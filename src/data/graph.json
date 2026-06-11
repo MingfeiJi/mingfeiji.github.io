@@ -1245,6 +1245,104 @@
    "cat": "收藏",
    "url": "/library/#知识管理",
    "deg": 2
+  },
+  {
+   "id": "lib-liuxiaopai",
+   "title": "刘小排",
+   "cat": "收藏",
+   "url": "/library/#liuxiaopai",
+   "deg": 3
+  },
+  {
+   "id": "lib-liuxiaopai-原课 · 实战进阶（4 讲）",
+   "title": "原课 · 实战进阶（",
+   "cat": "收藏",
+   "url": "/library/#liuxiaopai",
+   "deg": 1
+  },
+  {
+   "id": "lib-liuxiaopai-原课 · 主题课",
+   "title": "原课 · 主题课",
+   "cat": "收藏",
+   "url": "/library/#liuxiaopai",
+   "deg": 1
+  },
+  {
+   "id": "lib-liuxiaopai-我的拆解与再设计",
+   "title": "我的拆解与再设计",
+   "cat": "收藏",
+   "url": "/library/#liuxiaopai",
+   "deg": 2
+  },
+  {
+   "id": "lib-aipm-course",
+   "title": "AI 产品体系课程（自研）",
+   "cat": "收藏",
+   "url": "/library/#aipm-course",
+   "deg": 3
+  },
+  {
+   "id": "lib-aipm-course-课程大纲（6 节）",
+   "title": "课程大纲（6 节）",
+   "cat": "收藏",
+   "url": "/library/#aipm-course",
+   "deg": 2
+  },
+  {
+   "id": "lib-aipm-course-课程资产",
+   "title": "课程资产",
+   "cat": "收藏",
+   "url": "/library/#aipm-course",
+   "deg": 1
+  },
+  {
+   "id": "lib-c-liangning1",
+   "title": "产品思维30讲·梁宁",
+   "cat": "收藏",
+   "url": "/library/",
+   "deg": 2
+  },
+  {
+   "id": "lib-c-liangning2",
+   "title": "增长思维·梁宁",
+   "cat": "收藏",
+   "url": "/library/",
+   "deg": 2
+  },
+  {
+   "id": "lib-c-dedao",
+   "title": "经济学课·得到",
+   "cat": "收藏",
+   "url": "/library/",
+   "deg": 2
+  },
+  {
+   "id": "lib-c-liurun",
+   "title": "商业课·刘润",
+   "cat": "收藏",
+   "url": "/library/",
+   "deg": 2
+  },
+  {
+   "id": "lib-c-zhaoyue",
+   "title": "开心领导力·赵越",
+   "cat": "收藏",
+   "url": "/library/",
+   "deg": 2
+  },
+  {
+   "id": "lib-c-philosophy",
+   "title": "通识哲学",
+   "cat": "收藏",
+   "url": "/library/",
+   "deg": 2
+  },
+  {
+   "id": "lib-c-buffett",
+   "title": "巴菲特股东信",
+   "cat": "收藏",
+   "url": "/library/",
+   "deg": 2
   }
  ],
  "links": [
@@ -2967,6 +3065,86 @@
    "source": "lib-知识管理",
    "target": "lib-知识管理-相关论文",
    "w": 1
+  },
+  {
+   "source": "lib-hub",
+   "target": "lib-liuxiaopai",
+   "w": 2
+  },
+  {
+   "source": "lib-liuxiaopai",
+   "target": "lib-liuxiaopai-原课 · 实战进阶（4 讲）",
+   "w": 1
+  },
+  {
+   "source": "lib-liuxiaopai",
+   "target": "lib-liuxiaopai-原课 · 主题课",
+   "w": 1
+  },
+  {
+   "source": "lib-liuxiaopai",
+   "target": "lib-liuxiaopai-我的拆解与再设计",
+   "w": 1
+  },
+  {
+   "source": "lib-hub",
+   "target": "lib-aipm-course",
+   "w": 2
+  },
+  {
+   "source": "lib-aipm-course",
+   "target": "lib-aipm-course-课程大纲（6 节）",
+   "w": 1
+  },
+  {
+   "source": "lib-aipm-course",
+   "target": "lib-aipm-course-课程资产",
+   "w": 1
+  },
+  {
+   "source": "lib-hub",
+   "target": "lib-c-liangning1",
+   "w": 1
+  },
+  {
+   "source": "lib-hub",
+   "target": "lib-c-liangning2",
+   "w": 1
+  },
+  {
+   "source": "lib-hub",
+   "target": "lib-c-dedao",
+   "w": 1
+  },
+  {
+   "source": "lib-hub",
+   "target": "lib-c-liurun",
+   "w": 1
+  },
+  {
+   "source": "lib-hub",
+   "target": "lib-c-zhaoyue",
+   "w": 1
+  },
+  {
+   "source": "lib-hub",
+   "target": "lib-c-philosophy",
+   "w": 1
+  },
+  {
+   "source": "lib-hub",
+   "target": "lib-c-buffett",
+   "w": 1
+  },
+  {
+   "source": "lib-c-buffett",
+   "target": "k013",
+   "w": 2
+  },
+  {
+   "source": "lib-c-philosophy",
+   "target": "k089",
+   "w": 2
   },
   {
    "source": "lib-hub",

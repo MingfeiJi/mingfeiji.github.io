@@ -1,38 +1,101 @@
 ---
 import Base from '../layouts/Base.astro';
 import lib from '../data/library.json';
+
+// 学习来源书柜：构成知识底座的课程与著作（CSS 立体书脊，零图片依赖）
+const shelves = [
+  {
+    name: '哲学 · 思维底座',
+    books: [
+      { t: '看本质', a: '汤质', c: '#7c3aed', n: '196 篇笔记', href: '#汤质' },
+      { t: '高手的黑箱', a: '汤质', c: '#6d28d9', n: '127 篇笔记', href: '#汤质' },
+      { t: '关于说话的一切', a: '汤质', c: '#8b5cf6', n: '90 篇笔记', href: '#汤质' },
+      { t: '茶馆 · 哲学杂谈', a: '汤质', c: '#9333ea', n: '77 篇笔记', href: '#汤质' },
+      { t: '大三元', a: '汤质', c: '#a855f7', n: '54 篇笔记', href: '#汤质' },
+      { t: '人间攻略', a: '汤质', c: '#c084fc', n: '38 篇笔记', href: '#汤质' },
+      { t: '通识哲学', a: '黑格尔 · 拉康 · 符号学', c: '#581c87', n: '50 篇思辨笔记', href: '/graph/' },
+      { t: '哲学对话整理', a: '本人 × AI · 55 页', c: '#4c1d95', n: 'PDF 可读', href: '/files/philosophical-dialogues.pdf' },
+    ],
+  },
+  {
+    name: '商业 · 产品 · 增长',
+    books: [
+      { t: '产品思维 30 讲', a: '梁宁 · 得到', c: '#fb7185', n: '产品认知原点' },
+      { t: '增长思维 30 讲', a: '梁宁 · 得到', c: '#f43f5e', n: '增长方法论' },
+      { t: '经济学课', a: '得到', c: '#fbbf24', n: '经济学思维' },
+      { t: '商业课', a: '刘润', c: '#f59e0b', n: '商业底层逻辑' },
+      { t: '开心领导力', a: '赵越', c: '#34d399', n: '管理与带教' },
+      { t: '经济系统观察', a: '文稿拆解', c: '#0ea5e9', n: '71 篇笔记', href: '#经济系统' },
+      { t: '巴菲特股东信', a: '1957-2023', c: '#eab308', n: '50 个概念全编译', href: '/graph/' },
+    ],
+  },
+  {
+    name: '工程 · AI 实战',
+    books: [
+      { t: 'VibeCoding 课', a: '刘小排', c: '#7dd3fc', n: '12 项档案', href: '#liuxiaopai' },
+      { t: 'AI 产品体系课程', a: '自研 · 6 节', c: '#2dd4bf', n: '大纲+逐字稿+样张', href: '#aipm-course' },
+      { t: '阅读笔记', a: '金字塔原理 · 黑客与画家…', c: '#94a3b8', n: '113 篇精读', href: '#阅读笔记' },
+      { t: '学习观', a: 'Yjango', c: '#60a5fa', n: '8 篇笔记', href: '#Yjango' },
+      { t: '思维模型', a: '王川', c: '#818cf8', n: '24 篇笔记', href: '#王川' },
+      { t: '知识管理研究', a: '论文与实践', c: '#a3a3a3', n: '11 篇', href: '#知识管理' },
+    ],
+  },
+];
 ---
 
-<Base title="藏书阁 · 外部收藏目录 — 纪鸣飞" description="个人知识库收藏的外部内容全目录：汤质看理想系列、阅读笔记、经济系统观察等 800+ 篇，170 万字。">
+<Base title="藏书阁 · 学习来源书柜 — 纪鸣飞" description="构成知识底座的课程与著作：汤质看本质、梁宁产品课、得到经济学、刘润商业课、巴菲特股东信——830+ 篇学习笔记的完整目录。">
   <section class="chapter" style="padding-top:150px">
-    <div class="wrap" style="max-width:920px">
+    <div class="wrap" style="max-width:980px">
       <div class="chapter-head">
-        <div class="ch-no"><em>LIBRARY</em> EXTERNAL COLLECTION</div>
-        <h2>藏书阁 · 外部收藏</h2>
+        <div class="ch-no"><em>LIBRARY</em> LEARNING SOURCES</div>
+        <h2>藏书阁 · 学习来源</h2>
         <div class="ch-sub">
-          {lib.totalItems} 篇 · 约 {Math.round(lib.totalWords / 10000)} 万字——
-          这些是滋养我知识体系的外部内容（课程笔记、精读、文稿拆解）。
-          出于版权尊重，<strong style="color:#fff">此处公开完整目录而非全文</strong>；全文存于私人归档。
-          目录本身就是一张学习地图。
+          这些课程与著作构成我的知识底座。<strong style="color:#fff">书柜可以点</strong>——
+          有完整笔记的书会跳到下方目录；出于版权尊重，外部内容公开目录与笔记规模，不公开原文。
         </div>
+      </div>
+
+      <!-- ══ 立体书柜 ══ -->
+      <div class="bookcase">
+        {shelves.map((shelf) => (
+          <div class="shelf-block">
+            <div class="shelf-name">✦ {shelf.name}</div>
+            <div class="shelf">
+              {shelf.books.map((b) => (
+                <a class="book" href={b.href || '#catalog'} style={`--bc:${b.c}`} target={b.href?.startsWith('/files') ? '_blank' : undefined}>
+                  <span class="book-title">{b.t}</span>
+                  <span class="book-author">{b.a}</span>
+                  <span class="book-note">{b.n}</span>
+                </a>
+              ))}
+            </div>
+            <div class="shelf-board"></div>
+          </div>
+        ))}
+      </div>
+
+      <div class="chapter-head" id="catalog" style="margin-top:90px">
+        <div class="ch-no"><em>CATALOG</em> FULL INDEX</div>
+        <h2 style="font-size:clamp(24px,3.6vw,34px)">完整目录 · {lib.totalItems} 篇</h2>
+        <div class="ch-sub">约 {Math.round(lib.totalWords / 10000)} 万字学习笔记的全目录——目录本身就是一张学习地图。</div>
       </div>
 
       <div class="lib-nav">
         {lib.groups.map((g: any) => (
-          <a class="chip violet" href={`#${g.id}`}>{g.label.split(' · ')[0]} · {g.count}</a>
+          <a class="chip violet" href={`#${g.id}`}>{g.label.split(' · ')[0].split('（')[0]} · {g.count}</a>
         ))}
       </div>
 
       {lib.groups.map((g: any) => (
         <div class="lib-group" id={g.id}>
-          <h3>📚 {g.label} <span class="lib-meta">{g.count} 篇 · {Math.round(g.words / 10000)} 万字</span></h3>
+          <h3>📚 {g.label} <span class="lib-meta">{g.count} 篇{g.words ? ` · ${Math.round(g.words / 10000)} 万字` : ''}</span></h3>
           <p class="lib-desc">{g.desc}</p>
           {g.series.map((s: any) => (
             <details class="lib-series" open={s.items.length <= 12}>
               <summary>{s.series} <span class="lib-meta">{s.items.length} 篇</span></summary>
               <ul>
                 {s.items.map((it: any) => (
-                  <li>{it.t} <span class="lib-w">{(it.w / 1000).toFixed(1)}k</span></li>
+                  <li>{it.t} {it.w ? <span class="lib-w">{(it.w / 1000).toFixed(1)}k</span> : null}</li>
                 ))}
               </ul>
             </details>
@@ -49,11 +112,77 @@ import lib from '../data/library.json';
 </Base>
 
 <style>
+  /* ══════════ 立体书柜 ══════════ */
+  .bookcase { display: flex; flex-direction: column; gap: 44px; }
+  .shelf-name {
+    font-family: var(--mono); font-size: 12px; letter-spacing: .2em;
+    color: var(--ink2); margin-bottom: 14px;
+  }
+  .shelf {
+    display: flex; align-items: flex-end; gap: 7px;
+    padding: 0 18px; flex-wrap: wrap;
+    perspective: 900px;
+  }
+  .shelf-board {
+    height: 10px; border-radius: 3px; margin-top: 0;
+    background: linear-gradient(180deg, rgba(125, 211, 252, .25), rgba(19, 28, 66, .9));
+    box-shadow: 0 8px 24px rgba(3, 4, 18, .9), 0 1px 0 rgba(125, 211, 252, .3) inset;
+  }
+  .book {
+    --bc: #7dd3fc;
+    position: relative;
+    width: 64px; height: 215px;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 16px 6px 12px;
+    border-radius: 4px 7px 7px 4px;
+    background:
+      linear-gradient(90deg, rgba(0,0,0,.42) 0%, rgba(255,255,255,.14) 7%, rgba(0,0,0,0) 16%, rgba(0,0,0,.28) 94%, rgba(0,0,0,.5) 100%),
+      linear-gradient(180deg, color-mix(in srgb, var(--bc) 88%, #fff 12%), color-mix(in srgb, var(--bc) 72%, #000 28%));
+    border: 1px solid color-mix(in srgb, var(--bc) 55%, #000 45%);
+    box-shadow: 0 6px 18px rgba(3, 4, 18, .65);
+    color: #fff;
+    transform-origin: bottom center;
+    transition: transform .3s cubic-bezier(.2, .8, .3, 1.2), box-shadow .3s;
+    text-decoration: none;
+  }
+  .book:nth-child(3n) { height: 200px; }
+  .book:nth-child(4n+1) { height: 224px; }
+  .book:hover {
+    transform: translateY(-16px) rotateX(6deg) scale(1.04);
+    box-shadow: 0 22px 44px rgba(3, 4, 18, .9), 0 0 30px color-mix(in srgb, var(--bc) 60%, transparent);
+    z-index: 3; color: #fff;
+  }
+  .book-title {
+    writing-mode: vertical-rl;
+    font-family: var(--serif); font-weight: 700; font-size: 15px;
+    letter-spacing: .14em; line-height: 1.2;
+    text-shadow: 0 1px 3px rgba(0,0,0,.5);
+    flex: 1; display: flex; align-items: center;
+  }
+  .book-author {
+    writing-mode: vertical-rl;
+    font-size: 9.5px; opacity: .85; letter-spacing: .1em;
+    max-height: 80px; overflow: hidden;
+  }
+  .book-note {
+    position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%);
+    font-family: var(--mono); font-size: 10px; color: var(--flare);
+    background: rgba(3,4,18,.92); border: 1px solid rgba(251,191,36,.4);
+    border-radius: 12px; padding: 3px 10px; white-space: nowrap;
+    opacity: 0; transition: opacity .25s; pointer-events: none;
+  }
+  .book:hover .book-note { opacity: 1; }
+  @media (max-width: 640px) {
+    .book { width: 52px; height: 180px; }
+    .book-title { font-size: 13px; }
+  }
+
+  /* ══════════ 目录 ══════════ */
   .lib-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 44px; }
   .lib-group { margin-bottom: 56px; scroll-margin-top: 90px; }
   .lib-group h3 {
     font-family: var(--serif); font-size: 23px; color: #fff;
-    display: flex; align-items: baseline; gap: 12px; margin-bottom: 6px;
+    display: flex; align-items: baseline; gap: 12px; margin-bottom: 6px; flex-wrap: wrap;
   }
   .lib-meta { font-family: var(--mono); font-size: 12px; color: var(--ink3); font-weight: 400; }
   .lib-desc { font-size: 14px; color: var(--ink2); margin-bottom: 18px; }
