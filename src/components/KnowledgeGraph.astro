@@ -14,6 +14,7 @@ const { height = '72vh' } = Astro.props;
     <span><i style="background:#a78bfa"></i>哲学概念</span>
     <span><i style="background:#fb7185"></i>哲学命题</span>
     <span><i style="background:#e8ecff"></i>文章</span>
+    <span><i style="background:#2dd4bf"></i>藏书阁</span>
   </div>
   <div class="kg-hint">拖拽节点 · 滚轮缩放 · 点击进入全文</div>
   <div id="kg-tip" class="kg-tip"></div>
@@ -30,6 +31,7 @@ const { height = '72vh' } = Astro.props;
     哲学概念: '#a78bfa',
     哲学命题: '#fb7185',
     文章: '#e8ecff',
+    收藏: '#2dd4bf',
   };
 
   const canvas = document.getElementById('kg-canvas') as HTMLCanvasElement;

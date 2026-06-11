@@ -1056,6 +1056,195 @@
    "cat": "文章",
    "url": "/articles/p043/",
    "deg": 0
+  },
+  {
+   "id": "lib-hub",
+   "title": "藏书阁",
+   "cat": "收藏",
+   "url": "/library/",
+   "deg": 10
+  },
+  {
+   "id": "lib-汤质",
+   "title": "汤质",
+   "cat": "收藏",
+   "url": "/library/#汤质",
+   "deg": 8
+  },
+  {
+   "id": "lib-汤质-大三元",
+   "title": "大三元",
+   "cat": "收藏",
+   "url": "/library/#汤质",
+   "deg": 5
+  },
+  {
+   "id": "lib-汤质-关于说话的一切",
+   "title": "关于说话的一切",
+   "cat": "收藏",
+   "url": "/library/#汤质",
+   "deg": 5
+  },
+  {
+   "id": "lib-汤质-人间攻略",
+   "title": "人间攻略",
+   "cat": "收藏",
+   "url": "/library/#汤质",
+   "deg": 5
+  },
+  {
+   "id": "lib-汤质-高手的黑箱",
+   "title": "高手的黑箱",
+   "cat": "收藏",
+   "url": "/library/#汤质",
+   "deg": 5
+  },
+  {
+   "id": "lib-汤质-看本质",
+   "title": "看本质",
+   "cat": "收藏",
+   "url": "/library/#汤质",
+   "deg": 5
+  },
+  {
+   "id": "lib-汤质-茶馆",
+   "title": "茶馆",
+   "cat": "收藏",
+   "url": "/library/#汤质",
+   "deg": 5
+  },
+  {
+   "id": "lib-阅读笔记",
+   "title": "阅读笔记",
+   "cat": "收藏",
+   "url": "/library/#阅读笔记",
+   "deg": 8
+  },
+  {
+   "id": "lib-阅读笔记-《金字塔原理》",
+   "title": "《金字塔原理》",
+   "cat": "收藏",
+   "url": "/library/#阅读笔记",
+   "deg": 4
+  },
+  {
+   "id": "lib-阅读笔记-《高等写作学》马正平",
+   "title": "《高等写作学》马正平",
+   "cat": "收藏",
+   "url": "/library/#阅读笔记",
+   "deg": 2
+  },
+  {
+   "id": "lib-阅读笔记-《高绩效教练》",
+   "title": "《高绩效教练》",
+   "cat": "收藏",
+   "url": "/library/#阅读笔记",
+   "deg": 5
+  },
+  {
+   "id": "lib-阅读笔记-《黑客与画家》",
+   "title": "《黑客与画家》",
+   "cat": "收藏",
+   "url": "/library/#阅读笔记",
+   "deg": 1
+  },
+  {
+   "id": "lib-经济系统",
+   "title": "经济系统观察",
+   "cat": "收藏",
+   "url": "/library/#经济系统",
+   "deg": 8
+  },
+  {
+   "id": "lib-经济系统-发烧好了呢",
+   "title": "发烧好了呢",
+   "cat": "收藏",
+   "url": "/library/#经济系统",
+   "deg": 1
+  },
+  {
+   "id": "lib-经济系统-投资是怎样赚钱的？",
+   "title": "投资是怎样赚钱的？",
+   "cat": "收藏",
+   "url": "/library/#经济系统",
+   "deg": 2
+  },
+  {
+   "id": "lib-经济系统-投资第一课",
+   "title": "投资第一课",
+   "cat": "收藏",
+   "url": "/library/#经济系统",
+   "deg": 3
+  },
+  {
+   "id": "lib-经济系统-白子玄：房地产的功与过",
+   "title": "白子玄：房地产的功与",
+   "cat": "收藏",
+   "url": "/library/#经济系统",
+   "deg": 2
+  },
+  {
+   "id": "lib-经济系统-范勇鹏：制度的起源与本质",
+   "title": "范勇鹏：制度的起源与",
+   "cat": "收藏",
+   "url": "/library/#经济系统",
+   "deg": 3
+  },
+  {
+   "id": "lib-经济系统-质性社会学研究的差异性发问和发问的艺术——赵鼎新",
+   "title": "质性社会学研究的差异",
+   "cat": "收藏",
+   "url": "/library/#经济系统",
+   "deg": 2
+  },
+  {
+   "id": "lib-王川",
+   "title": "王川",
+   "cat": "收藏",
+   "url": "/library/#王川",
+   "deg": 4
+  },
+  {
+   "id": "lib-王川-摩尔定律还能走多远？",
+   "title": "摩尔定律还能走多远？",
+   "cat": "收藏",
+   "url": "/library/#王川",
+   "deg": 2
+  },
+  {
+   "id": "lib-Yjango",
+   "title": "Yjango",
+   "cat": "收藏",
+   "url": "/library/#Yjango",
+   "deg": 3
+  },
+  {
+   "id": "lib-Yjango-学习观 1-6",
+   "title": "学习观 1-6",
+   "cat": "收藏",
+   "url": "/library/#Yjango",
+   "deg": 2
+  },
+  {
+   "id": "lib-知识管理",
+   "title": "知识管理研究",
+   "cat": "收藏",
+   "url": "/library/#知识管理",
+   "deg": 3
+  },
+  {
+   "id": "lib-知识管理-主题建模",
+   "title": "主题建模",
+   "cat": "收藏",
+   "url": "/library/#知识管理",
+   "deg": 2
+  },
+  {
+   "id": "lib-知识管理-相关论文",
+   "title": "相关论文",
+   "cat": "收藏",
+   "url": "/library/#知识管理",
+   "deg": 2
   }
  ],
  "links": [
@@ -2647,6 +2836,141 @@
   {
    "source": "p031",
    "target": "p033",
+   "w": 1
+  },
+  {
+   "source": "lib-hub",
+   "target": "lib-汤质",
+   "w": 2
+  },
+  {
+   "source": "lib-汤质",
+   "target": "lib-汤质-大三元",
+   "w": 1
+  },
+  {
+   "source": "lib-汤质",
+   "target": "lib-汤质-关于说话的一切",
+   "w": 1
+  },
+  {
+   "source": "lib-汤质",
+   "target": "lib-汤质-人间攻略",
+   "w": 1
+  },
+  {
+   "source": "lib-汤质",
+   "target": "lib-汤质-高手的黑箱",
+   "w": 1
+  },
+  {
+   "source": "lib-汤质",
+   "target": "lib-汤质-看本质",
+   "w": 1
+  },
+  {
+   "source": "lib-汤质",
+   "target": "lib-汤质-茶馆",
+   "w": 1
+  },
+  {
+   "source": "lib-hub",
+   "target": "lib-阅读笔记",
+   "w": 2
+  },
+  {
+   "source": "lib-阅读笔记",
+   "target": "lib-阅读笔记-《金字塔原理》",
+   "w": 1
+  },
+  {
+   "source": "lib-阅读笔记",
+   "target": "lib-阅读笔记-《高等写作学》马正平",
+   "w": 1
+  },
+  {
+   "source": "lib-阅读笔记",
+   "target": "lib-阅读笔记-《高绩效教练》",
+   "w": 1
+  },
+  {
+   "source": "lib-阅读笔记",
+   "target": "lib-阅读笔记-《黑客与画家》",
+   "w": 1
+  },
+  {
+   "source": "lib-hub",
+   "target": "lib-经济系统",
+   "w": 2
+  },
+  {
+   "source": "lib-经济系统",
+   "target": "lib-经济系统-发烧好了呢",
+   "w": 1
+  },
+  {
+   "source": "lib-经济系统",
+   "target": "lib-经济系统-投资是怎样赚钱的？",
+   "w": 1
+  },
+  {
+   "source": "lib-经济系统",
+   "target": "lib-经济系统-投资第一课",
+   "w": 1
+  },
+  {
+   "source": "lib-经济系统",
+   "target": "lib-经济系统-白子玄：房地产的功与过",
+   "w": 1
+  },
+  {
+   "source": "lib-经济系统",
+   "target": "lib-经济系统-范勇鹏：制度的起源与本质",
+   "w": 1
+  },
+  {
+   "source": "lib-经济系统",
+   "target": "lib-经济系统-质性社会学研究的差异性发问和发问的艺术——赵鼎新",
+   "w": 1
+  },
+  {
+   "source": "lib-hub",
+   "target": "lib-王川",
+   "w": 2
+  },
+  {
+   "source": "lib-王川",
+   "target": "lib-王川-摩尔定律还能走多远？",
+   "w": 1
+  },
+  {
+   "source": "lib-hub",
+   "target": "lib-Yjango",
+   "w": 2
+  },
+  {
+   "source": "lib-Yjango",
+   "target": "lib-Yjango-学习观 1-6",
+   "w": 1
+  },
+  {
+   "source": "lib-hub",
+   "target": "lib-知识管理",
+   "w": 2
+  },
+  {
+   "source": "lib-知识管理",
+   "target": "lib-知识管理-主题建模",
+   "w": 1
+  },
+  {
+   "source": "lib-知识管理",
+   "target": "lib-知识管理-相关论文",
+   "w": 1
+  },
+  {
+   "source": "lib-hub",
+   "target": "k089",
    "w": 1
   }
  ]

@@ -1,0 +1,80 @@
+---
+import Base from '../layouts/Base.astro';
+import lib from '../data/library.json';
+---
+
+<Base title="藏书阁 · 外部收藏目录 — 纪鸣飞" description="个人知识库收藏的外部内容全目录：汤质看理想系列、阅读笔记、经济系统观察等 800+ 篇，170 万字。">
+  <section class="chapter" style="padding-top:150px">
+    <div class="wrap" style="max-width:920px">
+      <div class="chapter-head">
+        <div class="ch-no"><em>LIBRARY</em> EXTERNAL COLLECTION</div>
+        <h2>藏书阁 · 外部收藏</h2>
+        <div class="ch-sub">
+          {lib.totalItems} 篇 · 约 {Math.round(lib.totalWords / 10000)} 万字——
+          这些是滋养我知识体系的外部内容（课程笔记、精读、文稿拆解）。
+          出于版权尊重，<strong style="color:#fff">此处公开完整目录而非全文</strong>；全文存于私人归档。
+          目录本身就是一张学习地图。
+        </div>
+      </div>
+
+      <div class="lib-nav">
+        {lib.groups.map((g: any) => (
+          <a class="chip violet" href={`#${g.id}`}>{g.label.split(' · ')[0]} · {g.count}</a>
+        ))}
+      </div>
+
+      {lib.groups.map((g: any) => (
+        <div class="lib-group" id={g.id}>
+          <h3>📚 {g.label} <span class="lib-meta">{g.count} 篇 · {Math.round(g.words / 10000)} 万字</span></h3>
+          <p class="lib-desc">{g.desc}</p>
+          {g.series.map((s: any) => (
+            <details class="lib-series" open={s.items.length <= 12}>
+              <summary>{s.series} <span class="lib-meta">{s.items.length} 篇</span></summary>
+              <ul>
+                {s.items.map((it: any) => (
+                  <li>{it.t} <span class="lib-w">{(it.w / 1000).toFixed(1)}k</span></li>
+                ))}
+              </ul>
+            </details>
+          ))}
+        </div>
+      ))}
+
+      <div style="margin-top:60px;display:flex;gap:14px;justify-content:center">
+        <a class="btn" href="/graph/">🕸 回知识图谱</a>
+        <a class="btn" href="/">返回主站</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .lib-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 44px; }
+  .lib-group { margin-bottom: 56px; scroll-margin-top: 90px; }
+  .lib-group h3 {
+    font-family: var(--serif); font-size: 23px; color: #fff;
+    display: flex; align-items: baseline; gap: 12px; margin-bottom: 6px;
+  }
+  .lib-meta { font-family: var(--mono); font-size: 12px; color: var(--ink3); font-weight: 400; }
+  .lib-desc { font-size: 14px; color: var(--ink2); margin-bottom: 18px; }
+  .lib-series {
+    border: 1px solid var(--line); border-radius: 12px;
+    margin-bottom: 10px; overflow: hidden;
+    background: rgba(13, 20, 48, .35); backdrop-filter: blur(8px);
+  }
+  .lib-series summary {
+    cursor: pointer; padding: 14px 20px;
+    font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink);
+    display: flex; align-items: baseline; gap: 10px;
+    transition: background .2s;
+  }
+  .lib-series summary:hover { background: rgba(125, 211, 252, .06); color: #fff; }
+  .lib-series ul { padding: 4px 24px 16px 40px; columns: 2; column-gap: 36px; }
+  @media (max-width: 720px) { .lib-series ul { columns: 1; } }
+  .lib-series li {
+    font-size: 13.5px; color: var(--ink2); margin-bottom: 7px;
+    break-inside: avoid;
+  }
+  .lib-series li::marker { color: var(--nebula); }
+  .lib-w { font-family: var(--mono); font-size: 10.5px; color: var(--ink3); margin-left: 4px; }
+</style>
