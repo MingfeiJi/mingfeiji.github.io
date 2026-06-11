@@ -1,5 +1,12 @@
 ---
 import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const allArticles = (await getCollection('articles')).sort(
+  (a, b) => (b.data.created?.getTime() ?? 0) - (a.data.created?.getTime() ?? 0)
+);
+const featuredArticles = allArticles.slice(0, 14);
+const totalArticleWords = allArticles.reduce((s, a) => s + (a.data.word_count ?? 3000), 0);
 
 const works = [
   {
@@ -97,19 +104,13 @@ const skills = [
   },
 ];
 
-const articles = [
-  { title: '从 0 到 1 搭建 AI Agent 系统——完整方法论', tag: 'AGENT' },
-  { title: '上下文管理才是 AI Agent 的核心壁垒', tag: 'AGENT' },
-  { title: '做 AI Agent 落地半年，我踩过的那些坑', tag: 'AGENT' },
-  { title: '为什么我们把所有开源 Agent 框架都放弃了', tag: 'ENG' },
-  { title: 'RAG 知识库完整实战手册——从原理到落地', tag: 'RAG' },
-  { title: 'RAG 召回准确率从 65 到 92——我在大厂踩过的 7 个坑', tag: 'RAG' },
-  { title: 'AI 产品评测体系设计——别让主观感觉骗了你', tag: 'EVAL' },
-  { title: 'AI 项目跨团队协作——产品技术业务如何不打架', tag: 'ORG' },
-  { title: '做 AI 系统，别为了技术概念把架构做重', tag: 'ENG' },
-  { title: '多模态素材库建设——让 AI 真正看懂你的图片和视频', tag: 'MULTI' },
-  { title: 'AI 产品 MVP 方法论——三天验证一个想法的实战指南', tag: 'PM' },
-  { title: 'AI 产品经理完整转型指南——从入门到拿 offer', tag: 'CAREER' },
+const knowledgeZones = [
+  { icon: '📥', name: 'raw / 输入源', stat: '16 GB', desc: 'Plaud 录音转写 1402 个 · BuilderPulse 中英文头条池 · 切曼课程录音 170 个 · 巴菲特股东信' },
+  { icon: '🧠', name: 'Knowledge / 知识沉淀', stat: '930 MB', desc: 'TripFlow 项目档案（架构/PRD/调研/实施手册）· 合规审核体系 · 哲学与认知心理学笔记' },
+  { icon: '✍️', name: 'Writing / 内容产出', stat: '2300+ md', desc: '抖音口播稿 280 篇（20 周连续 5 公式覆盖🏆）· 公众号 338 篇 · 小红书 346 篇 · 切曼讲稿 23 节' },
+  { icon: '🛠', name: 'Software / 工具资产', stat: '25+ skills', desc: '写作方法论 skill 库 · 抖音口播 2.0 人设热点公式 · Agent 项目源码 · RAG / workflow 工程' },
+  { icon: '📚', name: 'WIKI / 概念库', stat: '55 概念', desc: 'Vibe Coding · Agent 记忆体系 · 模型选型 · 竞品分析——Karpathy 风格编译产物' },
+  { icon: '⚙️', name: 'Meta / 治理', stat: '8 规则', desc: 'CLAUDE.md 编译规范 · 内容生产规则 · 每日工作流 · 自动备份 launchd 双任务' },
 ];
 
 const courses = [
@@ -366,11 +367,58 @@ const courses = [
     </div>
   </section>
 
-  <!-- ════════════ CH.06 · 技能矩阵 ════════════ -->
+  <!-- ════════════ CH.06 · 知识星系 ════════════ -->
+  <section class="chapter" id="knowledge">
+    <div class="wrap">
+      <div class="chapter-head reveal">
+        <div class="ch-no"><em>CHAPTER 06</em> KNOWLEDGE GALAXY</div>
+        <h2>知识星系 · 个人知识体系</h2>
+        <div class="ch-sub">
+          一座 17 GB 的 Obsidian 知识库 + Claude Code Agent 流水线——「raw 进、Writing 出、Knowledge 沉淀、Software 复用、Meta 治理」。
+          AI 不只是我做的产品，也是我的生产方式本身。
+        </div>
+      </div>
+
+      <div class="dashboard reveal">
+        <div class="dial"><div class="num"><span data-count="17">0</span><span>GB</span></div><div class="lab">知识库总体量</div></div>
+        <div class="dial"><div class="num"><span data-count="2300">0</span><span>+</span></div><div class="lab">Markdown 文档</div></div>
+        <div class="dial"><div class="num"><span data-count="1402">0</span><span>个</span></div><div class="lab">Plaud 录音转写</div></div>
+        <div class="dial"><div class="num"><span data-count="280">0</span><span>篇</span></div><div class="lab">抖音口播稿（20 周纪录）</div></div>
+        <div class="dial"><div class="num"><span data-count="964">0</span><span>篇</span></div><div class="lab">三平台累计成稿</div></div>
+      </div>
+
+      <div class="grid-3" style="margin-top:34px" data-stagger>
+        {knowledgeZones.map((z) => (
+          <div class="card">
+            <h3>{z.icon} {z.name}</h3>
+            <div class="kz-stat">{z.stat}</div>
+            <p>{z.desc}</p>
+          </div>
+        ))}
+      </div>
+
+      <div class="pipeline reveal">
+        <div class="pipe-title">⚡ 端到端内容生产流水线（Agent 驱动 · 每周自动运转）</div>
+        <div class="pipe-flow">
+          <span class="pipe-node">录音 / 热点<br /><em>Plaud · BuilderPulse</em></span>
+          <span class="pipe-arrow">→</span>
+          <span class="pipe-node">改写引擎<br /><em>口播四步法 · 25+ skill</em></span>
+          <span class="pipe-arrow">→</span>
+          <span class="pipe-node">多平台成稿<br /><em>抖音 · 公众号 · 小红书</em></span>
+          <span class="pipe-arrow">→</span>
+          <span class="pipe-node">知识沉淀<br /><em>wiki 编译 · 双链索引</em></span>
+          <span class="pipe-arrow">→</span>
+          <span class="pipe-node">云端协同<br /><em>飞书 docx · Base 排期</em></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ CH.07 · 技能矩阵 ════════════ -->
   <section class="chapter">
     <div class="wrap">
       <div class="chapter-head reveal">
-        <div class="ch-no"><em>CHAPTER 06</em> ENGINE ROOM</div>
+        <div class="ch-no"><em>CHAPTER 07</em> ENGINE ROOM</div>
         <h2>轮机舱 · 技能矩阵</h2>
         <div class="ch-sub">Claude Code / Cursor 是日常生产工具而非谈资。</div>
       </div>
@@ -387,25 +435,30 @@ const courses = [
     </div>
   </section>
 
-  <!-- ════════════ CH.07 · 信号塔（写作）════════════ -->
+  <!-- ════════════ CH.08 · 信号塔（写作）════════════ -->
   <section class="chapter" id="signal">
     <div class="wrap">
       <div class="chapter-head reveal">
-        <div class="ch-no"><em>CHAPTER 07</em> SIGNAL TOWER</div>
+        <div class="ch-no"><em>CHAPTER 08</em> SIGNAL TOWER</div>
         <h2>信号塔 · Building in Public</h2>
         <div class="ch-sub">
-          「人人都是产品经理」专栏作者 · 飞书开发者大会受邀嘉宾——长期把踩坑与方法论开源给行业。
+          「人人都是产品经理」专栏作者 · 飞书开发者大会受邀嘉宾。
+          {allArticles.length} 篇 / 约 {Math.round(totalArticleWords / 10000)} 万字方法论全文已发布在本站——每一篇都可以点进去读。
         </div>
       </div>
 
       <div class="reveal">
-        {articles.map((a, i) => (
-          <div class="article-row">
+        {featuredArticles.map((a, i) => (
+          <a class="article-row" href={`/articles/${a.id}/`}>
             <span class="a-idx">{String(i + 1).padStart(2, '0')}</span>
-            <span class="a-title">{a.title}</span>
-            <span class="a-tag">{a.tag}</span>
-          </div>
+            <span class="a-title">{a.data.title}</span>
+            <span class="a-tag">{a.data.word_count ? `${(a.data.word_count / 1000).toFixed(1)}k 字` : a.data.tags[0]}</span>
+          </a>
         ))}
+      </div>
+
+      <div style="margin-top:36px;text-align:center" class="reveal">
+        <a class="btn primary" href="/articles/">📡 进入信号塔 · 全部 {allArticles.length} 篇文章</a>
       </div>
 
       <h3 style="font-family:var(--serif);font-size:21px;margin:56px 0 20px;color:#fff">AI 产品课程体系（6 节）</h3>

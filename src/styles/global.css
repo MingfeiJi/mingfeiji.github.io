@@ -19,8 +19,9 @@
   --glow-star: 0 0 24px rgba(125, 211, 252, .35);
   --glow-nebula: 0 0 32px rgba(167, 139, 250, .3);
   --serif: "Noto Serif SC", "Songti SC", "STSong", serif;
-  --sans: -apple-system, "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
-  --mono: "SF Mono", "JetBrains Mono", "Menlo", monospace;
+  --sans: "LXGW WenKai", -apple-system, "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  --body-font: "LXGW WenKai", "PingFang SC", sans-serif;
+  --mono: "JetBrains Mono", "SF Mono", "Menlo", monospace;
   --maxw: 1120px;
 }
 
@@ -70,6 +71,8 @@ body {
 }
 
 h1, h2, h3, h4 { font-family: var(--serif); font-weight: 700; line-height: 1.3; }
+
+.hero h1, .chapter-head h2 { font-weight: 900; }
 
 a { color: var(--star); text-decoration: none; transition: color .2s; }
 a:hover { color: var(--flare); }
@@ -328,6 +331,49 @@ a:hover { color: var(--flare); }
 }
 .method-card h3 { font-size: 17px; margin: 12px 0 8px; }
 .method-card p { font-size: 13px; }
+
+/* ============ 知识星系 ============ */
+.kz-stat {
+  font-family: var(--mono); font-size: 13px; font-weight: 700;
+  color: var(--flare); margin: 4px 0 10px;
+  text-shadow: 0 0 14px rgba(251, 191, 36, .4);
+}
+.pipeline {
+  margin-top: 34px; padding: 28px 30px;
+  background: linear-gradient(140deg, rgba(15, 118, 110, .12), rgba(37, 99, 235, .08));
+  border: 1px solid rgba(52, 211, 153, .25);
+  border-radius: 16px; backdrop-filter: blur(10px);
+}
+.pipe-title {
+  font-family: var(--serif); font-size: 17px; font-weight: 700;
+  color: #fff; margin-bottom: 20px;
+}
+.pipe-flow {
+  display: flex; align-items: stretch; gap: 10px;
+  flex-wrap: wrap;
+}
+.pipe-node {
+  flex: 1 1 130px; text-align: center;
+  padding: 14px 10px; border-radius: 10px;
+  background: rgba(7, 11, 31, .65);
+  border: 1px solid var(--line);
+  font-size: 13.5px; font-weight: 600; color: #fff;
+  line-height: 1.6;
+}
+.pipe-node em {
+  display: block; font-style: normal;
+  font-family: var(--mono); font-size: 10.5px;
+  color: var(--aurora); margin-top: 5px;
+}
+.pipe-arrow {
+  align-self: center; color: var(--aurora);
+  font-family: var(--mono); font-weight: 700;
+  text-shadow: 0 0 12px rgba(52, 211, 153, .6);
+}
+@media (max-width: 760px) {
+  .pipe-flow { flex-direction: column; }
+  .pipe-arrow { transform: rotate(90deg); }
+}
 
 /* ============ 技能矩阵 ============ */
 .skill-row { display: flex; gap: 18px; align-items: flex-start; padding: 22px 0; border-bottom: 1px solid rgba(125, 211, 252, .08); }

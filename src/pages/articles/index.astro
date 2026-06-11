@@ -1,0 +1,81 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const articles = (await getCollection('articles')).sort(
+  (a, b) => (b.data.created?.getTime() ?? 0) - (a.data.created?.getTime() ?? 0)
+);
+
+// 主题分类（按首个命中的关键词归类）
+const CATS: Array<[string, string[]]> = [
+  ['Agent 工程', ['Agent', 'MultiAgent', 'Multi-Agent', '架构设计', '上下文', '沙箱']],
+  ['RAG / 知识库', ['RAG', '知识库', '检索', '向量']],
+  ['评测与指标', ['评测', '指标', 'badcase', '置信度']],
+  ['AI 产品方法论', ['MVP', '产品', 'PE', '提示词', '闭环', '需求']],
+  ['组织与协作', ['协作', '团队', '招聘', '转型', '管理']],
+  ['内容与自媒体', ['自媒体', '内容', '公众号', '起号', '定位', '脱敏']],
+  ['职业成长', ['转行', '面试', 'offer', '职业', '成长', '助教', '学习']],
+];
+function catOf(tags: string[], title: string): string {
+  const hay = [...tags, title].join(' ');
+  for (const [cat, kws] of CATS) if (kws.some((k) => hay.includes(k))) return cat;
+  return '其他思考';
+}
+const grouped = new Map<string, typeof articles>();
+for (const a of articles) {
+  const c = catOf(a.data.tags, a.data.title);
+  if (!grouped.has(c)) grouped.set(c, []);
+  grouped.get(c)!.push(a);
+}
+const order = [...CATS.map(([c]) => c), '其他思考'].filter((c) => grouped.has(c));
+const totalWords = articles.reduce((s, a) => s + (a.data.word_count ?? 3000), 0);
+---
+
+<Base title="信号塔 · 全部文章 — 纪鸣飞" description="纪鸣飞的 AI 产品方法论文章库：Agent 工程、RAG、评测体系、组织转型、自媒体实践。">
+  <section class="chapter" style="padding-top:150px">
+    <div class="wrap">
+      <div class="chapter-head">
+        <div class="ch-no"><em>SIGNAL TOWER</em> ALL TRANSMISSIONS</div>
+        <h2>信号塔 · 全部文章</h2>
+        <div class="ch-sub">
+          {articles.length} 篇 · 约 {Math.round(totalWords / 10000)} 万字 ·
+          全部来自一线实战的踩坑与方法论，由个人知识体系（Obsidian + Agent 流水线）持续产出。
+        </div>
+      </div>
+
+      <nav class="cat-nav reveal in">
+        {order.map((c) => (
+          <a href={`#${c}`} class="chip">{c} · {grouped.get(c)!.length}</a>
+        ))}
+      </nav>
+
+      {order.map((c) => (
+        <div class="cat-block" id={c}>
+          <h3 class="cat-title">✦ {c} <span>{grouped.get(c)!.length} 篇</span></h3>
+          {grouped.get(c)!.map((a) => (
+            <a class="article-row" href={`/articles/${a.id}/`}>
+              <span class="a-title">{a.data.title}</span>
+              <span class="a-tag">
+                {a.data.word_count ? `${(a.data.word_count / 1000).toFixed(1)}k 字` : ''}
+                {a.data.created ? ` · ${a.data.created.toISOString().slice(0, 10)}` : ''}
+              </span>
+            </a>
+          ))}
+        </div>
+      ))}
+
+      <div style="margin-top:60px;text-align:center">
+        <a class="btn" href="/">← 返回主站</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .cat-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 48px; }
+  .cat-title {
+    font-family: var(--serif); font-size: 22px; color: #fff;
+    margin: 52px 0 10px; display: flex; align-items: baseline; gap: 12px;
+  }
+  .cat-title span { font-family: var(--mono); font-size: 12px; color: var(--ink3); }
+</style>

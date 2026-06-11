@@ -9,7 +9,10 @@
     "preview": "astro preview"
   },
   "dependencies": {
+    "@fontsource/jetbrains-mono": "^5.2.8",
+    "@fontsource/noto-serif-sc": "^5.2.8",
     "astro": "^5.0.0",
+    "lxgw-wenkai-webfont": "^1.7.0",
     "three": "^0.184.0"
   }
 }
