@@ -121,6 +121,62 @@ const knowledgeZones = [
   { icon: '⚙️', name: 'Meta / 治理', stat: '8 规则', desc: 'CLAUDE.md 编译规范 · 内容生产规则 · 每日工作流 · 自动备份 launchd 双任务' },
 ];
 
+
+const geekGear = [
+  { icon: '🤖', name: 'Agentic Coding', status: 'DAILY DRIVER', desc: 'Claude Code 多 Agent 并行编排 + 后台任务 + Workflow 脚本。本站 156 页（3D 星场 / 知识图谱 / 全文系统）即由 Agent 全程构建。' },
+  { icon: '🌐', name: '浏览器操作 Agent', status: 'IN PRODUCTION', desc: 'Claude in Chrome / browser-use 范式：AI 自己打开页面、截图、验证交互。本站每个版本上线前由 AI 在真实浏览器里自检回归。' },
+  { icon: '🕸', name: 'Multi-Agent Workflow', status: 'DAILY DRIVER', desc: 'fan-out 并行调研 + 对抗验证 + 流水线编排。内容周批次、知识库扫描全部多 Agent 并行跑。' },
+  { icon: '🧩', name: 'MCP 协议工程', status: 'IN PRODUCTION', desc: '薄包装策略：70% 复用既有接口、20 个 Tool 覆盖全业务域；飞书全家桶（Base / 文档 / 事件流 / 妙记）经 CLI 接入 Agent。' },
+  { icon: '⚡️', name: 'Skill 工程化', status: 'SHIPPING', desc: '25+ 写作方法论 skill：抖音口播 2.0 人设热点双引擎、口播四步法、公众号爆款——从"指挥 AI"到"管理 AI"。' },
+  { icon: '📚', name: 'LLM Wiki 知识编译', status: 'SHIPPING', desc: 'Karpathy 风格 raw→wiki 编译管线：双链、实体/概念/来源分型。本站 178 节点知识图谱就是编译产物。' },
+  { icon: '🔍', name: 'RAG 混合检索', status: 'IN PRODUCTION', desc: 'BM25 优先 + pgvector 语义辅助、结构化字段先筛掉 90%；MySQL → PostgreSQL 平滑演进。' },
+  { icon: '🎛', name: 'LLM 应用编排', status: 'IN PRODUCTION', desc: 'Dify / LobeHub 双栈：6 业务域 SubAgent、6 阶段意图识别 Pipeline、组合意图 + 会话对象栈（Entity Stack）。' },
+  { icon: '🎨', name: 'AIGC 视觉工作流', status: 'SHIPPED', desc: 'ComfyUI + Lora 微调（10 万+ 训练数据，生图采纳率 65%→87%）；Seedance / Sora2 / Veo 工业化视频生产。' },
+  { icon: '🛡', name: '多模态审核', status: 'SHIPPED', desc: 'Gemini 2.5 Flash/Pro 文本 / 图像 / 视频三模态"源头把控 + 终筛"，5000+ 条评测集支撑。' },
+  { icon: '📊', name: 'LLM 可观测', status: 'IN PRODUCTION', desc: 'Langfuse 全链路 tracing + 评测集 / badcase 闭环 + Token 成本看板——AI 系统不能是黑盒。' },
+  { icon: '🔁', name: '无人值守自动化', status: 'DAILY DRIVER', desc: 'launchd / cron 定时矩阵：每日内容生产、晨晚双轨备份、IMAP 录音附件拉取——睡觉时系统在干活。' },
+  { icon: '🗣', name: '语音 & 数字人', status: 'SHIPPED', desc: 'Whisper 转写 1402 条录音入库 + TTS 配音 + 数字人口播，录音直达多平台成稿。' },
+  { icon: '📡', name: '信息采集流水线', status: 'DAILY DRIVER', desc: 'BuilderPulse 中英热点池 git 自动拉取 + 邮件附件抓取 + 社媒内容采集归档，输入端全自动。' },
+  { icon: '🧪', name: 'Vibe Coding 原型术', status: 'DAILY DRIVER', desc: '单文件 HTML 高保真：20+ 可交互原型 + 看板 + 蓝图，"业务看得见、研发抄得走、老板拍得了板"。' },
+];
+
+// Hacker News AI 信号 · 抓取于 2026-06-11
+const hnSignals = [
+  { pts: '1113', title: 'HTML-first 建站让用户一夜翻倍——单文件哲学的胜利', url: 'https://mohkohn.co.uk/writing/html-first/' },
+  { pts: '416', title: '安全研究员 vs Anthropic Fable 护栏之争', url: 'https://techcrunch.com/2026/06/10/cybersecurity-researchers-arent-happy-about-the-guardrails-on-anthropics-fable/' },
+  { pts: '398', title: 'Anthropic 为 Fable / Mythos 引入 30 天数据保留', url: 'https://support.claude.com/en/articles/15425996-data-retention-practices-for-mythos' },
+  { pts: '371', title: 'AI Agent 在 Fedora 社区"跑飞"事件——Agent 权限边界大讨论', url: 'https://lwn.net/SubscriberLink/1077035/c7e7c14fbd60fae9/' },
+  { pts: '450', title: 'PgDog 获融资：Postgres 分片代理（pgvector 玩家必关注）', url: 'https://pgdog.dev/blog/our-funding-announcement' },
+  { pts: '212', title: 'Apache Burr：构建可靠 AI Agent 的状态机框架', url: 'https://burr.apache.org/' },
+  { pts: '120', title: 'HelixDB：建在对象存储上的图数据库——知识图谱新基建', url: 'https://github.com/HelixDB/helix-db' },
+];
+
+// 装备索引 · 查工具翻 Awesome，查 SOTA 上 Papers with Code
+const gearIndex = [
+  { name: 'awesome-ai-agents', url: 'https://github.com/e2b-dev/awesome-ai-agents' },
+  { name: 'awesome-llm-apps', url: 'https://github.com/Shubhamsaboo/awesome-llm-apps' },
+  { name: 'awesome-mcp-servers', url: 'https://github.com/punkpeye/awesome-mcp-servers' },
+  { name: 'awesome-claude-code', url: 'https://github.com/hesreallyhim/awesome-claude-code' },
+  { name: 'Papers with Code · SOTA', url: 'https://paperswithcode.com/sota' },
+  { name: 'HuggingFace Trending', url: 'https://huggingface.co/models?sort=trending' },
+];
+
+// GitHub Trending (weekly) · 抓取于 2026-06-11 · 跑 scripts/update-trending 可刷新
+const geekTrending = [
+  { repo: 'affaan-m/ECC', stars: '213k', desc: 'Agent harness 性能优化系统：Skills、instincts、memory、security 一体' },
+  { repo: 'NousResearch/hermes-agent', stars: '190k', desc: 'The agent that grows with you——会成长的个人 Agent' },
+  { repo: 'microsoft/markitdown', stars: '151k', desc: '万物 → Markdown，LLM 数据入口的事实标准' },
+  { repo: 'Leonxlnx/taste-skill', stars: '41k', desc: '给 AI 注入品味，拒绝 generic slop——Skill 工程的审美层' },
+  { repo: 'mvanhorn/last30days-skill', stars: '39k', desc: '跨 Reddit/X/YouTube/HN 的全网调研 Agent Skill' },
+  { repo: 'CopilotKit/CopilotKit', stars: '35k', desc: 'Agent & 生成式 UI 的前端栈——人机协作界面范式' },
+  { repo: 'lfnovo/open-notebook', stars: '29k', desc: '开源版 NotebookLM——知识库问答的开放实现' },
+  { repo: 'Panniantong/Agent-Reach', stars: '26k', desc: '给 Agent 装上看互联网的眼睛：读取与搜索全网社媒' },
+  { repo: 'chopratejas/headroom', stars: '22k', desc: '工具输出/RAG 块进 LLM 前压缩 60-95% token——上下文工程' },
+  { repo: 'EveryInc/compound-engineering-plugin', stars: '21k', desc: 'Compound Engineering：让每次 AI 协作沉淀为复利' },
+  { repo: 'phuryn/pm-skills', stars: '16k', desc: 'PM Skills 市场：100+ 产品经理 agentic skills——AI PM 的弹药库' },
+  { repo: 'revfactory/harness', stars: '7k', desc: '元 Skill：自动设计领域专属 Agent 团队' },
+];
+
 const courses = [
   'AI 产研工作流',
   '模型训练原理',
@@ -461,11 +517,75 @@ const courses = [
     </div>
   </section>
 
-  <!-- ════════════ CH.08 · 信号塔（写作）════════════ -->
+
+  <!-- ════════════ CH.08 · 极客雷达 ════════════ -->
+  <section class="chapter" id="geek">
+    <div class="wrap">
+      <div class="chapter-head reveal">
+        <div class="ch-no"><em>CHAPTER 08</em> GEEK RADAR</div>
+        <h2>极客雷达 · 前沿装备库</h2>
+        <div class="ch-sub">
+          不追概念。以下 15 项能力全部<strong style="color:#fff">在真实工作流里跑着</strong>，每一项都有可验证的产物——
+          包括你正在看的这个网站本身。
+        </div>
+      </div>
+
+      <div class="grid-3" data-stagger>
+        {geekGear.map((g) => (
+          <div class="card method-card">
+            <div style="display:flex;justify-content:space-between;align-items:baseline">
+              <h3 style="margin:0">{g.icon} {g.name}</h3>
+              <span class="geek-status">{g.status}</span>
+            </div>
+            <p style="margin-top:10px">{g.desc}</p>
+          </div>
+        ))}
+      </div>
+
+      <div style="margin-top:48px" class="reveal">
+        <h3 style="font-family:var(--serif);font-size:21px;color:#fff;margin-bottom:6px">📡 雷达扫描 · GitHub Trending 实时追踪</h3>
+        <p style="font-size:13.5px;color:var(--ink3);font-family:var(--mono);margin-bottom:18px">WEEKLY TRENDING · CAPTURED 2026-06-11 · AGENT ECOSYSTEM</p>
+        <div class="trend-grid">
+          {geekTrending.map((t) => (
+            <a class="trend-row" href={`https://github.com/${t.repo}`} target="_blank" rel="noopener">
+              <span class="tr-repo">{t.repo}</span>
+              <span class="tr-stars">⭐ {t.stars}</span>
+              <span class="tr-desc">{t.desc}</span>
+            </a>
+          ))}
+        </div>
+
+        <h3 style="font-family:var(--serif);font-size:21px;color:#fff;margin:44px 0 6px">🛰 Hacker News · 本日 AI 信号</h3>
+        <p style="font-size:13.5px;color:var(--ink3);font-family:var(--mono);margin-bottom:18px">FRONT PAGE SIGNALS · CAPTURED 2026-06-11</p>
+        <div class="trend-grid">
+          {hnSignals.map((h) => (
+            <a class="trend-row" href={h.url} target="_blank" rel="noopener">
+              <span class="tr-stars">▲ {h.pts}</span>
+              <span class="tr-desc" style="grid-column:2/-1;color:var(--ink)">{h.title}</span>
+            </a>
+          ))}
+        </div>
+
+        <div style="margin-top:40px">
+          <span style="font-family:var(--mono);font-size:12px;color:var(--ink3);letter-spacing:.15em">装备索引 · 查工具翻 AWESOME，查 SOTA 上 PAPERS WITH CODE →</span>
+          <div class="t-chips" style="margin-top:14px">
+            {gearIndex.map((g) => (
+              <a class="chip green" href={g.url} target="_blank" rel="noopener">{g.name} ↗</a>
+            ))}
+          </div>
+          <p style="font-size:13px;color:var(--ink3);margin-top:16px;font-style:italic">
+            信息输入也是工程：每周扫 Trending、每日刷 HN、按需翻 Awesome、对照 SOTA——雷达常开，不靠二手转述。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ CH.09 · 信号塔（写作）════════════ -->
   <section class="chapter" id="signal">
     <div class="wrap">
       <div class="chapter-head reveal">
-        <div class="ch-no"><em>CHAPTER 08</em> SIGNAL TOWER</div>
+        <div class="ch-no"><em>CHAPTER 09</em> SIGNAL TOWER</div>
         <h2>信号塔 · Building in Public</h2>
         <div class="ch-sub">
           「人人都是产品经理」专栏作者 · 飞书开发者大会受邀嘉宾。
