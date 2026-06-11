@@ -30,6 +30,13 @@ const {
     <meta property="og:type" content="website" />
     <meta name="theme-color" content="#030412" />
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>" />
+    <script is:inline>
+      // 防闪烁：渲染前应用已保存主题
+      (function () {
+        var t = localStorage.getItem('mfj-theme') || 'cosmos';
+        document.documentElement.setAttribute('data-theme', t);
+      })();
+    </script>
   </head>
   <body>
     <div id="voyage-progress"></div>
@@ -81,7 +88,39 @@ const {
       </div>
     </footer>
 
+    <button class="theme-fab" id="theme-fab" title="切换主题" aria-label="切换主题">🎨</button>
+    <div class="theme-panel" id="theme-panel">
+      <div class="tp-title">THEME · 选一种你喜欢的</div>
+      <button class="theme-opt" data-t="cosmos"><span class="sw"><i style="background:#030412"></i><i style="background:#7dd3fc"></i><i style="background:#a78bfa"></i></span>🌌 星辰大海</button>
+      <button class="theme-opt" data-t="paper"><span class="sw"><i style="background:#F5F2EA"></i><i style="background:#172441"></i><i style="background:#DD512B"></i></span>📜 宣纸编辑部</button>
+      <button class="theme-opt" data-t="klein"><span class="sw"><i style="background:#002FA7"></i><i style="background:#fff"></i><i style="background:#ffe14d"></i></span>🔵 克莱因蓝</button>
+      <button class="theme-opt" data-t="terminal"><span class="sw"><i style="background:#030806"></i><i style="background:#34ff88"></i><i style="background:#ffe14d"></i></span>🟢 终端绿磷</button>
+      <button class="theme-opt" data-t="snow"><span class="sw"><i style="background:#FAFAF8"></i><i style="background:#18181b"></i><i style="background:#1d4ed8"></i></span>⬜️ 月白极简</button>
+    </div>
+
     <script>
+      // 主题切换器
+      const fab = document.getElementById('theme-fab')!;
+      const panel = document.getElementById('theme-panel')!;
+      const themeOpts = panel.querySelectorAll<HTMLButtonElement>('.theme-opt');
+      function markActive() {
+        const cur = document.documentElement.getAttribute('data-theme') || 'cosmos';
+        themeOpts.forEach((o) => o.classList.toggle('active', o.dataset.t === cur));
+      }
+      markActive();
+      fab.addEventListener('click', (e) => { e.stopPropagation(); panel.classList.toggle('open'); });
+      document.addEventListener('click', (e) => {
+        if (!panel.contains(e.target as Node)) panel.classList.remove('open');
+      });
+      themeOpts.forEach((o) =>
+        o.addEventListener('click', () => {
+          const t = o.dataset.t!;
+          document.documentElement.setAttribute('data-theme', t);
+          localStorage.setItem('mfj-theme', t);
+          markActive();
+        })
+      );
+
       // 滚动入场
       const io = new IntersectionObserver(
         (entries) => entries.forEach((e) => e.isIntersecting && e.target.classList.add('in')),
