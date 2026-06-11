@@ -1,0 +1,3262 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TripFlow · 47 意图旅程图谱</title>
+<style>
+:root {
+  --bg-1: #FFFFFF;
+  --bg-2: #F7F7F5;
+  --bg-3: #F0EFEB;
+  --text-1: #1A1A1A;
+  --text-2: #5F5E5A;
+  --text-3: #888780;
+  --border-1: rgba(0,0,0,0.08);
+  --border-2: rgba(0,0,0,0.15);
+
+  --info-bg: #E6F1FB; --info-text: #0C447C; --info-border: #B5D4F4;
+  --success-bg: #EAF3DE; --success-text: #27500A; --success-border: #C0DD97;
+  --warning-bg: #FAEEDA; --warning-text: #633806; --warning-border: #FAC775;
+  --danger-bg: #FCEBEB; --danger-text: #791F1F; --danger-border: #F09595;
+
+  --d1: #D85A30; --d1-bg: #FAECE7; --d1-text: #712B13;
+  --d2: #7F77DD; --d2-bg: #EEEDFE; --d2-text: #3C3489;
+  --d3: #1D9E75; --d3-bg: #E1F5EE; --d3-text: #085041;
+  --d4: #BA7517; --d4-bg: #FAEEDA; --d4-text: #633806;
+  --d5: #378ADD; --d5-bg: #E6F1FB; --d5-text: #0C447C;
+  --d6: #D4537E; --d6-bg: #FBEAF0; --d6-text: #72243E;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", Menlo, monospace;
+
+  --r-sm: 6px; --r-md: 8px; --r-lg: 12px;
+}
+
+[data-theme="dark"] {
+  --bg-1: #0A0A0A; --bg-2: #161616; --bg-3: #1F1F1F;
+  --text-1: #EFEFEC; --text-2: #9C9A92; --text-3: #6B6A65;
+  --border-1: rgba(255,255,255,0.08);
+  --border-2: rgba(255,255,255,0.15);
+
+  --info-bg: #042C53; --info-text: #B5D4F4; --info-border: #185FA5;
+  --success-bg: #173404; --success-text: #C0DD97; --success-border: #3B6D11;
+  --warning-bg: #412402; --warning-text: #FAC775; --warning-border: #854F0B;
+  --danger-bg: #501313; --danger-text: #F7C1C1; --danger-border: #A32D2D;
+
+  --d1-bg: #4A1B0C; --d1-text: #F5C4B3;
+  --d2-bg: #26215C; --d2-text: #CECBF6;
+  --d3-bg: #04342C; --d3-text: #9FE1CB;
+  --d4-bg: #412402; --d4-text: #FAC775;
+  --d5-bg: #042C53; --d5-text: #B5D4F4;
+  --d6-bg: #4B1528; --d6-text: #F4C0D1;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg-2);
+  color: var(--text-1);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+/* ─── layout ─── */
+.layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
+}
+
+.sidebar {
+  background: var(--bg-1);
+  border-right: 0.5px solid var(--border-1);
+  padding: 18px 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.sidebar-header {
+  padding: 0 20px 14px;
+  border-bottom: 0.5px solid var(--border-1);
+  margin-bottom: 12px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.brand-mark {
+  width: 22px; height: 22px;
+  border-radius: 5px;
+  background: var(--text-1);
+  color: var(--bg-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 500;
+}
+.brand-name { font-size: 14px; font-weight: 500; }
+.brand-sub { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+
+.theme-toggle {
+  margin-top: 10px;
+  font-size: 11px;
+  padding: 3px 9px;
+  border: 0.5px solid var(--border-1);
+  background: transparent;
+  color: var(--text-2);
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.theme-toggle:hover { background: var(--bg-2); }
+
+.nav-group { padding: 0 8px 14px; }
+.nav-title {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-3);
+  padding: 6px 12px;
+  font-weight: 500;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  font-size: 12px;
+  color: var(--text-2);
+  text-decoration: none;
+  border-radius: 4px;
+  margin: 1px 0;
+}
+.nav-item:hover { background: var(--bg-2); color: var(--text-1); }
+.nav-item .nav-id {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-3);
+  flex-shrink: 0;
+  width: 32px;
+}
+.nav-item .nav-tag {
+  font-size: 9px;
+  margin-left: auto;
+  padding: 1px 5px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.tag-p0  { background: var(--d3-bg); color: var(--d3-text); }
+.tag-p1  { background: var(--info-bg); color: var(--info-text); }
+.tag-p2  { background: var(--bg-3); color: var(--text-3); }
+.tag-new { background: var(--warning-bg); color: var(--warning-text); }
+.tag-mrg { background: var(--bg-3); color: var(--text-3); }
+.tag-emb { background: var(--bg-3); color: var(--text-3); }
+.tag-inf { background: var(--bg-3); color: var(--text-3); }
+
+.main {
+  max-width: 1080px;
+  padding: 36px 48px 80px;
+  margin: 0 auto;
+}
+
+/* ─── typography ─── */
+h1 { font-size: 28px; font-weight: 500; margin: 0 0 12px; line-height: 1.25; letter-spacing: -0.3px; }
+h2 { font-size: 22px; font-weight: 500; margin: 48px 0 14px; line-height: 1.3; letter-spacing: -0.2px; }
+h3 { font-size: 18px; font-weight: 500; margin: 28px 0 10px; line-height: 1.35; }
+h4 { font-size: 14px; font-weight: 500; margin: 16px 0 8px; }
+p { margin: 0 0 12px; color: var(--text-1); }
+a { color: var(--info-text); text-decoration: none; }
+a:hover { text-decoration: underline; }
+code {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  padding: 1px 5px;
+  background: var(--bg-3);
+  border-radius: 3px;
+}
+
+.lead {
+  font-size: 16px;
+  color: var(--text-2);
+  line-height: 1.65;
+  margin: 0 0 24px;
+}
+
+/* ─── domain head ─── */
+.domain-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-radius: var(--r-lg);
+  margin: 56px 0 18px;
+}
+.domain-head .dot {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+.domain-head .domain-id {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+}
+.domain-head .domain-name {
+  font-size: 18px;
+  font-weight: 500;
+}
+.domain-head .domain-meta {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--text-2);
+}
+.dh-d1 { background: var(--d1-bg); color: var(--d1-text); }
+.dh-d1 .dot { background: var(--d1); }
+.dh-d2 { background: var(--d2-bg); color: var(--d2-text); }
+.dh-d2 .dot { background: var(--d2); }
+.dh-d3 { background: var(--d3-bg); color: var(--d3-text); }
+.dh-d3 .dot { background: var(--d3); }
+.dh-d4 { background: var(--d4-bg); color: var(--d4-text); }
+.dh-d4 .dot { background: var(--d4); }
+.dh-d5 { background: var(--d5-bg); color: var(--d5-text); }
+.dh-d5 .dot { background: var(--d5); }
+.dh-d6 { background: var(--d6-bg); color: var(--d6-text); }
+.dh-d6 .dot { background: var(--d6); }
+
+/* ─── intent card (the main unit) ─── */
+.intent {
+  background: var(--bg-1);
+  border: 0.5px solid var(--border-1);
+  border-radius: var(--r-lg);
+  padding: 24px 28px;
+  margin: 18px 0;
+  scroll-margin-top: 20px;
+}
+.intent-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+.intent-head .iid {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-3);
+  font-weight: 500;
+}
+.intent-head h3 { margin: 0; font-size: 18px; }
+.intent-head .badge {
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 3px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+.bd-p0  { background: var(--d3-bg); color: var(--d3-text); }
+.bd-p1  { background: var(--info-bg); color: var(--info-text); }
+.bd-p2  { background: var(--bg-3); color: var(--text-3); }
+.bd-new { background: var(--warning-bg); color: var(--warning-text); }
+.bd-mrg { background: var(--bg-3); color: var(--text-3); }
+.bd-emb { background: var(--bg-3); color: var(--text-3); }
+.bd-inf { background: var(--bg-3); color: var(--text-3); }
+.bd-dom { background: var(--bg-3); color: var(--text-3); }
+
+.intent-quote {
+  font-size: 14px;
+  color: var(--text-2);
+  font-style: normal;
+  border-left: 2px solid var(--border-1);
+  padding: 4px 0 4px 12px;
+  margin: 14px 0 18px;
+}
+.intent-quote::before { content: '运营会这么说: '; color: var(--text-3); font-size: 11px; }
+.intent-quote em {
+  font-style: normal;
+  color: var(--text-1);
+}
+
+.note {
+  background: var(--bg-2);
+  border-radius: var(--r-md);
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.6;
+  margin: 12px 0 18px;
+}
+.note-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-3);
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+/* ─── 3-column journey timeline ─── */
+.journey {
+  display: grid;
+  grid-template-columns: 36px 1fr 1.3fr 1fr;
+  gap: 0;
+  margin: 18px 0 8px;
+  border: 0.5px solid var(--border-1);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+.journey-head {
+  display: contents;
+}
+.journey-head > div {
+  background: var(--bg-2);
+  padding: 8px 12px;
+  font-size: 11px;
+  color: var(--text-3);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 0.5px solid var(--border-1);
+}
+.journey-row {
+  display: contents;
+}
+.journey-row > div {
+  padding: 14px 14px;
+  border-bottom: 0.5px solid var(--border-1);
+  font-size: 13px;
+  line-height: 1.55;
+  background: var(--bg-1);
+}
+.journey-row:last-child > div { border-bottom: none; }
+
+.j-step {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-3);
+  text-align: center;
+  background: var(--bg-2) !important;
+}
+.j-user { color: var(--text-1); }
+.j-agent {
+  background: var(--bg-2) !important;
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+.j-ui { color: var(--text-2); font-size: 12px; }
+
+.j-agent code,
+.j-ui code {
+  background: var(--bg-1);
+  border: 0.5px solid var(--border-1);
+  font-size: 10.5px;
+}
+.tool-call {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  margin: 2px 4px 2px 0;
+}
+.tc-d1 { background: var(--d1-bg); color: var(--d1-text); }
+.tc-d2 { background: var(--d2-bg); color: var(--d2-text); }
+.tc-d3 { background: var(--d3-bg); color: var(--d3-text); }
+.tc-d4 { background: var(--d4-bg); color: var(--d4-text); }
+.tc-d5 { background: var(--d5-bg); color: var(--d5-text); }
+.tc-d6 { background: var(--d6-bg); color: var(--d6-text); }
+.tc-mem { background: var(--bg-3); color: var(--text-2); }
+.tc-llm { background: var(--info-bg); color: var(--info-text); }
+
+/* mini frontend mock */
+.mock {
+  border: 0.5px solid var(--border-1);
+  border-radius: var(--r-md);
+  background: var(--bg-1);
+  padding: 8px 10px;
+  font-size: 11.5px;
+  color: var(--text-1);
+  line-height: 1.5;
+  margin: 4px 0;
+}
+.mock-head {
+  font-size: 10px;
+  color: var(--text-3);
+  margin-bottom: 4px;
+  letter-spacing: 0.3px;
+}
+.mock .row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 0;
+}
+.mock .pill {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  background: var(--bg-3);
+  color: var(--text-2);
+}
+.mock .pill-info { background: var(--info-bg); color: var(--info-text); }
+.mock .pill-warn { background: var(--warning-bg); color: var(--warning-text); }
+.mock .pill-ok   { background: var(--success-bg); color: var(--success-text); }
+.mock .pill-d1   { background: var(--d1-bg); color: var(--d1-text); }
+.mock .pill-d2   { background: var(--d2-bg); color: var(--d2-text); }
+.mock .pill-d3   { background: var(--d3-bg); color: var(--d3-text); }
+.mock .pill-d4   { background: var(--d4-bg); color: var(--d4-text); }
+.mock .pill-d5   { background: var(--d5-bg); color: var(--d5-text); }
+.mock .pill-d6   { background: var(--d6-bg); color: var(--d6-text); }
+.mock .btn {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--text-1);
+  color: var(--bg-1);
+  font-size: 10px;
+  font-weight: 500;
+}
+.mock .btn-secondary {
+  background: transparent;
+  border: 0.5px solid var(--border-1);
+  color: var(--text-1);
+}
+.mock .meta {
+  color: var(--text-3);
+  font-size: 10px;
+}
+
+/* skill / know-how table */
+.know-how {
+  background: var(--bg-2);
+  border-radius: var(--r-md);
+  padding: 14px 16px;
+  margin: 16px 0;
+}
+.know-how .label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-3);
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+.know-how ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+  color: var(--text-1);
+}
+.know-how li { margin: 4px 0; line-height: 1.55; }
+.know-how li::marker { color: var(--text-3); }
+
+/* short intent (for non-P0) */
+.short-intent {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 16px;
+  padding: 16px 20px;
+  border: 0.5px solid var(--border-1);
+  border-radius: var(--r-md);
+  margin: 10px 0;
+  background: var(--bg-1);
+}
+.short-intent .si-id {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-2);
+}
+.short-intent h4 {
+  margin: 0 0 6px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.short-intent p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.55;
+}
+
+/* TOC overview */
+.toc-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 24px 0;
+}
+.toc-card {
+  background: var(--bg-1);
+  border: 0.5px solid var(--border-1);
+  border-radius: var(--r-md);
+  padding: 14px 16px;
+}
+.toc-card .toc-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.toc-card .toc-id {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-3);
+}
+.toc-card .toc-name {
+  font-size: 14px;
+  font-weight: 500;
+}
+.toc-card .toc-stats {
+  font-size: 11px;
+  color: var(--text-3);
+  margin-left: auto;
+}
+.toc-card .toc-list {
+  font-size: 12px;
+  color: var(--text-2);
+  line-height: 1.55;
+}
+.toc-card .toc-list a {
+  color: var(--text-2);
+  border-bottom: 0.5px dotted var(--border-2);
+}
+.toc-card .toc-list a:hover {
+  color: var(--text-1);
+  border-bottom-color: var(--text-2);
+  text-decoration: none;
+}
+
+/* legend */
+.legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 16px 0 24px;
+  padding: 12px 16px;
+  background: var(--bg-1);
+  border: 0.5px solid var(--border-1);
+  border-radius: var(--r-md);
+  font-size: 12px;
+  color: var(--text-2);
+}
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.legend-item .swatch {
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 3px;
+}
+
+/* divider */
+hr {
+  border: none;
+  border-top: 0.5px solid var(--border-1);
+  margin: 32px 0;
+}
+
+/* footer note */
+.foot-note {
+  margin-top: 64px;
+  padding-top: 24px;
+  border-top: 0.5px solid var(--border-1);
+  font-size: 12px;
+  color: var(--text-3);
+}
+
+/* responsive */
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { position: static; height: auto; }
+  .main { padding: 24px 20px; }
+  .journey { grid-template-columns: 1fr; }
+  .journey-head { display: none; }
+  .journey-row > div { border: none; padding: 8px 14px; }
+  .journey-row > .j-step { background: var(--bg-2) !important; padding: 10px 14px; font-weight: 500; }
+  .toc-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="brand">
+      <div class="brand-mark">T</div>
+      <div>
+        <div class="brand-name">TripFlow</div>
+        <div class="brand-sub">47 意图旅程图谱</div>
+      </div>
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()">切换深色 ⏎</button>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-title">总览</div>
+    <a class="nav-item" href="#overview"><span class="nav-id">—</span>怎么读这份文档</a>
+    <a class="nav-item" href="#legend"><span class="nav-id">—</span>图例 / P0 清单</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-title">D1 · 爆款抓取</div>
+    <a class="nav-item" href="#i1-1"><span class="nav-id">I1.1</span>抓取列表<span class="nav-tag tag-p2">简化</span></a>
+    <a class="nav-item" href="#i1-2"><span class="nav-id">I1.2</span>仿写候选<span class="nav-tag tag-p0">P0</span></a>
+    <a class="nav-item" href="#i1-3"><span class="nav-id">I1.3</span>趋势聚类<span class="nav-tag tag-p2">降级</span></a>
+    <a class="nav-item" href="#i1-4"><span class="nav-id">I1.4</span>博主扫描<span class="nav-tag tag-p1">P1</span></a>
+    <a class="nav-item" href="#i1-5"><span class="nav-id">I1.5</span>钩子库<span class="nav-tag tag-emb">嵌入</span></a>
+    <a class="nav-item" href="#i1-6"><span class="nav-id">I1.6</span>单条归因<span class="nav-tag tag-p0">P0</span></a>
+    <a class="nav-item" href="#i1-7"><span class="nav-id">I1.7</span>批量打标<span class="nav-tag tag-inf">基建</span></a>
+    <a class="nav-item" href="#i1-8"><span class="nav-id">I1.8</span>同行查重<span class="nav-tag tag-new">新</span></a>
+    <a class="nav-item" href="#i1-9"><span class="nav-id">I1.9</span>榜单告警<span class="nav-tag tag-new">新</span></a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-title">D2 · 选题洞察</div>
+    <a class="nav-item" href="#i2-1"><span class="nav-id">I2.1</span>本周可做<span class="nav-tag tag-p0">P0</span></a>
+    <a class="nav-item" href="#i2-2"><span class="nav-id">I2.2</span>上升关键词<span class="nav-tag tag-p1">调整</span></a>
+    <a class="nav-item" href="#i2-3"><span class="nav-id">I2.3</span>博主选题<span class="nav-tag tag-mrg">合并</span></a>
+    <a class="nav-item" href="#i2-4"><span class="nav-id">I2.4</span>营销日历<span class="nav-tag tag-p1">调整</span></a>
+    <a class="nav-item" href="#i2-5"><span class="nav-id">I2.5</span>选题查重<span class="nav-tag tag-p0">P0</span></a>
+    <a class="nav-item" href="#i2-6"><span class="nav-id">I2.6</span>本地化迁移<span class="nav-tag tag-mrg">合并</span></a>
+    <a class="nav-item" href="#i2-7"><span class="nav-id">I2.7</span>跨业务迁移<span class="nav-tag tag-p1">P1</span></a>
+    <a class="nav-item" href="#i2-8"><span class="nav-id">I2.8</span>矩阵规划<span class="nav-tag tag-new">新</span></a>
+    <a class="nav-item" href="#i2-9"><span class="nav-id">I2.9</span>进度跟踪<span class="nav-tag tag-new">新</span></a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-title">D3 · 脚本创作</div>
+    <a class="nav-item" href="#i3-1"><span class="nav-id">I3.1</span>完整写脚本<span class="nav-tag tag-p2">降级</span></a>
+    <a class="nav-item" href="#i3-2"><span class="nav-id">I3.2</span>仿写本地化<span class="nav-tag tag-p0">P0</span></a>
+    <a class="nav-item" href="#i3-3"><span class="nav-id">I3.3</span>局部迭代<span class="nav-tag tag-p0">P0</span></a>
+    <a class="nav-item" href="#i3-4"><span class="nav-id">I3.4</span>多钩子候选<span class="nav-tag tag-emb">自动化</span></a>
+    <a class="nav-item" href="#i3-5"><span class="nav-id">I3.5</span>口语转脚本<span class="nav-tag tag-p2">P2</span></a>
+    <a class="nav-item" href="#i3-6"><span class="nav-id">I3.6</span>脚本预审<span class="nav-tag tag-inf">基建</span></a>
+    <a class="nav-item" href="#i3-7"><span class="nav-id">I3.7</span>多账号风格<span class="nav-tag tag-p1">P1</span></a>
+    <a class="nav-item" href="#i3-8"><span class="nav-id">I3.8</span>脚本 A/B<span class="nav-tag tag-new">新</span></a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-title">D4 · 素材管理</div>
+    <a class="nav-item" href="#i4-1"><span class="nav-id">I4.1</span>脚本召回<span class="nav-tag tag-p0">P0</span></a>
+    <a class="nav-item" href="#i4-2"><span class="nav-id">I4.2</span>语义搜索<span class="nav-tag tag-p1">调整</span></a>
+    <a class="nav-item" href="#i4-3"><span class="nav-id">I4.3</span>缺口检测<span class="nav-tag tag-p0">P0</span></a>
+    <a class="nav-item" href="#i4-4"><span class="nav-id">I4.4</span>入库打标<span class="nav-tag tag-p1">P1</span></a>
+    <a class="nav-item" href="#i4-5"><span class="nav-id">I4.5</span>相似召回<span class="nav-tag tag-emb">嵌入</span></a>
+    <a class="nav-item" href="#i4-6"><span class="nav-id">I4.6</span>入库归类<span class="nav-tag tag-mrg">合并</span></a>
+    <a class="nav-item" href="#i4-7"><span class="nav-id">I4.7</span>素材盘点<span class="nav-tag tag-new">新</span></a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-title">D5 · 剪辑生产</div>
+    <a class="nav-item" href="#i5-1"><span class="nav-id">I5.1</span>智能粗剪<span class="nav-tag tag-p0">P0</span></a>
+    <a class="nav-item" href="#i5-2"><span class="nav-id">I5.2</span>加字幕<span class="nav-tag tag-p0">P0</span></a>
+    <a class="nav-item" href="#i5-3"><span class="nav-id">I5.3</span>TTS 配音<span class="nav-tag tag-p1">P1</span></a>
+    <a class="nav-item" href="#i5-4"><span class="nav-id">I5.4</span>封面候选<span class="nav-tag tag-p0">P0</span></a>
+    <a class="nav-item" href="#i5-5"><span class="nav-id">I5.5</span>多比例<span class="nav-tag tag-p1">P1</span></a>
+    <a class="nav-item" href="#i5-6"><span class="nav-id">I5.6</span>节奏优化<span class="nav-tag tag-p2">P2</span></a>
+    <a class="nav-item" href="#i5-7"><span class="nav-id">I5.7</span>模板复用<span class="nav-tag tag-new">新</span></a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-title">D6 · 审核发布</div>
+    <a class="nav-item" href="#i6-1"><span class="nav-id">I6.1</span>合规审<span class="nav-tag tag-p0">P0</span></a>
+    <a class="nav-item" href="#i6-2"><span class="nav-id">I6.2</span>一键多平台<span class="nav-tag tag-p0">P0</span></a>
+    <a class="nav-item" href="#i6-3"><span class="nav-id">I6.3</span>差异化文案<span class="nav-tag tag-p0">P0</span></a>
+    <a class="nav-item" href="#i6-4"><span class="nav-id">I6.4</span>最佳时机<span class="nav-tag tag-p1">P1</span></a>
+    <a class="nav-item" href="#i6-5"><span class="nav-id">I6.5</span>数据回流<span class="nav-tag tag-inf">基建</span></a>
+    <a class="nav-item" href="#i6-6"><span class="nav-id">I6.6</span>最后撤回<span class="nav-tag tag-new">新</span></a>
+    <a class="nav-item" href="#i6-7"><span class="nav-id">I6.7</span>本周盘点<span class="nav-tag tag-new">新</span></a>
+  </div>
+</aside>
+
+<main class="main">
+
+<h1 id="overview">TripFlow · 47 意图旅程图谱</h1>
+<p class="lead">把 <a href="#"><b>38 意图深度审视</b></a> 报告里的每个意图,落到三栏对照:用户在做什么 / Agent 在替你做什么 / 前端长什么样。重点画 14 个 P0,其他意图按结论(嵌入 / 合并 / 基建 / 新增)简短交代它落到哪、怎么不打扰运营。</p>
+
+<div class="legend" id="legend">
+  <div class="legend-item"><span class="swatch bd-p0">P0</span>MVP 必做 · 14 个</div>
+  <div class="legend-item"><span class="swatch bd-p1">P1</span>第二批 · 重要不紧急</div>
+  <div class="legend-item"><span class="swatch bd-p2">P2</span>降级 / 长尾</div>
+  <div class="legend-item"><span class="swatch bd-new">新</span>新增建议 · 9 个</div>
+  <div class="legend-item"><span class="swatch bd-mrg">合并</span>并入主意图</div>
+  <div class="legend-item"><span class="swatch bd-emb">嵌入</span>作为内嵌行为</div>
+  <div class="legend-item"><span class="swatch bd-inf">基建</span>后台 CRON · 不感知</div>
+</div>
+
+<h3 style="margin-top:24px">每章三栏怎么读</h3>
+<div class="journey" style="margin-bottom:24px">
+  <div class="journey-head">
+    <div>步</div>
+    <div>用户做什么</div>
+    <div>Agent 在替你做什么</div>
+    <div>前端长什么样</div>
+  </div>
+  <div class="journey-row">
+    <div class="j-step">1</div>
+    <div class="j-user">真实场景下用户的动作 / 想法 / 输入(运营视角原话)</div>
+    <div class="j-agent">Agent 调用了哪些工具(域色 chip)、做了什么判断、何时主动 push、何时等待</div>
+    <div class="j-ui">这一步在前端呈现成什么(组件 + 内容 + 状态)</div>
+  </div>
+</div>
+
+<p class="lead" style="font-size:14px;color:var(--text-3)">读法:把第二栏当成 <code>Cursor</code> 风格的"看 Agent 工作",第三栏当成具体 mockup,合起来就是这个意图的完整产品逻辑。开发拿这一份能写 SKILL prompt + 前端组件;运营拿这一份能挑战"我真的会这样工作吗"。</p>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- ════════════════════ D1 · 爆款抓取 ═══════════════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+
+<div class="domain-head dh-d1">
+  <span class="dot"></span>
+  <span class="domain-id">D1</span>
+  <span class="domain-name">爆款抓取域</span>
+  <span class="domain-meta">9 意图(原 7 + 新 2) · P0 × 2 / P1 × 2 / 嵌入 1 / 基建 1 / 简化 1 / 降级 1 / 新增 2</span>
+</div>
+
+<p class="lead">域定位:每天打开就有"今天值得做的爆款"。运营不是来浏览榜单,是来挑明天能做的。</p>
+
+<!-- ───── I1.1 ───── -->
+<div class="intent" id="i1-1">
+  <div class="intent-head">
+    <span class="iid">I1.1</span>
+    <h3>按时间+业务线抓取</h3>
+    <span class="badge bd-p2">简化 · 去自然语言入口</span>
+    <span class="badge bd-dom">D1</span>
+  </div>
+  <div class="intent-quote">扫一眼今天榜上有什么(<em>不会真说"最近 7 天意铁的爆款"</em>)</div>
+
+  <div class="note">
+    <div class="note-label">体检结论</div>
+    保留意图,但去掉自然语言入口。打开 D1 默认就是"业务线 + 7 天 + viralScore 排序",运营要调的是<b>过滤器</b>(时间窗 / 分数下限 / 国家),不是"输 query"。"我用自然语言抓榜单"是 PM 的浪漫想象。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">⏰ 早上 9:30 打开 TripFlow,直奔 D1。</div>
+      <div class="j-agent">02:00 已经 CRON 抓完 <span class="tool-call tc-d1">D1·get_viral_videos</span>;打开页面只是取缓存渲染,几乎瞬开。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">D1 主页 · 默认筛选</div>意铁 · 7d · viralScore↓<br><span class="meta">142 条 · 跨 12 国 · 已为你折叠 38 条熟脸</span></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">👁 扫前 20 条卡片,5 秒一条,快速过。</div>
+      <div class="j-agent">学习用户停留行为(哪些卡 hover ≥ 3s),写入 <span class="tool-call tc-mem">mem·user_attention</span>,下次排序权重微调。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">9 卡网格</div><div class="row"><span class="pill pill-info">q 8.7</span><span class="pill pill-d1">意铁</span> 阿尔卑斯卧铺</div><div class="row"><span class="pill">q 7.6</span><span class="pill pill-d1">意铁</span> 米兰中央站</div><div class="row meta">5 秒一卡 · 滚轮自然下翻</div></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">🎯 看到陌生博主 + viralScore 突高 → hover 看封面和钩子。</div>
+      <div class="j-agent">hover ≥ 1s 时悄悄预加载 <span class="tool-call tc-d1">D1·get_attribution</span>(为下一步归因预热)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">卡片 hover 态</div><div class="row meta">@unknown_creator · 24h ↑3.2x · 第一次出现</div><div class="row"><span class="pill pill-info">仿写</span><span class="pill">归因</span><span class="pill">同行有抄过吗</span></div></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">4</div>
+      <div class="j-user">❌ 看完 20 条没眼前一亮 → 改时间窗到 3 天 / 调高分数阈值。</div>
+      <div class="j-agent">监测到"第 1 屏没采纳",自动建议下一步动作,降低空滑动概率。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">底部 Agent 提示</div>没看到合心意的?<br><span class="meta">试 3 天窗 · 看英铁同期 · 进 D2 选题</span></div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how(写进 SKILL 的判断逻辑)</div>
+    <ul>
+      <li>"值得花精力研究" = 播放/粉丝比 > 5 + 发布 ≤ 3 天 + 还在涨</li>
+      <li>会刻意忽略:广告嫌疑明显 / AI 生成感强 / 博主历史只爆这一条</li>
+      <li>陌生博主 + 突然爆 → 单独标记(可能新出黑马)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ───── I1.2 ───── -->
+<div class="intent" id="i1-2">
+  <div class="intent-head">
+    <span class="iid">I1.2</span>
+    <h3>仿写候选 + 脚本质量</h3>
+    <span class="badge bd-p0">P0 · MVP 必做</span>
+    <span class="badge bd-dom">D1</span>
+  </div>
+  <div class="intent-quote"><em>今天有什么能直接仿的吗?</em></div>
+
+  <div class="note">
+    <div class="note-label">为什么是 P0</div>
+    D1 价值最高的意图。运营真正的痛是:从 50 条爆款里选出"能仿、文化适配、风险低"的 top3,这个判断他自己 30 分钟也未必做得对。Agent 把 50 → 3 的收敛+解释做好,价值=替他省半小时,且更准。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">📊 看到 D1 主页置顶推荐区"3 条能仿写的"。</div>
+      <div class="j-agent">CRON 已跑完:<span class="tool-call tc-d1">D1·imitation_reproduction</span> 从 142 条筛 3 条;每条带 <span class="tool-call tc-d3">D3·script_quality_score</span> 评分;结果存 push 队列。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">置顶 Push 区(amber 底)</div>P0 · 今日 3 条仿写候选<br><span class="meta">从 142 条筛出 · 已过文化适配 / 风险检查</span></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">👁 扫卡片:封面 + 钩子原文 + viralScore + "为什么是它"一句话。</div>
+      <div class="j-agent">"为什么是它"由 LLM 拼接归因要点 <span class="tool-call tc-llm">llm·explain</span>,不是模板。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">仿写候选卡 #1</div><div class="row"><span class="pill pill-info">q 8.7</span><span class="pill pill-d1">仿写适配 92%</span></div><b>钩子:5 欧睡了一夜阿尔卑斯</b><div class="meta">为什么是它 · 博主稳定爆 / 结构清晰 / 无文化梗依赖</div><div class="row"><span class="btn">↻ 仿写</span><span class="btn-secondary btn">看归因</span></div></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">🤔 校验"为什么是它":博主历史 / 梗能不能换 / 结构清不清楚。</div>
+      <div class="j-agent">用户点 q-score → 跳到 <span class="tool-call tc-d1">I1.6·attribution</span>(本意图的可信度兜底,不是孤岛)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">q-score hover popover</div>完播 78% · 互动 1.2% · 增速 ↑3.1x · 冷启 72%<br><span class="meta">意铁亲子线高完播阈值 75%,此条 78% 算高</span></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">4</div>
+      <div class="j-user">✅ 信了 → 直接「↻ 仿写」跳 D3。</div>
+      <div class="j-agent">把 ViralVideo + 仿写候选脚本一起 emit 到 D3 入参,D3 不需重新查 D1。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">D3 编辑器顶部</div>← 来自 D1 仿写 · v_xxx · @eurail_life<br><span class="meta">脚本草稿已自动起 · 你改你的</span></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">5</div>
+      <div class="j-user">❓ 三条都不满意 → 滑到底点「换一批」。</div>
+      <div class="j-agent">记住"被拒类型"(同博主 / 同梗 / 同结构)写入 <span class="tool-call tc-mem">mem·rejected</span>,下次推荐时降权。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">底部</div>不满意?换一批<br><span class="meta">已记住:你不喜欢"博主历史只一条爆"的</span></div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how(写进 SKILL 的判断逻辑)</div>
+    <ul>
+      <li>"能仿写" ≠ "viralScore 高"。要看:① 脚本结构清晰 ② 文化梗不重 ③ 不是博主个人 IP 强绑定</li>
+      <li>博主历史:只爆这一条 → 慎仿(可能运气);长期稳定爆 → 公式可复制</li>
+      <li>风险低:无疑似抄袭 / 无敏感梗(政治 / 明星 / 民族)/ 无产品功能强依赖</li>
+      <li>"为什么是它"必须可信 — 只给数字运营不信,要给定性结论</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ───── I1.3 ───── -->
+<div class="intent" id="i1-3">
+  <div class="intent-head">
+    <span class="iid">I1.3</span>
+    <h3>趋势主题聚类 + 词云</h3>
+    <span class="badge bd-p2">降级 · 从 D1 移到 D2 子模块</span>
+    <span class="badge bd-dom">D1 → D2</span>
+  </div>
+  <div class="intent-quote"><em>最近欧铁什么主题在火?</em>(周一/周五会问,日常不主动来)</div>
+
+  <div class="note">
+    <div class="note-label">体检结论</div>
+    保留但<b>从独立入口降级为 D2 选题域里的子模块</b>。运营看趋势的真正目的是为了"选选题",孤立的趋势词云没有 actionable 出路 — 看完不知道下一步该做什么。集成进 D2 周报视图后,词云旁边就是"立即立项"按钮。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">🗓 周一早上,在 D2 周报里看到「本周上升主题 Top 5」。</div>
+      <div class="j-agent">趋势聚类不再是独立 query,是 D2 周报的子模块,默认渲染。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">D2 周报 · 趋势板块</div>本周上升:亲子 ↑38% / 夜车 ↑27% / 便宜票 ↑22% / 秋限 ↑18% / 宠物上车 ↑400%<br><span class="meta">绝对量大但不涨 = 红海过滤,只显示低基数高涨幅</span></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">🎯 4 个我已在做,第 5 个"宠物上车"是没做过的。</div>
+      <div class="j-agent">对照 user_prefs 中已做主题,自动标"未做"badge,把空白选题前置。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">主题卡 · 宠物上车</div><span class="pill pill-warn">未做过</span> 涨幅 ↑400% / 历史无重复<br><div class="row"><span class="btn">立即立项 →</span><span class="btn-secondary btn">看相关爆款</span></div></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">✅ 点「立即立项」→ 自动跳 D2 选题候选 + 该主题爆款列表。</div>
+      <div class="j-agent">立项时自动建草稿:<span class="tool-call tc-d2">D2·create_topic_draft</span> + 关联 <span class="tool-call tc-d1">D1·get_viral_by_theme</span>。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">D2 选题详情(预填)</div>主题:宠物上车 · 业务线:意铁<br>已为你拉:3 条相关爆款 + 4 段相关素材</div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how</div>
+    <ul>
+      <li>看词云的目的:"我有没有错过的题材",不是看绝对量</li>
+      <li>低基数高涨幅 = 蓝海;高绝对量但不涨 = 红海(自动过滤)</li>
+      <li>过滤:赛事 / 突发新闻类 / 明星八卦类(不可持续)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ───── I1.4 ───── -->
+<div class="intent" id="i1-4">
+  <div class="intent-head">
+    <span class="iid">I1.4</span>
+    <h3>博主爆款扫描</h3>
+    <span class="badge bd-p1">P1 · 保留(吸收 I2.3)</span>
+    <span class="badge bd-dom">D1 + D2</span>
+  </div>
+  <div class="intent-quote"><em>我那几个标杆博主最近发了啥?</em></div>
+
+  <div class="note">
+    <div class="note-label">体检结论</div>
+    保留为关注列表型查询,运营有 5-15 个"标杆博主"。<b>合并 I2.3 博主选题</b>(原本 D1 看爆款 / D2 看选题方向被拆两个,实际是一个动作:点开博主主页同时看选题方向和数据)。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">📂 进入「关注博主」列表(每周 2-3 次)。</div>
+      <div class="j-agent">已订阅 12 个博主 · CRON 每天扫他们最近动态 · 异常时主动 push。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">博主关注列表</div>@eurail_life · 最近 7d · 3 条<br>@trains_uk · ⚠ 5 天没发<br>@itrail_pro · 出了篇 q 9.1 异常高</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">🎯 重点看:博主突然换风格 / 7 天没发 / 出了篇异常高的。</div>
+      <div class="j-agent">"换风格" / "异常静默" / "异常爆款"主动标记(资深运营关心的"信号",但说不清怎么感知 — Agent 替他识别)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">@trains_uk 异常告警</div><span class="pill pill-warn">⚠ 5 天没发</span> 平时每周 3-4 条<br><span class="meta">可能换号 / 限流 / 假期 — 需要你判断</span></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">✅ 找到值得仿的 → 进 I3.2 仿写本地化。</div>
+      <div class="j-agent">同时 emit 选题方向 + 爆款脚本到 D3,运营不再分两次操作。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">@itrail_pro 详情</div>近 30d 选题方向:亲子(60%)/ 夜车(30%)<br>本月爆款:威尼斯一日游 q 8.4<br><div class="row"><span class="btn">↻ 仿这条</span><span class="btn-secondary btn">订阅他</span></div></div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how</div>
+    <ul>
+      <li>关注 5-15 个标杆博主,定期扫(不是每天)</li>
+      <li>看博主不是为了仿,是为了"对方又出了什么我没想到的角度"</li>
+      <li>博主一段时间不发 → 警觉(可能换号 / 被限流) — 这是 Agent 可主动告知的信号</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ───── I1.5 ───── -->
+<div class="intent" id="i1-5">
+  <div class="intent-head">
+    <span class="iid">I1.5</span>
+    <h3>钩子库挖掘</h3>
+    <span class="badge bd-emb">嵌入 · 改造为 I3.4 内嵌召回</span>
+    <span class="badge bd-dom">D1 → D3</span>
+  </div>
+  <div class="intent-quote">运营从不会主动说"给我钩子库" — <em>他卡住的场景在写脚本时</em></div>
+
+  <div class="note">
+    <div class="note-label">体检结论 · 嵌入</div>
+    砍掉作为独立意图。改造为 <a href="#i3-4">I3.4 多钩子候选</a> 的内嵌召回:写脚本到钩子段时,Agent 在右侧抽屉自动给 5 条按风格分类的候选,每条带"试听"按钮。运营不需要去"钩子库",钩子来找他。
+  </div>
+
+  <div class="short-intent">
+    <div class="si-id">钩子库</div>
+    <div>
+      <h4>怎么不打扰运营</h4>
+      <p><b>运营视角看不到"钩子库"这个词。</b>钩子库是后台索引,Agent 在 I3.4 写脚本时按"业务线 + 选题类型"召回 5 条;运营完全不感知数据库存在。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ───── I1.6 ───── -->
+<div class="intent" id="i1-6">
+  <div class="intent-head">
+    <span class="iid">I1.6</span>
+    <h3>单条归因(为什么火)</h3>
+    <span class="badge bd-p0">P0 · 信任的关键</span>
+    <span class="badge bd-dom">D1</span>
+  </div>
+  <div class="intent-quote"><em>这条 viralScore 9.2,凭什么这么高?</em></div>
+
+  <div class="note">
+    <div class="note-label">为什么是 P0</div>
+    建立信任的关键意图。运营对所有 q-score 推荐都会"质疑一次"才会用 — 没有这个反查动作,所有推荐意图都立不住。归因不是"分数怎么算的",是"这条火的<b>真正原因</b>是什么"+"我可以仿哪 3 个动作"。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">👀 看到一条 viralScore 9.2,心里嘀咕:凭什么。</div>
+      <div class="j-agent">用户在 I1.2 卡片 hover q-score 时已悄悄预热 <span class="tool-call tc-d1">D1·get_attribution</span>,点击瞬间出结果。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">触发位</div>右键卡片 → 「📊 归因」<br>或 q-score badge 点击</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">📊 看归因报告:不是数字堆积,是定性结论 + 占比。</div>
+      <div class="j-agent">融合 4 路信号:<span class="tool-call tc-d1">D1·extract_features</span>(钩子/BGM/封面)+ <span class="tool-call tc-llm">llm·explain</span>(写人话)+ <span class="tool-call tc-d1">D1·hot_bgm_check</span> + <span class="tool-call tc-d1">D1·comment_quality</span>。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">归因报告</div>① BGM 是 4 月新出爆款乐(40%)<br>② 钩子第 2 秒翻转(30%)<br>③ 评论区被博主回复带起来(20%)<br>④ 博主人设(10%)</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">💡 看到底部 3 个可仿动作。</div>
+      <div class="j-agent">归因必须 <b>actionable</b>:不止"为什么火",要给"我可以仿什么"。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">3 个可仿动作</div>① 用同 BGM(已加入素材库)<br>② 仿钩子结构(2 秒反差句)<br>③ 评论区埋点话术<br><div class="row"><span class="btn">仿钩子 → D3</span></div></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">4</div>
+      <div class="j-user">✅ 选其中一个 → 直接跳 D3。</div>
+      <div class="j-agent">把"被仿动作"标记到原视频的 imitation_targets,后续若多次被仿,提升该动作 ROI 评分。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">D3 入参</div>仿钩子模式:2 秒反差<br>带原句:"以为是头等舱,其实只要 5 欧"<br>已为你拉相似句式 5 条参考</div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how</div>
+    <ul>
+      <li>看的不是分数,是"火的真正原因":钩子? BGM? 博主人设? 评论区?</li>
+      <li>只给数字不信,要定性结论:"BGM 选得好" / "钩子第 2 秒翻转"</li>
+      <li>归因目的是 actionable:给我 3 个可仿动作,不要"原因分析报告"</li>
+      <li>q-score 9 的视频,运营最先怀疑:① 数据真假 ② 算法偏差 ③ 是否短期流量</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ───── I1.7 ───── -->
+<div class="intent" id="i1-7">
+  <div class="intent-head">
+    <span class="iid">I1.7</span>
+    <h3>批量打标</h3>
+    <span class="badge bd-inf">基建 · 后台 CRON</span>
+    <span class="badge bd-dom">D1</span>
+  </div>
+  <div class="intent-quote">运营不会去触发批量打标 — <em>这是基建,不是意图</em></div>
+
+  <div class="short-intent">
+    <div class="si-id">CRON</div>
+    <div>
+      <h4>怎么不打扰运营</h4>
+      <p>从用户意图列表移除。<b>每天 02:00 自动跑</b>:对昨日新抓视频按业务线 / 题材 / 风格 / 文化梗自动打标,产出 enrichment 字段供其他意图用。打标失败 → 写入 fail_queue,由人工或后续重试解决,前端永不感知。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ───── I1.8 (NEW) ───── -->
+<div class="intent" id="i1-8">
+  <div class="intent-head">
+    <span class="iid">I1.8</span>
+    <h3>我的同行有没有抄过这条</h3>
+    <span class="badge bd-new">新建议 · P1</span>
+    <span class="badge bd-dom">D1</span>
+  </div>
+  <div class="intent-quote"><em>这条爆款是不是已经被国内同行做过了?</em></div>
+
+  <div class="note">
+    <div class="note-label">为什么需要(运营每天做但被漏掉)</div>
+    运营对"撞车"极度敏感:同业务线如果别人已经发过仿写版,他不愿再做(没有差异化)。这是 D2 选题查重的"D1 入口侧版本" — 看到一条爆款时第一反应就是"我们的同行抄过了吗",而不是等到 D2 立项再查重。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">👁 在 D1 看到一条想仿的爆款。</div>
+      <div class="j-agent">用户尚未触发,Agent 在卡片上自动标记"国内同行已仿 N 条"badge(扫描预设的 3-5 个同行账号矩阵)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">仿写候选卡</div><span class="pill pill-warn">国内同行已仿 2 条</span><br>原视频:阿尔卑斯卧铺 q 8.7<br>同行版本:7d 内 2 条,中位数据 q 6.4</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">🤔 有点犹豫,点 badge 看详情。</div>
+      <div class="j-agent">对比"原视频 vs 同行已仿版"差异 + 给出"还能不能做 / 怎么差异化"建议。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">同行扫描详情</div>@同行A · 3d 前发 · q 7.2 · 角度"省钱"<br>@同行B · 5d 前发 · q 5.6 · 角度"亲子"<br><span class="meta">建议:换"夜景拍摄技巧"角度,空白</span></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">✅ 接受建议 → 跳 D3 时已带"差异化角度"提示。</div>
+      <div class="j-agent">差异化角度作为脚本生成约束传给 D3 prompt,产出的脚本天然不撞车。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">D3 编辑器顶部</div>← 来自 D1 仿写 · 差异化角度:夜景拍摄技巧<br><span class="meta">同行已做"省钱""亲子",请勿重复这两个</span></div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how</div>
+    <ul>
+      <li>同行账号 3-5 个,运营心里有数(资深运营会日常看)</li>
+      <li>"已仿但数据不好" → 还能做,换角度;"已仿且爆了" → 让位</li>
+      <li>差异化维度:角度 / 业务线 / 时长 / 平台</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ───── I1.9 (NEW) ───── -->
+<div class="intent" id="i1-9">
+  <div class="intent-head">
+    <span class="iid">I1.9</span>
+    <h3>榜单异常告警</h3>
+    <span class="badge bd-new">新建议 · P2</span>
+    <span class="badge bd-dom">D1</span>
+  </div>
+  <div class="intent-quote"><em>最近 viralScore 怎么集体下来了?</em> / <em>这个领域好像凉了。</em></div>
+
+  <div class="note">
+    <div class="note-label">为什么需要</div>
+    资深运营有"领域温度感"但说不清怎么感知。Agent 用数据可以更早发现系统性变化:整个意铁类爆款数突然降 50% / 所有人都在做某一个方向 / TOP10 平均分下降 N%。这是<b>主动告警类意图</b>,不是用户主动查询。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">⏰(被动)早上打开 TripFlow,看到顶部 banner。</div>
+      <div class="j-agent">CRON 跑「领域温度」:对比 7d / 30d / 90d 关键指标(榜单条数 / 平均 q / TOP10 中位数),触发阈值时 push。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">顶部告警 banner(amber)</div>⚠ 意铁类近 7d 平均 q 从 7.2 降到 5.8<br><span class="meta">可能原因:平台算法调整 / 季节性 / 题材饱和</span><div class="row"><span class="btn-secondary btn">看分析</span><span class="btn-secondary btn">忽略 7 天</span></div></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">🤔 点「看分析」。</div>
+      <div class="j-agent">给出 3 种可能解释 + 每种的应对建议,供运营判断。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">异常分析</div>① 算法调整(40%):TOP10 中长视频占比异常升高<br>② 题材饱和(35%):亲子/省钱重复率增高<br>③ 季节性(25%):去年同期也有类似下降</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">💡 看完决定本周策略调整。</div>
+      <div class="j-agent">将运营的反应(忽略 / 调策略)写入 mem,下次同类告警阈值动态调整。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">策略建议</div>本周可以试:<br>① 切到长视频(>60s)<br>② 试新题材"宠物上车"(空白)<br><div class="row"><span class="btn">采纳 → D2</span></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- ════════════════════ D2 · 选题洞察 ═══════════════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+
+<div class="domain-head dh-d2">
+  <span class="dot"></span>
+  <span class="domain-id">D2</span>
+  <span class="domain-name">选题洞察域</span>
+  <span class="domain-meta">9 意图(原 7 + 新 2) · P0 × 2 / P1 × 3 / 合并 2 / 新增 2</span>
+</div>
+
+<p class="lead">域定位:从信号到选题决策。每周给运营完整作战图,而不是 6 张孤立卡。</p>
+
+<!-- ───── I2.1 ───── -->
+<div class="intent" id="i2-1">
+  <div class="intent-head">
+    <span class="iid">I2.1</span>
+    <h3>本周可做(周报)</h3>
+    <span class="badge bd-p0">P0 · 周一晨会模式</span>
+    <span class="badge bd-dom">D2</span>
+  </div>
+  <div class="intent-quote"><em>本周该做几条?各占什么主题?</em></div>
+
+  <div class="note">
+    <div class="note-label">体检结论</div>
+    保留为 P0,但要从"6 张孤立卡片"改造为<b>周一晨会模式</b>:一屏给完整作战图(本周可做 6 条 + 上周复盘 + 本周日历节点)。运营周一不是单看选题,他在做"本周内容矩阵规划"。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">☕ 周一 9:00,早会前打开 D2。</div>
+      <div class="j-agent">周日晚 22:00 已 CRON 跑完整套规划:<span class="tool-call tc-d2">D2·weekly_topics</span> + <span class="tool-call tc-d2">D2·last_week_review</span> + <span class="tool-call tc-d2">D2·calendar_nodes</span>;一屏渲染。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">D2 周报首屏</div>本周可做 6 条 · 上周已发 5 条 · 本周节点:5/1 复活节<br><span class="meta">为周一晨会准备 · 一屏看完</span></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">📋 一屏看到 6 张选题卡 + 上周复盘 + 本周日历。</div>
+      <div class="j-agent">6 张卡按 Fresh-score 排序,P0 标识 ≥ 8.5 才打;上周复盘写人话:"上周 5 条平均 q 7.4,夜车类表现最好"。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">6 张选题卡 · 横向</div><div class="row"><span class="pill pill-d2">P0 8.7</span> 阿尔卑斯卧铺</div><div class="row"><span class="pill">7.9</span> 米兰晨光</div><div class="row"><span class="pill">7.6</span> 5 欧穿越</div><div class="row meta">+3 张 · 拖到日历排程</div></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">🤔 每张卡看一句话归因。</div>
+      <div class="j-agent">归因 = "亲子 + 复活节假期 + IT 上升 30%",拼三层 actionable 信号,不是泛泛"热度高"。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">卡片归因</div>P0 阿尔卑斯卧铺<br><span class="meta">为什么:① 复活节窗口(5/1 前发) ② 意铁夜车类 7d ↑30% ③ 你历史此类平均 q 7.8</span></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">4</div>
+      <div class="j-user">✅ 选 4 张,拖到本周日历(周二 / 三 / 四 / 五),留 2 张机动。</div>
+      <div class="j-agent">监测到运营"留机动位"行为,记入 mem;后续<a href="#i2-9">I2.9 进度跟踪</a>会用这 2 个机动位做兜底建议。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">本周日历(下半屏)</div>周二 ◯ → 阿尔卑斯卧铺<br>周三 ◯ → 米兰晨光<br>周四 — 机动位<br>周五 ◯ → 5 欧穿越</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">5</div>
+      <div class="j-user">📤 一键导出「本周选题方案」发飞书。</div>
+      <div class="j-agent">生成可分享的选题作战图(图片 + 文字),自动发到运营 leader 飞书群。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">导出预览</div>本周选题方案 v1<br>4 条已定 + 2 张机动 · 节点 5/1 复活节<br><div class="row"><span class="btn">发飞书</span><span class="btn-secondary btn">复制图片</span></div></div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how</div>
+    <ul>
+      <li>"可做" = 有热度 + 有素材或能拍 + 没撞车 + 符合本周节奏</li>
+      <li>资深运营会 6 张挑 4 张做,留 2 张机动应对突发热点</li>
+      <li>P0 标识严格:Fresh-score ≥ 8.5 才打(避免标签贬值)</li>
+      <li>归因必有数据源链接(可点跳到原爆款 / 趋势图)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ───── I2.2 ───── -->
+<div class="intent" id="i2-2">
+  <div class="intent-head">
+    <span class="iid">I2.2</span>
+    <h3>上升关键词</h3>
+    <span class="badge bd-p1">调整 · 必带"为什么涨"</span>
+    <span class="badge bd-dom">D2</span>
+  </div>
+  <div class="intent-quote"><em>欧铁什么词在涨?</em></div>
+
+  <div class="note">
+    <div class="note-label">体检结论</div>
+    保留,但<b>每个关键词必须带"为什么涨"的解释</b>,否则只是数字列表,运营不会用。"涨"分两种:真实趋势(用户兴趣转移)/ 突发噪音(某事件爆了)— 运营要的是前者,Agent 要识别。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">📈 进 D2 「上升关键词」板块(集成在周报右侧)。</div>
+      <div class="j-agent"><span class="tool-call tc-d2">D2·rising_keywords</span> + <span class="tool-call tc-d2">D2·classify_rise_type</span>(真实趋势 / 突发噪音)+ <span class="tool-call tc-llm">llm·explain_why</span>。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">上升词 Top 10</div>"夜行 sleeper" ↑80% · "宠物上车" ↑400%<br>"复活节假期" ↑65% · "Eurostar" ↑40%</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">👀 看到"夜行 sleeper" ↑80%。</div>
+      <div class="j-agent">关键词拼上 ① 涨幅 ② 原因(一句话) ③ Agent 建议(追/不追/观察) ④ 你有的素材数。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">关键词详情</div>"夜行 sleeper" ↑80%<br><span class="meta">原因:Eurostar 新增 Amsterdam 线路新闻(本周三爆)</span><br><span class="meta">建议:追(已有 3 个博主出爆款,你素材库有 12 段)</span></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">✅ 点「立即立项」→ 跳 D3 写脚本。</div>
+      <div class="j-agent">立项时自动绑定关键词为"目标搜索词",后续发布时也带这个 hashtag。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">D3 入参</div>主题:夜行 sleeper / 关键词锚点<br>已为你拉:3 个相关爆款 / 12 段相关素材</div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how</div>
+    <ul>
+      <li>"涨"分两种:真实趋势 vs 突发噪音 — 运营要前者</li>
+      <li>关键词背后要有锚点:谁在涨? 哪国? 哪个年龄段?</li>
+      <li>看上升词的目的是"决定要不要追",Agent 应直接给"追/不追/观察"建议</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ───── I2.3 ───── -->
+<div class="intent" id="i2-3">
+  <div class="intent-head">
+    <span class="iid">I2.3</span>
+    <h3>博主选题</h3>
+    <span class="badge bd-mrg">合并 · 并入 I1.4</span>
+    <span class="badge bd-dom">D2</span>
+  </div>
+  <div class="intent-quote">运营查博主时是一个动作 — <em>不该拆"看选题方向"和"看哪条爆"两个意图</em></div>
+
+  <div class="short-intent">
+    <div class="si-id">合并</div>
+    <div>
+      <h4>怎么合并到 I1.4</h4>
+      <p>原 I2.3(D2 看选题方向)+ I1.4(D1 看爆款)合并为 <a href="#i1-4">I1.4 博主爆款扫描</a>。运营点开博主主页时同时看选题方向和数据,这是一个动作。合并后博主详情页同时给:近 30d 选题分布 + 爆款列表 + 风格变化检测。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ───── I2.4 ───── -->
+<div class="intent" id="i2-4">
+  <div class="intent-head">
+    <span class="iid">I2.4</span>
+    <h3>营销日历</h3>
+    <span class="badge bd-p1">调整 · 集成进 I2.1 周报</span>
+    <span class="badge bd-dom">D2</span>
+  </div>
+  <div class="intent-quote"><em>5 月黄金周提前准备</em>(每月 1-2 次)</div>
+
+  <div class="note">
+    <div class="note-label">体检结论</div>
+    保留但不应是独立模块。集成进 I2.1 周报视图(本周日历直接显示节点)。<b>提前量是关键 KPI</b>:节点当天再发就晚了。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">📅 周一早上 D2 周报,顶部直接显示「下周节点」。</div>
+      <div class="j-agent">CRON 维护节假日数据库 + 业务线敏感度配置,自动给本周/下周提醒。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">周报顶部 banner</div><span class="pill pill-warn">⚠ 5/1 复活节</span><br>意铁亲子线建议提前 2 周 · 内容应在 4/25 前完成</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">🎯 红色标注:"4.30 复活节,内容应在 4.25 前完成"。</div>
+      <div class="j-agent">系统倒推:你还有 5 天 → 应该今天/明天立项;往日历推送 deadline 标记。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">本周日历</div>周二 — 立项 deadline ⚠<br>周四 — 拍摄 deadline<br>周五 — 发布 deadline</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">✅ 点节点 → 加载历史选题(去年同期数据)。</div>
+      <div class="j-agent"><span class="tool-call tc-d2">D2·history_at_node</span> 找去年同节点数据 + 当时哪些选题爆了 + 给本年选题建议。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">5/1 复活节 · 去年</div>去年 5/1 发了 3 条:亲子游 q 8.2 / 巧克力火车 q 7.8 / 春日郊游 q 6.5<br><span class="meta">建议:今年沿用"亲子游"角度,换路线</span></div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how</div>
+    <ul>
+      <li>大节假日(春节/暑假/圣诞)提前 4-6 周;小节点(开学/复活节)提前 2 周</li>
+      <li>不同业务线敏感度不同:意铁亲子对学校假期敏感 / 英铁对工作日通勤敏感</li>
+      <li>过去错过节点会成为长期"心理痛点",Agent 主动提醒减焦虑</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ───── I2.5 ───── -->
+<div class="intent" id="i2-5">
+  <div class="intent-head">
+    <span class="iid">I2.5</span>
+    <h3>选题查重</h3>
+    <span class="badge bd-p0">P0 · 减焦虑刚需</span>
+    <span class="badge bd-dom">D2</span>
+  </div>
+  <div class="intent-quote"><em>这个我们做过吗?</em></div>
+
+  <div class="note">
+    <div class="note-label">为什么是 P0</div>
+    运营对"重复做"极度敏感:既怕浪费又怕被领导挑刺。3 层判断:① 我们账号发过吗 ② 同业账号发过吗 ③ 历史数据如何(发过但效果差,可以再做;发过且效果好,要换角度)。<b>语义查重</b>不只是关键词,要查"角度相似"。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">🤔 想到一个选题"威尼斯火车一日游"。</div>
+      <div class="j-agent">用户输入瞬间触发 <span class="tool-call tc-d2">D2·semantic_dedup</span>(语义查重,不是关键词)+ <span class="tool-call tc-d1">D1·peer_dedup</span>(同行查重)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">D2 查重输入</div>输入:"威尼斯火车一日游"<br><span class="meta">⌛ 查我们历史 + 同行 + 最近爆款</span></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">📋 看查重结果。</div>
+      <div class="j-agent">三层结果分别给:① 我们做过 ② 同行做过 ③ 当时数据如何;不只列表,带"还能不能再做"判断。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">查重结果</div>① 我们 3 个月前发过 · 完播 35% 偏低 · 当时角度"省钱"<br>② 同行 @A 上周发过 · 数据 q 7.8(高)<br>③ 历史角度分布:省钱/亲子/美食</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">💡 看 Agent 建议。</div>
+      <div class="j-agent">基于"上次发布时间 > 6 个月可重做" + "角度差异化"规则,给出"重做但换角度"建议。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">Agent 建议</div>可以重做,但换切入角度<br>当时主打省钱(数据差)→ 这次试"亲子" / "美食探店"<br><div class="row"><span class="btn">用亲子角度 → D3</span></div></div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how</div>
+    <ul>
+      <li>查重 3 层:我们 / 同行 / 历史数据如何</li>
+      <li>语义查重(查角度) > 关键词查重(查标题)</li>
+      <li>同选题间隔 6+ 个月 + 换角度 → 可以再做;< 3 个月 → 不要</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ───── I2.6 ───── -->
+<div class="intent" id="i2-6">
+  <div class="intent-head">
+    <span class="iid">I2.6</span>
+    <h3>本地化迁移(地理过滤)</h3>
+    <span class="badge bd-mrg">合并 · 并入 I2.1</span>
+    <span class="badge bd-dom">D2</span>
+  </div>
+  <div class="intent-quote"><em>罗马-那不勒斯下周做啥?</em></div>
+
+  <div class="short-intent">
+    <div class="si-id">合并</div>
+    <div>
+      <h4>怎么合并</h4>
+      <p>本质是 I2.1 加了"地理过滤器",不是独立意图。改造为 <a href="#i2-1">I2.1 周报</a> 的过滤维度:左上选「线路 / 城市 / 国家」三选一,选题列表自动按地理范围筛。地理粒度有特殊价值(欧铁每条线路对应不同城市/景点/文化),但不是新意图。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ───── I2.7 ───── -->
+<div class="intent" id="i2-7">
+  <div class="intent-head">
+    <span class="iid">I2.7</span>
+    <h3>跨业务线迁移</h3>
+    <span class="badge bd-p1">P1 · 差异化价值</span>
+    <span class="badge bd-dom">D2</span>
+  </div>
+  <div class="intent-quote"><em>英铁的这条选题,意铁能用吗?</em></div>
+
+  <div class="note">
+    <div class="note-label">为什么 P1</div>
+    D2 最有差异化价值的意图。利用了运营懒得跨业务线看的痛点,Agent 自动迁移。<b>3 个迁移等级</b>:直接换地名(易)/ 换文化梗(中)/ 完全重写(难,Agent 解不了,标记交人工)。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">👁 D2 意铁 dashboard 顶部 banner:"英铁有 2 条选题适合你迁移"。</div>
+      <div class="j-agent">CRON 跑跨业务线匹配 <span class="tool-call tc-d2">D2·cross_line_match</span>(基于业务线相似度 + 文化梗适配检测),把候选 push 到对应运营。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">D2 banner(amber)</div>英铁有 2 条选题可迁移 → 意铁<br>① 苏格兰夜火车 → 阿尔卑斯夜车<br>② 英伦小镇一日 → 意大利小镇</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">🖱 点开 → 看到原英铁选题 vs Agent 翻译的意铁版,左右对比。</div>
+      <div class="j-agent">Diff 高亮:绿色 = Agent 自动改的(地名/价格)/ 红色 = 文化梗需人工确认。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">Diff 视图</div>左:苏格兰夜火车 / £140 / 哈利波特<br>右:阿尔卑斯夜车 / €130 / <span style="color:var(--danger-text)">⚠ 文化梗需确认</span></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">🤔 校验文化梗:哈利波特 → 罗密欧朱丽叶?接受还是改?</div>
+      <div class="j-agent">每个文化梗给 2-3 个替代建议,运营选 / 自己改 / 跳过。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">文化梗替换</div>哈利波特(英) → 替代:<br>① 罗密欧朱丽叶  ② 教父  ③ 跳过<br><span class="meta">基于意大利文化敏感度评分</span></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">4</div>
+      <div class="j-user">✅ 接受 → 进 D3 写脚本(已带迁移版选题)。</div>
+      <div class="j-agent">迁移记录写入 mem,下次同类迁移自动用此次替换规则,越用越准。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">D3 顶部</div>← 来自 D2 跨业务线迁移 · 英铁 → 意铁<br><span class="meta">已替换:地名 / 价格 / 文化梗(哈利波特→罗密欧朱丽叶)</span></div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how</div>
+    <ul>
+      <li>不是所有选题都能迁。要看:文化梗能不能换 / 价格区间是否对齐 / 主流票务平台是否一致</li>
+      <li>3 个迁移等级:换地名(易,模板化)/ 换文化梗(中,要懂目标文化)/ 完全重写(难,标记交人工)</li>
+      <li>迁移历史是宝贵 mem,Agent 越用越懂"哪些梗替换得好"</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ───── I2.8 (NEW) ───── -->
+<div class="intent" id="i2-8">
+  <div class="intent-head">
+    <span class="iid">I2.8</span>
+    <h3>本周内容矩阵规划</h3>
+    <span class="badge bd-new">新建议 · P1</span>
+    <span class="badge bd-dom">D2</span>
+  </div>
+  <div class="intent-quote"><em>本周我要发几条,各占什么主题,各发哪天?</em></div>
+
+  <div class="note">
+    <div class="note-label">为什么需要</div>
+    I2.1 的"上一层规划意图"。运营选完本周 6 条选题后,需要排进时间表(平台 × 日期 × 主题分布),手工排很累。资深运营有"内容节奏感":一周不能全是同主题,要错开;周末发轻量,工作日发干货;高质量内容卡黄金时段。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">📋 在 I2.1 周报选完 4 条选题后,点「自动排矩阵」。</div>
+      <div class="j-agent"><span class="tool-call tc-d2">D2·matrix_planner</span> 综合考虑:① 主题节奏 ② 平台差异化 ③ 黄金时段 ④ 用户历史最佳时段。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">本周矩阵生成中</div>排程依据:<br>· 主题分布(亲子 ×2 / 省钱 ×2)<br>· 平台差异化(IG 主 / TK 主 / XHS 副)<br>· 节奏:周二/四 高质,周末轻量</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">📅 看到周内矩阵图:横轴日期 × 纵轴平台。</div>
+      <div class="j-agent">每个格子显示选题 + 推荐时段;空格子标"机动位",建议运营留弹性。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">周内矩阵</div>　　　二　　三　　四　　五<br>IG　亲卧 19:30　·　夜车 20:00　·<br>TK　·　省欧 18:00　·　卧铺 18:30<br>XHS　·　·　亲卧 21:00　·</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">✏ 微调 1-2 个格子(运营有自己的偏好)。</div>
+      <div class="j-agent">用户调整记入 mem,下次自动 plan 更准。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">拖拽编辑</div>把 IG 亲卧从周二拖到周三<br><span class="meta">Agent 警告:周二是 IG 黄金时段,移到周三流量预估 -15%</span></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">4</div>
+      <div class="j-user">✅ 确认 → 自动生成各条任务,推到 D3 写脚本。</div>
+      <div class="j-agent">为每条选题创建 task,绑定 deadline(发布日 - 1 天 = 拍摄完成)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">本周任务面板</div>4 条任务已建 · 显示进度<br>① 阿尔卑斯卧铺 · 待写脚本 (deadline 周一晚)<br>② 米兰晨光 · 待写脚本 (deadline 周二晚)</div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how</div>
+    <ul>
+      <li>一周不能全是同主题(用户疲劳),要错开</li>
+      <li>周末发轻量内容(用户休闲态);工作日发干货(用户学习态)</li>
+      <li>高质量内容卡黄金时段;一般内容填充时段</li>
+      <li>留 1-2 个机动位,应对突发热点</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ───── I2.9 (NEW) ───── -->
+<div class="intent" id="i2-9">
+  <div class="intent-head">
+    <span class="iid">I2.9</span>
+    <h3>我这周还差几条没发</h3>
+    <span class="badge bd-new">新建议 · P1</span>
+    <span class="badge bd-dom">D2</span>
+  </div>
+  <div class="intent-quote"><em>我这周已经发了 3 条,还差 2 条,选什么补?</em></div>
+
+  <div class="note">
+    <div class="note-label">为什么需要</div>
+    产能进度跟踪意图。运营本周 KPI 是 5 条,Agent 应主动跟踪并提醒"补齐"。运营脑子里有"本周完成度"概念,接近周末时会焦虑。这个意图<b>减焦虑</b>。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">⏰(被动)周四下午,看到右上角进度环角标。</div>
+      <div class="j-agent">CRON 每天 14:00 跑进度检查 <span class="tool-call tc-d6">D6·publish_count</span> 对比 KPI;周三/四是关键提醒点。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">右上角小气泡</div>本周进度 3/5 · 还差 2 条<br><span class="meta">不打断,只是 hint</span></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">🤔 周五早上点进度环看详情。</div>
+      <div class="j-agent">显示已发 3 条数据 + 还差 2 条 · 给"快补这 2 条"建议(优先用 I2.1 周报里 2 张机动卡)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">本周产能详情</div>已发 3 条 · 平均 q 7.6<br>还差 2 条 · 你周一留的机动位:<br>① 5 欧穿越(已有素材,可拍 2h)<br>② 米兰晨光(待补 1 段过渡素材)</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">✅ 选 1 条立项 → 进 D3。</div>
+      <div class="j-agent">立项后立即提示"deadline:今晚 22:00 发布",倒推每个 D 域的 milestone。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">补救流程</div>选题:5 欧穿越<br>D3 写脚本 → 18:00<br>D4 找素材 → 19:00<br>D5 粗剪 → 20:30<br>D6 发布 → 22:00<br><span class="meta">Agent 全程提速</span></div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- ════════════════════ D3 · 脚本创作 ═══════════════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+
+<div class="domain-head dh-d3">
+  <span class="dot"></span>
+  <span class="domain-id">D3</span>
+  <span class="domain-name">脚本创作域</span>
+  <span class="domain-meta">8 意图(原 7 + 新 1) · P0 × 2 / P1 × 1 / P2 × 2 / 自动化 1 / 基建 1 / 新增 1</span>
+</div>
+
+<p class="lead">域定位:把"选题/爆款"变成可拍脚本。日常 80% 是仿写,不是从零写。</p>
+
+<!-- ───── I3.1 ───── -->
+<div class="intent" id="i3-1">
+  <div class="intent-head">
+    <span class="iid">I3.1</span>
+    <h3>完整写脚本</h3>
+    <span class="badge bd-p2">降级 · 特殊场景</span>
+    <span class="badge bd-dom">D3</span>
+  </div>
+  <div class="intent-quote">运营有明确主题但<em>没爆款参考</em>时用(占比 < 20%)</div>
+
+  <div class="note">
+    <div class="note-label">体检结论</div>
+    保留但降级。从"主路径意图"降为"特殊场景":日常 80% 应该是 I3.2(基于爆款仿写)。"完整写"很少是凭空创造,运营会带:① 一个选题方向 ② 几个素材关键词 ③ 业务线偏好语气 — 没有上下文的纯写,Agent 也是 garbage in garbage out。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">📝 在 D3 输入"45s 意铁亲子,夜车场景,主打省钱"。</div>
+      <div class="j-agent">先做 plan(对话式):<span class="tool-call tc-llm">llm·plan</span>"我是不是该看你的历史哪些片做过 + 业务线偏好 + 类似爆款"。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">D3 输入框</div>"45s 意铁亲子,夜车场景,主打省钱"<br><div class="row meta">⌛ 我先看你历史 + 同主题爆款,2 秒</div></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">⌛ 等 Agent 想完。</div>
+      <div class="j-agent">并行调:<span class="tool-call tc-d3">D3·history</span> + <span class="tool-call tc-d1">D1·similar_viral</span> + <span class="tool-call tc-mem">mem·biz_voice</span>(意铁亲子语气)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">透明日志(右抽屉)</div>D3 历史 ✓ 找到 4 条同类<br>D1 类似爆款 ✓ 3 条参考<br>mem 业务线语气 ✓<br>llm 起草 ⌛ 1124 tok</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">📜 看到 5 段脚本骨架(钩子/承接/正/CTA/结)。</div>
+      <div class="j-agent">每段下方有"为什么这样写"hint(可点开看引用),不藏黑盒。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">脚本骨架</div>0-3s 钩子:5 欧睡了一夜阿尔卑斯<br>3-15s 承接:从米兰到维也纳,夜车开了 8 小时<br>15-30s 正:车厢里娃贴窗指雪山<br>30-40s CTA:你下次想试吗<br>40-45s 结:意大利夜车攻略合集<br><span class="meta">引用:I1.6 钩子库 · 5 段结构 · 意铁亲子语气</span></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">4</div>
+      <div class="j-user">🎯 改钩子(用 I3.4 多候选)+ 微调正文。</div>
+      <div class="j-agent">用户改时,Agent 监测"改了哪段",学习用户偏好(钩子改最多 → 默认给更多钩子候选)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">分段编辑器</div>5 段卡片纵向 · 选中段高亮<br>每段 hover:[改] [换钩子] [试听] [删]</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">5</div>
+      <div class="j-user">✅ 满意 → 「→ 找素材」进 D4。</div>
+      <div class="j-agent">脚本 emit + 同时触发 <span class="tool-call tc-d3">D3·audit_realtime</span>(隐式预审,这是基建 I3.6 在跑)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">底部</div><span class="btn">→ 找素材</span><span class="btn-secondary btn">审核</span><span class="btn-secondary btn">换风格</span></div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how</div>
+    <ul>
+      <li>"完整写"很少凭空,运营会带:选题方向 + 素材关键词 + 业务线语气</li>
+      <li>没爆款参考时,Agent 应主动找历史相似 + 业务线 voice 兜底</li>
+      <li>5 段结构是脚手架,运营喜欢("钩 / 承 / 正 / CTA / 结"是基本功)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ───── I3.2 ───── -->
+<div class="intent" id="i3-2">
+  <div class="intent-head">
+    <span class="iid">I3.2</span>
+    <h3>仿写本地化</h3>
+    <span class="badge bd-p0">P0 · D3 主路径</span>
+    <span class="badge bd-dom">D3</span>
+  </div>
+  <div class="intent-quote"><em>仿这条,换成英铁</em></div>
+
+  <div class="note">
+    <div class="note-label">为什么是 P0</div>
+    D3 主路径意图。从 D1 仿写候选过来,80% 走这个意图。<b>仿写不只是换地名</b>,4 个层次:① 地名替换(易) ② 数据替换(价格/路线) ③ 文化梗替换(难) ④ 节奏调整(因业务线特性)。英铁脚本节奏快/笑点多,意铁要更注重情感 — 不仅换字,要换语气。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">👁 D1 仿写候选页 → 点「↻ 仿写」。</div>
+      <div class="j-agent">从 D1 emit 的 ViralVideo + 已生成的仿写候选脚本(共 3 版,在 I1.2 阶段就并行生成了)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">D3 仿写入口</div>← 来自 D1 仿写 · v_xxx<br><span class="meta">原视频 + 3 个仿写候选已就绪</span></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">📋 看到 3 个候选脚本,左右对比原视频。</div>
+      <div class="j-agent">每个候选标"仿写策略":① 直译型(地名换) ② 文化适配型(梗换) ③ 风格融合型(节奏调)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">3 候选 + 原视频对比</div>原英铁:伦敦→爱丁堡 / £140 / 哈利波特<br>v1 直译:伦敦→爱丁堡换米兰→维也纳<br>v2 文化:换罗密欧朱丽叶<br>v3 风格融合:节奏从快变慢 + 加情感笔触</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">✏ 选最贴的一版,微调。</div>
+      <div class="j-agent">选了 v2 → mem 记"用户偏好文化适配型",下次同类仿写默认推 v2 风格的候选。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">选中 v2</div>5 段编辑器 + 引用 chip<br>引用:wiki/scripts/45s_pov / wiki/hooks/it_family</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">4</div>
+      <div class="j-user">🎙 试听 TTS 效果(听节奏)。</div>
+      <div class="j-agent">逐段 TTS 试听,同时检测"读出来卡不卡"(语速 + 字数密度评估)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">试听条</div>第 ② 段 [▶] 3-15s<br><span class="pill pill-warn">⚠ 节奏偏快 · 字数密度 4.2/秒</span></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">5</div>
+      <div class="j-user">✅ 通过 → D4 找素材。</div>
+      <div class="j-agent">audit 必跑 + emit 脚本到 D4,带"原视频引用"标记(D4 召回时优先用原视频同类素材)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">D4 入参</div>← 来自 D3 · 仿写本地化 v2<br>原视频:阿尔卑斯卧铺 (英铁)<br>素材召回偏好:原视频同类风格</div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how</div>
+    <ul>
+      <li>仿写 4 层次:换地名(易) / 换数据 / 换文化梗(难) / 换节奏(最难,因业务线)</li>
+      <li>英铁节奏快 + 笑点多;意铁注重情感 + 家庭氛围 — 不仅换字,要换语气</li>
+      <li>资深运营仿写后做"读两遍测试":读出来卡不卡 / 听感对不对</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ───── I3.3 ───── -->
+<div class="intent" id="i3-3">
+  <div class="intent-head">
+    <span class="iid">I3.3</span>
+    <h3>局部迭代</h3>
+    <span class="badge bd-p0">P0 · 高频迭代</span>
+    <span class="badge bd-dom">D3</span>
+  </div>
+  <div class="intent-quote"><em>开头不够抓人,改一下</em>(每条脚本要改 3-5 次)</div>
+
+  <div class="note">
+    <div class="note-label">为什么是 P0</div>
+    高频迭代场景。运营写完初稿后,核心动作是"段段修"。改的优先级:钩子(60%) > CTA(20%) > 中段过渡(15%) > 结尾(5%)。<b>改完要联动检查</b>:改了钩子可能要联动改第一段承接,Agent 自动提示。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">✏ 选中钩子段,右键「改一下」。</div>
+      <div class="j-agent">弹出迷你输入框 + 上下文已自动带(整条脚本 + 钩子段位置 + 历史改写偏好)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">右键迷你菜单</div>段 ① 钩子 · 0-3s<br>[改一下] [换钩子] [删段] [试听]</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">💬 输入约束:"更短,有数字"。</div>
+      <div class="j-agent">解析约束 → 调 <span class="tool-call tc-llm">llm·rewrite</span> 给 3 个候选,每个标符合度。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">改写候选</div>① 5 欧 / 一晚 / 阿尔卑斯(11 字 · 数字✓)<br>② 一晚 5 欧 · 阿尔卑斯睡了一觉(13 字 · 数字✓)<br>③ 5 欧的阿尔卑斯夜车体验(11 字 · 数字✓)</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">👁 选一个候选 → 自动应用。</div>
+      <div class="j-agent">应用后立即检测"上下文连贯性":钩子改了,第 ② 段承接会不会断?如果断了 → 自动提示。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">连贯性提示</div><span class="pill pill-warn">⚠ 第 ② 段需联动</span><br>原:从米兰到维也纳<br>建议:从米兰开始的省钱攻略<br><div class="row"><span class="btn">应用</span><span class="btn-secondary btn">忽略</span></div></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">4</div>
+      <div class="j-user">✅ 应用联动改 → 钩子 + 承接段都已更新。</div>
+      <div class="j-agent">每次迭代记 mem,Agent 越用越懂"这运营心里的钩子标准"。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">脚本主区</div>① ✓ 钩子已更新<br>② ✓ 承接已联动<br>③ 正文不变</div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how</div>
+    <ul>
+      <li>改的优先级:钩子(60%) > CTA(20%) > 中段(15%) > 结尾(5%)</li>
+      <li>"不抓人" = 没有"反差/数字/疑问"任一元素</li>
+      <li>改完要看上下文连贯,改钩子常需联动改承接</li>
+      <li>"改一下"运营心里多半有具体方向(更短 / 有数字 / 更口语)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ───── I3.4 ───── -->
+<div class="intent" id="i3-4">
+  <div class="intent-head">
+    <span class="iid">I3.4</span>
+    <h3>多钩子候选</h3>
+    <span class="badge bd-emb">自动化 · 写到钩子时默认给</span>
+    <span class="badge bd-dom">D3</span>
+  </div>
+  <div class="intent-quote">不应该是"用户主动触发",<em>是 Agent 默认就给</em></div>
+
+  <div class="note">
+    <div class="note-label">体检结论</div>
+    改造为 I3.1 / I3.2 的<b>内嵌行为</b>:写到钩子段时,Agent 自动在右侧抽屉给 5 个候选(5 类风格:疑问/数字/反差/故事/情感),每个带"试听"按钮。<a href="#i1-5">I1.5 钩子库</a> 也并入这里(从钩子库召回)。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">✏ 写脚本到钩子段(无需主动触发)。</div>
+      <div class="j-agent">检测光标进入钩子段 → 自动召回 5 类钩子候选 <span class="tool-call tc-d3">D3·get_hooks</span>(钩子库:I1.5 已并入)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">右侧自动展开抽屉</div>5 类钩子候选(默认折叠,可展开看)</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">👀 看 5 个候选,每个带类型标签。</div>
+      <div class="j-agent">5 类:疑问 / 数字 / 反差 / 故事 / 情感;每条带历史 ROI(同类业务线表现)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">钩子抽屉</div>① 数字型 · 5 欧睡阿尔卑斯(ROI 1.4x · TTS▶)<br>② 反差型 · 你以为是头等舱…(ROI 1.2x · TTS▶)<br>③ 疑问型 · 凌晨 3 点你能看到啥?(ROI 1.1x)<br>④ 故事型 · 第一次坐欧洲夜卧…(ROI 0.9x)<br>⑤ 情感型 · 娃贴窗指雪山(ROI 1.0x)</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">🎙 试听 5 个,选听感最好的。</div>
+      <div class="j-agent">TTS 用业务线偏好的声线;听感差的(ROI < 0.8)默认折叠。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">试听条</div>当前播放 ① · ▮▮▮▮▮▮▯▯ 0:02</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">4</div>
+      <div class="j-user">✅ 一键替换。</div>
+      <div class="j-agent">替换后 mem 记"这运营在意铁亲子线偏好数字型",下次同类自动把数字型置顶。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">应用结果</div>钩子已替换 ✓ · 抽屉自动收起<br><span class="meta">已记:你在意铁亲子偏好数字型</span></div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how</div>
+    <ul>
+      <li>5 类风格:疑问 / 数字 / 反差 / 故事 / 情感</li>
+      <li>亲子选题 → 情感/故事;省钱选题 → 数字/反差;知识科普 → 疑问</li>
+      <li>"高完播率"不是绝对,要看脚本类型(知识型钩子在情感型上反而扑街)</li>
+      <li>试听是关键:运营会试听 5 个,选听感最好</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ───── I3.5 ───── -->
+<div class="intent" id="i3-5">
+  <div class="intent-head">
+    <span class="iid">I3.5</span>
+    <h3>口语转脚本</h3>
+    <span class="badge bd-p2">P2 · 高级用户</span>
+    <span class="badge bd-dom">D3</span>
+  </div>
+  <div class="intent-quote">运营在路上想到点子,用语音备忘录录下来 — <em>把流水账变结构化</em></div>
+
+  <div class="short-intent">
+    <div class="si-id">P2</div>
+    <div>
+      <h4>怎么做(MVP 之后)</h4>
+      <p>不是 MVP 必须。运营有时在路上录灵感,需要 Agent 把流水账录音变成结构化脚本(钩子/承接/CTA)。<b>实现路径</b>:拖入录音 → Whisper 转写 → LLM 抽主题 + 5 段结构化 → 输出脚本初稿 → 用户在 I3.3 局部迭代里调。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ───── I3.6 ───── -->
+<div class="intent" id="i3-6">
+  <div class="intent-head">
+    <span class="iid">I3.6</span>
+    <h3>脚本预审</h3>
+    <span class="badge bd-inf">基建 · 实时下划线</span>
+    <span class="badge bd-dom">D3</span>
+  </div>
+  <div class="intent-quote">不是用户主动查,<em>写脚本时实时下划线</em></div>
+
+  <div class="note">
+    <div class="note-label">体检结论</div>
+    不需要用户"问",写完脚本应自动跑预审。失败时是<b>阻断式提醒,但永不阻断流程</b>(可强制继续)。预审重点:夸大词("最/绝对/100%") + 政治敏感 + 竞品负面 + 价格/数据违规。运营对"被驳回"很敏感(怕来回改),所以预审应实时(写一段查一段)。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">✏ 写脚本时键入"保证最便宜"。</div>
+      <div class="j-agent">实时分词 + 词典匹配 + LLM 复检 <span class="tool-call tc-d3">D3·audit_streaming</span>(典型敏感词 200ms,LLM 灰色地带 1.5s)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">编辑器内联</div>"保证<u style="text-decoration-color:var(--danger-text);text-decoration-style:wavy">最便宜</u>" ⚠<br><span class="meta">hover 看为什么</span></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">🖱 hover 看"为什么"。</div>
+      <div class="j-agent">显示触发规则 + 风险等级 + 2 条改写建议;每条建议附"如果保留风险"评估。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">hover popover</div>触发:夸大词("最/绝对/最便宜")<br>平台规则:小红书 / 抖音 都禁<br>建议:① 通常更便宜 ② 比同行划算<br><div class="row"><span class="btn">用①</span><span class="btn-secondary btn">强制保留</span></div></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">✅ 接受改写 / 强制保留(此时记录决策)。</div>
+      <div class="j-agent">强制保留:写入 <span class="tool-call tc-mem">mem·force_keep</span> + 后续 D6 合规审跳过此项 + 累计 3 次同类强制保留时给 leader 提醒。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">强制保留确认</div>已保留"最便宜"<br><span class="meta">D6 审核会跳过此项 · 已记日志</span></div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how</div>
+    <ul>
+      <li>预审 4 类:夸大词 + 政治敏感 + 竞品负面 + 价格/数据违规</li>
+      <li>实时(写一段查一段) > 提交时(写完才查)— 减少返工</li>
+      <li>"灰色地带"必须给可操作建议 + 风险评估,不只是"违规"</li>
+      <li>不阻断流程,永远有"强制保留"出口</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ───── I3.7 ───── -->
+<div class="intent" id="i3-7">
+  <div class="intent-head">
+    <span class="iid">I3.7</span>
+    <h3>多账号风格</h3>
+    <span class="badge bd-p1">P1 · 矩阵运营</span>
+    <span class="badge bd-dom">D3</span>
+  </div>
+  <div class="intent-quote"><em>三个账号都要发</em></div>
+
+  <div class="note">
+    <div class="note-label">体检结论</div>
+    P1 保留。多账号矩阵运营核心需求,但不是每个运营都有。<b>差异化不是"同一文换 3 版"</b>,要换钩子结构 + 节奏 + 用词。资深运营有"账号人设档案",每个账号几句话定调。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">✅ 主版脚本通过 → 点「→ 多账号差异化」。</div>
+      <div class="j-agent">读 <span class="tool-call tc-mem">mem·account_profiles</span>(每个账号的人设)+ 主脚本 → LLM 生成 3 版差异化。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">账号 tabs</div>[@意铁日记 主严肃] [@小欧家庭 萌] [@eurail_pro 知识]</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">📋 看到 3 版差异化脚本,各自风格画像。</div>
+      <div class="j-agent">每版顶部贴风格画像:"@小欧家庭 · 第一人称口语 · 萌点多 · 适合家庭场景"。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">@小欧家庭 版</div>"娃第一次坐欧洲夜车,我惊呆了"(第一人称萌)<br>vs 主版:"5 欧睡阿尔卑斯"(第三人称数字)</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">✏ 各自微调 → 进 D6 一键多账号发布。</div>
+      <div class="j-agent">3 版分别走完整 D4-D5-D6 流水(并行),最后在 D6 同时发布。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">3 个并行任务</div>@意铁日记 · D5 进度 80%<br>@小欧家庭 · D5 进度 65%<br>@eurail_pro · D4 进度 45%</div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how</div>
+    <ul>
+      <li>同选题不同账号差异化 3 维:① 账号定位 ② 受众年龄 ③ 平台风格</li>
+      <li>差异化不是"同一文换 3 版",要换钩子结构 + 节奏 + 用词</li>
+      <li>"账号人设档案"是关键 mem,运营自己写的好</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ───── I3.8 (NEW) ───── -->
+<div class="intent" id="i3-8">
+  <div class="intent-head">
+    <span class="iid">I3.8</span>
+    <h3>脚本对比 A/B</h3>
+    <span class="badge bd-new">新建议 · P2</span>
+    <span class="badge bd-dom">D3</span>
+  </div>
+  <div class="intent-quote"><em>我有两版脚本,哪版更好?</em></div>
+
+  <div class="note">
+    <div class="note-label">为什么需要</div>
+    运营写出 2 版后会自己拍脑袋选,Agent 可基于历史数据给客观评估(预测完播 / 互动等)。<b>关键</b>:不只看长度/钩子,要看"和这博主历史爆款的相似度",越像他过去爆的,越可能再爆。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">📝 有 v1 和 v2 两个版本,选中两个 → 「对比」。</div>
+      <div class="j-agent">并行评估:<span class="tool-call tc-d3">D3·predict_completion</span>(预测完播)+ <span class="tool-call tc-d3">D3·similarity_to_history</span>(对比博主历史爆款)+ <span class="tool-call tc-llm">llm·judge</span>。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">A/B 对比触发</div>选中 v1 + v2 → 顶部按钮 [对比 A/B]</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">📊 看对比结果。</div>
+      <div class="j-agent">5 维雷达图 + LLM 一句话总评 + 推荐用哪版。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">对比报告</div>　　　v1　v2<br>钩子　　8.7　7.2<br>结构　　7.8　8.1<br>节奏　　8.5　7.9<br>历史相似 0.85　0.62<br><b>推荐 v1</b> · 钩子和你历史爆款相似度更高</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">✅ 接受推荐 / 自己选。</div>
+      <div class="j-agent">无论选哪个,都把决策记入 mem,后续相同维度判断辅助。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">已选 v1</div>v2 自动归档到草稿(可后续复用)</div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- ════════════════════ D4 · 素材管理 ═══════════════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+
+<div class="domain-head dh-d4">
+  <span class="dot"></span>
+  <span class="domain-id">D4</span>
+  <span class="domain-name">素材管理域</span>
+  <span class="domain-meta">7 意图(原 6 + 新 1) · P0 × 2 / P1 × 2 / 嵌入 1 / 合并 1 / 新增 1</span>
+</div>
+
+<p class="lead">域定位:从"脚本"到"具体镜头"。每段脚本配上对应素材,有缺口给出路。</p>
+
+<!-- ───── I4.1 ───── -->
+<div class="intent" id="i4-1">
+  <div class="intent-head">
+    <span class="iid">I4.1</span>
+    <h3>脚本召回</h3>
+    <span class="badge bd-p0">P0 · D4 主入口</span>
+    <span class="badge bd-dom">D4</span>
+  </div>
+  <div class="intent-quote"><em>找素材</em>(从 D3 自动跳过来,主路径动作)</div>
+
+  <div class="note">
+    <div class="note-label">为什么是 P0</div>
+    D4 主入口。召回的不只是"画面对",还要看:① 时长是否匹配脚本段(3 秒不要给 10 秒) ② 镜头风格统一(全亲子段不混商务) ③ 画质达标。<b>资深运营对"硬需要 vs 软需要"敏感</b>:钩子 3 秒画面是硬需要,中段过渡是软需要。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">👆 D3 写完点「→ 找素材」。</div>
+      <div class="j-agent"><span class="tool-call tc-d4">D4·parse_script</span> 把 5 段脚本拆分 → 每段抽关键词 + 时长 + 风格 → 并行召回 <span class="tool-call tc-d4">D4·recall</span>(每段 top-5)。5 秒内出。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">D4 加载态</div>解析 5 段脚本 ✓<br>召回中 · 1/5 ▮▮▯▯▯ 段 ① 完成<br><span class="meta">3.2s 内完成</span></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">👁 看到分段卡:每段配 1-3 个素材选项。</div>
+      <div class="j-agent">同时跑 <span class="tool-call tc-d4">D4·detect_gaps</span>(I4.3 缺口检测自动起),不需要用户触发。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">召回结果(覆盖率 strip)</div>段 ① ████ 0.92 (3 候选)<br>段 ② ████ 0.88 (5 候选)<br>段 ③ ███▒ 0.65 (3 候选)<br>段 ④ ▒▒ <span style="color:var(--danger-text)">0.42 ⚠</span> (硬缺口)<br>段 ⑤ ████ 0.95 (5 候选)</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">🎯 看是否有红色"硬缺口"标识。</div>
+      <div class="j-agent">硬缺口段闪烁警示 + 自动弹 KP3 决策 modal(进 I4.3 流程)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">硬缺口提示</div>段 ④ CTA · 替代 0.42 < 阈值 0.6<br>请在三选一中决策(I4.3)</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">4</div>
+      <div class="j-user">✏ 召回质量差的段 → 用 I4.2 二次搜索 / I4.5 找类似。</div>
+      <div class="j-agent">右键菜单提供:语义搜索 / 找类似 / 上传新素材 / 切到删段。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">右键菜单</div>段 ③ 不满意:<br>· 二次搜索 (I4.2)<br>· 找类似 (I4.5)<br>· 上传新素材<br>· 删段 → 改写脚本</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">5</div>
+      <div class="j-user">✅ 满意 → 进 D5 粗剪。</div>
+      <div class="j-agent">emit MaterialPack(每段 clip + 时间码 + 备选 2 个)到 D5。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">D5 入参</div>← 来自 D4 · 14 clips<br>段 ④ 标记 ⚠ alt(走了 I4.3 决策 C)<br><span class="meta">D5 知道 alt 段需要二次确认</span></div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how</div>
+    <ul>
+      <li>"画面对" + "时长对" + "风格对"三维度同时满足</li>
+      <li>硬需要(钩子前 3 秒)vs 软需要(中段过渡)— Agent 给不同优先级</li>
+      <li>召回结果运营看几秒就决定:5 秒一段 → 不行立即跳次选</li>
+      <li>风格统一比单段最佳更重要(亲子段不混商务镜头)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ───── I4.2 ───── -->
+<div class="intent" id="i4-2">
+  <div class="intent-head">
+    <span class="iid">I4.2</span>
+    <h3>语义搜索(对象/地点)</h3>
+    <span class="badge bd-p1">调整 · I4.1 的二次搜索</span>
+    <span class="badge bd-dom">D4</span>
+  </div>
+  <div class="intent-quote"><em>夜班火车进站镜头</em> / <em>米兰中央车站</em></div>
+
+  <div class="note">
+    <div class="note-label">体检结论</div>
+    不是独立意图,是 I4.1 召回失败/不满意时的<b>二次搜索动作</b>。"语义"不是关键词:"米兰中央车站" = 米兰 OR Milano Centrale OR 大穹顶火车站。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">⚠ I4.1 段 ③ 召回不满意。</div>
+      <div class="j-agent">在该段卡片底部出现搜索框,带历史搜索建议。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">段 ③ 卡片</div>当前 3 候选 · 不满意?<br>[搜更多: 米兰中央车站夜景]</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">🔍 输入"米兰中央车站夜景"。</div>
+      <div class="j-agent">语义召回不只查标签,而是 ① 地名同义词 ② 画面物体 ③ 氛围词(白天/夜晚 / 阴雨/晴 / 人多/少)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">语义解析</div>查询解析:<br>· 地点:米兰中央车站(Milano Centrale)<br>· 时间:夜晚<br>· 氛围:夜景</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">📋 看 5 个补充候选 → 选 1 个替换。</div>
+      <div class="j-agent">替换后该段标记为"二次召回"(D5 知道这段是手工选的,不是 Agent 默认)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">5 个候选</div>① clip_xxx · 米兰大穹顶夜 · 8s ✓<br>② ...<br>替换后段 ③ 覆盖率 → 0.85</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ───── I4.3 ───── -->
+<div class="intent" id="i4-3">
+  <div class="intent-head">
+    <span class="iid">I4.3</span>
+    <h3>缺口检测</h3>
+    <span class="badge bd-p0">P0 · 自动 + 决策卡</span>
+    <span class="badge bd-dom">D4</span>
+  </div>
+  <div class="intent-quote">召回完默认就要跑 — <em>Agent 主动行为</em></div>
+
+  <div class="note">
+    <div class="note-label">为什么是 P0</div>
+    "硬缺口" vs "软缺口":硬缺口 = 没有任何替代;软缺口 = 有勉强能用的替代。运营 80% 选"近似替代",10% 选"删段缩短",10% 选"补采"。<b>补采是最痛的</b>(发拍摄群 + 等 1-2 天)。决策必须是 KP3 三键互斥,任意一选都能 5 步内回主路径。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">🚨 看到段 ④ 红色"硬缺口"badge。</div>
+      <div class="j-agent">召回完自动跑 <span class="tool-call tc-d4">D4·detect_gaps</span> + 查 <span class="tool-call tc-mem">mem·gap_register</span>(同类缺口下次自动给方案)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">缺口标记</div>段 ④ CTA 30-40s · 亲子互动<br><span class="pill pill-warn">硬缺口 · 替代 0.42 < 0.6 阈值</span></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">🖱 点缺口段 → KP3 三键决策 modal 弹出。</div>
+      <div class="j-agent">每个选项预生成详情(补采 PDF / 替代 top-5 / 删段后脚本):<span class="tool-call tc-d4">D4·gen_shoot_list</span> + <span class="tool-call tc-d3">D3·rewrite_without_gap</span>。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">KP3 决策 modal(560 宽)</div>段 ④ · 亲子互动 · 硬缺口<br>　　A 补采　　　B 删段　　　C 替代<br>　ROI 持平　　ROI -0.1x　　ROI -0.3x<br>　PDF 拍摄单　回 D3 重写　⚠ alt 标记<br>　[选 A]　　　[选 B]　　　[选 C]<br><span class="meta">⌘Z 30 分钟内可撤销</span></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">✅ 选 C(80% 概率)→ 标 ⚠ alt → 继续。</div>
+      <div class="j-agent">写入 gap_register("段 ④ 亲子互动 · 用户选 C 替代 · ROI -0.3x");后续同类缺口自动建议同方案。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">段 ④ 状态</div>✓ 已用近似替代 · 标 ⚠ alt<br>D5 字幕错位检测会优先看此段<br>D6 发布前会再次提醒</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">4</div>
+      <div class="j-user">🔁 30 分钟内反悔 → ⌘Z 撤回到决策点。</div>
+      <div class="j-agent">回退到 modal 状态 + 把当前选 C 改为待选;运营可重新选 A 或 B。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">撤销提示</div>已撤回选 C<br>请重新选 [A 补采] [B 删段] [C 替代]</div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how</div>
+    <ul>
+      <li>80% 替代 / 10% 删段 / 10% 补采(分布写进默认排序)</li>
+      <li>每选一次决策都要写 gap_register(同类下次自动建议)</li>
+      <li>三键互斥 + 每键风险预测一句话 + ⌘Z 30 分钟可撤</li>
+      <li>不能死胡同:任意一选都能 5 步内回主路径</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ───── I4.4 ───── -->
+<div class="intent" id="i4-4">
+  <div class="intent-head">
+    <span class="iid">I4.4</span>
+    <h3>入库打标(含归类)</h3>
+    <span class="badge bd-p1">P1 · 高频但运营懒</span>
+    <span class="badge bd-dom">D4</span>
+  </div>
+  <div class="intent-quote"><em>拍完素材入库</em>(I4.6 已合并到这里)</div>
+
+  <div class="note">
+    <div class="note-label">体检结论</div>
+    保留 P1。每周拍完素材入库的高频动作。运营对"标签"很懒,Agent 自动打就够了。<b>关键设计</b>:打标 + 5 种用法说明同时给(原 I4.6 合并到这里) — 这素材可以用在 X/Y/Z 场景。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">📂 拖入 30 段新素材到 D4 入库区。</div>
+      <div class="j-agent">并行打标:<span class="tool-call tc-d4">D4·detect_objects</span>(物体)+ <span class="tool-call tc-d4">D4·detect_location</span>(地点)+ <span class="tool-call tc-d4">D4·estimate_quality</span>(画质)+ <span class="tool-call tc-llm">llm·gen_use_cases</span>(5 种用法)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">入库进度</div>30 段 · 已处理 12<br>⌛ 物体 ✓ / 地点 ✓ / 画质 ⌛ / 用法 ⌛</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">📋 显示打标结果,运营快速 review。</div>
+      <div class="j-agent">运营懒:Agent 标 95% 准的就默认接受;< 95% 高亮请求确认;运营改的部分 → mem 记下,下次同类更准。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">入库审核(列表)</div>clip_001 · 米兰中央车站 ✓<br>clip_002 · ⚠ 拍摄时段?(白天/夜晚)<br>clip_003 · 街道:维多利亚?(请确认)<br>...</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">👀 每段下面看"5 种用法"。</div>
+      <div class="j-agent">5 种用法 = ① 主用途(可作主镜头) ② 钩子段 ③ 中段过渡 ④ 结尾 ⑤ 装饰 B-roll。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">clip_005 用法建议</div>① 主:亲子选题主镜头<br>② 钩子:0-3s 反差(娃贴窗 + 雪山)<br>③ 中段:30-40s 情感共鸣<br>④ 结尾:慢镜头 fade out<br>⑤ B-roll:任何意铁选题装饰</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">4</div>
+      <div class="j-user">✅ 入库完成 → 进 D4 索引。</div>
+      <div class="j-agent">embedding 入向量库,后续 I4.1 召回可以用上;同时通知正在写脚本的同事"有新素材"(订阅级)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">入库完成</div>30 段 · 索引中(后台 30s)<br>同事通知:@小欧 你的"亲卧"项目有 5 段新素材</div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how</div>
+    <ul>
+      <li>运营对标签很懒,Agent 自动打就够,只需要 review</li>
+      <li>具体地名(街道级)+ 拍摄时段(运营记得)需要人工补</li>
+      <li>"5 种用法"是 Agent 主动价值:让运营立即知道"这素材能用在哪"</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ───── I4.5 ───── -->
+<div class="intent" id="i4-5">
+  <div class="intent-head">
+    <span class="iid">I4.5</span>
+    <h3>相似召回</h3>
+    <span class="badge bd-emb">嵌入 · I4.1 右键菜单</span>
+    <span class="badge bd-dom">D4</span>
+  </div>
+  <div class="intent-quote"><em>找类似</em>(召回结果不满意时用)</div>
+
+  <div class="short-intent">
+    <div class="si-id">嵌入</div>
+    <div>
+      <h4>怎么不打扰运营</h4>
+      <p>不是独立意图,是 I4.1 的右键菜单。看到一段不满意时点"找类似",Agent 给 5 个相似候选(默认"画面 + 风格"双相似)。运营看不到独立入口。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ───── I4.6 ───── -->
+<div class="intent" id="i4-6">
+  <div class="intent-head">
+    <span class="iid">I4.6</span>
+    <h3>入库归类(预生成 5 种用法)</h3>
+    <span class="badge bd-mrg">合并 · 并入 I4.4</span>
+    <span class="badge bd-dom">D4</span>
+  </div>
+  <div class="intent-quote"><em>是 I4.4 入库的子动作,不应独立</em></div>
+
+  <div class="short-intent">
+    <div class="si-id">合并</div>
+    <div>
+      <h4>怎么合并</h4>
+      <p>已并入 <a href="#i4-4">I4.4 入库打标</a> 的"5 种用法"环节。运营拖入素材时,打标 + 5 种用法说明一起出,不需要"先打标再归类"两步。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ───── I4.7 (NEW) ───── -->
+<div class="intent" id="i4-7">
+  <div class="intent-head">
+    <span class="iid">I4.7</span>
+    <h3>素材库盘点</h3>
+    <span class="badge bd-new">新建议 · P2</span>
+    <span class="badge bd-dom">D4</span>
+  </div>
+  <div class="intent-quote"><em>我们意铁素材够不够覆盖下季度计划?</em></div>
+
+  <div class="note">
+    <div class="note-label">为什么需要</div>
+    资深运营 / leader 视角:看素材库覆盖度,提前安排拍摄。<b>数据看板类意图</b>。运营 leader 关心"未来可写选题数 / 现有素材覆盖比",这是预算和拍摄计划依据。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">📊 leader 进 D4 「素材盘点」面板。</div>
+      <div class="j-agent">CRON 每周一跑覆盖率分析:对比"下季度计划选题"和"现有素材标签覆盖"。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">盘点首屏</div>意铁素材库总览:14,328 段<br>下季度计划:48 个选题<br>覆盖估算:32 个完全覆盖 / 16 个部分缺口</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">🔍 看缺口热力图(主题 × 业务线)。</div>
+      <div class="j-agent">高亮"缺口最大"的 3 个主题,给"需要补拍多少段"建议。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">缺口热力图</div>　　亲子　夜车　省钱　节假<br>意铁　███　█▒▒　███　▒▒▒ <span class="pill pill-warn">缺</span><br>英铁　██▒　███　██▒　███<br><span class="meta">意铁节假日素材最缺,建议本月补拍 12 段</span></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">📤 导出补拍计划 → 发拍摄团队。</div>
+      <div class="j-agent">基于缺口生成 PDF 拍摄单(地点 + 时长 + 关键元素清单),发飞书。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">补拍计划导出</div>意铁节假日补拍计划<br>12 段 · 5 个地点 · 2 周完成<br>已发到 @拍摄团队</div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- ════════════════════ D5 · 剪辑生产 ═══════════════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+
+<div class="domain-head dh-d5">
+  <span class="dot"></span>
+  <span class="domain-id">D5</span>
+  <span class="domain-name">剪辑生产域</span>
+  <span class="domain-meta">7 意图(原 6 + 新 1) · P0 × 3 / P1 × 2 / P2 × 1 / 新增 1</span>
+</div>
+
+<p class="lead">域定位:从"脚本+素材"到"成片"。Agent 粗剪到 80% 可用,人工最后 20% 微调。</p>
+
+<!-- ───── I5.1 ───── -->
+<div class="intent" id="i5-1">
+  <div class="intent-head">
+    <span class="iid">I5.1</span>
+    <h3>智能粗剪</h3>
+    <span class="badge bd-p0">P0 · D5 主路径</span>
+    <span class="badge bd-dom">D5</span>
+  </div>
+  <div class="intent-quote"><em>能不能给我剪个差不多的版本</em>(默认开启,可关)</div>
+
+  <div class="note">
+    <div class="note-label">为什么是 P0</div>
+    粗剪可用度 ≥ 80% 是关键 KPI。低于这个值,运营宁愿自己剪。资深运营关心:① 卡点对不对(BGM 节奏与镜头切换)② 字幕时机 ③ 转场是否生硬。<b>"待人工区段标记"非常关键</b> — Agent 不确定的地方,主动标出来让人工看,而不是硬剪。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">✅ D4 完成 → 自动进 D5 粗剪。</div>
+      <div class="j-agent">不需要用户触发 · 调 <span class="tool-call tc-d5">D5·rough_cut</span>(BGM 选 + 卡点对齐 + 转场)+ <span class="tool-call tc-d5">D5·detect_uncertainty</span>(Agent 信心低的段标记)。3-8 分钟。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">D5 加载首屏</div>粗剪进行中 · 预计 4 分 30 秒<br>进度:① 选 BGM ✓ ② 卡点对齐 ⌛ ③ 转场 ⏸ ④ 字幕 ⏸<br><span class="meta">不卡你 · 你可以先去做其他事</span></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">⏰ 完成 push 通知:粗剪好了。</div>
+      <div class="j-agent">push 时一并给"3 个待人工区段"清单,让运营带着任务进来,不是看一遍才发现问题。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">D5 push 通知</div>✓ 粗剪完成 · 4m 12s · 可用度 0.83<br>3 个待人工区段:<br>· 段 ② 转场偏硬(13s)<br>· 段 ④ alt 素材接缝(31s)<br>· 段 ⑤ 结尾节奏快了(43s)</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">👁 预览,直接跳到 3 个待人工区段。</div>
+      <div class="j-agent">时间轴上 3 个段闪烁标识 + "为什么不确定"hint(信心 0.62 / 替代素材接缝 / BGM 节奏不匹配)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">D5 预览 + 时间轴</div>视频预览(占 65%)<br>━━━━●━━━━━●━━━━━━━━●━━<br>　段②⚠　段④⚠　段⑤⚠<br><span class="meta">点 ⚠ 跳过去 · 不用全片看</span></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">4</div>
+      <div class="j-user">✏ 选「跳到 Max 工程」做微调。</div>
+      <div class="j-agent">导出 .fcpxml(Final Cut)/ .prproj(Premiere)工程文件 + 待人工区段已标记。运营在 Max 里直接看到红色标记。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">导出选择</div>① 在 TripFlow 内微调(简单)<br>② 跳到 Final Cut(资深)<br>③ 直接进 D6(粗剪够用了)</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">5</div>
+      <div class="j-user">✅ 微调完 → 出片 → 进 D6 审核发布。</div>
+      <div class="j-agent">Max 修改回写 TripFlow,可用度评分 → mem(下次同类 BGM 优先级调整)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">出片完成</div>✓ 成片 · 45s · 1080p<br><div class="row"><span class="btn">→ D6 审核</span><span class="btn-secondary btn">出多比例</span></div></div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how</div>
+    <ul>
+      <li>粗剪可用度 ≥ 80% 是关键 KPI(低于这个值,运营宁愿自己剪)</li>
+      <li>三个关心点:卡点(BGM × 镜头切换) / 字幕时机 / 转场是否生硬</li>
+      <li>"待人工区段"主动标出来 > 假装全自动剪好</li>
+      <li>资深运营会用 Final Cut/Premiere,Agent 要能导工程文件</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ───── I5.2 ───── -->
+<div class="intent" id="i5-2">
+  <div class="intent-head">
+    <span class="iid">I5.2</span>
+    <h3>加字幕</h3>
+    <span class="badge bd-p0">P0 · 刚需基本功</span>
+    <span class="badge bd-dom">D5</span>
+  </div>
+  <div class="intent-quote">所有视频都要加字幕 — <em>偏差 ≥ 0.2s 自动标红</em></div>
+
+  <div class="note">
+    <div class="note-label">为什么是 P0</div>
+    所有视频刚需。字幕 3 痛:① 时间偏差(0.2s 已可见)② 错别字(尤其专有名词:地名 / 品牌)③ 多语言换行不对。资深运营会在 Max 里"逐句对",非常耗时。<b>Agent 自动校时,偏差 ≥ 0.2s 自动标红</b>是最有价值的。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">⌛ 粗剪流水内,字幕自动生成(无需触发)。</div>
+      <div class="j-agent"><span class="tool-call tc-d5">D5·whisper_transcribe</span>(转写)+ <span class="tool-call tc-d5">D5·align_timing</span>(校时)+ <span class="tool-call tc-d5">D5·proper_noun_fix</span>(查脚本里专有名词词典回填)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">字幕自动加载</div>转写 ✓ · 校时 ✓ · 专名修正 ✓<br>识别 23 句 · 标红 4 句(偏差 ≥0.2s)</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">🚨 看到 4 句标红的字幕。</div>
+      <div class="j-agent">每条标红显示:① 当前时间码 ② Agent 建议时间码 ③ 偏差幅度。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">字幕条 · 标红</div>03.4-04.6s "5 欧睡了一夜" <span class="pill pill-warn">⚠ 偏差 +0.3s</span><br>建议:03.7-04.9s [一键校时]</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">🖱 一键校时(批量) + 改 1-2 个错字。</div>
+      <div class="j-agent">"批量校时"对所有标红一次执行,典型节省 5-10 分钟。错字修改 → 写入专名词典 → 下次同类自动正确。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">批量操作</div>4 句校时 · 一键应用 ✓<br>"米兰中央站" → 词典修正:Milano Centrale<br><span class="meta">已记到专名词典</span></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">4</div>
+      <div class="j-user">👁 预览成片,字幕已对齐。</div>
+      <div class="j-agent">检测多语言换行:中文 ≤ 14 字/行 / 英文 ≤ 6 词/行,超出自动断行建议。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">字幕样式预览</div>预览不同位置:底部 1/3 · 顶部 1/4<br>预览不同字号:大 / 中 / 小</div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how</div>
+    <ul>
+      <li>3 痛:时间偏差 / 错别字(地名/品牌)/ 多语言换行</li>
+      <li>偏差 ≥0.2s 是肉眼可见阈值,标红</li>
+      <li>专名词典是 mem 沉淀,越用越准</li>
+      <li>一条 45s 视频改字幕,人工要 10-15 分钟,Agent 要降到 1-2 分钟</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ───── I5.3 ───── -->
+<div class="intent" id="i5-3">
+  <div class="intent-head">
+    <span class="iid">I5.3</span>
+    <h3>TTS 配音</h3>
+    <span class="badge bd-p1">P1 · 关键是用户音库</span>
+    <span class="badge bd-dom">D5</span>
+  </div>
+  <div class="intent-quote"><em>AI 配个音 / 用我自己的克隆音</em></div>
+
+  <div class="note">
+    <div class="note-label">体检结论</div>
+    P1。<b>关键是支持"用户音库"</b>(运营自己 / 合作主播声音克隆)。资深运营有自己声音库,Agent 应该克隆。不同业务线接受度不同:<b>知识型可接受 AI 音,情感型必须真人。</b>
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">🎙 在 D5 选音色:AI 标准音 / 我的克隆音 / 不要 TTS。</div>
+      <div class="j-agent">基于业务线 + 内容类型,默认推荐:亲子 → "你的克隆音";知识型 → "AI 标准音"。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">音色选择</div>○ AI 标准音(温暖女声)<br>● 你的克隆音(基于 12 段历史样本) · 推荐<br>○ 不用 TTS(自己后期录)</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">⌛ 生成。</div>
+      <div class="j-agent">克隆音生成需 30s,标准音 5s;期间运营可继续做其他事。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">生成进度</div>克隆音 · 30s 内出 ⌛<br><span class="meta">不等你,可去 D6 文案</span></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">👂 试听 → 通过 / 重做。</div>
+      <div class="j-agent">逐段试听 + 不自然的段(韵律评分低)主动标记 → 提供"重读这段"按钮。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">试听条</div>段 ② [▶] · 评分 0.92 ✓<br>段 ④ [▶] · 评分 0.71 <span class="pill pill-warn">⚠</span> [重读]<br><span class="meta">韵律不自然,可以重读这段</span></div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how</div>
+    <ul>
+      <li>TTS 痛:听感不自然(机器感重)</li>
+      <li>资深运营有声音样本,Agent 应该克隆</li>
+      <li>知识型可 AI / 情感型必须真人(亲子内容用 AI 会被吐槽)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ───── I5.4 ───── -->
+<div class="intent" id="i5-4">
+  <div class="intent-head">
+    <span class="iid">I5.4</span>
+    <h3>封面候选</h3>
+    <span class="badge bd-p0">P0 · CTR 关键</span>
+    <span class="badge bd-dom">D5</span>
+  </div>
+  <div class="intent-quote"><em>3 个封面候选</em></div>
+
+  <div class="note">
+    <div class="note-label">为什么是 P0</div>
+    封面对完播 / CTR 影响大,资深运营会反复挑。<b>3 元素</b>:① 主体清晰(占画面 40%+) ② 文案 ≤ 8 字 ③ 色彩对比(避免低饱和)。资深运营有"业务线封面公式":意铁亲子用暖色 + 笑脸 / 英铁商务用冷色 + 数字。会做小范围 A/B(3 个封面跑数据看 CTR)。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">⌛ 粗剪完,Agent 自动给 3 个封面候选。</div>
+      <div class="j-agent">从成片关键帧 + 高情绪表情 + 文案叠加 <span class="tool-call tc-d5">D5·gen_thumbnail</span>;读 <span class="tool-call tc-mem">mem·biz_cover_formula</span>(业务线封面公式)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">3 候选(横向)</div>① 暖色 + 笑脸 + "5 欧"<br>② 冷色 + 雪山 + "阿尔卑斯"<br>③ 反差红黄 + "卧铺/夜车"</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">👁 看每个的"为什么是它"说明。</div>
+      <div class="j-agent">每个候选标:① 公式来源("意铁亲子标准") ② 评分(主体 / 文案 / 色彩) ③ 历史相似封面 CTR。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">封面 ① 详情</div>意铁亲子公式 · 暖色 + 笑脸 + 数字<br>主体 9.1 / 文案 8.7 / 色彩 8.5<br>历史相似封面平均 CTR 6.2%</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">✏ 选 1 个 / 自定义微调(改文字/换主体)。</div>
+      <div class="j-agent">微调时实时检测 3 元素是否满足,不满足 → 警示。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">编辑封面 ①</div>文案:[5 欧睡阿尔卑斯](10 字 ⚠ > 8)<br><span class="meta">建议精简到 ≤ 8 字</span></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">4</div>
+      <div class="j-user">🧪(可选)做 A/B 测试 → 选 2-3 个跑数据。</div>
+      <div class="j-agent">D6 发布时绑定 A/B 标记 → 24h 后回流 CTR 数据 → 自动选优胜版替换。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">A/B 测试设置</div>选 ① + ② 都发<br>各 50% 流量 · 24h 后看 CTR 选优<br><div class="row"><span class="btn">启用 A/B</span></div></div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how</div>
+    <ul>
+      <li>3 元素:主体清晰 40%+ / 文案 ≤ 8 字 / 色彩对比</li>
+      <li>业务线封面公式:意铁亲子(暖色+笑脸)/ 英铁商务(冷色+数字)</li>
+      <li>资深运营做 A/B,3 个封面各跑流量,看 CTR 选优</li>
+      <li>"为什么是它"必须解释清楚(公式 + 评分 + 历史 CTR)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ───── I5.5 ───── -->
+<div class="intent" id="i5-5">
+  <div class="intent-head">
+    <span class="iid">I5.5</span>
+    <h3>多比例</h3>
+    <span class="badge bd-p1">P1 · 多平台分发</span>
+    <span class="badge bd-dom">D5</span>
+  </div>
+  <div class="intent-quote"><em>9:16 转 1:1</em>(分发 IG/视频号时用)</div>
+
+  <div class="note">
+    <div class="note-label">体检结论</div>
+    P1 多平台分发时需要。Agent 不能简单裁切,要识别画面主体 <b>智能 reframe</b>(主体始终居中)。不同比例字幕位置要重排(9:16 字幕在底部 1/3 / 1:1 在底部 1/4)。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">✅ 9:16 主版完成 → 一键「转 1:1 / 16:9」。</div>
+      <div class="j-agent"><span class="tool-call tc-d5">D5·smart_reframe</span> 逐段识别主体 + 智能裁切 + 字幕位置重排。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">多比例转换面板</div>主版 9:16 ✓<br>[+] 转 1:1(IG)· 预计 30s<br>[+] 转 16:9(视频号)· 预计 45s</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">👁 review 每段 reframe 效果。</div>
+      <div class="j-agent">主体识别失败的段标红(运动镜头 / 多人镜头),给手动调整入口。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">1:1 版预览</div>段 ① ✓ 主体居中<br>段 ② ⚠ 多人 · 主体识别不确定 [手动调]<br>段 ③-⑤ ✓</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">✏ 微调有问题的段。</div>
+      <div class="j-agent">手动调时拖动主体框,Agent 实时预览;调整记入 mem。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">手动 reframe</div>段 ② · 主体框拖动<br><span class="meta">Agent 学:多人镜头你偏好框中间人</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ───── I5.6 ───── -->
+<div class="intent" id="i5-6">
+  <div class="intent-head">
+    <span class="iid">I5.6</span>
+    <h3>节奏优化</h3>
+    <span class="badge bd-p2">P2 · 口播专用</span>
+    <span class="badge bd-dom">D5</span>
+  </div>
+  <div class="intent-quote"><em>剪掉口癖和停顿</em>(口播类视频用)</div>
+
+  <div class="short-intent">
+    <div class="si-id">P2</div>
+    <div>
+      <h4>怎么做(MVP 之后)</h4>
+      <p>Agent 识别"嗯啊呃"等口癖 + 长停顿(>0.8s)→ 标记可剪节点。<b>不能全自动剪</b>(有些停顿是节奏需要),运营要 review。MVP 之后再做。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ───── I5.7 (NEW) ───── -->
+<div class="intent" id="i5-7">
+  <div class="intent-head">
+    <span class="iid">I5.7</span>
+    <h3>剪辑模板复用</h3>
+    <span class="badge bd-new">新建议 · P2</span>
+    <span class="badge bd-dom">D5</span>
+  </div>
+  <div class="intent-quote"><em>按上次那个亲子模板剪</em></div>
+
+  <div class="note">
+    <div class="note-label">为什么需要</div>
+    资深运营有"自己的模板"(开头 logo / 字幕样式 / 转场风格),希望 Agent 套用,不每次重设。<b>"剪辑指纹"是个人风格的标准化</b>。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">⌛ 进 D5 时,顶部有"沿用上次模板?"提示。</div>
+      <div class="j-agent">从 mem 读最近 5 条同业务线视频的剪辑参数(开头 logo / 字幕样式 / 转场 / BGM 音量),提炼为模板。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">模板提示 banner</div>沿用「意铁亲子标准」模板?<br>(基于你最近 5 条同类视频提炼)<br><div class="row"><span class="btn">用</span><span class="btn-secondary btn">不用</span><span class="btn-secondary btn">先看模板</span></div></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">👁 「先看模板」→ 看模板细节。</div>
+      <div class="j-agent">展示模板 5 维:logo 位置 / 字幕字体 / 转场类型 / BGM 音量曲线 / 结尾 CTA 样式。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">模板:意铁亲子标准</div>logo:左上 · 0.5s 淡入<br>字幕:HarmonyOS Sans · 36px · 黄底<br>转场:平剪 80% / 闪白 15%<br>BGM:整段 -12dB · 收尾 fade out 1.5s<br>CTA:"完整路线 → 评论区"<br><div class="row"><span class="btn">沿用</span><span class="btn-secondary btn">改一改</span></div></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">✅ 沿用 → 粗剪自动套模板。</div>
+      <div class="j-agent">套模板后,运营若再调整,新调整覆盖模板,但写入"模板演化"历史。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">粗剪 with 模板</div>已套用模板 ✓<br>预计成片可用度提升至 0.88<br>(原 0.83 → 提升 0.05)</div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how</div>
+    <ul>
+      <li>资深运营都有"剪辑指纹":logo / 字幕 / 转场 / BGM / CTA 样式相对固定</li>
+      <li>模板是个人风格沉淀,不是一刀切</li>
+      <li>套模板能省 30-50% 剪辑时间</li>
+    </ul>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- ════════════════════ D6 · 审核发布 ═══════════════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+
+<div class="domain-head dh-d6">
+  <span class="dot"></span>
+  <span class="domain-id">D6</span>
+  <span class="domain-name">审核发布域</span>
+  <span class="domain-meta">7 意图(原 5 + 新 2) · P0 × 3 / P1 × 2 / 基建 1 / 新增 2</span>
+</div>
+
+<p class="lead">域定位:从"成片"到"已发布"。合规过审 + 多平台错峰 + 数据闭环。</p>
+
+<!-- ───── I6.1 ───── -->
+<div class="intent" id="i6-1">
+  <div class="intent-head">
+    <span class="iid">I6.1</span>
+    <h3>合规审</h3>
+    <span class="badge bd-p0">P0 · 上线必跑</span>
+    <span class="badge bd-dom">D6</span>
+  </div>
+  <div class="intent-quote">所有视频上线前必跑 — <em>6 项 checklist</em></div>
+
+  <div class="note">
+    <div class="note-label">为什么是 P0</div>
+    所有视频上线前必跑。6 项:① 敏感词 ② 政治 / 民族 / 宗教 ③ 竞品负面 ④ 价格 / 数据真实性 ⑤ 版权(BGM / 镜头) ⑥ 平台规则。资深运营对"灰色地带"敏感(不是明确违规但有风险)。<b>审核失败要给 actionable 改写建议</b>,不能只说"违规请改"。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">✅ D5 出片完成 → 自动跳 D6 → 「合规审」。</div>
+      <div class="j-agent">并行跑 6 项:<span class="tool-call tc-d6">D6·sensitive_words</span> + <span class="tool-call tc-d6">D6·political</span> + <span class="tool-call tc-d6">D6·competitor</span> + <span class="tool-call tc-d6">D6·data_truth</span> + <span class="tool-call tc-d6">D6·copyright</span> + <span class="tool-call tc-d6">D6·platform_rules</span>。10-30s。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">D6 审核进度</div>1. 敏感词 ✓<br>2. 政治/民族 ✓<br>3. 竞品负面 ✓<br>4. 价格/数据真实性 ⚠<br>5. 版权 ⌛<br>6. 平台规则 ⌛</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">🚨 看到第 4 项标红:第 12s 字幕"绝对最便宜"。</div>
+      <div class="j-agent">每条违规给:① 触发规则 ② 风险等级 ③ 多条改写建议(2-3 个)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">第 4 项详情</div>第 12s 字幕"<u style="text-decoration-color:var(--danger-text)">绝对最便宜</u>"<br>触发:夸大词 + 价格不可证<br>风险:小红书会限流 / 抖音可能下架<br>建议:① 通常更便宜 ② 比同行划算 ③ 性价比高<br><div class="row"><span class="btn">用①</span><span class="btn-secondary btn">强制保留</span></div></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">✏ 接受改写 ① → 字幕 + TTS 重新生成第 12s。</div>
+      <div class="j-agent">局部重做不重新粗剪整片(只刷新涉及段),省时间。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">改写应用</div>第 12s 字幕已改 · TTS 重读 ⌛ 5s<br><span class="meta">不重剪整片</span></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">4</div>
+      <div class="j-user">✅ 6 项全过 → 进发布流程。</div>
+      <div class="j-agent">通过后写 audit_log,后续 D6.5 数据回流时复盘"哪些审核项最常触发"。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">审核通过</div>6/6 ✓ · audit_id_xxx<br><div class="row"><span class="btn">→ 配置发布</span></div></div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how</div>
+    <ul>
+      <li>"灰色地带"判断很重要:不是明确违规但有风险 → 给改写建议</li>
+      <li>改写建议 ≥ 2 条(让运营有选择)</li>
+      <li>"强制保留"出口必须有,但写入决策日志(防滥用)</li>
+      <li>过去被驳回最多的类:① 夸大词 ② 数据不可证 ③ 平台规则更新没跟上</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ───── I6.2 ───── -->
+<div class="intent" id="i6-2">
+  <div class="intent-head">
+    <span class="iid">I6.2</span>
+    <h3>一键多平台</h3>
+    <span class="badge bd-p0">P0 · 错峰发</span>
+    <span class="badge bd-dom">D6</span>
+  </div>
+  <div class="intent-quote"><em>三平台都发</em>(每条都要发到 IG/TK/XHS)</div>
+
+  <div class="note">
+    <div class="note-label">为什么是 P0</div>
+    "一键" ≠ "同步发"。每个平台时间不同(<b>错峰发</b>),且每个平台对应不同账号矩阵。资深运营会留 1-2 个平台延后(等主平台数据出来再决定)。<b>失败要明确告知</b>:哪个平台失败 + 原因 + 重试。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">✅ 选发布平台:IG主 + TK主 + XHS副。</div>
+      <div class="j-agent">读 user_prefs 中"账号矩阵";自动勾选"通常发"的平台,运营调微即可。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">平台选择</div>☑ IG @意铁日记 主<br>☑ TikTok @意铁日记 主<br>☑ 小红书 @意铁副号<br>☐ 视频号(本周不发)</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">🕐 看错峰时间(<a href="#i6-4">I6.4 推荐</a>)。</div>
+      <div class="j-agent">每平台推荐时间不同:IG 19:30 / TK 20:00 / XHS 21:00;运营可改。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">错峰排程</div>IG 19:30(预估流量 +18%)<br>TK 20:00(预估流量 +12%)<br>XHS 21:00(预估流量 +8%)<br><span class="meta">点时间可改</span></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">✅ 一键发布。</div>
+      <div class="j-agent">并行调 3 个平台 API → 实时返回状态;失败的标红 + 给原因 + 重试入口。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">发布进度</div>IG ✓ 19:31 已发(链接)<br>TK ✓ 20:01 已发(链接)<br>XHS ⚠ 21:02 失败:封面尺寸不符<br><div class="row"><span class="btn">改封面 → 重发</span></div></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">4</div>
+      <div class="j-user">🔄 XHS 失败 → 重试 / 改原因后重发。</div>
+      <div class="j-agent">失败原因写入"平台失败模式"知识库;下次同类发布提前预防(如下次封面尺寸自动适配 XHS 要求)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">XHS 重发</div>封面已自动适配 XHS · 1080×1080<br>重发 ⌛<br><span class="meta">下次会提前预防</span></div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how</div>
+    <ul>
+      <li>"一键" ≠ "同步发"。错峰是默认</li>
+      <li>1-2 个平台延后:看主平台数据再决定怎么发</li>
+      <li>失败必告知:哪个平台 + 原因 + 重试入口</li>
+      <li>失败模式要沉淀,下次预防</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ───── I6.3 ───── -->
+<div class="intent" id="i6-3">
+  <div class="intent-head">
+    <span class="iid">I6.3</span>
+    <h3>差异化文案</h3>
+    <span class="badge bd-p0">P0 · 默认要给</span>
+    <span class="badge bd-dom">D6</span>
+  </div>
+  <div class="intent-quote">运营常忽略,<em>Agent 默认要给三版</em></div>
+
+  <div class="note">
+    <div class="note-label">为什么是 P0</div>
+    不同平台文案风格差异大:<b>XHS</b> 长文 + emoji + 多 hashtag(小红书味)/ <b>TK</b> 短句 + 1-2 hashtag(口语感)/ <b>IG</b> 中等长度 + hashtag 群。运营常忽略(全平台用一个文案),Agent 默认要给三版。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">✅ 进入发布页 → 看到三版文案 diff(默认已生成)。</div>
+      <div class="j-agent"><span class="tool-call tc-d6">D6·gen_caption</span> 三版并行生成,基于平台 voice 模型 + 业务线偏好。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">三版文案 tab</div>[XHS · 长文] [TK · 短句] [IG · 中等]</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">📋 切到 XHS tab,看长文 + emoji + hashtag。</div>
+      <div class="j-agent">XHS 文案 ≥ 200 字,emoji 嵌入自然位置(不堆砌),hashtag 6-10 个(挑近期热的)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">XHS 文案</div>"分享一个我超爱的欧洲玩法 ✨ 5 欧睡了一夜阿尔卑斯..."<br>(245 字 + 7 emoji)<br>#意铁攻略 #欧洲夜火车 #亲子游 ...(8 个 hashtag)<br><div class="row"><span class="btn-secondary btn">看 hashtag 推荐</span></div></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">✏ XHS 加 1-2 个新 hashtag(运营手工挑近期热的)。</div>
+      <div class="j-agent">运营改的 hashtag → 写入"个人 hashtag 偏好库",下次自动推。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">hashtag 推荐</div>近期热(7d):<br>#秋日欧旅 ↑42% · #欧洲夜车 ↑28%<br>#5 欧挑战 ↑15%<br><div class="row"><span class="btn">加这 3 个</span></div></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">4</div>
+      <div class="j-user">✏ TK 改一句话(短句感不够)。</div>
+      <div class="j-agent">实时检测 TK 文案长度 + 句式;若改后 > 100 字提醒。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">TK 文案</div>"5 欧!阿尔卑斯一夜!欧洲夜火车真上头 🚂"<br>(46 字 ✓ TK 风格)<br>#nighttrain #europe</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">5</div>
+      <div class="j-user">✅ 三版通过 → 一键发布(I6.2)。</div>
+      <div class="j-agent">三版文案绑定到对应平台,发布时自动用各自版本。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">已绑定</div>XHS · 245 字 + 8 hashtag<br>TK · 46 字 + 2 hashtag<br>IG · 120 字 + 5 hashtag</div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how</div>
+    <ul>
+      <li>XHS:长文 + emoji + 多 hashtag,要"小红书味"</li>
+      <li>TK:短句 + 1-2 hashtag,口语感</li>
+      <li>IG:中等长度 + hashtag 群(可埋多个)</li>
+      <li>运营会改 hashtag(手工挑近期热的)— Agent 推荐近 7d 上升 hashtag</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ───── I6.4 ───── -->
+<div class="intent" id="i6-4">
+  <div class="intent-head">
+    <span class="iid">I6.4</span>
+    <h3>最佳时机</h3>
+    <span class="badge bd-p1">P1 · 数据驱动</span>
+    <span class="badge bd-dom">D6</span>
+  </div>
+  <div class="intent-quote"><em>什么时候发最好?</em></div>
+
+  <div class="note">
+    <div class="note-label">体检结论</div>
+    P1。基于历史数据给推荐时间。"最佳时机"3 维:① 平台流量高峰(IG 19-21 点) ② 受众活跃(亲子内容晚 8 点 / 通勤 7-8 点) ③ 竞品错峰。<b>推荐时间附 6 小时柱状图</b>,看选这个点的相对优势。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">🕐 在 D6 排程页,看 Agent 推荐时间。</div>
+      <div class="j-agent">三路信号:<span class="tool-call tc-d6">D6·platform_traffic</span>(平台流量) + <span class="tool-call tc-d6">D6·audience_active</span>(账号粉丝活跃) + <span class="tool-call tc-d6">D6·peer_avoid</span>(同行错峰)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">推荐时间</div>IG 推荐:今晚 19:30<br>预估流量 +18% · 受众活跃 +12%<br>避开同行 @A 19:15 发的</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">📊 看附近 6 小时柱状对比。</div>
+      <div class="j-agent">柱状图显示:每小时预估流量 / 受众活跃度 / 同行密度。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">6 小时对比</div>17:00 ▮▮▮ 0.7x<br>18:00 ▮▮▮▮ 0.85x<br>19:00 ▮▮▮▮▮▮ 1.12x<br>19:30 ▮▮▮▮▮▮▮ 1.18x ⭐<br>20:00 ▮▮▮▮▮▮ 1.15x<br>21:00 ▮▮▮▮▮ 1.05x</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">✅ 接受推荐 / 改时间。</div>
+      <div class="j-agent">运营改了 → 写入 mem"用户偏好这个时段",下次推荐微调。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">最终时间</div>已排:今晚 19:30<br><span class="meta">预估流量 +18% · 已避开同行</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ───── I6.5 ───── -->
+<div class="intent" id="i6-5">
+  <div class="intent-head">
+    <span class="iid">I6.5</span>
+    <h3>数据回流</h3>
+    <span class="badge bd-inf">基建 · 24h CRON + push</span>
+    <span class="badge bd-dom">D6</span>
+  </div>
+  <div class="intent-quote">不是用户主动触发 — <em>24h 后 CRON 自动跑 + push 给运营</em></div>
+
+  <div class="note">
+    <div class="note-label">体检结论</div>
+    <b>24h 后看</b>:播放 / 完播 / 互动 / 分享 / 评论质量。"正向"标准:viralScore ≥ 历史中位数 × 1.2。<b>正向 → 自动衍生 3 条仿写候选 push 给运营</b>(这是闭环关键 — 让爆款变成下一波爆款的种子)。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">⏰(被动)24h 后,收到 push。</div>
+      <div class="j-agent">CRON 24h 后跑 <span class="tool-call tc-d6">D6·publish_metrics</span> 拉数据 + 算 viralScore + 比历史中位数。正向 → 自动 <span class="tool-call tc-d3">D3·gen_imitations</span> 衍生 3 条仿写候选。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">push 通知 24h 后</div>🎉 昨天那条爆了!viralScore 8.7<br>(历史中位 6.5 · 1.34x · 正向)<br>已为你写好 3 条衍生仿写,要看吗?</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">📊 点 push → 看回流数据 + 衍生候选。</div>
+      <div class="j-agent">数据 = 一个 dashboard;衍生候选 = 3 条 D1 卡片格式(可直接「↻ 仿写」)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">D6 回流面板</div>v_xxx 24h 数据:<br>· 播放 12.4w · 完播 78%<br>· 互动 1.4% · 分享 320<br>· 评论质量 0.85(高)<br><br><b>3 条衍生仿写</b>(用相同钩子结构,换地点)<br>① 阿尔卑斯 → 米兰湖区<br>② 阿尔卑斯 → 多洛米蒂<br>③ 阿尔卑斯 → 五渔村</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">✅ 选 1 条 → 直接进 D3 写脚本。</div>
+      <div class="j-agent">用原视频成功要素(钩子结构 / 节奏 / BGM)作 D3 prompt 的 high-priority 约束;脚本质量起点高。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">D3 入参</div>← 来自 D6 数据回流 · 衍生第 ①<br>沿用钩子结构:数字 + 反差<br>沿用节奏:钩 / 承 / 正 / CTA<br>换地点:米兰湖区</div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how</div>
+    <ul>
+      <li>"爆了"标准:viralScore ≥ 历史中位数 × 1.2</li>
+      <li>正向数据 → 立即衍生 3 条(趁热打铁)</li>
+      <li>衍生用相同结构换地点 / 主体 / 时长,不是从零写</li>
+      <li>运营对"24h 数据"有感,但忙起来会忘 — Agent 主动 push 是关键</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ───── I6.6 (NEW) ───── -->
+<div class="intent" id="i6-6">
+  <div class="intent-head">
+    <span class="iid">I6.6</span>
+    <h3>撤回最后一刻</h3>
+    <span class="badge bd-new">新建议 · P1</span>
+    <span class="badge bd-dom">D6</span>
+  </div>
+  <div class="intent-quote"><em>刚发出去发现错字,撤回!</em></div>
+
+  <div class="note">
+    <div class="note-label">为什么需要</div>
+    运营对"已发出但有问题"<b>极度焦虑</b>。Agent 应支持发布后 30 min 撤回窗。撤回是减焦虑刚需 — 比"零差错"更重要的是"出错可挽救"。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">😱 发出后 5 分钟,发现字幕第 12s 错字。</div>
+      <div class="j-agent">D6 发布后默认进入"30 分钟撤回窗",这期间所有平台都可一键撤回 + 重发。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">D6 已发布卡片(顶部)</div>v_xxx · 30 分钟撤回窗 · 剩 24:35<br><div class="row"><span class="btn">⏪ 撤回</span><span class="btn-secondary btn">查看</span></div></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">🖱 点「⏪ 撤回」→ 选哪些平台撤。</div>
+      <div class="j-agent">显示每个平台撤回成本:IG 立即撤(0 数据损失)/ TK 已有 200 播放(撤可能影响推荐)/ XHS 还没人看到(0 损失)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">撤回选择</div>☑ IG · 7 播放 · 立即撤<br>☑ XHS · 0 播放 · 立即撤<br>☐ TK · 215 播放 · ⚠ 撤可能影响推荐<br><div class="row"><span class="btn">确认撤这两个</span></div></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">✏ 改字幕 → 重发。</div>
+      <div class="j-agent">改字幕局部重生成片段(不重剪整片)→ 重发到刚撤的平台。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">局部重做</div>第 12s 字幕 · 已改<br>TTS 重读 · 5s ✓<br>合成 · 8s ✓<br>重发 IG + XHS · ⌛</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">4</div>
+      <div class="j-user">✅ 完成 · 危机解除。</div>
+      <div class="j-agent">写入"撤回原因"日志(字幕错字),后续 D6 合规审字幕检查权重提升,降低同类二次发生。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">撤回完成</div>IG / XHS 已重发 · 新版本<br>TK 保留原版(已有数据)<br><span class="meta">已记日志 · 后续会加强字幕检查</span></div></div>
+    </div>
+  </div>
+
+  <div class="know-how">
+    <div class="label">运营 know-how</div>
+    <ul>
+      <li>30 分钟是黄金期(平台还没大量推送)</li>
+      <li>撤回成本:看播放量,有播放的撤要慎重(影响推荐权重)</li>
+      <li>撤回 + 局部重做(只改错的段),不重剪整片</li>
+      <li>撤回原因写入日志,后续合规审权重调整</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ───── I6.7 (NEW) ───── -->
+<div class="intent" id="i6-7">
+  <div class="intent-head">
+    <span class="iid">I6.7</span>
+    <h3>本周发布盘点</h3>
+    <span class="badge bd-new">新建议 · P2</span>
+    <span class="badge bd-dom">D6</span>
+  </div>
+  <div class="intent-quote"><em>这周我发了几条,数据如何?</em></div>
+
+  <div class="note">
+    <div class="note-label">为什么需要</div>
+    <b>周五复盘场景</b>。运营自己想看产能 + 数据。不是看单条,是看整体(本周发了几条 / 平均 viralScore / 哪条最爆 / 哪条扑街)。和 <a href="#i2-9">I2.9 进度跟踪</a> 是配对意图(I2.9 是周中焦虑,I6.7 是周末复盘)。
+  </div>
+
+  <div class="journey">
+    <div class="journey-head">
+      <div>步</div><div>用户做什么</div><div>Agent 在替你做什么</div><div>前端长什么样</div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">1</div>
+      <div class="j-user">📊 周五下午,进 D6 「本周盘点」。</div>
+      <div class="j-agent">CRON 每周五 16:00 跑盘点;运营进入时已有现成数据。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">本周盘点首屏</div>本周(2026/4/27 - 4/30)<br>已发 5 条 · KPI 5 条 ✓ 达成<br>平均 viralScore 7.4(历史均 6.8 · ↑0.6)</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">2</div>
+      <div class="j-user">🏆 看本周冠军 + 黑马 + 扑街。</div>
+      <div class="j-agent">三类视频自动归类 + 给定性原因 + actionable 建议。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">冠军 / 黑马 / 扑街</div>🏆 阿尔卑斯卧铺 · q 8.7(衍生 3 条已 push)<br>📈 5 欧穿越 · q 7.2(冷启好,可加投流)<br>📉 米兰晨光 · q 4.8(钩子弱,下次注意)</div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">3</div>
+      <div class="j-user">📤 一键导出周报发飞书。</div>
+      <div class="j-agent">生成可分享的周报 PDF + 给 leader 的话术。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">导出周报</div>本周成绩单(意铁亲子线 · 璐璐)<br>5 条达成 · 1 个爆款 · 平均 ↑8%<br><div class="row"><span class="btn">发到 leader 群</span></div></div></div>
+    </div>
+
+    <div class="journey-row">
+      <div class="j-step">4</div>
+      <div class="j-user">💡 看下周建议。</div>
+      <div class="j-agent">基于本周数据给下周策略建议(沿用爆款结构 / 避坑扑街题材)。</div>
+      <div class="j-ui"><div class="mock"><div class="mock-head">下周建议</div>① 沿用"卧铺 + 数字"钩子结构(本周冠军)<br>② 避免"晨光"题材(本周扑街)<br>③ 5/1 节点要有 1-2 条节假内容<br><div class="row"><span class="btn">采纳 → 进 D2 立项</span></div></div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- ════════════════════ 收尾 · 总结与下一步 ═════════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+
+<h2 id="closing" style="margin-top:80px">收尾 · 这份图谱怎么用</h2>
+
+<p class="lead">47 个意图画完,真正想说的是一句话:<b>从"列得多"转向"做得对"</b>。下面分别给 4 类人看的角度。</p>
+
+<div class="toc-grid">
+  <div class="toc-card">
+    <div class="toc-head">
+      <span class="toc-id">钱总 / 邹哥</span>
+      <span class="toc-name">范围决策视角</span>
+    </div>
+    <div class="toc-list">
+      <p style="margin:0 0 8px">看 <b>14 个 P0</b>(总览图例)+ <b>9 个新增意图</b>。每个 P0 的"为什么是 P0"都已写在体检结论里 — 这是范围收敛的依据。</p>
+      <p style="margin:0;color:var(--text-3)">关键问题:9 个新增意图(尤其 <a href="#i1-8">I1.8 同行查重</a> / <a href="#i6-6">I6.6 最后撤回</a> / <a href="#i2-8">I2.8 矩阵规划</a> / <a href="#i2-9">I2.9 进度跟踪</a>)是否进 MVP?这 4 个都是 P1,做了显著降低运营焦虑。</p>
+    </div>
+  </div>
+
+  <div class="toc-card">
+    <div class="toc-head">
+      <span class="toc-id">运营合伙人</span>
+      <span class="toc-name">挑战体检结论</span>
+    </div>
+    <div class="toc-list">
+      <p style="margin:0 0 8px">每个意图都有"运营 know-how"块 — 这是 PM 揣摩出来的判断标准。<b>请你挑战或修正</b>。</p>
+      <p style="margin:0 0 8px">特别要确认:</p>
+      <p style="margin:0;color:var(--text-3)">① <b>嵌入</b>(I1.5 钩子库 / I4.5 相似召回)真的不需要独立入口吗?<br>② <b>合并</b>(I2.3 → I1.4 / I2.6 → I2.1 / I4.6 → I4.4)从你的工作流看对吗?<br>③ <b>9 个新增意图</b>真的都需要吗?优先级对吗?</p>
+    </div>
+  </div>
+
+  <div class="toc-card">
+    <div class="toc-head">
+      <span class="toc-id">浩伟(Skill 开发)</span>
+      <span class="toc-name">开发优先级</span>
+    </div>
+    <div class="toc-list">
+      <p style="margin:0 0 8px">14 P0 是开发主路径。<b>每个意图的 Agent 列</b>(中间栏)直接对应 SKILL prompt 的工具调用流程。</p>
+      <p style="margin:0;color:var(--text-3)">关键洞察:<br>· <b>嵌入</b>(I1.5 / I4.5)不需要独立 MCP,作为内嵌行为<br>· <b>合并</b>(I2.3 / I2.6 / I4.6)的逻辑并入主意图,不重复实现<br>· <b>基建</b>(I1.7 / I3.6 / I6.5)是 CRON,不是 trigger,不要做用户入口<br>· I3.6 脚本预审是<b>实时下划线</b>,不是按钮触发 — 这个交互很关键</p>
+    </div>
+  </div>
+
+  <div class="toc-card">
+    <div class="toc-head">
+      <span class="toc-id">陈城(SKILL 写手)</span>
+      <span class="toc-name">prompt 输入材料</span>
+    </div>
+    <div class="toc-list">
+      <p style="margin:0 0 8px">每个 P0 意图的 3 块直接给到 SKILL:</p>
+      <p style="margin:0 0 8px;color:var(--text-3)">· <b>「运营 know-how」块</b> → 写进 SKILL prompt 的"判断逻辑"段<br>· <b>「Agent 在替你做什么」栏</b> → 写进 trigger_examples + ops_flow<br>· <b>「前端长什么样」栏</b> → UI 组件 spec(给浩伟同步)</p>
+      <p style="margin:0;color:var(--text-3)">配合 47 意图访谈采集 xlsx 一起用,合伙人挑战哪条 know-how → 修正,直到 SKILL 的判断标准跟资深运营对齐。</p>
+    </div>
+  </div>
+</div>
+
+<h3 style="margin-top:48px">5 类陷阱回顾(防止下次又踩)</h3>
+
+<div class="journey">
+  <div class="journey-head">
+    <div>类型</div>
+    <div>典型症状</div>
+    <div>本次涉及</div>
+    <div>判断锚点</div>
+  </div>
+  <div class="journey-row">
+    <div class="j-step">1</div>
+    <div class="j-user"><b>想象的意图</b><br>PM 编的 trigger,运营从不会真这么说</div>
+    <div class="j-agent">7 个意图触发<br>典型:I1.5 "10 条高完播率开头"</div>
+    <div class="j-ui">运营访谈时,把 trigger 念给他听,看他笑不笑</div>
+  </div>
+  <div class="journey-row">
+    <div class="j-step">2</div>
+    <div class="j-user"><b>颗粒度太碎</b><br>运营是连贯动作,被拆成 N 个意图</div>
+    <div class="j-agent">4 个意图涉及<br>典型:I2.1+I2.2+I2.4 在周一早上是一起做</div>
+    <div class="j-ui">画运营动作时间轴 → 同 5 分钟内的合并</div>
+  </div>
+  <div class="journey-row">
+    <div class="j-step">3</div>
+    <div class="j-user"><b>颗粒度太粗</b><br>一个意图实际是 2-3 个不同动作</div>
+    <div class="j-agent">2 个意图涉及<br>典型:I3.2 仿写本地化(挑/改/切语境)</div>
+    <div class="j-ui">看意图能不能单步 5 秒内完成</div>
+  </div>
+  <div class="journey-row">
+    <div class="j-step">4</div>
+    <div class="j-user"><b>基建当意图</b><br>运营不主动触发,后台自动跑</div>
+    <div class="j-agent">3 个意图涉及<br>典型:I1.7 / I3.6 / I6.5</div>
+    <div class="j-ui">问"这个动作是用户启动还是后台启动"</div>
+  </div>
+  <div class="journey-row">
+    <div class="j-step">5</div>
+    <div class="j-user"><b>漏掉真意图</b><br>运营每天做但没列在原 38 里</div>
+    <div class="j-agent">9 个新增建议<br>典型:I2.9 进度跟踪 / I6.6 最后撤回</div>
+    <div class="j-ui">访谈时问"你今天做了 5 件事,我列的是哪几件"</div>
+  </div>
+</div>
+
+<h3 style="margin-top:48px">下一步建议</h3>
+
+<div class="note" style="background: var(--info-bg); color: var(--info-text); border: 0.5px solid var(--info-border);">
+  <div class="note-label" style="color:var(--info-text);opacity:0.75">行动清单(本周内)</div>
+  <p style="margin:8px 0 4px"><b>1. 合伙人审阅(本周一-三)</b> · 让王老师 / 璐璐带头,1-2 周内挑战 47 个意图,在 47 意图访谈采集 xlsx 上确认 P0 名单。</p>
+  <p style="margin:8px 0 4px"><b>2. 签字版 P0(本周四)</b> · 确认后让合伙人签字,锁住范围。</p>
+  <p style="margin:8px 0 4px"><b>3. Skill 开发排期(本周五)</b> · 浩伟基于 14 个 P0 重排开发优先级,跟 MVP 4 周计划对齐。</p>
+  <p style="margin:8px 0 0"><b>4. 新意图决议(下周)</b> · 9 个新增,4 个 P1(I1.8 / I2.8 / I2.9 / I6.6)是否进 MVP — 全做加 4 个意图,做一半加 2,这是范围决策。</p>
+</div>
+
+<h3 style="margin-top:48px">一句话总结</h3>
+<p class="lead" style="font-size:18px;color:var(--text-1);font-weight:500">
+  38 → 14 P0,扔掉 PM 想象的"理想动作",拥抱运营真实工作流。<br>
+  从"列得多"转向"做得对" — 这是从产品规划到业务落地的关键收缩。
+</p>
+
+<div class="foot-note">
+  <p style="margin:0">TripFlow · 47 意图旅程图谱 · 基于《38 意图深度审视》报告 v1.0(鸣飞 × Claude · 2026-04-28)</p>
+  <p style="margin:6px 0 0">本图谱配套使用:核心报告 docx + 47 意图访谈采集 xlsx + 设计 brief pack + 开发终态规范 v1。</p>
+  <p style="margin:6px 0 0">如发现某个意图的 know-how 跟你的工作流不符,在采集表对应行 sheet 上批注,我们一起改。</p>
+</div>
+
+</main>
+</div>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const cur = html.getAttribute('data-theme');
+  html.setAttribute('data-theme', cur === 'light' ? 'dark' : 'light');
+  document.querySelectorAll('.theme-toggle').forEach(b =>
+    b.textContent = cur === 'light' ? '切换浅色 ⏎' : '切换深色 ⏎'
+  );
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,199 @@
+---
+import Base from '../layouts/Base.astro';
+
+const protos = [
+  {
+    slug: 'workbench-v6',
+    title: '内容工作台 v6 · 可交互原型',
+    date: '06-08',
+    tag: '高保真 · 可交互',
+    desc: '五步流水线「找灵感→攒素材→创作→成片→复盘」的高保真工作台。爆款卡片、AI 归因、智能检索、副驾 Dock 都能点。',
+  },
+  {
+    slug: 'inspiration-engine',
+    title: '灵感引擎 · 高保真 v1',
+    date: '06-09 · 最新',
+    tag: '高保真',
+    desc: '从「数据搬运」到「洞察生成」——三层产品架构（产出层 / AI 洞察层 / 数据接入层）+ 一键切片→资产库新链路。',
+  },
+  {
+    slug: 'workbench-v8',
+    title: '内容工作台 v8 · 信息架构地图',
+    date: '06-08',
+    tag: '线框 · IA',
+    desc: '8 个一级模块挂在同一条内容生产流水线上的信息架构总图——搜索一等公民、血缘关系、任务队列贯穿全局。',
+  },
+  {
+    slug: 'product-blueprint',
+    title: '产品形态整合蓝图',
+    date: '06-08',
+    tag: '蓝图 · OOUX',
+    desc: '把 v15 的几十个功能收进「一条主轴 × 三层底座 × 两端数据」：单条=批量=同一道工序，规则/模板/词包是可换的包。',
+  },
+  {
+    slug: 'system-blueprint',
+    title: '系统蓝图 · 把六个工具画成一个工作台',
+    date: '06-05',
+    tag: '蓝图 · OOUX',
+    desc: '五视角拆解：OOUX 对象模型 → 用户旅程/任务流 → 功能架构 → 分面信息架构 → 10 个 AI 交互模式。',
+  },
+  {
+    slug: 'platform-blueprint',
+    title: '平台总蓝图 & 产品形态决策',
+    date: '06-05',
+    tag: '蓝图 · 决策',
+    desc: '所有对象、用户路径、架构结构化放好之后，回答终极问题：它到底该长成"几个独立工具"还是"一个巨型后台"。',
+  },
+  {
+    slug: 'intent-47-journeys',
+    title: '47 意图旅程图谱',
+    date: '06-07',
+    tag: '体验底层',
+    desc: '每个意图三栏对照：用户在做什么 / Agent 在替你做什么 / 前端长什么样。14 个 P0 怎么落地，一份文档说清。',
+  },
+  {
+    slug: 'intent-38-atlas',
+    title: '38 Intent Atlas（英文版）',
+    date: '06-07',
+    tag: '体验底层 · EN',
+    desc: '38 个意图 × wireframe × user flow 的英文图谱——每个意图都有原型线框和系统/用户/Agent 动线。',
+  },
+  {
+    slug: 'collab-preview',
+    title: '人机协作设计方案集',
+    date: '06-07',
+    tag: '方法论',
+    desc: '把"AI 会判断"变成可控、可信、可回退：AI 做重活人做判断 / 方向盘在人手里 / 透明呈现置信度 / 出错当默认状态。',
+  },
+  {
+    slug: 'content-prd',
+    title: '内容创作模块 · 详细 PRD',
+    date: '06-05',
+    tag: 'PRD',
+    desc: '把「素材+意图」变成「成稿/成片」的批量创作工作台 PRD——OOUX 对象模型 + 产能/复用/爆款率/人工四指标。',
+  },
+  {
+    slug: 'kickoff-briefing',
+    title: 'Kickoff 启动简报',
+    date: '06-07',
+    tag: '协作机制',
+    desc: '从 38 意图蓝图到第一个 MVP 闭环：两周里程碑、三方角色边界、交付物清单、风险应对——协作机制怎么立起来。',
+  },
+  {
+    slug: 'project-retrospective',
+    title: '项目复盘 · 可视化报告',
+    date: '06-07',
+    tag: '复盘',
+    desc: '0-1 全程复盘：痛点洞察 → 产品形态 → 五层技术架构 → 双轨指标，A4 杂志风排版，一页讲清整个项目。',
+  },
+  {
+    slug: 'vibecoding-class',
+    title: '产品经理的第一堂 Vibe Coding 实战课',
+    date: '06-07',
+    tag: '分享 · 27P',
+    desc: '不教你写代码，教你"会指挥 + 会验收"——把验证想法这件事，从别人的排期里拿回自己手上。内部分享 PPT。',
+  },
+  {
+    slug: 'skill-workshop',
+    title: 'Skill Workshop · 从指挥 AI 到管理 AI',
+    date: '06-07',
+    tag: '分享 · 20P',
+    desc: '让 AI 不再碰运气帮你做对一次，而是每一次都按你的标准稳定地做——Prompt → Skill 的工程化路径。',
+  },
+];
+---
+
+<Base title="原型工坊 · 14 个过程文件实录 — 纪鸣飞" description="内容增长 AI 中台的 14 个真实过程文件：高保真原型、产品蓝图、意图图谱、PRD、复盘——全部可交互，Claude Code + Dify 亲手交付。">
+  <section class="chapter" style="padding-top:150px">
+    <div class="wrap" style="max-width:1240px">
+      <div class="chapter-head">
+        <div class="ch-no"><em>PROTOTYPE WORKSHOP</em> PROCESS FILES</div>
+        <h2>原型工坊 · 过程文件实录</h2>
+        <div class="ch-sub">
+          ⚠️ 以下 14 个文件是<strong style="color:#fff">真实项目的过程产物</strong>（工作原型 / 蓝图 / 简报 / 复盘），
+          不是包装过的成品交付物——保留了思考与迭代的原始痕迹。全部由 Claude Code / Vibe Coding 亲手交付，
+          <strong style="color:#fff">每一个都可以点开直接交互</strong>。这是"用可运行的产物代替纯 PRD"的工作方式本身。
+        </div>
+      </div>
+
+      <div class="proto-grid">
+        {protos.map((p) => (
+          <a class="proto-card" href={`/prototypes/${p.slug}.html`} target="_blank" rel="noopener">
+            <div class="proto-frame">
+              <iframe src={`/prototypes/${p.slug}.html`} loading="lazy" tabindex="-1" scrolling="no" title={p.title}></iframe>
+              <div class="proto-mask"><span>点击全屏打开 ↗</span></div>
+            </div>
+            <div class="proto-info">
+              <div class="proto-tags">
+                <span class="chip gold">{p.tag}</span>
+                <span class="chip plain-date">{p.date}</span>
+              </div>
+              <h3>{p.title}</h3>
+              <p>{p.desc}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <div style="margin-top:56px;display:flex;gap:14px;justify-content:center">
+        <a class="btn" href="/#works">← 星图集</a>
+        <a class="btn" href="/">返回主站</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .proto-grid {
+    display: grid; gap: 26px;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 760px) { .proto-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  .proto-card {
+    display: block; color: inherit;
+    border: 1px solid var(--line); border-radius: 16px;
+    overflow: hidden;
+    background: linear-gradient(160deg, rgba(19, 28, 66, .5), rgba(7, 11, 31, .4));
+    backdrop-filter: blur(10px);
+    transition: transform .3s, border-color .3s, box-shadow .3s;
+  }
+  .proto-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(251, 191, 36, .5);
+    box-shadow: 0 20px 60px rgba(3, 4, 18, .8), 0 0 30px rgba(251, 191, 36, .15);
+  }
+
+  .proto-frame {
+    position: relative; height: 300px; overflow: hidden;
+    background: #fff;
+  }
+  .proto-frame iframe {
+    width: 1440px; height: 900px;
+    transform: scale(0.42); transform-origin: 0 0;
+    border: none; pointer-events: none;
+  }
+  @media (max-width: 760px) {
+    .proto-frame { height: 220px; }
+    .proto-frame iframe { transform: scale(0.30); }
+  }
+  .proto-mask {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(180deg, transparent 55%, rgba(3, 4, 18, .55));
+    opacity: 0; transition: opacity .25s;
+  }
+  .proto-card:hover .proto-mask { opacity: 1; }
+  .proto-mask span {
+    font-family: var(--mono); font-size: 13px; font-weight: 700;
+    color: #fff; background: rgba(3, 4, 18, .8);
+    border: 1px solid rgba(251, 191, 36, .5); border-radius: 24px;
+    padding: 10px 22px;
+  }
+
+  .proto-info { padding: 20px 24px 24px; }
+  .proto-tags { display: flex; gap: 8px; margin-bottom: 10px; }
+  .chip.plain-date { color: var(--ink3); border-color: rgba(93, 104, 144, .4); background: transparent; }
+  .proto-info h3 { font-size: 18px; color: #fff; margin-bottom: 8px; }
+  .proto-info p { font-size: 13.5px; color: var(--ink2); }
+</style>

@@ -45,16 +45,19 @@ const works = [
 ];
 
 const protos = [
-  { ver: 'v8', name: '内容工作台 · 整合版', note: '6-08 · 最终形态' },
-  { ver: 'v6', name: '内容工作台 · 可交互原型', note: '6-08 · 全流程可点击' },
-  { ver: 'NEW', name: '灵感生成模块 · 高保真', note: '6-09 · 最新迭代' },
-  { ver: 'MAP', name: '47 意图旅程图谱', note: '6-07 · 体验底层' },
-  { ver: 'ATLAS', name: '38 Intent Atlas（英文）', note: '6-07 · 国际化版本' },
-  { ver: 'BP', name: '产品形态整合蓝图', note: '6-08 · 形态收敛' },
-  { ver: 'SYS', name: '系统蓝图 · 五层架构', note: '6-05 · 架构总览' },
-  { ver: 'VC', name: 'Vibe Coding 工作区', note: '6-08 · 新工作流' },
-  { ver: 'PRD', name: '内容创作模块详细 PRD', note: '6-05 · 单文件可运行' },
-  { ver: 'RETRO', name: '项目复盘 · 可视化报告', note: '6-07 · 个人视角全复盘' },
+  { ver: 'v6', name: '内容工作台 · 可交互原型', note: '6-08 · 全流程可点击', slug: 'workbench-v6' },
+  { ver: 'NEW', name: '灵感引擎 · 高保真 v1', note: '6-09 · 最新迭代', slug: 'inspiration-engine' },
+  { ver: 'v8', name: '内容工作台 · 信息架构地图', note: '6-08 · IA 总图', slug: 'workbench-v8' },
+  { ver: 'BP', name: '产品形态整合蓝图', note: '6-08 · 形态收敛', slug: 'product-blueprint' },
+  { ver: 'SYS', name: '系统蓝图 · 六合一工作台', note: '6-05 · OOUX 五视角', slug: 'system-blueprint' },
+  { ver: 'MAP', name: '47 意图旅程图谱', note: '6-07 · 体验底层', slug: 'intent-47-journeys' },
+  { ver: 'ATLAS', name: '38 Intent Atlas（英文）', note: '6-07 · 国际化版本', slug: 'intent-38-atlas' },
+  { ver: 'HAI', name: '人机协作设计方案集', note: '6-07 · 可控可信可回退', slug: 'collab-preview' },
+  { ver: 'PRD', name: '内容创作模块详细 PRD', note: '6-05 · OOUX + 四指标', slug: 'content-prd' },
+  { ver: 'RETRO', name: '项目复盘 · 可视化报告', note: '6-07 · 0-1 全程复盘', slug: 'project-retrospective' },
+  { ver: 'KO', name: 'Kickoff 启动简报', note: '6-07 · 两周 MVP 机制', slug: 'kickoff-briefing' },
+  { ver: 'VC', name: 'Vibe Coding 实战课', note: '6-07 · 27P 分享', slug: 'vibecoding-class' },
+  { ver: 'SK', name: 'Skill Workshop', note: '6-07 · 指挥 AI → 管理 AI', slug: 'skill-workshop' },
 ];
 
 const methods = [
@@ -281,16 +284,19 @@ const courses = [
       </h3>
       <div class="proto-strip reveal">
         {protos.map((p) => (
-          <div class="proto-item">
-            <div class="p-ver">{p.ver}</div>
+          <a class="proto-item" href={`/prototypes/${p.slug}.html`} target="_blank" rel="noopener" style="color:inherit;display:block">
+            <div class="p-ver">{p.ver} ↗</div>
             <h4>{p.name}</h4>
             <p>{p.note}</p>
-          </div>
+          </a>
         ))}
       </div>
       <p style="font-family:var(--mono);font-size:12px;color:var(--ink3)">
-        ← 横向滑动 · 20+ 单文件 HTML 原型，用可运行产物代替纯 PRD 对齐业务与研发
+        ← 横向滑动 · 每一个都可点开直接交互（真实过程文件）· 用可运行产物代替纯 PRD
       </p>
+      <div style="margin-top:22px" class="reveal">
+        <a class="btn primary" href="/prototypes/">🛠 进原型工坊 · 14 个过程文件实时预览</a>
+      </div>
     </div>
   </section>
 

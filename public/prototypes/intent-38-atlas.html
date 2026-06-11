@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>TripFlow · 38 意图 · 原型 & 动线图谱</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f1ea;
+  --bg-2: #ebe5db;
+  --paper: #fbf8f2;
+  --ink: #1a1a1a;
+  --ink-soft: #57534e;
+  --ink-mute: #a8a29e;
+  --line: #d6d3d1;
+  --line-soft: #e7e5e4;
+  --accent: #b8511a;
+  --accent-soft: #f4dac1;
+  --user: #3b5998;
+  --user-bg: #dde4ee;
+  --agent: #6b3e8b;
+  --agent-bg: #e6d8ec;
+  --system: #4a5568;
+  --system-bg: #d8dde3;
+  --d1: #c8602e;
+  --d2: #5a8a3a;
+  --d3: #2d6da6;
+  --d4: #b88523;
+  --d5: #5d6772;
+  --d6: #7a4a8a;
+  --serif: 'Fraunces', 'Noto Serif SC', serif;
+  --sans: 'Noto Sans SC', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  background: var(--bg);
+  background-image:
+    radial-gradient(circle at 8% 12%, rgba(184,81,26,0.06) 0%, transparent 40%),
+    radial-gradient(circle at 92% 88%, rgba(45,109,166,0.05) 0%, transparent 40%);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Layout ===== */
+.app { display: grid; grid-template-columns: 280px 1fr; height: 100vh; }
+
+.sidebar {
+  background: var(--bg-2);
+  border-right: 1px solid var(--line);
+  overflow-y: auto;
+  padding: 24px 0 40px;
+}
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--ink-mute); border-radius: 3px; }
+
+.brand { padding: 0 22px 16px; border-bottom: 1px dashed var(--line); margin-bottom: 8px; }
+.brand-title {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-style: italic;
+}
+.brand-sub {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-soft);
+  margin-top: 4px;
+}
+.brand-meta { font-family: var(--mono); font-size: 10px; color: var(--ink-mute); margin-top: 8px; }
+
+.domain-group { padding: 12px 0; }
+.domain-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 6px 22px;
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-soft);
+}
+.domain-head .dot {
+  display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+  margin-right: 6px; vertical-align: middle;
+}
+.domain-name { font-weight: 600; }
+.domain-count { color: var(--ink-mute); font-size: 9px; }
+
+.intent-list { list-style: none; }
+.intent-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 22px 7px 30px;
+  cursor: pointer;
+  font-size: 12.5px;
+  transition: background 0.15s;
+  border-left: 2px solid transparent;
+}
+.intent-item:hover { background: var(--paper); }
+.intent-item.active {
+  background: var(--paper);
+  border-left-color: var(--accent);
+  font-weight: 500;
+}
+.intent-id {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-soft);
+  min-width: 32px;
+  letter-spacing: 0.02em;
+}
+.intent-item.active .intent-id { color: var(--accent); font-weight: 600; }
+.intent-name { flex: 1; }
+
+/* ===== Main ===== */
+.main { overflow-y: auto; padding: 28px 40px 60px; }
+.main::-webkit-scrollbar { width: 8px; }
+.main::-webkit-scrollbar-thumb { background: var(--ink-mute); border-radius: 4px; }
+
+.detail-head {
+  border-bottom: 1px dashed var(--line);
+  padding-bottom: 18px;
+  margin-bottom: 24px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: end;
+}
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--ink-mute);
+  margin-bottom: 8px;
+  display: flex; gap: 12px; align-items: center;
+}
+.eyebrow .domain-tag {
+  padding: 2px 8px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+}
+.detail-title {
+  font-family: var(--serif);
+  font-size: 36px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+.detail-id {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+.trigger-quote {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--ink-soft);
+  margin-top: 8px;
+}
+.detail-meta {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-soft);
+  text-align: right;
+  line-height: 1.6;
+}
+.detail-meta .label { color: var(--ink-mute); }
+
+/* ===== Sections ===== */
+.section {
+  margin-bottom: 32px;
+}
+.section-title {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--ink-soft);
+  margin-bottom: 14px;
+  display: flex; align-items: center; gap: 12px;
+}
+.section-title::after {
+  content: ''; flex: 1; height: 1px;
+  background: var(--line); display: inline-block;
+}
+
+.split { display: grid; grid-template-columns: 1.1fr 1fr; gap: 28px; }
+@media (max-width: 1280px) { .split { grid-template-columns: 1fr; } }
+
+/* ===== Wireframe ===== */
+.wireframe {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 18px;
+  position: relative;
+}
+.wireframe::before {
+  content: 'PROTOTYPE · WIREFRAME';
+  position: absolute; top: -7px; left: 14px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  color: var(--ink-mute);
+  background: var(--bg);
+  padding: 0 6px;
+}
+.wf-window {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  overflow: hidden;
+  font-size: 11.5px;
+}
+.wf-titlebar {
+  background: var(--bg-2);
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-soft);
+  display: flex; align-items: center; gap: 8px;
+}
+.wf-titlebar .dots { display: flex; gap: 4px; }
+.wf-titlebar .dots span {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--line);
+}
+.wf-body { padding: 14px; min-height: 240px; display: flex; flex-direction: column; gap: 10px; }
+
+/* WF blocks */
+.wf-block {
+  border: 1px dashed var(--line);
+  background: var(--bg);
+  padding: 10px 12px;
+  border-radius: 3px;
+  position: relative;
+  font-size: 11.5px;
+}
+.wf-block.input {
+  background: white;
+  border: 1px solid var(--line);
+  display: flex; align-items: center; gap: 8px;
+}
+.wf-block.input::before {
+  content: '🔍'; font-size: 11px; opacity: 0.5;
+}
+.wf-block.main {
+  flex: 1;
+  background: linear-gradient(180deg, var(--bg) 0%, var(--paper) 100%);
+}
+.wf-block.side {
+  background: var(--bg-2);
+  border-style: solid;
+  border-color: var(--line-soft);
+}
+.wf-block .label {
+  font-family: var(--mono); font-size: 9px;
+  color: var(--ink-mute); text-transform: uppercase;
+  letter-spacing: 0.1em; margin-bottom: 4px;
+}
+.wf-row { display: flex; gap: 10px; }
+.wf-row > * { flex: 1; }
+.wf-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.wf-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.wf-list-item {
+  padding: 6px 8px;
+  border-bottom: 1px dotted var(--line);
+  display: flex; justify-content: space-between; gap: 10px;
+  font-size: 11px;
+}
+.wf-list-item:last-child { border-bottom: none; }
+.wf-list-item .meta { color: var(--ink-mute); font-family: var(--mono); font-size: 10px; }
+.wf-chip {
+  display: inline-block; padding: 2px 7px;
+  background: white; border: 1px solid var(--line);
+  border-radius: 10px; font-size: 10px;
+  font-family: var(--mono);
+  margin-right: 4px;
+}
+.wf-chip.active { background: var(--ink); color: white; border-color: var(--ink); }
+.wf-chip.warn { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+.wf-btn {
+  display: inline-block; padding: 5px 12px;
+  background: var(--ink); color: white;
+  font-family: var(--mono); font-size: 10px;
+  border-radius: 2px; cursor: default;
+  margin-right: 6px;
+}
+.wf-btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
+.wf-btn.accent { background: var(--accent); }
+.wf-anno {
+  position: absolute;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+}
+.wf-bar {
+  height: 6px; background: var(--bg-2); border-radius: 3px;
+  position: relative; overflow: hidden;
+}
+.wf-bar::after {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: var(--p, 60%); background: var(--ink); border-radius: 3px;
+}
+.wf-stack { display: flex; flex-direction: column; gap: 6px; }
+
+/* ===== Flow ===== */
+.flow {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 22px 18px 18px;
+  position: relative;
+}
+.flow::before {
+  content: 'USER FLOW · 动线';
+  position: absolute; top: -7px; left: 14px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  color: var(--ink-mute);
+  background: var(--bg);
+  padding: 0 6px;
+}
+.flow-steps {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.flow-step {
+  display: grid;
+  grid-template-columns: 32px 90px 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 8px 0;
+  border-bottom: 1px dotted var(--line-soft);
+  position: relative;
+}
+.flow-step:last-child { border-bottom: none; }
+.flow-step .num {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+}
+.flow-step .actor {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 4px 8px;
+  border-radius: 2px;
+  text-align: center;
+  height: fit-content;
+}
+.actor-user { background: var(--user-bg); color: var(--user); }
+.actor-agent { background: var(--agent-bg); color: var(--agent); }
+.actor-system { background: var(--system-bg); color: var(--system); }
+.flow-step .desc { font-size: 12.5px; line-height: 1.5; }
+.flow-step .io {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-mute);
+  margin-top: 3px;
+}
+.flow-step .io::before { content: '→ '; }
+
+/* ===== Notes ===== */
+.notes {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+.note {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  padding: 12px 14px;
+  border-radius: 0 3px 3px 0;
+}
+.note.success { border-left-color: var(--d2); }
+.note.warn { border-left-color: var(--d4); }
+.note.info { border-left-color: var(--d3); }
+.note .label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-mute);
+  margin-bottom: 5px;
+}
+.note .content { font-size: 12px; line-height: 1.55; color: var(--ink-soft); }
+
+/* ===== Overview ===== */
+.overview {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 24px 28px;
+  margin-bottom: 32px;
+}
+.overview h2 {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+.overview p {
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-bottom: 18px;
+  max-width: 760px;
+}
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  margin-top: 14px;
+}
+.overview-domain {
+  border: 1px solid var(--line);
+  background: var(--bg);
+  padding: 10px 12px;
+  border-radius: 3px;
+}
+.overview-domain .dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  display: inline-block; margin-right: 6px;
+  vertical-align: middle;
+}
+.overview-domain .name {
+  font-family: var(--mono); font-size: 11px;
+  font-weight: 600; letter-spacing: 0.04em;
+}
+.overview-domain .count {
+  font-family: var(--serif); font-size: 28px;
+  font-weight: 600; line-height: 1; margin: 6px 0 2px;
+}
+.overview-domain .label {
+  font-family: var(--mono); font-size: 9px;
+  color: var(--ink-mute); text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+@media (max-width: 1100px) {
+  .overview-grid { grid-template-columns: repeat(3, 1fr); }
+  .notes { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-title">TripFlow</div>
+    <div class="brand-sub">Intent Atlas · 38 prototypes</div>
+    <div class="brand-meta">v 0.1 · 2026.04 · UX Lab</div>
+  </div>
+  <nav id="nav"></nav>
+</aside>
+
+<main class="main" id="main"></main>
+
+</div>
+
+<script>
+// ============ INTENT DATA ============
+// 6 业务域 × 38 意图,每个意图包含:原型组件 + 动线步骤 + 关键体验注解
+
+const DOMAINS = {
+  D1: { name: '爆款抓取域', desc: '已经火起来 → 仿写/趋势/归因', color: 'var(--d1)' },
+  D2: { name: '选题洞察域', desc: '还没火之前 → 主动发现', color: 'var(--d2)' },
+  D3: { name: '脚本创作域', desc: '灵感 → 可拍可剪结构化脚本', color: 'var(--d3)' },
+  D4: { name: '素材管理域', desc: '召回 / 缺口检测 / 入库', color: 'var(--d4)' },
+  D5: { name: '剪辑生产域', desc: '脚本+素材 → 成片', color: 'var(--d5)' },
+  D6: { name: '审核发布域', desc: '合规 + 多平台定时', color: 'var(--d6)' },
+};
+
+const INTENTS = [
+  // ============ D1 · 爆款抓取域 (7) ============
+  {
+    id: 'I1.1', domain: 'D1', name: '按时间+业务线抓取',
+    trigger: '"最近 7 天意铁的爆款"',
+    tools: ['platform_api', 'q_score'],
+    output: '按 q-score 排序的爆款列表',
+    proto: [
+      { type: 'titlebar', text: 'D1 / 爆款抓取' },
+      { type: 'input', text: '最近 7 天意铁的爆款', anno: '自然语言' },
+      { type: 'chips', items: [['7d','active'],['14d',''],['30d',''],['意铁','active']] },
+      { type: 'list', items: [
+        ['#1 5欧夜卧穿越阿尔卑斯', 'q 8.7'],
+        ['#2 凌晨3点的米兰中央', 'q 7.9'],
+        ['#3 意大利火车餐车实测', 'q 7.4'],
+        ['…共 53 条', 'CRON']
+      ]},
+      { type: 'sidelog', items: ['[02:00] CRON 启动', '抓取 7d × 意铁', '✓ 53 条入库'] }
+    ],
+    flow: [
+      { actor: 'system', desc: 'CRON 凌晨 02:00 自动触发,或用户主动唤起', io: 'time + biz_line' },
+      { actor: 'user', desc: '输入自然语言查询,或点业务线 chip', io: 'query → tool_call' },
+      { actor: 'agent', desc: '解析意图、锚定业务线、确定时间窗', io: 'platform_api(7d, 意铁)' },
+      { actor: 'system', desc: '拉取原始数据,计算每条 q-score', io: '53 条 + score' },
+      { actor: 'user', desc: '浏览结果,或点击进入 I1.2 仿写候选', io: 'list → next intent' }
+    ],
+    notes: {
+      good: '业务线 chip 一键切换,免重输关键词',
+      pain: '抓到 500 条不知道哪几条值得看',
+      opp: '顶部「今日 3 条最值得看」预筛',
+    }
+  },
+  {
+    id: 'I1.2', domain: 'D1', name: '仿写候选 + 脚本质量',
+    trigger: '"3 条能仿写的"',
+    tools: ['q_score', 'script_quality'],
+    output: 'top-3 高潜仿写候选',
+    proto: [
+      { type: 'titlebar', text: 'D1 / 仿写候选' },
+      { type: 'banner', text: '从 53 条爆款 + q-score≥7 筛出 · 3 条', accent: true },
+      { type: 'cards', items: [
+        ['🎯 #1 5欧夜卧阿尔卑斯', 'q 8.7 · 完播 86%'],
+        ['🎯 #2 凌晨3点米兰中央', 'q 7.9 · 完播 79%'],
+        ['🎯 #3 火车餐车实测', 'q 7.4 · 互动率 高']
+      ]},
+      { type: 'actions', items: ['↻ 仿写 → C1.1', '⌕ 找类似', '⊕ 归档'] }
+    ],
+    flow: [
+      { actor: 'agent', desc: '基于 I1.1 的爆款池二次筛选', io: '53 条 → q≥7 + 脚本质量' },
+      { actor: 'user', desc: '看到「3 条能仿写的」推荐区', io: 'top-3 候选' },
+      { actor: 'user', desc: '点 q-score 想看分数怎么算', io: 'hover → 拆解' },
+      { actor: 'agent', desc: '展示 q-score 五维拆解(完播/互动/增速/相关/钩子)', io: '透明度' },
+      { actor: 'user', desc: '点「↻ 仿写」→ 流转到 D3 写脚本', io: 'C1.1 组合意图' }
+    ],
+    notes: {
+      good: '3 条比 53 条更可决策',
+      pain: 'q-score 怎么算的不透明',
+      opp: 'q-score hover 显示五维拆解',
+    }
+  },
+  {
+    id: 'I1.3', domain: 'D1', name: '趋势主题聚类 + 词云',
+    trigger: '"最近火车类什么在火"',
+    tools: ['embedding', 'cluster'],
+    output: '主题聚类 + 词云 + 增速',
+    proto: [
+      { type: 'titlebar', text: 'D1 / 趋势聚类' },
+      { type: 'input', text: '最近火车类什么在火' },
+      { type: 'cloud', items: ['夜卧 +312%', '阿尔卑斯', '5欧', '亲子 +89%', '餐车', '冬季限定'] },
+      { type: 'list', items: [
+        ['🔥 夜卧体验类', '17 条 · ↑312%'],
+        ['🔥 跨国路线类', '12 条 · ↑156%'],
+        ['亲子主题', '9 条 · ↑89%']
+      ]},
+      { type: 'actions', items: ['+ 加入关注'] }
+    ],
+    flow: [
+      { actor: 'user', desc: '想了解最近哪类内容在升温', io: 'query' },
+      { actor: 'agent', desc: '对最近 30d 爆款做 embedding 聚类', io: '聚类算法' },
+      { actor: 'system', desc: '生成主题簇 + 增速 + 词云', io: '可视化数据' },
+      { actor: 'user', desc: '看到主题列表 + 词云,识别热门主题', io: '决策输入' },
+      { actor: 'user', desc: '点「+ 加入关注」转化为持续监测', io: 'watch_list' }
+    ],
+    notes: {
+      good: '帮助用户看到趋势,而非单条爆款',
+      pain: '关键词为什么涨没解释',
+      opp: '聚类一键转为 D2 选题',
+    }
+  },
+  {
+    id: 'I1.4', domain: 'D1', name: '博主爆款扫描',
+    trigger: '"@eurail_life 的爆款"',
+    tools: ['platform_api', 'follow_list'],
+    output: '关注列表内的爆款汇总',
+    proto: [
+      { type: 'titlebar', text: 'D1 / 博主爆款扫描' },
+      { type: 'chips', items: [['@eurail_life','active'],['@trainspotter','active'],['+12 个','']] },
+      { type: 'list', items: [
+        ['@eurail_life 5欧夜卧', '↑324% · 7d'],
+        ['@trainspotter 米兰夜', '↑210% · 7d'],
+        ['@traveltrain 餐车', '↑180% · 14d']
+      ]},
+      { type: 'actions', items: ['↻ 仿写', '+ 批量关注'] }
+    ],
+    flow: [
+      { actor: 'user', desc: '指定关注的博主或选 group', io: '@用户名 list' },
+      { actor: 'agent', desc: '扫描该列表近期爆款', io: 'follow_list 查询' },
+      { actor: 'system', desc: '按增速排序输出', io: '爆款列表' },
+      { actor: 'user', desc: '点单条进入 I1.6 归因', io: 'why_viral' }
+    ],
+    notes: {
+      pain: '博主关注列表手动添加,没批量',
+      opp: '从聚类一键加入关注',
+    }
+  },
+  {
+    id: 'I1.5', domain: 'D1', name: '钩子库挖掘',
+    trigger: '"10 条高完播率开头"',
+    tools: ['hook_extract', 'completion_rate'],
+    output: '高完播开头的钩子库',
+    proto: [
+      { type: 'titlebar', text: 'D1 / 钩子库 · wiki/hooks' },
+      { type: 'list', items: [
+        ['"5欧能睡欧洲屋脊上"', '完播 91% · 数据钩'],
+        ['"凌晨3点你不会信看到啥"', '完播 87% · 反差'],
+        ['"火车餐车比米其林好吃"', '完播 84% · 对比']
+      ]},
+      { type: 'chips', items: [['数据','active'],['反差',''],['疑问',''],['故事',''],['共鸣','']] },
+      { type: 'actions', items: ['→ 用到脚本 D3'] }
+    ],
+    flow: [
+      { actor: 'agent', desc: '从历史爆款中提取开头 0-3s 段', io: 'hook_extract' },
+      { actor: 'system', desc: '关联完播率,过滤≥80% 的', io: '高完播钩子库' },
+      { actor: 'user', desc: '按风格分类浏览 5 类钩子', io: '5 风格' },
+      { actor: 'user', desc: '点「→ 用到脚本」一键带入 D3', io: 'I3.4' }
+    ],
+    notes: {
+      good: '钩子库是 D3 写脚本的弹药库',
+      opp: '钩子风格强制覆盖 5 类',
+    }
+  },
+  {
+    id: 'I1.6', domain: 'D1', name: '单条归因 (为什么火)',
+    trigger: '"这条为什么火"',
+    tools: ['attribution_model', 'segment_analysis'],
+    output: '归因结论 + 3 条仿写动作',
+    proto: [
+      { type: 'titlebar', text: 'D1 / 单条归因 · 5欧夜卧' },
+      { type: 'block', label: 'WHY · 一句话', text: '数据反差 + 路线稀缺,3s 钩子贡献 61% 完播' },
+      { type: 'grid3', items: [
+        ['钩子', '8.7/10'],
+        ['结构', '7.9/10'],
+        ['数据', '8.2/10']
+      ]},
+      { type: 'list', items: [
+        ['💡 衍生 1 · 角度变换', '"30欧能睡王宫上"'],
+        ['💡 衍生 2 · 业务线迁移', '英铁版'],
+        ['💡 衍生 3 · 长度变换', '15s 短版']
+      ]},
+      { type: 'actions', items: ['↻ 仿写', '→ 钩子库'] }
+    ],
+    flow: [
+      { actor: 'user', desc: '看到一条爆款,想知道为什么火', io: 'video_id' },
+      { actor: 'agent', desc: '调归因模型 + 段落分析', io: '5 维评分' },
+      { actor: 'agent', desc: '生成一句话归因 + 数据来源链接', io: 'why' },
+      { actor: 'agent', desc: '主动给出 3 个仿写动作建议', io: '3 actions' },
+      { actor: 'user', desc: '选一个动作进入 D3', io: 'C1.1 / 衍生' }
+    ],
+    notes: {
+      good: '归因 → 直接给可操作动作,不只是结论',
+      pain: '归因结论模糊,缺乏可操作',
+      opp: '归因结论附 3 个仿写动作',
+    }
+  },
+  {
+    id: 'I1.7', domain: 'D1', name: '批量打标',
+    trigger: '后台 CRON / 主动',
+    tools: ['tag_classifier'],
+    output: '所有爆款的 tag 索引',
+    proto: [
+      { type: 'titlebar', text: 'D1 / 批量打标 · 后台' },
+      { type: 'block', label: '今日打标进度', text: '142/500 条 · 28%', bar: 28 },
+      { type: 'list', items: [
+        ['#1 5欧夜卧', 'tag: 夜卧, 阿尔卑斯, 数据钩'],
+        ['#2 米兰中央', 'tag: 凌晨, 车站, 反差'],
+        ['#3 餐车', 'tag: 美食, 对比, 评测']
+      ]},
+      { type: 'sidelog', items: ['[02:00] CRON 启动', '142 条已打标', '38 条待复核(红点)'] }
+    ],
+    flow: [
+      { actor: 'system', desc: 'CRON 触发或新数据入库时', io: 'trigger' },
+      { actor: 'agent', desc: '调 tag_classifier 批量打标', io: 'auto_tag' },
+      { actor: 'system', desc: '低置信度的写入「待打标」队列', io: 'low_conf' },
+      { actor: 'user', desc: '侧栏红点提示,可批量复核', io: 'review' }
+    ],
+    notes: {
+      pain: '自动标签覆盖率低',
+      opp: '用户复核结果反哺训练',
+    }
+  },
+
+  // ============ D2 · 选题洞察域 (7) ============
+  {
+    id: 'I2.1', domain: 'D2', name: '本周可做选题',
+    trigger: '"本周可做的选题"',
+    tools: ['fresh_score', '4d_signal_fusion'],
+    output: '6 张含 Fresh-score 的选题卡',
+    proto: [
+      { type: 'titlebar', text: 'D2 / 本周可做 · 意铁亲子' },
+      { type: 'cards', items: [
+        ['📌 #1 P0 · 阿尔卑斯卧铺', 'Fresh 9.2'],
+        ['📌 #2 米兰夜抵', 'Fresh 8.1'],
+        ['📌 #3 餐车亲子', 'Fresh 7.8'],
+        ['#4 跨国早餐', 'Fresh 7.3'],
+        ['#5 行李攻略', 'Fresh 6.9'],
+        ['#6 站台美食', 'Fresh 6.2']
+      ]},
+      { type: 'actions', items: ['写脚本 →', '深度调研'] }
+    ],
+    flow: [
+      { actor: 'user', desc: '周一早晨制定本周选题', io: 'biz_line' },
+      { actor: 'agent', desc: '融合 4 维信号(关键词/博主/日历/历史)', io: 'fusion' },
+      { actor: 'agent', desc: '计算 Fresh-score,P0 标识 ≥8.5', io: '6 张选题卡' },
+      { actor: 'user', desc: '查看每张卡的归因(为什么推荐)', io: 'why_card' },
+      { actor: 'user', desc: '点「写脚本 →」流转到 D3', io: 'C2.1' }
+    ],
+    notes: {
+      good: '4 维信号融合,不是单一来源',
+      pain: '6 张卡看哪个先?',
+      opp: 'Fresh-score ≥8.5 才打 P0,避免标签贬值',
+    }
+  },
+  {
+    id: 'I2.2', domain: 'D2', name: '上升关键词',
+    trigger: '"欧铁什么词在涨"',
+    tools: ['keyword_trend', 'velocity'],
+    output: '关键词增速 + 涨幅原因',
+    proto: [
+      { type: 'titlebar', text: 'D2 / 上升关键词 · 14d' },
+      { type: 'list', items: [
+        ['"夜卧"', '↑412% · 因低价路线开放'],
+        ['"亲子"', '↑245% · 因学校假期'],
+        ['"5欧"', '↑189% · 病毒视频带动']
+      ]},
+      { type: 'actions', items: ['+ 加入选题', '查看数据源'] }
+    ],
+    flow: [
+      { actor: 'user', desc: '想提前布局未来 1-2 周选题', io: 'biz_line' },
+      { actor: 'agent', desc: '计算关键词 14d 增速', io: 'velocity' },
+      { actor: 'agent', desc: '标注每个上升词的归因', io: 'why_rising' },
+      { actor: 'user', desc: '挑选词转化为选题', io: 'I2.1 list' }
+    ],
+    notes: {
+      pain: '关键词为什么涨没解释',
+      opp: '一句话归因 + 数据来源链接',
+    }
+  },
+  {
+    id: 'I2.3', domain: 'D2', name: '博主选题',
+    trigger: '"关注的博主在做啥"',
+    tools: ['follow_list', 'topic_extract'],
+    output: '关注博主的选题方向汇总',
+    proto: [
+      { type: 'titlebar', text: 'D2 / 博主选题' },
+      { type: 'list', items: [
+        ['@eurail_life', '在做: 阿尔卑斯路线、餐车'],
+        ['@trainspotter', '在做: 凌晨车站、跨国'],
+        ['@traveltrain', '在做: 亲子、行李攻略']
+      ]},
+      { type: 'actions', items: ['+ 加入选题'] }
+    ],
+    flow: [
+      { actor: 'user', desc: '了解关注的博主在做什么选题', io: 'follow_list' },
+      { actor: 'agent', desc: '抽取每位博主近期 10 条主题', io: 'topic_extract' },
+      { actor: 'user', desc: '识别值得跟的方向,加入选题池', io: 'add_topic' }
+    ],
+    notes: {
+      good: '从竞品/同行视角看选题',
+    }
+  },
+  {
+    id: 'I2.4', domain: 'D2', name: '营销日历',
+    trigger: '"5 月黄金周提前准备"',
+    tools: ['calendar_lookup', 'lead_time_calc'],
+    output: '节点列表 + 倒推制作时间',
+    proto: [
+      { type: 'titlebar', text: 'D2 / 营销日历 · 5月' },
+      { type: 'list', items: [
+        ['5/1 劳动节假期', '需 4/15 前完成 · ⏰ 倒计时 18d'],
+        ['5/4 青年节', '需 4/22 · ⏰ 25d'],
+        ['5/20 旅游促销季', '需 5/8 · ⏰ 41d']
+      ]},
+      { type: 'actions', items: ['→ 选题预案', '→ 加日历'] }
+    ],
+    flow: [
+      { actor: 'user', desc: '准备未来节假日内容', io: 'date_range' },
+      { actor: 'agent', desc: '查日历 + 倒推所需提前量', io: 'lead_time' },
+      { actor: 'agent', desc: '强提醒过期风险节点', io: '⏰ 倒计时' },
+      { actor: 'user', desc: '为节点准备选题预案', io: 'pre_plan' }
+    ],
+    notes: {
+      pain: '营销日历提前量不一致',
+      opp: '倒推所需提前量,强提醒',
+    }
+  },
+  {
+    id: 'I2.5', domain: 'D2', name: '选题查重',
+    trigger: '"这个我们做过吗"',
+    tools: ['publish_history', 'embedding_match'],
+    output: '历史发布 + 表现数据',
+    proto: [
+      { type: 'titlebar', text: 'D2 / 选题查重' },
+      { type: 'input', text: '5欧能睡阿尔卑斯' },
+      { type: 'list', items: [
+        ['✓ 已发 · 2025-09-12', '播放 12 万 · ROI 高'],
+        ['✓ 已发 · 2025-11-05', '播放 8 万 · 二创']
+      ]},
+      { type: 'block', label: '建议', text: '同主题已饱和,建议换角度或路线' }
+    ],
+    flow: [
+      { actor: 'user', desc: '担心选题重复', io: 'topic_text' },
+      { actor: 'agent', desc: '语义匹配历史发布表', io: 'embedding_match' },
+      { actor: 'agent', desc: '给出"是否值得再做"建议', io: 'reuse_advice' },
+      { actor: 'user', desc: '决定换角度或继续', io: 'decision' }
+    ],
+    notes: {
+      opp: '查重直接给"是否值得再做"建议',
+    }
+  },
+  {
+    id: 'I2.6', domain: 'D2', name: '本地化迁移 (城市/路线)',
+    trigger: '"罗马-那不勒斯下周做啥"',
+    tools: ['route_kb', 'geo_match'],
+    output: '该路线下的可做选题',
+    proto: [
+      { type: 'titlebar', text: 'D2 / 本地化迁移' },
+      { type: 'input', text: '罗马-那不勒斯下周做啥' },
+      { type: 'list', items: [
+        ['路线特色: Frecciarossa 高速', '可做: 速度对比'],
+        ['沿途: 庞贝古城', '可做: 一日游攻略'],
+        ['本地小吃: 比萨', '可做: 站台美食']
+      ]}
+    ],
+    flow: [
+      { actor: 'user', desc: '指定路线/城市', io: 'route' },
+      { actor: 'agent', desc: '查路线知识库,匹配地理特征', io: 'route_kb' },
+      { actor: 'agent', desc: '给出该路线下的特色选题', io: 'topic_list' }
+    ],
+    notes: {
+      good: '让选题接地气,不再是空泛主题',
+    }
+  },
+  {
+    id: 'I2.7', domain: 'D2', name: '跨业务线迁移 (英铁→意铁)',
+    trigger: '英铁选题迁移到意铁',
+    tools: ['cross_biz_log', 'culture_check'],
+    output: '迁移版选题 + 文化锚点检查表',
+    proto: [
+      { type: 'titlebar', text: 'D2 / 跨业务线 · Wizard' },
+      { type: 'split', left: ['英铁原版', '"5p 睡英国乡村列车"'], right: ['意铁迁移版', '"5€ 睡意大利夜卧"'] },
+      { type: 'block', label: '⚠ 文化锚点 · 3 处需确认', text: '· 英国乡村感 → 意大利地中海感\n· 早餐茶 → 早餐 espresso\n· 价格 5p → 5€' },
+      { type: 'actions', items: ['✓ 确认迁移', '↻ 重写'] }
+    ],
+    flow: [
+      { actor: 'agent', desc: '主动检测高频迁移路径,弹出建议', io: 'cross_biz_log' },
+      { actor: 'user', desc: '点「I2.7 迁移」进入 wizard', io: 'wizard' },
+      { actor: 'agent', desc: '自动替换地点/路线/价格/文化锚点', io: 'auto_replace' },
+      { actor: 'user', desc: 'Diff 视图逐项确认 3 处文化锚点', io: '3 anchors' },
+      { actor: 'system', desc: '迁移版进入 D3,与原版双向链接', io: 'cross_link' }
+    ],
+    notes: {
+      good: 'Diff 视图 + 文化锚点检查清单',
+      opp: '高频路径 → 一键模板',
+    }
+  },
+
+  // ============ D3 · 脚本创作域 (7) ============
+  {
+    id: 'I3.1', domain: 'D3', name: '完整写脚本',
+    trigger: '"写一条 45s 意铁亲子"',
+    tools: ['script_gen', '5d_score'],
+    output: '5 段结构化脚本',
+    proto: [
+      { type: 'titlebar', text: 'D3 / 写脚本 · 45s 意铁亲子' },
+      { type: 'block', label: 'HOOK · 0-3s · 数据', text: '"5 欧能睡阿尔卑斯山顶上?"' },
+      { type: 'block', label: 'SETUP · 3-15s', text: '介绍欧铁夜卧的特殊路线' },
+      { type: 'block', label: 'BODY · 15-35s', text: '亲子真实体验 / 沿途风景' },
+      { type: 'block', label: 'CTA · 35-45s', text: '"评论区说说你想去哪条"' },
+      { type: 'grid3', items: [['钩子','8.5'],['结构','8.0'],['数据','7.8']] },
+      { type: 'actions', items: ['→ 找素材 C3.1', '↻ 局部迭代'] }
+    ],
+    flow: [
+      { actor: 'user', desc: '输入业务线 + 时长 + 主题', io: 'biz/dur/topic' },
+      { actor: 'agent', desc: '调脚本生成模型,流式输出 5 段', io: 'script_gen 流式' },
+      { actor: 'agent', desc: '5 维评分,低分段标黄', io: '5d_score' },
+      { actor: 'user', desc: '看脚本草稿,决定整体保留还是局部改', io: 'review' },
+      { actor: 'user', desc: '点「→ 找素材」流转 D4', io: 'C3.1' }
+    ],
+    notes: {
+      good: '流式输出,看见 Agent 在写',
+      pain: '首次生成不够"我"',
+      opp: '学习账号过去 10 条风格,个性化',
+    }
+  },
+  {
+    id: 'I3.2', domain: 'D3', name: '仿写本地化',
+    trigger: '"仿这条,换成英铁"',
+    tools: ['script_clone', 'culture_adapt'],
+    output: '本地化的仿写脚本',
+    proto: [
+      { type: 'titlebar', text: 'D3 / 仿写本地化' },
+      { type: 'split', left: ['原版 (意铁)', '5 欧夜卧阿尔卑斯…'], right: ['新版 (英铁)', '5 镑夜卧苏格兰…'] },
+      { type: 'block', label: '⚠ 文化梗调整', text: '阿尔卑斯 → 苏格兰高地\n意式咖啡 → 英式茶\n5€ → £5' },
+      { type: 'actions', items: ['✓ 采用', '↻ 重写'] }
+    ],
+    flow: [
+      { actor: 'user', desc: '指定原视频 + 目标业务线', io: 'src + target' },
+      { actor: 'agent', desc: '复用结构,替换文化锚点', io: 'culture_adapt' },
+      { actor: 'user', desc: '逐项确认文化梗调整', io: 'review_anchor' }
+    ],
+    notes: {
+      pain: '本地化失去原梗',
+      opp: '文化对照表 + 替代梗推荐',
+    }
+  },
+  {
+    id: 'I3.3', domain: 'D3', name: '局部迭代',
+    trigger: '"开头不够抓人,改一下"',
+    tools: ['segment_rewrite'],
+    output: '该段 3 个改写版本',
+    proto: [
+      { type: 'titlebar', text: 'D3 / 局部迭代 · 高亮段' },
+      { type: 'block', label: '原段', text: '"今天给大家分享…" (5 维评分: 钩子 4.2)' },
+      { type: 'list', items: [
+        ['💡 v1 数据钩', '"5 欧能睡阿尔卑斯"'],
+        ['💡 v2 反差钩', '"凌晨3点你不会信看到啥"'],
+        ['💡 v3 疑问钩', '"火车餐车真比米其林好?"']
+      ]},
+      { type: 'actions', items: ['✓ 采用 v1', '↻ 再改'] }
+    ],
+    flow: [
+      { actor: 'user', desc: '高亮某段,输入"不够抓人"', io: 'segment + intent' },
+      { actor: 'agent', desc: '只改这一段,生成 3 个改写版', io: 'segment_rewrite' },
+      { actor: 'user', desc: '对比选择,采用其一', io: 'pick_v' }
+    ],
+    notes: {
+      good: '只改一段,不重写全文',
+      opp: '局部对比 + 高亮原句',
+    }
+  },
+  {
+    id: 'I3.4', domain: 'D3', name: '多钩子候选',
+    trigger: '"5 个不同风格开头"',
+    tools: ['hook_gen', 'tts_preview'],
+    output: '5 类风格钩子 + TTS 试听',
+    proto: [
+      { type: 'titlebar', text: 'D3 / 多钩子 · A/B' },
+      { type: 'list', items: [
+        ['🎯 数据', '"5 欧能睡欧洲屋脊上"'],
+        ['🎯 反差', '"凌晨 3 点你不会信"'],
+        ['🎯 疑问', '"真有人 5 欧住阿尔卑斯?"'],
+        ['🎯 故事', '"那夜列车开过山顶时…"'],
+        ['🎯 共鸣', '"穷游党都该看这条"']
+      ]},
+      { type: 'actions', items: ['🔊 TTS 试听', '✓ 采用'] }
+    ],
+    flow: [
+      { actor: 'user', desc: '点「+ 候选」', io: 'gen_hooks' },
+      { actor: 'agent', desc: '强制生成 5 类风格钩子', io: '5 styles' },
+      { actor: 'user', desc: 'TTS 试听口语化效果', io: 'audio_preview' },
+      { actor: 'user', desc: '选最佳钩子采用', io: 'pick' }
+    ],
+    notes: {
+      good: '强制 5 类(数据/反差/疑问/故事/共鸣)',
+      pain: '5 个钩子风格趋同',
+      opp: '加 TTS 试听口语化效果',
+    }
+  },
+  {
+    id: 'I3.5', domain: 'D3', name: '口语转脚本',
+    trigger: '拖入录音文件',
+    tools: ['asr', 'structure_extract'],
+    output: '基于录音的结构化脚本',
+    proto: [
+      { type: 'titlebar', text: 'D3 / 口语转脚本' },
+      { type: 'block', label: '上传', text: '🎤 audio_2418.m4a · 1m 32s' },
+      { type: 'block', label: 'ASR 结果', text: '"嗯…那个夜里坐火车…经过阿尔卑斯…"' },
+      { type: 'block', label: '结构化', text: 'HOOK / SETUP / BODY / CTA · 保留口语风格' }
+    ],
+    flow: [
+      { actor: 'user', desc: '拖入录音文件', io: 'audio file' },
+      { actor: 'agent', desc: 'ASR 转文本,识别停顿/重复', io: 'asr' },
+      { actor: 'agent', desc: '结构化为 HOOK/SETUP/BODY/CTA', io: 'structure' },
+      { actor: 'user', desc: '保留个人口语,做最终编辑', io: 'review' }
+    ],
+    notes: {
+      good: '保留口语风格,不机械化',
+    }
+  },
+  {
+    id: 'I3.6', domain: 'D3', name: '脚本预审',
+    trigger: '"这个能过审吗"',
+    tools: ['compliance_check'],
+    output: '高亮敏感词 + 改写建议',
+    proto: [
+      { type: 'titlebar', text: 'D3 / 脚本预审' },
+      { type: 'block', label: '⚠ 检测到 1 处问题', text: '"绝对最便宜" → 夸大宣传' },
+      { type: 'list', items: [
+        ['💡 改写 1', '"目前已知最低价"'],
+        ['💡 改写 2', '"性价比最高之一"']
+      ]},
+      { type: 'actions', items: ['✓ 改写 1', '强制继续'] }
+    ],
+    flow: [
+      { actor: 'user', desc: '点「脚本预审」(D3→D4 流转前)', io: 'script' },
+      { actor: 'agent', desc: '调合规模型,标红问题段', io: 'compliance' },
+      { actor: 'agent', desc: '直接给出 2 条改写建议', io: 'rewrite' },
+      { actor: 'user', desc: '采用建议或强制继续', io: 'decision' }
+    ],
+    notes: {
+      good: '不阻断流程,可强制继续',
+      pain: '驳回理由不具操作性',
+      opp: '驳回 → 改写建议直接挂在段落',
+    }
+  },
+  {
+    id: 'I3.7', domain: 'D3', name: '多账号风格',
+    trigger: '"三个账号都要发"',
+    tools: ['style_clone', 'history_learn'],
+    output: '3 个账号风格的版本',
+    proto: [
+      { type: 'titlebar', text: 'D3 / 多账号风格' },
+      { type: 'grid3', items: [
+        ['账号 A · 知识型', '专业感, 数据多'],
+        ['账号 B · 故事型', '叙事, 情绪强'],
+        ['账号 C · 攻略型', '清单, 实用']
+      ]},
+      { type: 'actions', items: ['全部生成', '逐个 review'] }
+    ],
+    flow: [
+      { actor: 'user', desc: '指定 3 个账号', io: 'account list' },
+      { actor: 'agent', desc: '学习每个账号过去 10 条风格', io: 'history_learn' },
+      { actor: 'agent', desc: '为每个账号生成专属版本', io: '3 versions' }
+    ],
+    notes: {
+      good: '基于历史学习,不机械模板化',
+    }
+  },
+
+  // ============ D4 · 素材管理域 (6) ============
+  {
+    id: 'I4.1', domain: 'D4', name: '脚本召回',
+    trigger: '点「→ 找素材」',
+    tools: ['embedding_search', 'tag_index'],
+    output: '逐段对应的 top-N 候选',
+    proto: [
+      { type: 'titlebar', text: 'D4 / 脚本召回 · 5 段' },
+      { type: 'list', items: [
+        ['段 1 · 0-3s 钩子画面', '5 候选 · 覆盖率 92%'],
+        ['段 2 · 3-15s 路线介绍', '4 候选 · 覆盖率 88%'],
+        ['段 3 · 15-35s 亲子互动', '0 候选 · ⚠ 硬缺口'],
+        ['段 4 · 35-45s CTA', '6 候选 · 覆盖率 95%']
+      ]},
+      { type: 'sidelog', items: ['emb 索引: ✓', 'tag 索引: ✓', 'coverage 算: ✓'] }
+    ],
+    flow: [
+      { actor: 'user', desc: 'D3 点「→ 找素材」流转过来', io: 'script' },
+      { actor: 'agent', desc: '逐段调 embedding 搜索 + tag 索引', io: 'dual index' },
+      { actor: 'agent', desc: '计算每段覆盖率,标记硬缺口', io: 'coverage' },
+      { actor: 'user', desc: '逐段确认/替换镜头', io: 'segment_bind' }
+    ],
+    notes: {
+      pain: '召回 top-5 排序不稳',
+      opp: '召回结果显示「为什么是它」',
+    }
+  },
+  {
+    id: 'I4.2', domain: 'D4', name: '语义搜索 (对象/地点)',
+    trigger: '"夜班火车进站镜头" / "米兰中央车站"',
+    tools: ['object_detect', 'geo_index'],
+    output: '匹配的素材列表',
+    proto: [
+      { type: 'titlebar', text: 'D4 / 语义搜索' },
+      { type: 'input', text: '夜班火车进站' },
+      { type: 'chips', items: [['对象','active'],['地点',''],['时间',''],['动作','']] },
+      { type: 'list', items: [
+        ['clip_0294 · 米兰中央 02:14', '匹配 0.91'],
+        ['clip_1817 · 罗马 23:48', '匹配 0.85'],
+        ['clip_2418 · 那不勒斯', '匹配 0.78']
+      ]}
+    ],
+    flow: [
+      { actor: 'user', desc: '输入自然语言查询', io: 'query' },
+      { actor: 'agent', desc: '调对象检测 + 地点索引', io: 'multi-index' },
+      { actor: 'system', desc: '按匹配度返回 top-N', io: 'ranked list' }
+    ],
+    notes: {
+      pain: 'facet 选项过多',
+      opp: 'facet 自动收敛',
+    }
+  },
+  {
+    id: 'I4.3', domain: 'D4', name: '缺口检测',
+    trigger: '自动触发 (随召回)',
+    tools: ['coverage_model', 'risk_predict'],
+    output: '硬缺口报告 + 三键决策',
+    proto: [
+      { type: 'titlebar', text: 'D4 / 缺口检测 · ⚠ 硬缺口' },
+      { type: 'block', label: '段 3 · 15-20s · 亲子互动', text: '替代 top-5 平均匹配度 0.42 (低于 0.6)' },
+      { type: 'grid3', items: [
+        ['📋 补采清单', 'PDF · 暂停项目'],
+        ['↻ 删段缩短', '总时长 → 39s'],
+        ['⚠ 替代继续', 'ROI -0.3x']
+      ]},
+      { type: 'block', label: '后悔可回', text: '⏎ 30min 内可撤销' }
+    ],
+    flow: [
+      { actor: 'system', desc: '召回完成后自动跑覆盖率', io: 'coverage' },
+      { actor: 'agent', desc: '硬缺口触发三键决策面板', io: 'gap_modal' },
+      { actor: 'agent', desc: '每个选项附一句话风险预测', io: 'risk hint' },
+      { actor: 'user', desc: '三键互斥选其一', io: '3-key choice' },
+      { actor: 'system', desc: '缺口入 gap_register,30d 内可复用', io: 'register' }
+    ],
+    notes: {
+      good: '让用户感觉"有路可走",不是被卡住',
+      pain: '硬缺口仅提示,缺补救路径',
+      opp: '三键决策 · 都能 30min 内回主路径',
+    }
+  },
+  {
+    id: 'I4.4', domain: 'D4', name: '入库打标',
+    trigger: '拖入 12 条新素材',
+    tools: ['auto_tag', 'usage_predict'],
+    output: '入库 + 自动标签 + 5 种用法',
+    proto: [
+      { type: 'titlebar', text: 'D4 / 入库打标' },
+      { type: 'block', label: '上传中', text: '12/12 · ✓ 完成', bar: 100 },
+      { type: 'list', items: [
+        ['clip_2501 · 米兰夜抵', 'tags: 夜景, 站台, 旅客'],
+        ['clip_2502 · 阿尔卑斯', 'tags: 山景, 雪, 黄昏']
+      ]},
+      { type: 'block', label: '5 种推荐用法', text: '钩子 / 转场 / 风景 / 互动 / 收尾' }
+    ],
+    flow: [
+      { actor: 'user', desc: '拖入新素材', io: 'files' },
+      { actor: 'agent', desc: '自动跑 tag 模型', io: 'auto_tag' },
+      { actor: 'agent', desc: '预生成 5 种用法说明', io: 'usage_hint' },
+      { actor: 'system', desc: '入库 + 索引', io: 'indexed' }
+    ],
+    notes: {
+      opp: '入库后预生成 5 种用法说明',
+    }
+  },
+  {
+    id: 'I4.5', domain: 'D4', name: '相似召回',
+    trigger: '右键「找类似」',
+    tools: ['embedding_match'],
+    output: '同风格相似素材列表',
+    proto: [
+      { type: 'titlebar', text: 'D4 / 相似召回' },
+      { type: 'block', label: '种子', text: 'clip_2418 · 米兰中央 02:14' },
+      { type: 'list', items: [
+        ['clip_1817 · 罗马', '相似度 0.91 · 风格匹配'],
+        ['clip_0612 · 那不勒斯', '相似度 0.85'],
+        ['clip_2901 · 米兰', '相似度 0.79']
+      ]}
+    ],
+    flow: [
+      { actor: 'user', desc: '右键某条素材选「找类似」', io: 'seed' },
+      { actor: 'agent', desc: 'embedding 匹配相似素材', io: 'sim search' },
+      { actor: 'user', desc: '复用相似风格,降低拍摄成本', io: 'reuse' }
+    ]
+  },
+  {
+    id: 'I4.6', domain: 'D4', name: '入库 (含归类)',
+    trigger: '入库后预生成 5 种用法说明',
+    tools: ['categorize', 'wiki_write'],
+    output: '归类完成的素材资产',
+    proto: [
+      { type: 'titlebar', text: 'D4 / 归类入库 · wiki/' },
+      { type: 'block', label: '路径', text: 'wiki/assets/2026/04/意铁/夜卧/' },
+      { type: 'list', items: [
+        ['L1 资产层', 'wiki/assets'],
+        ['L2 模板层', 'wiki/templates'],
+        ['L3 脚本产出', 'wiki/scripts']
+      ]}
+    ],
+    flow: [
+      { actor: 'system', desc: '从 I4.4 入库流程接续', io: 'tagged file' },
+      { actor: 'agent', desc: '按业务线/主题/年月归类', io: 'auto path' },
+      { actor: 'system', desc: '写入 wiki 引用图谱', io: 'graph node' }
+    ]
+  },
+
+  // ============ D5 · 剪辑生产域 (6) ============
+  {
+    id: 'I5.1', domain: 'D5', name: '智能粗剪',
+    trigger: '默认开启,可关',
+    tools: ['smart_cut', 'segment_align'],
+    output: '可用度 ≥80% 的粗剪 mp4',
+    proto: [
+      { type: 'titlebar', text: 'D5 / 智能粗剪' },
+      { type: 'block', label: '进度', text: '段 5/5 · ⏳ 1m 23s', bar: 80 },
+      { type: 'list', items: [
+        ['段 1 · 钩子', '✓ 0-3s'],
+        ['段 2 · setup', '✓ 3-15s'],
+        ['段 3 · body', '⚠ 字幕错位'],
+        ['段 4 · CTA', '✓ 35-45s']
+      ]},
+      { type: 'actions', items: ['查看待修区段'] }
+    ],
+    flow: [
+      { actor: 'user', desc: 'D4 流转过来,触发智能粗剪', io: 'script + assets' },
+      { actor: 'agent', desc: '按脚本节奏自动拼接素材', io: 'smart_cut' },
+      { actor: 'agent', desc: '标记待人工区段', io: 'manual zone' },
+      { actor: 'user', desc: '看时间轴,定位需修段', io: 'timeline' }
+    ],
+    notes: {
+      good: 'Agent 主导,用户做微调',
+      pain: '粗剪结果与脑中想象有差',
+      opp: '粗剪标可用率 + 待人工区段',
+    }
+  },
+  {
+    id: 'I5.2', domain: 'D5', name: '加字幕',
+    trigger: '自动 / 偏差≥0.2s 自动标记',
+    tools: ['asr_subtitle', 'align_check'],
+    output: '对齐字幕 / 错位高亮',
+    proto: [
+      { type: 'titlebar', text: 'D5 / 字幕 · 23-25s' },
+      { type: 'block', label: '⚠ 检测到偏差', text: '字幕(23.82s) vs 口播(23.50s) · 偏差 0.32s' },
+      { type: 'list', items: [
+        ['"5 欧能睡阿尔卑斯"', '0-3s · ✓ 对齐'],
+        ['"凌晨 3 点经过山段"', '23-25s · ❌ 错位'],
+        ['"评论说说想去哪"', '40-45s · ✓ 对齐']
+      ]},
+      { type: 'actions', items: ['一键修正'] }
+    ],
+    flow: [
+      { actor: 'agent', desc: '自动 ASR 生成字幕', io: 'asr' },
+      { actor: 'agent', desc: '检测口播-字幕偏差', io: 'align_check' },
+      { actor: 'agent', desc: '偏差 ≥0.2s 自动变色高亮', io: 'mark' },
+      { actor: 'user', desc: '点「一键修正」', io: 'fix' }
+    ],
+    notes: {
+      pain: '字幕错位需要重对齐',
+      opp: '偏差≥0.2s 自动标记 + 一键修正',
+    }
+  },
+  {
+    id: 'I5.3', domain: 'D5', name: 'TTS 配音',
+    trigger: '"AI 配个音"',
+    tools: ['voice_clone', 'tts'],
+    output: 'AI 配音 mp3',
+    proto: [
+      { type: 'titlebar', text: 'D5 / TTS 配音' },
+      { type: 'block', label: '声音模型', text: '👤 用户音库 · 30s 训练 · 已就绪' },
+      { type: 'block', label: '正在合成', text: '段 3/5 · 4.2s', bar: 60 },
+      { type: 'actions', items: ['🔊 试听', '↻ 重合成'] }
+    ],
+    flow: [
+      { actor: 'user', desc: '没出镜也想做内容', io: 'script' },
+      { actor: 'agent', desc: '调用用户专属音库', io: 'voice_clone' },
+      { actor: 'agent', desc: '逐段合成 TTS', io: 'tts' },
+      { actor: 'user', desc: '试听,不满意可重合成', io: 'review' }
+    ],
+    notes: {
+      pain: 'TTS 不像本人',
+      opp: '用户音库 · 30s 训练个人声音',
+    }
+  },
+  {
+    id: 'I5.4', domain: 'D5', name: '封面候选',
+    trigger: '"3 个封面候选"',
+    tools: ['frame_extract', 'cover_gen'],
+    output: '3 个封面 + 文字编辑',
+    proto: [
+      { type: 'titlebar', text: 'D5 / 封面 · 3 选 1' },
+      { type: 'grid3', items: [
+        ['🖼 封面 A', '高潮帧 · 反差大'],
+        ['🖼 封面 B', '钩子帧 · 文字醒目'],
+        ['🖼 封面 C', '人物帧 · 情绪强']
+      ]},
+      { type: 'actions', items: ['✓ 用 A', '编辑文字'] }
+    ],
+    flow: [
+      { actor: 'agent', desc: '从视频抽取候选关键帧', io: 'frames' },
+      { actor: 'agent', desc: '生成 3 种风格封面', io: '3 covers' },
+      { actor: 'user', desc: '选 1 个,文字可在线编辑', io: 'pick + edit' }
+    ]
+  },
+  {
+    id: 'I5.5', domain: 'D5', name: '多比例 (9:16/1:1)',
+    trigger: '"9:16 转 1:1"',
+    tools: ['subject_track', 'reframe'],
+    output: '多比例版本',
+    proto: [
+      { type: 'titlebar', text: 'D5 / 多比例 · 9:16 + 1:1 + 16:9' },
+      { type: 'grid3', items: [
+        ['9:16 主版', '已就绪'],
+        ['1:1 适配', '⏳ 主体追踪'],
+        ['16:9 适配', '⏳ 重构图']
+      ]},
+      { type: 'block', label: '锁定主体', text: '🔒 璐璐 · 父亲 · 不允许切出' }
+    ],
+    flow: [
+      { actor: 'user', desc: '指定多比例需求', io: 'ratios' },
+      { actor: 'agent', desc: '主体识别 + 锁定', io: 'subject_track' },
+      { actor: 'agent', desc: '逐比例重构图,不切关键画面', io: 'reframe' }
+    ],
+    notes: {
+      pain: '自动构图常切到关键主体外',
+      opp: '主体识别 + 锁定不允许切',
+    }
+  },
+  {
+    id: 'I5.6', domain: 'D5', name: '节奏优化',
+    trigger: '"剪掉口癖和停顿"',
+    tools: ['silence_detect', 'tempo_opt'],
+    output: '节奏紧凑版',
+    proto: [
+      { type: 'titlebar', text: 'D5 / 节奏优化' },
+      { type: 'list', items: [
+        ['"嗯…那个" · 12s处', '建议剪 0.8s'],
+        ['长停顿 · 24s处', '建议剪 1.2s'],
+        ['重复 · 38s处', '建议剪 0.5s']
+      ]},
+      { type: 'block', label: '总时长', text: '45s → 42.5s · -2.5s' },
+      { type: 'actions', items: ['全部应用', '逐项确认'] }
+    ],
+    flow: [
+      { actor: 'agent', desc: '检测口癖 / 停顿 / 重复', io: 'silence + filler' },
+      { actor: 'user', desc: '逐项确认或全部应用', io: 'review' },
+      { actor: 'agent', desc: '原始保留,可回滚', io: 'reversible' }
+    ]
+  },
+
+  // ============ D6 · 审核发布域 (5) ============
+  {
+    id: 'I6.1', domain: 'D6', name: '合规审',
+    trigger: '6 项 checklist',
+    tools: ['policy_check', 'auto_fix'],
+    output: '审核报告 + 警告级一键修',
+    proto: [
+      { type: 'titlebar', text: 'D6 / 合规审 · 6 项' },
+      { type: 'list', items: [
+        ['✓ 版权', '通过'],
+        ['✓ 敏感词', '通过'],
+        ['⚠ 路人脸', '23.5s 处侧脸'],
+        ['✓ 数据准确', '通过'],
+        ['✓ 平台规则', '通过'],
+        ['✓ 商业广告', '通过']
+      ]},
+      { type: 'actions', items: ['✓ 自动遮挡', '强制通过'] }
+    ],
+    flow: [
+      { actor: 'user', desc: 'D5 流转过来,过合规审', io: 'video' },
+      { actor: 'agent', desc: '6 维 checklist 逐项检查', io: 'policy_check' },
+      { actor: 'agent', desc: '警告级提供"一键自动修"', io: 'auto_fix' },
+      { actor: 'user', desc: '采纳修复或强制通过', io: 'decision' }
+    ],
+    notes: {
+      pain: '警告级修不修不知道',
+      opp: '警告级一键自动修(可拒)',
+    }
+  },
+  {
+    id: 'I6.2', domain: 'D6', name: '一键多平台',
+    trigger: '"三平台都发"',
+    tools: ['platform_api'],
+    output: '排程到 XHS/抖音/TK',
+    proto: [
+      { type: 'titlebar', text: 'D6 / 多平台 · 排程' },
+      { type: 'list', items: [
+        ['📱 小红书', '19:00'],
+        ['📱 抖音', '19:10'],
+        ['📱 TikTok', '19:20']
+      ]},
+      { type: 'block', label: '错峰策略', text: '黄金时段 · 间隔 10min · 撤回窗 30min' }
+    ],
+    flow: [
+      { actor: 'user', desc: '勾选三平台', io: 'platforms' },
+      { actor: 'agent', desc: '为每平台分配错峰时段', io: 'schedule' },
+      { actor: 'system', desc: '生成排程任务 + cancel_url', io: 'scheduled' }
+    ]
+  },
+  {
+    id: 'I6.3', domain: 'D6', name: '差异化文案',
+    trigger: 'XHS/抖音/TK 各一版',
+    tools: ['platform_style'],
+    output: '三版平台文案',
+    proto: [
+      { type: 'titlebar', text: 'D6 / 三平台文案 · diff' },
+      { type: 'split', left: ['📕 小红书 · 412/500', '种草口吻 · 多 emoji'], right: ['🎵 抖音 · 287/300', '钩子前置 · 短句'] },
+      { type: 'block', label: '🌍 TikTok · 198/300', text: '英文 + 表情符号 · 国际化语境' },
+      { type: 'actions', items: ['同步编辑', '✓ 全部确认'] }
+    ],
+    flow: [
+      { actor: 'agent', desc: '基于视频内容生成三版文案', io: 'platform_style' },
+      { actor: 'user', desc: '看 diff 视图,逐平台微调', io: 'diff_edit' },
+      { actor: 'user', desc: '确认全部,流转到排程', io: 'confirm' }
+    ],
+    notes: {
+      pain: '三平台文案差异不直观',
+      opp: 'diff 高亮 + 同步编辑',
+    }
+  },
+  {
+    id: 'I6.4', domain: 'D6', name: '最佳时机',
+    trigger: '"什么时候发最好"',
+    tools: ['time_predict', 'historical_perf'],
+    output: '推荐时间 + 6 小时柱状对比',
+    proto: [
+      { type: 'titlebar', text: 'D6 / 最佳时机' },
+      { type: 'block', label: '推荐 · 19:00', text: '基于近 30d 该业务线峰值' },
+      { type: 'list', items: [
+        ['18:00', '柱 ▮▮▮'],
+        ['19:00', '柱 ▮▮▮▮▮ ★'],
+        ['20:00', '柱 ▮▮▮▮'],
+        ['21:00', '柱 ▮▮']
+      ]},
+      { type: 'actions', items: ['✓ 用 19:00', '改时间'] }
+    ],
+    flow: [
+      { actor: 'user', desc: '想知道何时发布最好', io: 'platform' },
+      { actor: 'agent', desc: '调历史表现 + 时段模型', io: 'time_predict' },
+      { actor: 'agent', desc: '推荐时间 + 6 小时柱状对比', io: 'visualize' },
+      { actor: 'user', desc: '采纳或手动改', io: 'pick' }
+    ],
+    notes: {
+      pain: '推荐时间没有理由',
+      opp: '推荐时间附近 6 小时柱状对比',
+    }
+  },
+  {
+    id: 'I6.5', domain: 'D6', name: '数据回流 + 二次仿写',
+    trigger: 'CRON 24h 后',
+    tools: ['data_sync', 'derive_gen'],
+    output: '24h 数据 + 3 条衍生候选',
+    proto: [
+      { type: 'titlebar', text: 'D6 / 数据回流 + 衍生' },
+      { type: 'banner', text: '🎉 昨天那条爆了 ↑3.1x · 看 3 条延伸', accent: true },
+      { type: 'list', items: [
+        ['💡 角度变换', '"30 欧能睡王宫上"'],
+        ['💡 业务线迁移', '英铁版 · 苏格兰夜卧'],
+        ['💡 长度变换', '15s 短版']
+      ]},
+      { type: 'block', label: '钩子写入', text: 'wiki/hooks · score A→S' }
+    ],
+    flow: [
+      { actor: 'system', desc: 'CRON 24h 后自动拉数据', io: 'data_sync' },
+      { actor: 'agent', desc: '检测达基线 → 触发归档', io: 'archive' },
+      { actor: 'agent', desc: '主动生成 3 条衍生候选', io: 'derive_gen' },
+      { actor: 'system', desc: 'push banner 给用户', io: 'notify' },
+      { actor: 'user', desc: '点 banner 选 1 条进入 D3', io: 'next round' }
+    ],
+    notes: {
+      good: '数据-动作绑定 · 30min 内推送行动建议',
+      opp: '复用素材包 · skip 部分 D4',
+    }
+  },
+];
+
+// ============ RENDERING ============
+
+const navEl = document.getElementById('nav');
+const mainEl = document.getElementById('main');
+
+function buildNav() {
+  Object.entries(DOMAINS).forEach(([dKey, d]) => {
+    const items = INTENTS.filter(i => i.domain === dKey);
+    const group = document.createElement('div');
+    group.className = 'domain-group';
+    group.innerHTML = `
+      <div class="domain-head">
+        <span class="domain-name"><span class="dot" style="background:${d.color}"></span>${dKey} · ${d.name}</span>
+        <span class="domain-count">${items.length} 意图</span>
+      </div>
+      <ul class="intent-list">
+        ${items.map(i => `
+          <li class="intent-item" data-id="${i.id}">
+            <span class="intent-id">${i.id}</span>
+            <span class="intent-name">${i.name}</span>
+          </li>
+        `).join('')}
+      </ul>
+    `;
+    navEl.appendChild(group);
+  });
+
+  navEl.addEventListener('click', e => {
+    const item = e.target.closest('.intent-item');
+    if (!item) return;
+    document.querySelectorAll('.intent-item').forEach(el => el.classList.remove('active'));
+    item.classList.add('active');
+    renderIntent(item.dataset.id);
+  });
+}
+
+function renderOverview() {
+  const counts = Object.keys(DOMAINS).reduce((acc, d) => {
+    acc[d] = INTENTS.filter(i => i.domain === d).length; return acc;
+  }, {});
+  return `
+    <div class="overview">
+      <h2>意图图谱 · 38 个原型</h2>
+      <p>TripFlow 由 6 个业务域(SubAgent)组成,共定义 38 个用户意图。每个意图对应一个原型 + 一条动线。<br>左侧导航选择任一意图查看其线框原型与用户动线。</p>
+      <div class="overview-grid">
+        ${Object.entries(DOMAINS).map(([k, d]) => `
+          <div class="overview-domain">
+            <div><span class="dot" style="background:${d.color}"></span><span class="name">${k}</span></div>
+            <div class="count">${counts[k]}</div>
+            <div class="label">${d.name}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function renderProtoBlock(c) {
+  switch (c.type) {
+    case 'titlebar':
+      return `<div class="wf-titlebar"><span class="dots"><span></span><span></span><span></span></span>${c.text}</div>`;
+    case 'input':
+      return `<div class="wf-block input">${c.text}</div>`;
+    case 'banner':
+      return `<div class="wf-block" style="background:${c.accent?'var(--accent-soft)':''};border-color:${c.accent?'var(--accent)':''};color:${c.accent?'var(--accent)':''}">${c.text}</div>`;
+    case 'chips':
+      return `<div class="wf-block"><div class="label">CHIPS</div>${c.items.map(([t,s])=>`<span class="wf-chip ${s}">${t}</span>`).join('')}</div>`;
+    case 'list':
+      return `<div class="wf-block main"><div class="label">LIST</div>${c.items.map(([l,r])=>`<div class="wf-list-item"><span>${l}</span><span class="meta">${r}</span></div>`).join('')}</div>`;
+    case 'cards':
+      return `<div class="wf-block main"><div class="label">CARDS</div><div class="wf-stack">${c.items.map(([t,m])=>`<div class="wf-list-item" style="background:white;border:1px solid var(--line);border-radius:3px;padding:8px 10px;border-bottom:1px solid var(--line)"><span>${t}</span><span class="meta">${m}</span></div>`).join('')}</div></div>`;
+    case 'cloud':
+      return `<div class="wf-block"><div class="label">WORD CLOUD</div><div style="display:flex;flex-wrap:wrap;gap:8px">${c.items.map(t=>`<span class="wf-chip" style="font-size:${10+Math.random()*4}px">${t}</span>`).join('')}</div></div>`;
+    case 'block':
+      return `<div class="wf-block">${c.label?`<div class="label">${c.label}</div>`:''}${c.text||''}${c.bar!==undefined?`<div class="wf-bar" style="--p:${c.bar}%;margin-top:6px"></div>`:''}</div>`;
+    case 'grid3':
+      return `<div class="wf-grid-3">${c.items.map(([l,r])=>`<div class="wf-block" style="text-align:center"><div class="label">${l}</div><strong>${r}</strong></div>`).join('')}</div>`;
+    case 'split':
+      return `<div class="wf-row"><div class="wf-block"><div class="label">${c.left[0]}</div>${c.left[1]}</div><div class="wf-block"><div class="label">${c.right[0]}</div>${c.right[1]}</div></div>`;
+    case 'sidelog':
+      return `<div class="wf-block side"><div class="label">SIDE LOG</div>${c.items.map(t=>`<div style="font-family:var(--mono);font-size:10px;color:var(--ink-soft);padding:2px 0">${t}</div>`).join('')}</div>`;
+    case 'actions':
+      return `<div class="wf-block" style="border:none;background:transparent;padding:6px 0 0">${c.items.map((t,i)=>`<span class="wf-btn ${i===0?'':'ghost'}">${t}</span>`).join('')}</div>`;
+    default: return '';
+  }
+}
+
+function renderIntent(id) {
+  const i = INTENTS.find(x => x.id === id);
+  if (!i) return;
+  const d = DOMAINS[i.domain];
+
+  const titlebar = i.proto.find(p => p.type === 'titlebar');
+  const others = i.proto.filter(p => p.type !== 'titlebar');
+
+  mainEl.innerHTML = `
+    <header class="detail-head">
+      <div>
+        <div class="eyebrow">
+          <span class="domain-tag" style="color:${d.color}">${i.domain} · ${d.name}</span>
+          <span>${d.desc}</span>
+        </div>
+        <div class="detail-id">${i.id}</div>
+        <h1 class="detail-title">${i.name}</h1>
+        <div class="trigger-quote">触发 · ${i.trigger}</div>
+      </div>
+      <div class="detail-meta">
+        <div><span class="label">TOOLS</span> ${(i.tools||[]).map(t=>`<code>${t}</code>`).join(' · ')}</div>
+        <div style="margin-top:6px"><span class="label">OUTPUT</span> ${i.output||'-'}</div>
+      </div>
+    </header>
+
+    <div class="split">
+      <section>
+        <div class="section-title">原型 · Wireframe</div>
+        <div class="wireframe">
+          <div class="wf-window">
+            ${titlebar ? renderProtoBlock(titlebar) : ''}
+            <div class="wf-body">
+              ${others.map(renderProtoBlock).join('')}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-title">动线 · User Flow</div>
+        <div class="flow">
+          <div class="flow-steps">
+            ${i.flow.map((s, idx) => `
+              <div class="flow-step">
+                <div class="num">${idx+1}</div>
+                <div class="actor actor-${s.actor}">${s.actor==='user'?'用户':s.actor==='agent'?'Agent':'系统'}</div>
+                <div>
+                  <div class="desc">${s.desc}</div>
+                  ${s.io?`<div class="io">${s.io}</div>`:''}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </section>
+    </div>
+
+    ${i.notes ? `
+    <section class="section">
+      <div class="section-title">体验关键点 · Notes</div>
+      <div class="notes">
+        ${i.notes.good ? `<div class="note success"><div class="label">✓ Good Practice</div><div class="content">${i.notes.good}</div></div>` : ''}
+        ${i.notes.pain ? `<div class="note warn"><div class="label">⚠ Pain Point</div><div class="content">${i.notes.pain}</div></div>` : ''}
+        ${i.notes.opp ? `<div class="note info"><div class="label">💡 Opportunity</div><div class="content">${i.notes.opp}</div></div>` : ''}
+      </div>
+    </section>
+    ` : ''}
+  `;
+
+  mainEl.scrollTop = 0;
+}
+
+function init() {
+  buildNav();
+  mainEl.innerHTML = renderOverview() + `
+    <div style="text-align:center;padding:60px 20px;color:var(--ink-mute);font-family:var(--mono);font-size:11px;letter-spacing:0.1em">
+      ← 从左侧选择任一意图查看原型与动线
+    </div>
+  `;
+  // 默认选中第一个
+  setTimeout(() => {
+    const first = document.querySelector('.intent-item');
+    if (first) first.click();
+  }, 100);
+}
+
+init();
+</script>
+</body>
+</html>

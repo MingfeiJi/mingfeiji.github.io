@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>平台总蓝图 & 产品形态决策</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#15171C;--canvas:#F5F4EF;--surface:#FFFFFF;--line:#E8E5DC;--line-2:#F0EEE7;--muted:#8C887B;--text:#23262D;--text-soft:#52555E;
+--accent:#F24E29;--accent-soft:#FDEAE3;--accent-tint:#FFF4F0;--accent-2:#C73E1D;--teal:#0E8388;--teal-soft:#E2F1F1;--blue:#2F6FED;--blue-soft:#E7EEFD;
+--purple:#7A5AF0;--purple-soft:#EEEAFC;--amber:#D9892B;--amber-soft:#FBEED7;--green:#2E9E5B;--green-soft:#E4F4EA;--red:#D14343;--red-soft:#FBEAEA;--gray-soft:#F1EFE8;--gray-bd:#DCD9CF;
+--mono:"DM Mono",ui-monospace,monospace;--sans:"Sora","PingFang SC","Microsoft YaHei",-apple-system,sans-serif;
+--shadow:0 4px 14px rgba(20,22,28,.06),0 1px 3px rgba(20,22,28,.05);--shadow-sm:0 1px 2px rgba(20,22,28,.04),0 1px 3px rgba(20,22,28,.05);}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:var(--sans);background:var(--canvas);color:var(--text);-webkit-font-smoothing:antialiased;font-size:14px;line-height:1.6}
+.mono{font-family:var(--mono)}.wrap{max-width:1020px;margin:0 auto;padding:34px 28px 80px;animation:fade .5s ease}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.hero{background:var(--ink);border-radius:20px;padding:34px 38px;color:#fff;position:relative;overflow:hidden;margin-bottom:30px}
+.hero::before{content:"";position:absolute;right:-70px;top:-70px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(242,78,41,.5),transparent 70%)}
+.hero::after{content:"";position:absolute;right:150px;bottom:-110px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(14,131,136,.32),transparent 70%)}
+.eye{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#FF8E6B;font-weight:600;position:relative}
+.hero h1{font-size:26px;font-weight:800;letter-spacing:-.5px;margin:9px 0 11px;position:relative}
+.hero p{font-size:13.5px;color:#BDBAB2;max-width:700px;line-height:1.7;position:relative}.hero p b{color:#fff;font-weight:600}
+.sec{margin-top:38px}.sec-h{display:flex;align-items:baseline;gap:11px;margin-bottom:14px;flex-wrap:wrap}
+.sec-h .no{font-family:var(--mono);font-size:13px;color:var(--accent);font-weight:500}.sec-h h2{font-size:18px;font-weight:700;letter-spacing:-.2px}.sec-h .s{font-size:12.5px;color:var(--muted)}
+.subh{font-size:12px;font-weight:700;color:var(--text-soft);margin:16px 0 8px;display:flex;align-items:center;gap:7px}.subh .b{width:6px;height:14px;border-radius:3px;background:var(--teal)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-sm);overflow:hidden}
+p.lead{color:var(--text-soft);font-size:13.5px;line-height:1.75;margin-bottom:14px}p.lead b{color:var(--text);font-weight:600}
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{text-align:left;font-size:10.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.3px;padding:9px 11px;border-bottom:1px solid var(--line);background:#FBFAF7}
+.tbl td{padding:10px 11px;border-bottom:1px solid var(--line-2);vertical-align:top;line-height:1.5}.tbl tr:last-child td{border-bottom:none}.tbl .k{font-weight:600;color:var(--text);white-space:nowrap}
+.pill{display:inline-block;font-size:10px;font-weight:600;padding:2px 7px;border-radius:5px;white-space:nowrap}
+.pl-teal{background:var(--teal-soft);color:var(--teal)}.pl-purple{background:var(--purple-soft);color:#5b40c4}.pl-blue{background:var(--blue-soft);color:var(--blue)}
+.pl-gray{background:var(--gray-soft);color:var(--text-soft)}.pl-accent{background:var(--accent-soft);color:var(--accent-2)}.pl-amber{background:var(--amber-soft);color:var(--amber)}.pl-green{background:var(--green-soft);color:var(--green)}
+.note{display:flex;gap:9px;border-radius:11px;padding:12px 15px;font-size:12.5px;line-height:1.6;margin-top:13px}
+.note.teal{background:var(--teal-soft);border:1px solid #C9E6E6;color:#0a5d61}.note.accent{background:var(--accent-soft);border:1px solid #FBD9CD;color:#7A3A28}
+.note .ni{flex:none;font-weight:700}.note b{font-weight:600}
+ul.clean{list-style:none;display:flex;flex-direction:column;gap:8px;margin-top:4px}
+ul.clean li{font-size:13px;color:var(--text-soft);padding-left:18px;position:relative;line-height:1.6}
+ul.clean li::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);position:absolute;left:2px;top:8px}
+ul.clean li b{color:var(--text);font-weight:600}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.cap{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:14px 16px;box-shadow:var(--shadow-sm)}
+.cap h4{font-size:13px;font-weight:700;margin-bottom:9px;display:flex;align-items:center;gap:8px}.cap h4 .dot{width:8px;height:8px;border-radius:3px;background:var(--accent)}
+.cap ul{list-style:none;display:flex;flex-direction:column;gap:6px}.cap li{font-size:11.5px;color:var(--text-soft);padding-left:13px;position:relative;line-height:1.5}
+.cap li::before{content:"";width:4px;height:4px;border-radius:50%;background:#C2BEB2;position:absolute;left:2px;top:7px}
+/* journey spine */
+.spine{display:flex;align-items:stretch;gap:0;flex-wrap:wrap}
+.snode{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 13px;flex:1;min-width:150px;box-shadow:var(--shadow-sm)}
+.snode .sn{font-size:13px;font-weight:700}.snode .sd{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.4}
+.snode .so{font-size:10px;color:var(--teal);margin-top:7px;font-weight:600}
+.sarr{display:flex;align-items:center;padding:0 6px;color:#C2BEB2;font-weight:700;align-self:center}
+/* decision */
+.decision{background:linear-gradient(180deg,#fff,var(--accent-tint));border:1.5px solid #FBD9CD;border-radius:16px;padding:20px 22px;box-shadow:var(--shadow)}
+.decision .lab{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent-2);font-weight:700}
+.decision .big{font-size:17px;font-weight:800;letter-spacing:-.2px;margin:8px 0 6px;line-height:1.4}
+.decision .big em{font-style:normal;color:var(--accent-2)}
+.decision p{font-size:13px;color:var(--text-soft);line-height:1.7}
+.matrix td .good{color:var(--green);font-weight:600}.matrix td .bad{color:var(--red)}
+.matrix tr.win td{background:var(--accent-tint)}
+.fit{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}.fit.hi{background:var(--green);color:#fff}.fit.mid{background:var(--amber);color:#fff}.fit.lo{background:#B6B2A6;color:#fff}
+.foot{margin-top:46px;padding-top:18px;border-top:1px solid var(--line);font-size:11.5px;color:var(--muted);line-height:1.6}
+@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <div class="eye">PLATFORM BLUEPRINT · 产品形态决策</div>
+    <h1>平台总蓝图 & 产品形态决策</h1>
+    <p>把灵感、资产库、创作、剪辑、审核、复盘 + 副驾，作为<b>一个平台</b>统一拆解：所有对象、所有用户路径、整套架构结构化放好，最后给一个明确的<b>整体产品形态决策</b>——它到底应该长成"几个独立工具"、"一个巨型后台"，还是别的。</p>
+  </div>
+
+  <!-- 1 本质 -->
+  <div class="sec" style="margin-top:6px">
+    <div class="sec-h"><span class="no">01</span><h2>产品本质判断</h2></div>
+    <p class="lead"><b>一句话：</b>用户带着【一个内容意图】进入，平台用【发现 → 沉淀 → 创作 → 成片】这条人机协作流水线，把【全网爆款 / 素材 / 想法】转成【可发布的图文 / 视频】，并通过【表现回流】沉淀成爆款配方，越用越聪明。</p>
+    <p class="lead"><b>核心闭环：</b>发现 → 沉淀 → 创作 → 成片 → 复盘（回流反哺发现）。<b>最高频任务：</b>找到与我相关的爆款、把好片段沉成可复用素材、把素材+脚本批量出成片。<b>最核心对象：</b>素材资产（唯一真源）、灵感（爆款）、草稿/成片、创作篮、爆款配方。</p>
+  </div>
+
+  <!-- 2 对象模型 -->
+  <div class="sec">
+    <div class="sec-h"><span class="no">02</span><h2>核心对象模型（全平台 OOUX）</h2><span class="s">先按对象拆、不按页面拆——分三类：内容 / 任务 / 组织</span></div>
+
+    <div class="subh"><span class="b"></span>内容对象</div>
+    <div class="card"><table class="tbl">
+      <thead><tr><th>对象</th><th>定义</th><th>关键属性</th><th>状态</th><th>用户动作 / AI 动作</th><th>承载</th></tr></thead>
+      <tbody>
+        <tr><td class="k">灵感 / 爆款</td><td>发现的爆款（视频/图文）+ AI 洞察</td><td>平台·作者·指标·爆款分·为什么火·拉片脚本·选题</td><td>待分析 / 已洞察</td><td>看·选·切片·改编 / 归因·情绪·选题·打标</td><td>灵感工作台卡 + 抽屉</td></tr>
+        <tr><td class="k">素材资产</td><td>统一素材真源（图/视频/脚本/BGM/字幕/模板）</td><td>类型·来源·标签·向量·血缘·表现·权限</td><td>待处理 / 已向量化</td><td>预览·加篮·相似·去创作 / 切片·裂变·打标</td><td>资产库卡 + 抽屉</td></tr>
+        <tr><td class="k">片段</td><td>从爆款/视频切出的精彩片段</td><td>起止·类型(钩子/卖点)·业务标签·字幕·审核态</td><td>待审 / 已入库</td><td>勾选·微调·入库 / AI 分镜</td><td>切片抽屉 → 资产库</td></tr>
+        <tr><td class="k">变体</td><td>裂变 / 改写产生的新素材</td><td>母素材·差异度·生成方式</td><td>待确认 / 已保留</td><td>对比·保留·再裂变 / 生成·差异校验</td><td>详情抽屉(变体对比)</td></tr>
+        <tr><td class="k">选题</td><td>可生产的内容方向</td><td>来源·业务线·卖点·参考爆款</td><td>草拟 / 已采用</td><td>采用·生成脚本 / 分析·推荐</td><td>创作台</td></tr>
+        <tr><td class="k">脚本</td><td>文案 / 分镜脚本</td><td>正文·分镜·语种·有效性</td><td>草稿 / 定稿</td><td>改写·拆分镜·定稿 / 生成·仿写</td><td>创作台</td></tr>
+        <tr><td class="k">草稿</td><td>生产中的图文 / 视频</td><td>类型·素材组成·模板·版本·血缘</td><td>编辑 / 待生成 / 已生成</td><td>编辑·重生成·送审 / 生成·拼接</td><td>创作台画布</td></tr>
+        <tr><td class="k">成片 / 作品</td><td>最终图文 / 视频</td><td>渠道·素材血缘·表现·审核态</td><td>待审 / 通过 / 驳回</td><td>送审·导出·标配方</td><td>成片列表 + 复盘</td></tr>
+        <tr><td class="k">模板</td><td>剪辑 / 图文模板</td><td>类型·结构·适用场景</td><td>—</td><td>套用·批量套</td><td>模板库</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="subh"><span class="b" style="background:var(--blue)"></span>任务对象（异步，统一进任务中心）</div>
+    <div class="card"><table class="tbl">
+      <thead><tr><th>对象</th><th>定义</th><th>状态</th><th>关键属性</th><th>承载</th></tr></thead>
+      <tbody>
+        <tr><td class="k">采集任务</td><td>检索 / 爬取 / 账号抓取 / 爆款监控</td><td>排队 / 采集中 / 完成 / 失败</td><td>来源·进度·结果·错误</td><td>采集弹窗 + 任务中心</td></tr>
+        <tr><td class="k">加工任务</td><td>切片 / 打标 / 向量化 / 提取要素</td><td>处理中 / 完成 / 失败</td><td>输入资产·类型·产物·成本</td><td>任务中心</td></tr>
+        <tr><td class="k">生成任务</td><td>批量 / 单条 内容生成</td><td>排队 / 生成中 / 完成 / 失败</td><td>数量·成本·进度</td><td>任务中心</td></tr>
+        <tr><td class="k">审核任务</td><td>视频 / 图文 / 脚本审核 + 事实核查</td><td>待审 / 通过 / 驳回</td><td>类型·合规结果·初筛</td><td>审核台</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="subh"><span class="b" style="background:var(--purple)"></span>组织与集合对象</div>
+    <div class="card"><table class="tbl">
+      <thead><tr><th>对象</th><th>定义</th><th>关键属性</th><th>用户动作 / AI 动作</th><th>承载</th></tr></thead>
+      <tbody>
+        <tr><td class="k">项目</td><td>素材归属与协作空间</td><td>成员·权限·素材集合·作品</td><td>共享·归档·配额</td><td>项目空间</td></tr>
+        <tr><td class="k">创作篮</td><td>临时素材组合（灵感/资产 → 创作 的桥）</td><td>已选素材·脚本·模板·目标渠道</td><td>召回·拼接·批量创作 / 推荐搭配</td><td>底部创作篮（全局）</td></tr>
+        <tr><td class="k">爆款配方</td><td>表现好的一组素材/模板/脚本组合</td><td>来源作品·组合·指标·适用场景</td><td>复刻·推荐 / 生成相似组合</td><td>爆款配方 / 复盘</td></tr>
+        <tr><td class="k">账号 / 博主</td><td>竞品 / 合作博主监测</td><td>平台·角色·粉丝·历史快照</td><td>监测·查看 / 策略提炼</td><td>数据复盘 / 竞品报告</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- 3 架构 -->
+  <div class="sec">
+    <div class="sec-h"><span class="no">03</span><h2>平台架构（五层 · 速览）</h2><span class="s">详见《AI 中台整体架构》</span></div>
+    <p class="lead"><b>① 前端体验层</b>（按旅程的工作台视图）· <b>② 编排层</b>（把原子能力串成流程 + 副驾 Agent）· <b>③ 能力层</b>（解耦原子能力）· <b>④ 数据层</b>（资产库＝唯一真源）· <b>⑤ 模型+工程层</b>（AI 收口 Dify、确定性逻辑落工程）。上层只依赖下层；前端↔编排的边界做成<b>可配置契约</b>，加功能＝清单登记 + Dify 搭流程，前端基本不动。</p>
+  </div>
+
+  <!-- 4 信息架构 -->
+  <div class="sec">
+    <div class="sec-h"><span class="no">04</span><h2>信息架构</h2><span class="s">导航 / 分类 / 标签 / 筛选 / 搜索 / 集合 分清楚</span></div>
+    <div class="card"><table class="tbl">
+      <thead><tr><th>层级</th><th>内容</th><th>原则</th></tr></thead>
+      <tbody>
+        <tr><td class="k">一级导航</td><td>旅程式：找灵感 · 攒素材 · 创作 · 成片 · 复盘（+ 项目 / 任务中心 / 设置）</td><td>按旅程，不按技术模块</td></tr>
+        <tr><td class="k">对象分类</td><td>素材类型 / 草稿类型 / 任务类型（稳定、少而稳）</td><td>类型集合保持小</td></tr>
+        <tr><td class="k">标签体系</td><td>行业 · 场景 · 情绪 · 渠道 · 业务线（AI 自动 + 人工补）</td><td>语义标签，跨类型召回</td></tr>
+        <tr><td class="k">筛选 Facets</td><td>类型 · 来源 · 表现 · 业务线 · 时间 · 项目 · 状态</td><td>多维同时缩小，不做文件夹树</td></tr>
+        <tr><td class="k">搜索</td><td>关键词 · 语义 · 描述片段 · 以图/视频搜（全局意图框）</td><td>搜索一等公民</td></tr>
+        <tr><td class="k">集合</td><td>项目 · 收藏 · 创作篮 · 爆款配方 · 素材包 · 批次</td><td>用户自组织</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- 5 用户路径 -->
+  <div class="sec">
+    <div class="sec-h"><span class="no">05</span><h2>所有用户路径</h2></div>
+
+    <div class="subh"><span class="b"></span>主旅程（贯穿全平台的一条动线）</div>
+    <div class="spine">
+      <div class="snode"><div class="sn">找灵感</div><div class="sd">发现爆款 + 看懂为什么火</div><div class="so">灵感 · 选题</div></div>
+      <div class="sarr">→</div>
+      <div class="snode"><div class="sn">攒素材</div><div class="sd">切片入库、采集、裂变沉淀</div><div class="so">素材 · 片段 · 变体</div></div>
+      <div class="sarr">→</div>
+      <div class="snode"><div class="sn">创作</div><div class="sd">召回拼接、批量生成成稿</div><div class="so">脚本 · 草稿 · 创作篮</div></div>
+      <div class="sarr">→</div>
+      <div class="snode"><div class="sn">成片</div><div class="sd">出片、AI 初筛、人终审</div><div class="so">成片 · 审核任务</div></div>
+      <div class="sarr">→</div>
+      <div class="snode"><div class="sn">复盘</div><div class="sd">表现回流、标爆款配方反哺</div><div class="so">表现 · 爆款配方</div></div>
+    </div>
+
+    <div class="subh"><span class="b" style="background:var(--blue)"></span>按角色的路径（决定默认落地哪个工作台）</div>
+    <div class="card"><table class="tbl">
+      <thead><tr><th>角色</th><th>默认落地</th><th>主要走的路径</th><th>关心的对象</th></tr></thead>
+      <tbody>
+        <tr><td class="k">编导 / 策划</td><td>灵感工作台 + 创作台</td><td>发现爆款 → 定选题 → 生成脚本 → 召回素材</td><td>灵感 · 选题 · 脚本 · 素材</td></tr>
+        <tr><td class="k">剪辑 / 制作</td><td>资产库 + 创作台</td><td>取片段 → 拼接 → 套模板 → 出成片</td><td>片段 · 素材 · 草稿 · 模板 · 成片</td></tr>
+        <tr><td class="k">投放 / 运营</td><td>数据复盘</td><td>看成片表现 → 爆款归因 → 复刻配方 → 反哺</td><td>成片表现 · 爆款配方 · 账号</td></tr>
+        <tr><td class="k">管理员</td><td>项目 / 治理</td><td>建项目 → 配权限配额 → 治理分类标签</td><td>项目 · 任务 · 成本</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="subh"><span class="b" style="background:var(--purple)"></span>关键用户流（跨模块）</div>
+    <div class="card"><table class="tbl">
+      <thead><tr><th>用户流</th><th>关键步骤</th><th>跨模块</th></tr></thead>
+      <tbody>
+        <tr><td class="k">发现 → 切片 → 入库</td><td>灵感发现爆款 → 一键切片 → 打标入库</td><td>灵感 → 资产库</td></tr>
+        <tr><td class="k">采集 → 入库</td><td>贴链接/关键词 → 预览 → 入库 → 自动切片打标向量化</td><td>资产库</td></tr>
+        <tr><td class="k">脚本 → 召回 → 成片</td><td>贴脚本 → 召回素材 → 拼接 → 字幕脚本直出 → 送审</td><td>创作 → 资产库 → 审核</td></tr>
+        <tr><td class="k">选题 → 批量 N 条</td><td>选题 → 批量生成 → 逐条微调 → 批量导出</td><td>创作</td></tr>
+        <tr><td class="k">素材 → 裂变 → 入库</td><td>选素材 → 视频生视频 → 差异校验 → 保留入库</td><td>资产库</td></tr>
+        <tr><td class="k">成片 → 送审 →（发布）</td><td>成片 → AI 初筛 → 人终审 →（发布暂不做）</td><td>创作 → 审核</td></tr>
+        <tr><td class="k">表现 → 归因 → 反哺</td><td>表现回流 → 标爆款配方 → 反哺推荐与采集</td><td>复盘 → 灵感 / 创作</td></tr>
+        <tr><td class="k">副驾代办</td><td>一句话 → 自动编排一整条流程 → 人审收口</td><td>贯穿全程</td></tr>
+        <tr><td class="k">任务失败 / 相似过高</td><td>任务中心重试；裂变差异不足提示再改</td><td>任务中心 / 资产库</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- 6 决策 -->
+  <div class="sec">
+    <div class="sec-h"><span class="no">06</span><h2>整体产品形态决策 ★</h2><span class="s">这是这份蓝图要拍的板</span></div>
+    <div class="decision">
+      <div class="lab">决策结论</div>
+      <div class="big">做成「<em>共享底座上的旅程式多工作台平台</em>」——一个平台、一套通用承载件、一个素材真源、一个常驻副驾；前端是按旅程的几个工作台视图，用旅程导航无缝串成一条动线、带上下文流转。</div>
+      <p><b>不是</b>六个各自为站的独立工具（割裂、重复造、丢上下文），<b>也不是</b>一个塞满菜单的巨型后台（认知过载），<b>更不是</b>把所有事压进单一大画布（角色冲突、太挤）。模块是"<b>视图</b>"，不是"系统"；单个 AI 能力是"<b>动作</b>"，不是"页面"。</p>
+    </div>
+
+    <div class="subh" style="margin-top:20px"><span class="b"></span>三个候选方案的权衡</div>
+    <div class="card"><table class="tbl matrix">
+      <thead><tr><th>候选</th><th>描述</th><th>优</th><th>劣</th><th>适配</th></tr></thead>
+      <tbody>
+        <tr><td class="k">A · 六个独立工具</td><td>每个模块各做一个产品/站点</td><td class="good">各自简单、好起步</td><td class="bad">割裂、重复造轮子、跨模块丢上下文、像六个系统</td><td><span class="fit lo">低</span></td></tr>
+        <tr><td class="k">B · 单一融合大画布</td><td>所有事都在一个画布里完成</td><td class="good">极致连续</td><td class="bad">角色需求冲突、认知过载、难维护、移动端崩</td><td><span class="fit mid">中低</span></td></tr>
+        <tr class="win"><td class="k">C · 共享底座 + 旅程式多工作台 <b>(推荐)</b></td><td>几个专门工作台共享承载件/真源/副驾，旅程串联、带上下文</td><td class="good">既连续又不挤、按角色聚焦、底座解耦好维护、加功能走配置</td><td class="bad">需治理契约与统一规范</td><td><span class="fit hi">高</span></td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="subh"><span class="b" style="background:var(--blue)"></span>为什么选 C</div>
+    <ul class="clean">
+      <li><b>角色差异大</b>：编导找灵感、剪辑取片段、投放看数据——需求不同，硬塞一个画布会互相干扰，所以要<b>专门视图</b>。</li>
+      <li><b>认知负荷</b>：平台功能很多，一个页面承载不了；分成旅程阶段，每屏只承载一段任务。</li>
+      <li><b>连续性不丢</b>：靠<b>统一承载件 + 旅程导航 + 带上下文跳转 + 常驻副驾 + 同一素材真源</b>，几个视图仍像"一个产品"，而不是六个。</li>
+      <li><b>工程可持续</b>：底座（承载件/能力/真源）解耦，各视图可独立演进；前端↔能力走可配置契约，加功能不动前端。</li>
+    </ul>
+
+    <div class="subh"><span class="b" style="background:var(--purple)"></span>配套决策规则（什么放哪）</div>
+    <div class="grid2">
+      <div class="cap"><h4><span class="dot"></span>该成为「工作台视图」</h4><ul>
+        <li>一个旅程阶段的主场景（找灵感 / 攒素材 / 创作 / 成片 / 复盘）</li>
+        <li>有独立浏览 / 组织需求的对象集合（灵感卡流、素材库）</li></ul></div>
+      <div class="cap"><h4><span class="dot" style="background:var(--teal)"></span>该成为「上下文动作」（不开页）</h4><ul>
+        <li>对选中对象的 AI 能力：切片 / 改编 / 裂变 / 召回 / 改写</li>
+        <li>单步、即时、跟对象强绑定的操作</li></ul></div>
+      <div class="cap"><h4><span class="dot" style="background:var(--blue)"></span>该进「任务中心」（后台异步）</h4><ul>
+        <li>耗时 / 批量：爬取、切片、向量化、批量生成</li>
+        <li>需要进度、成本、失败重试的</li></ul></div>
+      <div class="cap"><h4><span class="dot" style="background:var(--amber)"></span>该是「全局贯穿件」</h4><ul>
+        <li>副驾、意图框 / 搜索、创作篮、任务中心入口</li>
+        <li>跟着用户走、在哪个视图都在</li></ul></div>
+    </div>
+  </div>
+
+  <!-- 7 AI -->
+  <div class="sec">
+    <div class="sec-h"><span class="no">07</span><h2>AI 嵌入 & 副驾</h2></div>
+    <p class="lead">AI 是副驾不是工具站：<b>选中即用</b>（动作长在卡上）·<b>结果回流真源</b>（生成物自动成资产/草稿卡）·<b>可解释 / 可干预 / 可回退</b>（归因、改切点换素材、血缘版本）·<b>批量进任务中心</b>·<b>成本/额度可见</b>·<b>推荐说明理由</b>。TripYoYo 作为常驻 Agent 贯穿，能对话式编排整条流程、人审收口。</p>
+  </div>
+
+  <!-- 8 MVP -->
+  <div class="sec">
+    <div class="sec-h"><span class="no">08</span><h2>平台 MVP / P1 / P2</h2></div>
+    <div class="grid2">
+      <div class="cap"><h4><span class="dot"></span>P0 · 跑通主动线</h4><ul>
+        <li>灵感工作台（洞察卡流）+ 资产库（真源 + 检索 + 切片入库）</li>
+        <li>创作台（图文批量）+ 选中即用动作 + 任务中心</li>
+        <li>打通一条：发现 → 切片 → 入库 → 图文成稿</li></ul></div>
+      <div class="cap"><h4><span class="dot" style="background:var(--teal)"></span>P1 / P2</h4><ul>
+        <li><b>P1：</b>剪辑（视频召回拼接 / SRT 直出）· 模板 · 审核衔接 · 竞品周报 / 海外监控 · 血缘 / 表现角标 · 权限配额</li>
+        <li><b>P2：</b>副驾 Agent 编排 · 反馈闭环 / 爆款配方 / 推荐 · 浏览器 skill（低风险机械活儿）· 跨项目治理</li>
+        <li><b>暂不做：</b>养号 / 发布</li></ul></div>
+    </div>
+  </div>
+
+  <!-- 9 checklist -->
+  <div class="sec">
+    <div class="sec-h"><span class="no">09</span><h2>设计评审 Checklist</h2></div>
+    <div class="card"><table class="tbl">
+      <thead><tr><th>检查项</th><th>好</th><th>差</th></tr></thead>
+      <tbody>
+        <tr><td class="k">产品本质</td><td>意图驱动的内容工作台平台</td><td>一堆功能后台</td></tr>
+        <tr><td class="k">对象</td><td>识别出素材/灵感/任务/草稿/创作篮/配方</td><td>只列页面</td></tr>
+        <tr><td class="k">形态</td><td>共享底座 + 旅程多工作台，模块是视图</td><td>六个独立工具 或 一个巨型后台</td></tr>
+        <tr><td class="k">AI</td><td>选中即用、结果回流真源</td><td>单独的"AI 工具"页</td></tr>
+        <tr><td class="k">连续性</td><td>旅程导航 + 带上下文 + 常驻副驾</td><td>模块间反复横跳</td></tr>
+        <tr><td class="k">异步</td><td>任务中心：进度 / 成本 / 重试</td><td>点完一直转圈</td></tr>
+        <tr><td class="k">闭环</td><td>表现 / 血缘 / 爆款配方反哺</td><td>用完即结束</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="foot">平台总蓝图 & 产品形态决策 v0.1 · 待评审 ｜ 配套：AI 中台整体架构 · 灵感 / 资产库 / 内容创作 模块 PRD · 产品形态原型 · 数据模型字段表</div>
+
+</div>
+</body>
+</html>

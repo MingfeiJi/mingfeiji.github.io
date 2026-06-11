@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>内容创作模块 · 详细 PRD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#15171C;--canvas:#F5F4EF;--surface:#FFFFFF;--line:#E8E5DC;--line-2:#F0EEE7;--muted:#8C887B;--text:#23262D;--text-soft:#52555E;
+--accent:#F24E29;--accent-soft:#FDEAE3;--accent-tint:#FFF4F0;--accent-2:#C73E1D;--teal:#0E8388;--teal-soft:#E2F1F1;--blue:#2F6FED;--blue-soft:#E7EEFD;
+--purple:#7A5AF0;--purple-soft:#EEEAFC;--amber:#D9892B;--amber-soft:#FBEED7;--green:#2E9E5B;--green-soft:#E4F4EA;--gray-soft:#F1EFE8;--gray-bd:#DCD9CF;
+--mono:"DM Mono",ui-monospace,monospace;--sans:"Sora","PingFang SC","Microsoft YaHei",-apple-system,sans-serif;
+--shadow:0 4px 14px rgba(20,22,28,.06),0 1px 3px rgba(20,22,28,.05);--shadow-sm:0 1px 2px rgba(20,22,28,.04),0 1px 3px rgba(20,22,28,.05);}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:var(--sans);background:var(--canvas);color:var(--text);-webkit-font-smoothing:antialiased;font-size:14px;line-height:1.6}
+.mono{font-family:var(--mono)}.wrap{max-width:1000px;margin:0 auto;padding:34px 28px 80px;animation:fade .5s ease}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.hero{background:var(--ink);border-radius:20px;padding:32px 36px;color:#fff;position:relative;overflow:hidden;margin-bottom:28px}
+.hero::before{content:"";position:absolute;right:-70px;top:-70px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(122,90,240,.4),transparent 70%)}
+.hero::after{content:"";position:absolute;right:140px;bottom:-100px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(242,78,41,.32),transparent 70%)}
+.eye{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#FF8E6B;font-weight:600;position:relative}
+.hero h1{font-size:25px;font-weight:800;letter-spacing:-.5px;margin:9px 0 11px;position:relative}
+.hero p{font-size:13.5px;color:#BDBAB2;max-width:680px;line-height:1.7;position:relative}.hero p b{color:#fff;font-weight:600}
+.kpis{display:flex;gap:26px;margin-top:20px;position:relative}.kpi .n{font-family:var(--mono);font-size:13px;color:#FF8E6B;font-weight:500}.kpi .l{font-size:11px;color:#8B877F;margin-top:2px}
+.sec{margin-top:36px}.sec-h{display:flex;align-items:baseline;gap:11px;margin-bottom:14px;flex-wrap:wrap}
+.sec-h .no{font-family:var(--mono);font-size:13px;color:var(--accent);font-weight:500}.sec-h h2{font-size:18px;font-weight:700;letter-spacing:-.2px}.sec-h .s{font-size:12.5px;color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-sm);overflow:hidden}
+p.lead{color:var(--text-soft);font-size:13.5px;line-height:1.75;margin-bottom:14px}p.lead b{color:var(--text);font-weight:600}
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{text-align:left;font-size:10.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.3px;padding:9px 11px;border-bottom:1px solid var(--line);background:#FBFAF7}
+.tbl td{padding:10px 11px;border-bottom:1px solid var(--line-2);vertical-align:top;line-height:1.5}.tbl tr:last-child td{border-bottom:none}.tbl .k{font-weight:600;color:var(--text);white-space:nowrap}
+.pill{display:inline-block;font-size:10px;font-weight:600;padding:2px 7px;border-radius:5px;white-space:nowrap}
+.pl-teal{background:var(--teal-soft);color:var(--teal)}.pl-purple{background:var(--purple-soft);color:#5b40c4}.pl-blue{background:var(--blue-soft);color:var(--blue)}
+.pl-gray{background:var(--gray-soft);color:var(--text-soft)}.pl-accent{background:var(--accent-soft);color:var(--accent-2)}.pl-amber{background:var(--amber-soft);color:var(--amber)}.pl-green{background:var(--green-soft);color:var(--green)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.cap{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:14px 16px;box-shadow:var(--shadow-sm)}
+.cap h4{font-size:13px;font-weight:700;margin-bottom:9px;display:flex;align-items:center;gap:8px}.cap h4 .dot{width:8px;height:8px;border-radius:3px;background:var(--accent)}
+.cap ul{list-style:none;display:flex;flex-direction:column;gap:6px}.cap li{font-size:11.5px;color:var(--text-soft);padding-left:13px;position:relative;line-height:1.5}
+.cap li::before{content:"";width:4px;height:4px;border-radius:50%;background:#C2BEB2;position:absolute;left:2px;top:7px}
+.note{display:flex;gap:9px;border-radius:11px;padding:11px 14px;font-size:12px;line-height:1.6;margin-top:13px}
+.note.teal{background:var(--teal-soft);border:1px solid #C9E6E6;color:#0a5d61}.note.accent{background:var(--accent-soft);border:1px solid #FBD9CD;color:#7A3A28}.note.purple{background:var(--purple-soft);border:1px solid #DBD2F8;color:#4a3a9e}
+.note .ni{flex:none;font-weight:700}.note b{font-weight:600}
+/* wireframe */
+.wf{border:1px solid var(--line);border-radius:16px;background:var(--surface);box-shadow:var(--shadow);overflow:hidden}
+.wf-top{background:var(--ink);padding:11px 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.wf-bt{background:rgba(255,255,255,.1);border:1px dashed rgba(255,255,255,.35);border-radius:8px;padding:6px 11px;color:#cfcdc6;font-size:11px}
+.wf-bt b{color:#FF9E80;font-weight:600}
+.wf-mid{display:grid;grid-template-columns:150px 1fr 168px;min-height:250px}
+.wf-reg{border:1px dashed var(--gray-bd);margin:8px;border-radius:10px;padding:11px;position:relative}
+.wf-reg .rl{font-size:11px;font-weight:700;color:var(--text)}.wf-reg .rs{font-size:10px;color:var(--muted);margin-top:3px;line-height:1.4}
+.wf-input .blk{margin-top:9px;background:var(--canvas);border:1px solid var(--line);border-radius:7px;padding:7px 9px;font-size:10px;color:var(--text-soft)}
+.wf-thumbs{display:flex;gap:5px;margin-top:6px}.wf-thumbs div{width:26px;height:26px;border-radius:5px;background:linear-gradient(150deg,#e7e4dc,#f3f1ea)}
+.wf-canvas{background:var(--canvas)}
+.wf-doc{margin-top:9px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px;font-size:10px;color:var(--text-soft);line-height:1.7}
+.wf-doc .ln{height:7px;background:var(--line-2);border-radius:3px;margin:5px 0}.wf-doc .ln.s{width:60%}
+.wf-pager{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:10px;color:var(--muted)}
+.wf-pager .pg{width:18px;height:18px;border-radius:5px;border:1px solid var(--line);display:grid;place-items:center;font-size:9px}
+.wf-pager .pg.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.wf-ai{background:var(--purple-soft);border-color:#DBD2F8}
+.wf-ai .chipx{font-size:9.5px;background:#fff;border:1px solid #DBD2F8;color:#5b40c4;padding:3px 7px;border-radius:6px;margin:4px 4px 0 0;display:inline-block}
+.wf-bottom{background:var(--teal-soft);border-top:1px solid #C9E6E6;padding:10px 16px;display:flex;align-items:center;gap:10px;font-size:11.5px;color:#0a5d61;font-weight:600}
+.foot{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);font-size:11.5px;color:var(--muted)}
+@media(max-width:760px){.grid2{grid-template-columns:1fr}.wf-mid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <div class="eye">CONTENT CREATION · 详细 PRD</div>
+    <h1>内容创作模块 · 详细 PRD</h1>
+    <p>把「素材 + 意图」变成「成稿 / 成片」的<b>批量创作工作台</b>。不是单条编辑器，而是「选题 → 召回素材 → 生成 / 拼接 → 套模板 → 批量产出 → 送审 → 回流」的流水线——<b>人定调、AI 起量</b>。它上承资产库（素材与创作篮），下接审核与发布，并把表现回流成爆款配方反哺选题。</p>
+    <div class="kpis">
+      <div class="kpi"><div class="n">↑ 产能</div><div class="l">单位时间产出条数</div></div>
+      <div class="kpi"><div class="n">↑ 复用</div><div class="l">素材 / 配方被用比例</div></div>
+      <div class="kpi"><div class="n">↑ 爆款率</div><div class="l">产出成爆款占比</div></div>
+      <div class="kpi"><div class="n">↓ 人工</div><div class="l">人均每条投入</div></div>
+    </div>
+  </div>
+
+  <div class="sec" style="margin-top:6px">
+    <div class="sec-h"><span class="no">01</span><h2>产品本质 & 核心闭环</h2></div>
+    <p class="lead"><b>一句话：</b>用户带着【选题 / 脚本 / 一篮素材】进入，系统用【召回 + 生成 + 拼接 + 模板 + 批量】把它转成【可发布的图文 / 视频成片】，再通过【表现回流】沉淀成爆款配方反哺下一轮。</p>
+    <p class="lead"><b>核心闭环：</b>选题 / 脚本 → 召回素材 → 生成 / 拼接 → 套模板 → 批量产出 → 送审 → 表现回流（配方 / 选题）。<b>角色与高频任务：</b>编导（定选题 / 写脚本）· 剪辑（拼接成片 / 套模板）· 运营（批量产出 / 复刻爆款）。</p>
+  </div>
+
+  <!-- 对象模型 -->
+  <div class="sec">
+    <div class="sec-h"><span class="no">02</span><h2>核心对象模型（OOUX）</h2><span class="s">创作篮 / 爆款配方 与资产库共享同一对象，是两个模块的桥</span></div>
+    <div class="card"><table class="tbl">
+      <thead><tr><th>对象</th><th>定义</th><th>关键属性</th><th>状态</th><th>用户动作</th><th>AI 动作</th><th>承载</th></tr></thead>
+      <tbody>
+        <tr><td class="k">选题<br>Topic</td><td>一个可生产的内容方向</td><td>来源（灵感/配方/手动）·业务线·卖点·参考爆款</td><td>草拟 / 已采用</td><td>采用·生成脚本</td><td>选题分析·推荐</td><td>选题区 / 创作篮</td></tr>
+        <tr><td class="k">脚本<br>Script</td><td>文案 / 分镜脚本</td><td>正文·分镜·语种·有效性</td><td>草稿 / 定稿</td><td>改写·扩写·拆分镜·定稿</td><td>生成·改写·分镜·仿写</td><td>脚本编辑区</td></tr>
+        <tr><td class="k">创作篮<br>Creation Basket</td><td>从资产库带入的素材组合（同资产库对象）</td><td>已选素材·脚本·模板·目标渠道</td><td>编辑中</td><td>召回·拼接·批量创作</td><td>推荐搭配</td><td>左栏 / 顶部带入</td></tr>
+        <tr><td class="k">草稿<br>Draft</td><td>生产中的图文 / 视频半成品</td><td>类型·素材组成·模板·版本·血缘</td><td>编辑 / 待生成 / 已生成</td><td>编辑·重生成·套模板·送审</td><td>生成·拼接·改</td><td>中间草稿画布</td></tr>
+        <tr><td class="k">模板<br>Template</td><td>剪辑 / 图文模板</td><td>类型·结构·适用场景</td><td>—</td><td>套用·批量套</td><td>—</td><td>模板库 / 右栏</td></tr>
+        <tr><td class="k">生成任务<br>Generation Task</td><td>批量 / 单条生成的异步任务</td><td>数量·输入·产物·成本·进度</td><td>排队 / 生成中 / 完成 / 失败</td><td>批量·重试·查看</td><td>执行</td><td>任务队列</td></tr>
+        <tr><td class="k">成片 / 作品<br>Work</td><td>最终图文 / 视频</td><td>类型·渠道·素材血缘·表现·审核态</td><td>待审 / 通过 / 驳回 /（暂不发）</td><td>送审·导出·标爆款配方</td><td>—</td><td>成片列表</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- 功能架构 -->
+  <div class="sec">
+    <div class="sec-h"><span class="no">03</span><h2>功能架构（按创作流水线）</h2></div>
+    <div class="card"><table class="tbl">
+      <thead><tr><th>能力域</th><th>用户问题</th><th>功能</th><th>优先级</th></tr></thead>
+      <tbody>
+        <tr><td class="k">选题</td><td>我做什么？</td><td>选题分析 · 推荐 · 从灵感 / 爆款配方带入</td><td><span class="pill pl-amber">P1</span>（P0 支持手动选题）</td></tr>
+        <tr><td class="k">脚本</td><td>怎么写？</td><td>生成 · 改写 · 扩写 · 拆分镜 · 仿写改编</td><td><span class="pill pl-accent">P0</span></td></tr>
+        <tr><td class="k">召回拼接</td><td>素材从哪来？</td><td>按脚本 / 词召回 · AI 拼接成草稿</td><td><span class="pill pl-accent">P0</span></td></tr>
+        <tr><td class="k">生成</td><td>怎么出内容？</td><td>文生图 · 图生视频 · 视频生视频 · 图文排版 · 字幕+脚本直出</td><td><span class="pill pl-accent">P0</span> 图文优先</td></tr>
+        <tr><td class="k">模板套用</td><td>怎么快又统一？</td><td>剪辑 / 图文模板一键套 · 批量套</td><td><span class="pill pl-amber">P1</span></td></tr>
+        <tr><td class="k">批量</td><td>怎么起量？</td><td>一次多条 · 并行生成 · 批量导出</td><td><span class="pill pl-accent">P0</span> 核心</td></tr>
+        <tr><td class="k">审核衔接</td><td>怎么不出事？</td><td>送审核台 · 初筛结果回显 · 驳回返修</td><td><span class="pill pl-amber">P1</span></td></tr>
+        <tr><td class="k">反馈</td><td>怎么越做越准？</td><td>表现回流 · 爆款配方 · 选题推荐</td><td><span class="pill pl-gray">P2</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- 信息架构 -->
+  <div class="sec">
+    <div class="sec-h"><span class="no">04</span><h2>信息架构</h2></div>
+    <div class="card"><table class="tbl">
+      <thead><tr><th>层级</th><th>内容</th><th>设计原则</th></tr></thead>
+      <tbody>
+        <tr><td class="k">一级导航</td><td>创作台 · 批量任务 · 草稿箱 · 模板库 · 成片 · 选题库 · 设置</td><td>围绕"从想法到成片"的动线</td></tr>
+        <tr><td class="k">对象分类</td><td>草稿类型（图文 / 视频 / 脚本）；任务类型（单条 / 批量）</td><td>少而稳</td></tr>
+        <tr><td class="k">筛选器</td><td>类型 · 目标渠道 · 状态（草稿/待审/通过）· 项目 · 时间</td><td>多维缩小</td></tr>
+        <tr><td class="k">搜索</td><td>草稿 · 模板 · 素材（语义召回，复用资产库检索）</td><td>与资产库共用召回能力</td></tr>
+        <tr><td class="k">集合</td><td>创作篮 · 素材包 · 批次（一次批量产出的一组）</td><td>批次是批量创作的组织单位</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- 产品形态 -->
+  <div class="sec">
+    <div class="sec-h"><span class="no">05</span><h2>推荐产品形态 · 批量创作工作台</h2><span class="s">三栏批量工作台（对齐 TripFlow 批量工作台），不是单条编辑器</span></div>
+    <div class="wf">
+      <div class="wf-top"><span class="wf-bt">目标渠道 <b>抖音 · 图文</b></span><span class="wf-bt">计划 <b>5 条</b></span><span class="wf-bt">来源：从灵感 / 创作篮带入 ✓</span></div>
+      <div class="wf-mid">
+        <div class="wf-reg wf-input"><div class="rl">输入区</div><div class="rs">带入的素材 + 选题 + 脚本</div>
+          <div class="blk">选题：低价短途火车治愈游<div class="wf-thumbs"><div></div><div></div><div></div></div></div>
+          <div class="blk">脚本：钩子 / 痛点 / 反转 / 卖点 / CTA</div>
+        </div>
+        <div class="wf-reg wf-canvas"><div class="rl">草稿画布 · 逐条编辑</div><div class="rs">图文排版 / 视频时间轴；AI 起稿，人定调</div>
+          <div class="wf-doc"><div class="ln"></div><div class="ln s"></div><div class="ln"></div><div class="ln s"></div></div>
+          <div class="wf-pager">条次<span class="pg on">1</span><span class="pg">2</span><span class="pg">3</span><span class="pg">4</span><span class="pg">5</span></div>
+        </div>
+        <div class="wf-reg wf-ai"><div class="rl">AI 动作 + 任务</div><div class="rs">选中即用</div>
+          <span class="chipx">生成</span><span class="chipx">改写</span><span class="chipx">召回拼接</span><span class="chipx">套模板</span><span class="chipx">相似变体</span><span class="chipx">送审</span></div>
+      </div>
+      <div class="wf-bottom">⚙ 生成任务 · 批量生成 3/5 完成 · 预计额度 ¥1.2 · 失败 0 · 全部导出</div>
+    </div>
+    <p class="lead" style="margin-top:14px"><b>布局要点：</b>顶部批量条（渠道 / 条数 / 带入）+ 左输入（素材 + 选题 + 脚本）+ 中草稿画布（逐条切换、AI 起稿人定调）+ 右 AI 动作与生成任务 + 底部批量任务队列。<b>批量是核心</b>，但每一条都能进去精调——人在驾驶位。</p>
+  </div>
+
+  <!-- AI 嵌入 -->
+  <div class="sec">
+    <div class="sec-h"><span class="no">06</span><h2>AI 能力嵌入方式</h2><span class="s">AI 出草稿，人定稿</span></div>
+    <div class="grid2">
+      <div class="cap"><h4><span class="dot"></span>单条动作</h4><ul>
+        <li>选题分析 · 脚本生成 / 改写 / 拆分镜</li><li>召回拼接 · 文生图 · 图生视频 · 视频生视频</li><li>字幕+脚本直出 · 生成相似变体</li></ul></div>
+      <div class="cap"><h4><span class="dot" style="background:var(--purple)"></span>批量动作</h4><ul>
+        <li>批量生成 N 条 · 批量套模板</li><li>批量改写 / 换素材 · 批量送审 · 批量导出</li><li>按爆款配方批量复刻</li></ul></div>
+    </div>
+    <div class="note purple"><span class="ni">✦</span><div><b>原则：</b>AI 出草稿、人定稿 · 每条结果可预览 / 可比较 / 可保存 / 可回滚（版本 + 血缘）· 批量生成必进任务队列、进度与<b>成本 / 额度可见</b> · 成片表现回流、好的可一键标成爆款配方 · 与<b>资产库</b>（取素材）和<b>审核台</b>（送审）双向打通。</div></div>
+  </div>
+
+  <!-- 页面清单 -->
+  <div class="sec">
+    <div class="sec-h"><span class="no">07</span><h2>页面与组件清单</h2></div>
+    <div class="card"><table class="tbl">
+      <thead><tr><th>页面</th><th>核心任务</th><th>关键组件</th><th>AI 入口</th></tr></thead>
+      <tbody>
+        <tr><td class="k">批量创作流主页</td><td>从篮 / 脚本起一批，逐条产出</td><td>批量条 · 输入区 · 草稿画布 · 条次切换 · 右侧 AI + 任务</td><td>右侧 AI 动作</td></tr>
+        <tr><td class="k">单条草稿编辑（抽屉）</td><td>精调某一条</td><td>排版 / 时间轴 · 素材替换 · 版本 · 血缘</td><td>改写 / 重生成 / 套模板</td></tr>
+        <tr><td class="k">召回拼接面板</td><td>脚本 / 词 → 草稿</td><td>召回结果 · 拼接预览 · 加入草稿</td><td>AI 召回拼接</td></tr>
+        <tr><td class="k">模板库</td><td>选 / 套模板</td><td>模板卡 · 适用场景 · 一键套 / 批量套</td><td>—</td></tr>
+        <tr><td class="k">生成任务队列</td><td>看批量进度 / 成本 / 失败</td><td>状态 · 进度 · 成本 · 重试 · 查看结果</td><td>—</td></tr>
+        <tr><td class="k">成片列表</td><td>送审 / 导出 / 标配方</td><td>成片卡 · 审核态 · 表现 · 送审 / 导出</td><td>标爆款配方</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- 用户流 -->
+  <div class="sec">
+    <div class="sec-h"><span class="no">08</span><h2>核心用户流</h2></div>
+    <div class="card"><table class="tbl">
+      <thead><tr><th>用户流</th><th>关键步骤</th><th>成功标准</th></tr></thead>
+      <tbody>
+        <tr><td class="k">脚本 → 成片</td><td>贴脚本 → 召回素材 → 拼接草稿 → 字幕脚本直出 → 送审</td><td>一条脚本直出一条成片</td></tr>
+        <tr><td class="k">选题 → 批量 N 条</td><td>选一个选题 → 批量生成 5 条图文 → 逐条微调 → 批量导出</td><td>一次产出一批、可逐条调</td></tr>
+        <tr><td class="k">创作篮 → 图文批量</td><td>资产库带入篮 → 进图文创作 → AI 排版 → 批量出</td><td>素材篮直接成一批图文</td></tr>
+        <tr><td class="k">素材 → 视频变体</td><td>选视频 → 视频生视频 → 多变体 → 差异校验 → 入库 / 用</td><td>变体差异达标可用</td></tr>
+        <tr><td class="k">成片 → 送审 →（发布）</td><td>成片 → 送审核台 → AI 初筛 → 人终审 →（发布暂不做）</td><td>终审通过进发布队列</td></tr>
+        <tr><td class="k">副驾代办</td><td>「做 5 条火车短途图文」→ 自动编排 选题/召回 → 生成 → 排版 → 送审 → 人收口</td><td>一句话起一批、人审收口</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- 状态异常 + MVP -->
+  <div class="sec">
+    <div class="sec-h"><span class="no">09</span><h2>状态 / 异常 & 性能成本</h2></div>
+    <p class="lead"><b>生成任务状态机：</b>排队 → 生成中 → 完成 / 失败（可重试），<b>批量进度逐条可见</b>。<b>草稿：</b>带版本与血缘（改自哪条、用了哪些素材），可回退。<b>审核衔接：</b>送审后回显 AI 初筛结果（通过 / 驳回原因），驳回可返修。<b>同质化：</b>批量产出之间做差异度校验，过雷同提示再改。<b>成本：</b>批量优先、生成结果缓存、按项目显示额度与成本、可设上限。</p>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="no">10</span><h2>MVP / P1 / P2</h2></div>
+    <div class="grid2">
+      <div class="cap"><h4><span class="dot"></span>P0 · MVP（跑通图文批量）</h4><ul>
+        <li>批量创作流（图文优先）+ 草稿逐条编辑</li><li>脚本生成 / 改写 · 召回拼接</li><li>文生图 / 基础生成 · 批量生成 / 导出</li><li>选中即用 AI 动作 · 生成任务队列</li></ul></div>
+      <div class="cap"><h4><span class="dot" style="background:var(--purple)"></span>P1 / P2</h4><ul>
+        <li><b>P1：</b>视频生成 / 视频生视频 · 模板套用 · 字幕+脚本直出剪辑 · 选题推荐 · 审核衔接 · 版本血缘</li>
+        <li><b>P2：</b>爆款配方复刻 · 智能推荐 · Agent 批量代办 · 多渠道适配</li>
+        <li><b>暂不做：</b>养号 / 发布（成片止于"通过 + 导出 / 进队列"）</li></ul></div>
+    </div>
+  </div>
+
+  <div class="foot">内容创作模块 · 详细 PRD v0.1 · 待评审 ｜ 配套：灵感生成模块 PRD · 资产库 PRD · 数据模型字段表 · AI 中台整体架构</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>内容增长工作台 · 人机协作视觉方案集</title>
+<style>
+:root{
+  --bg:#F6F3EC;
+  --paper:#FFFFFF;
+  --ink:#17181D;
+  --ink2:#2A2D35;
+  --muted:#77756E;
+  --line:#E7E1D6;
+  --line2:#EFE9DF;
+  --orange:#F25A36;
+  --orange2:#D94322;
+  --orangeSoft:#FFF0EA;
+  --teal:#0B8588;
+  --tealSoft:#E4F4F2;
+  --blue:#376CFB;
+  --blueSoft:#EAF0FF;
+  --purple:#7C55F0;
+  --purpleSoft:#F0EAFF;
+  --green:#1F9A5B;
+  --greenSoft:#E7F7EE;
+  --amber:#D88A22;
+  --amberSoft:#FFF3DA;
+  --red:#D64242;
+  --redSoft:#FFEAEA;
+  --dark:#12141A;
+  --shadow:0 18px 50px rgba(17,19,25,.12),0 2px 8px rgba(17,19,25,.06);
+  --shadow2:0 8px 26px rgba(17,19,25,.08),0 1px 3px rgba(17,19,25,.06);
+  --radius:18px;
+  --radius2:28px;
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Microsoft YaHei",Arial,sans-serif;
+  --mono:"SF Mono",Menlo,Monaco,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--font);background:radial-gradient(900px 420px at 18% -8%,rgba(242,90,54,.13),transparent 60%),radial-gradient(800px 520px at 90% 12%,rgba(11,133,136,.10),transparent 60%),var(--bg);color:var(--ink);font-size:14px;line-height:1.5}
+button,input,textarea{font-family:inherit}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:#D5CEC0;border:2px solid var(--bg);border-radius:10px}
+.app{min-height:100vh}.top{position:sticky;top:0;z-index:50;background:rgba(246,243,236,.78);backdrop-filter:blur(18px);border-bottom:1px solid var(--line);height:68px;display:flex;align-items:center;padding:0 26px;gap:18px}.logo{width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,var(--orange),#FF8A5B);box-shadow:0 12px 24px rgba(242,90,54,.26);display:grid;place-items:center;color:#fff;font-weight:900}.brand{min-width:230px}.brand b{font-size:15px;letter-spacing:.1px}.brand span{display:block;font-size:11px;color:var(--muted);margin-top:1px}.tabs{display:flex;gap:6px;background:#ECE6DB;border:1px solid var(--line);padding:5px;border-radius:14px;overflow:auto}.tab{border:0;background:transparent;color:#5E5B53;padding:8px 12px;border-radius:10px;font-size:13px;cursor:pointer;white-space:nowrap;font-weight:700}.tab.active{background:var(--paper);color:var(--ink);box-shadow:0 1px 3px rgba(20,22,28,.08)}.topRight{margin-left:auto;display:flex;gap:10px;align-items:center}.pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:rgba(255,255,255,.72);border-radius:999px;padding:7px 11px;font-size:12px;color:var(--ink2);font-weight:700}.dot{width:8px;height:8px;border-radius:50%;background:var(--green)}.wrap{max-width:1440px;margin:0 auto;padding:26px}.hero{background:var(--dark);color:#fff;border-radius:30px;padding:30px;position:relative;overflow:hidden;box-shadow:var(--shadow);margin-bottom:22px}.hero:before{content:"";position:absolute;right:-80px;top:-110px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(242,90,54,.56),transparent 68%)}.hero:after{content:"";position:absolute;left:58%;bottom:-140px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(11,133,136,.35),transparent 70%)}.hero>*{position:relative}.kicker{display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:1.8px;text-transform:uppercase;color:#FFB098;font-weight:800}.hero h1{font-size:34px;line-height:1.15;margin:12px 0 10px;letter-spacing:-.8px}.hero p{max-width:900px;color:#CAC7BE;margin:0;font-size:14px}.heroGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:22px}.heroCard{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.10);border-radius:16px;padding:14px;min-height:118px}.heroCard small{color:#ABA79B;font-size:11px}.heroCard b{display:block;font-size:17px;margin:6px 0;color:#fff}.heroCard span{color:#D9D5CA;font-size:12px}.section{display:none;animation:fade .25s ease}.section.active{display:block}@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{background:rgba(255,255,255,.86);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow2);overflow:hidden}.card.pad{padding:20px}.cardHead{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line2);padding:15px 18px}.cardHead h2,.cardHead h3{margin:0;font-size:15px}.sub{font-size:12px;color:var(--muted)}.miniTitle{font-size:12px;color:var(--muted);font-weight:800;letter-spacing:.7px;text-transform:uppercase}.tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:800;border-radius:999px;padding:5px 8px}.tag.orange{background:var(--orangeSoft);color:var(--orange2)}.tag.teal{background:var(--tealSoft);color:var(--teal)}.tag.blue{background:var(--blueSoft);color:var(--blue)}.tag.purple{background:var(--purpleSoft);color:var(--purple)}.tag.green{background:var(--greenSoft);color:var(--green)}.tag.amber{background:var(--amberSoft);color:#A76610}.tag.red{background:var(--redSoft);color:var(--red)}.btn{border:1px solid var(--line);background:#fff;border-radius:11px;padding:8px 11px;font-size:12px;font-weight:800;cursor:pointer;color:var(--ink2)}.btn.primary{background:var(--ink);border-color:var(--ink);color:#fff}.btn.orange{background:var(--orange);border-color:var(--orange);color:#fff}.btn.ghost{background:transparent}.split{display:flex;gap:10px;align-items:center}.proto{height:720px;border-radius:24px;overflow:hidden;background:#EFEAE0;border:1px solid var(--line);box-shadow:var(--shadow);display:grid;grid-template-rows:56px 1fr}.protoTop{background:rgba(255,255,255,.88);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 16px;gap:12px}.windowDots{display:flex;gap:6px}.windowDots i{width:10px;height:10px;border-radius:50%;background:#DDD4C5}.intent{flex:1;height:38px;background:#F7F4EF;border:1px solid var(--line);border-radius:14px;display:flex;align-items:center;gap:10px;padding:0 12px;color:var(--muted);font-size:12px}.protoBody{display:grid;grid-template-columns:180px minmax(0,1fr) 340px;background:#F6F3EC;min-height:0}.side{background:#17191F;color:#fff;padding:16px 12px;display:flex;flex-direction:column;gap:8px}.sideItem{padding:10px 11px;border-radius:12px;color:#BDB9AD;font-size:12px;font-weight:800;display:flex;justify-content:space-between;align-items:center}.sideItem.on{background:rgba(255,255,255,.10);color:#fff}.mainArea{padding:16px;overflow:auto}.rightPanel{background:#fff;border-left:1px solid var(--line);padding:16px;overflow:auto}.cardFlow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.asset{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 2px 9px rgba(20,22,28,.05)}.thumb{height:120px;background:linear-gradient(135deg,#ECE5D7,#C8D9D7);position:relative;display:flex;align-items:end;padding:10px;color:#fff;font-weight:800}.thumb.orange{background:linear-gradient(135deg,#FF815F,#94381E)}.thumb.teal{background:linear-gradient(135deg,#4EC9C4,#0B6C70)}.thumb.purple{background:linear-gradient(135deg,#B99CFF,#5E3DD1)}.thumb.blue{background:linear-gradient(135deg,#9DB7FF,#315DDB)}.thumb:after{content:"";position:absolute;inset:0;background:linear-gradient(transparent,rgba(0,0,0,.5))}.thumb span{position:relative;z-index:1;font-size:12px}.assetBody{padding:12px}.assetBody b{display:block;font-size:13px;margin-bottom:7px}.meta{display:flex;gap:6px;flex-wrap:wrap}.aiActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.action{border:1px solid var(--line);border-radius:12px;background:#FAF8F3;padding:9px;font-size:12px;font-weight:800;cursor:pointer}.action:hover{border-color:var(--orange);color:var(--orange)}.drawerTitle{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:12px}.drawerTitle h3{margin:0;font-size:18px}.confidence{height:8px;border-radius:99px;background:#EEE8DC;overflow:hidden;margin:10px 0}.confidence i{display:block;height:100%;width:76%;background:linear-gradient(90deg,var(--teal),var(--green));border-radius:99px}.explain{display:grid;gap:10px}.explainItem{background:#F8F5EF;border:1px solid var(--line2);border-radius:14px;padding:12px}.explainItem b{font-size:12px}.explainItem p{margin:5px 0 0;font-size:12px;color:var(--muted)}.basket{position:sticky;bottom:12px;background:#15171C;color:#fff;border-radius:17px;margin-top:16px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 16px 42px rgba(17,19,25,.22)}.basket span{font-size:12px;color:#C9C4B7}.matrix{display:grid;grid-template-columns:110px repeat(3,1fr);gap:10px;align-items:stretch}.mcell{border:1px solid var(--line);background:#fff;border-radius:16px;padding:14px;min-height:112px}.mcell.axis{background:#17191F;color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:900}.mcell h4{margin:0 0 8px;font-size:14px}.mcell p{font-size:12px;color:var(--muted);margin:0}.mcell.reco{border-color:#FFB39E;background:var(--orangeSoft)}.handoff{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;align-items:center}.step{position:relative;background:#fff;border:1px solid var(--line);border-radius:17px;padding:14px;min-height:150px}.step:after{content:"→";position:absolute;right:-13px;top:50%;transform:translateY(-50%);color:#BEB6A7;font-weight:900}.step:last-child:after{display:none}.step .num{font-family:var(--mono);font-size:12px;color:var(--orange);font-weight:900}.step h4{margin:8px 0 6px;font-size:14px}.step p{font-size:12px;color:var(--muted);margin:0}.laneWrap{display:grid;grid-template-columns:130px 1fr;gap:10px}.laneLabel{display:grid;gap:10px}.laneLabel div{height:88px;background:#17191F;color:#fff;border-radius:16px;display:grid;place-items:center;text-align:center;font-weight:900}.lane{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.laneCard{height:88px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px}.laneCard b{display:block;font-size:12px;margin-bottom:5px}.laneCard small{color:var(--muted)}.canvas{height:640px;background:#F6F3EC;border:1px solid var(--line);border-radius:24px;position:relative;overflow:hidden;box-shadow:var(--shadow2)}.node{position:absolute;background:#fff;border:1px solid var(--line);border-radius:18px;padding:13px 15px;box-shadow:0 8px 20px rgba(17,19,25,.07);min-width:150px}.node h4{margin:0 0 5px;font-size:13px}.node p{margin:0;color:var(--muted);font-size:12px}.node.ai{border-color:#BFD3FF;background:#F7FAFF}.node.human{border-color:#FFC2B2;background:#FFF8F5}.node.output{border-color:#C5EBD5;background:#F4FFF8}.edge{position:absolute;height:2px;background:#CFC6B8;transform-origin:left center}.edge:after{content:"";position:absolute;right:-1px;top:-4px;border-left:8px solid #CFC6B8;border-top:5px solid transparent;border-bottom:5px solid transparent}.reviewGrid{display:grid;grid-template-columns:1fr 360px;gap:16px}.videoMock{height:420px;border-radius:22px;background:linear-gradient(135deg,#20242D,#52515D);position:relative;overflow:hidden;color:#fff;display:grid;place-items:center}.videoMock:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 25% 25%,rgba(255,255,255,.18),transparent 25%),linear-gradient(transparent,rgba(0,0,0,.45))}.play{position:relative;width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,.18);display:grid;place-items:center;font-size:28px}.timeline{position:absolute;left:22px;right:22px;bottom:22px;height:56px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:8px;display:flex;gap:5px}.seg{height:100%;border-radius:8px;background:rgba(255,255,255,.28);flex:1}.seg.warn{background:rgba(255,189,97,.6)}.risk{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px}.risk h4{margin:0 0 8px;font-size:13px;display:flex;justify-content:space-between}.risk p{font-size:12px;color:var(--muted);margin:0}.flywheel{display:grid;grid-template-columns:1fr 390px;gap:18px}.circle{height:560px;border-radius:28px;background:#fff;border:1px solid var(--line);position:relative;box-shadow:var(--shadow2);overflow:hidden}.circleCore{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:190px;height:190px;border-radius:50%;background:#17191F;color:#fff;display:grid;place-items:center;text-align:center;font-weight:900;box-shadow:0 20px 50px rgba(17,19,25,.24)}.orbit{position:absolute;width:170px;min-height:92px;background:#FAF8F3;border:1px solid var(--line);border-radius:18px;padding:14px}.orbit b{font-size:13px}.orbit p{margin:5px 0 0;font-size:12px;color:var(--muted)}.o1{left:46px;top:64px}.o2{right:58px;top:58px}.o3{right:38px;bottom:142px}.o4{left:50%;bottom:38px;transform:translateX(-50%)}.o5{left:40px;bottom:146px}.metricList{display:grid;gap:12px}.metric{background:#fff;border:1px solid var(--line);border-radius:18px;padding:15px;display:flex;justify-content:space-between;gap:12px}.metric b{font-size:13px}.metric span{font-family:var(--mono);font-weight:900;color:var(--orange)}.draftNav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.draftBtn{padding:10px 13px;border-radius:13px;border:1px solid var(--line);background:#fff;font-size:12px;font-weight:900;cursor:pointer}.draftBtn.active{background:var(--ink);color:#fff;border-color:var(--ink)}.draftPanel{display:none}.draftPanel.active{display:block}.caption{font-size:12px;color:var(--muted);margin-top:10px}.legend{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.legendItem{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}.sw{width:12px;height:12px;border-radius:4px}.sw.ai{background:#DCE7FF}.sw.human{background:#FFE2D8}.sw.output{background:#DDF4E7}.principles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.principle{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px}.principle .icon{width:34px;height:34px;border-radius:12px;display:grid;place-items:center;font-weight:900;margin-bottom:10px}.principle h3{font-size:14px;margin:0 0 6px}.principle p{font-size:12px;color:var(--muted);margin:0}.stickyNotes{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.note{background:#FFF9E9;border:1px solid #F1DEAE;border-radius:18px;padding:16px;min-height:145px;transform:rotate(-1deg);box-shadow:0 10px 20px rgba(17,19,25,.06)}.note:nth-child(2){background:#EFF9F9;border-color:#C8E8E8;transform:rotate(1deg)}.note:nth-child(3){background:#F6F0FF;border-color:#DCCEFF;transform:rotate(-.5deg)}.note b{font-size:14px}.note p{font-size:12px;color:#5F5B52;margin:8px 0 0}.smallTable{width:100%;border-collapse:collapse;font-size:12px}.smallTable th,.smallTable td{padding:10px;border-bottom:1px solid var(--line2);text-align:left;vertical-align:top}.smallTable th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.5px}.footer{padding:22px;text-align:center;color:var(--muted);font-size:12px}@media(max-width:1100px){.grid2,.flywheel,.reviewGrid{grid-template-columns:1fr}.protoBody{grid-template-columns:150px 1fr}.rightPanel{display:none}.heroGrid,.principles,.grid3{grid-template-columns:1fr 1fr}.handoff{grid-template-columns:1fr}.step:after{display:none}.matrix{grid-template-columns:1fr}.laneWrap{grid-template-columns:1fr}.lane{grid-template-columns:1fr 1fr}.circle{height:760px}.orbit{position:relative;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;transform:none!important;margin:12px}.circleCore{position:relative;left:auto;top:auto;transform:none;margin:30px auto}}@media(max-width:740px){.top{height:auto;flex-wrap:wrap;padding:12px}.brand{min-width:auto}.wrap{padding:14px}.hero h1{font-size:26px}.heroGrid,.principles,.grid3,.stickyNotes{grid-template-columns:1fr}.proto{height:auto}.protoBody{grid-template-columns:1fr}.side{display:none}.cardFlow{grid-template-columns:1fr}.tabs{width:100%}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <div class="logo">AI</div>
+    <div class="brand"><b>内容增长工作台 · 人机协作设计方案集</b><span>Human-AI Collaboration Visual Design Kit</span></div>
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-tab="overview">总览</button>
+      <button class="tab" data-tab="principle">协作设计观</button>
+      <button class="tab" data-tab="drafts">多稿产品形态</button>
+      <button class="tab" data-tab="handoff">控制权交接</button>
+      <button class="tab" data-tab="review">审核与容错</button>
+      <button class="tab" data-tab="feedback">复盘闭环</button>
+    </div>
+    <div class="topRight">
+      <span class="pill"><i class="dot"></i>可直接给 Claude Design 继续生成</span>
+    </div>
+  </div>
+  <div class="wrap">
+    <section class="hero">
+      <div class="kicker">Human-AI Collaboration · Content Growth</div>
+      <h1>把“AI 会判断”变成可控、可信、可回退的内容生产工作台</h1>
+      <p>这份视觉方案把你的“人机协作设计观”落到内容中台：AI 做采集、判断、切片、召回、生成、初审；人做目标设定、选择、干预、确认、终审和复盘拍板。核心不是让 AI 全自动，而是设计一段动态关系：明确分工、交接控制权、校准信任、默认容错。</p>
+      <div class="heroGrid">
+        <div class="heroCard"><small>01 / 分工</small><b>AI 做重活，人做判断</b><span>AI 负责多候选、草稿和初筛；人负责选择、覆盖和拍板。</span></div>
+        <div class="heroCard"><small>02 / 控制</small><b>方向盘始终在人手里</b><span>可中断、可覆盖、可撤销、可回滚是硬指标。</span></div>
+        <div class="heroCard"><small>03 / 信任</small><b>透明呈现置信度</b><span>不是讲模型原理，而是讲“为什么推荐、哪里不确定”。</span></div>
+        <div class="heroCard"><small>04 / 容错</small><b>把出错当默认状态</b><span>错误可发现、可纠正、可学习，任务可重试。</span></div>
+      </div>
+    </section>
+
+    <section class="section active" id="overview">
+      <div class="grid2">
+        <div class="card pad">
+          <div class="miniTitle">产品总图</div>
+          <h2 style="margin:8px 0 6px;font-size:24px">不是“AI 工具集合”，而是“人机共创流水线”</h2>
+          <p class="sub" style="font-size:14px;max-width:760px">用户带着内容意图进入系统，AI 逐步把模糊意图转化为可用资产、可编辑草稿和可复盘配方；每个关键节点都保留人工确认点。</p>
+          <div class="handoff" style="margin-top:20px">
+            <div class="step"><div class="num">01</div><h4>人设定目标</h4><p>关键词、链接、脚本、SRT、目标渠道与产出类型。</p><span class="tag orange" style="margin-top:12px">Human lead</span></div>
+            <div class="step"><div class="num">02</div><h4>AI 采集判断</h4><p>爆款抓取、单链分析、评论洞察、候选推荐。</p><span class="tag blue" style="margin-top:12px">AI propose</span></div>
+            <div class="step"><div class="num">03</div><h4>人筛选确认</h4><p>收藏、打标、入库、删掉不相关结果。</p><span class="tag orange" style="margin-top:12px">Human choose</span></div>
+            <div class="step"><div class="num">04</div><h4>AI 加工生成</h4><p>切片、转 SRT、召回素材、拼接草稿、批量变体。</p><span class="tag blue" style="margin-top:12px">AI execute</span></div>
+            <div class="step"><div class="num">05</div><h4>人干预送审</h4><p>替换素材、修改脚本、覆盖 AI 判断、终审拍板。</p><span class="tag orange" style="margin-top:12px">Human approve</span></div>
+            <div class="step"><div class="num">06</div><h4>系统学习复盘</h4><p>表现回流、爆款配方、素材贡献、提示词迭代。</p><span class="tag green" style="margin-top:12px">System learn</span></div>
+          </div>
+        </div>
+        <div class="card pad">
+          <div class="miniTitle">协作关系地图</div>
+          <h3 style="margin:8px 0 12px">四类协作模式，不同风险不同控制权</h3>
+          <div class="matrix">
+            <div></div><div class="mcell axis">低风险<br/>高重复</div><div class="mcell axis">中风险<br/>可编辑</div><div class="mcell axis">高风险<br/>需担责</div>
+            <div class="mcell axis">AI 主动</div>
+            <div class="mcell"><h4>自动整理</h4><p>自动打标、向量化、去重检测、任务归档。</p></div>
+            <div class="mcell reco"><h4>主动推荐</h4><p>高潜素材提醒、爆款机会推送、缺素材提示。</p></div>
+            <div class="mcell"><h4>谨慎提醒</h4><p>只做风险提示，不自动改内容，不越权通过。</p></div>
+            <div class="mcell axis">人发起</div>
+            <div class="mcell"><h4>一键执行</h4><p>批量上传、批量切片、批量导出。</p></div>
+            <div class="mcell reco"><h4>共创草稿</h4><p>脚本生成、SRT 拼接、图文批量生成，多候选供选择。</p></div>
+            <div class="mcell"><h4>人审 AI 辅助</h4><p>事实核查、合规检查、风险解释，人工终审。</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="grid3" style="margin-top:18px">
+        <div class="note"><b>设计抓手 1：多候选而非单答案</b><p>AI 输出脚本、素材召回、切片结果时，默认给 3 个候选，并显示推荐理由、置信度、风险点。</p></div>
+        <div class="note"><b>设计抓手 2：动作前置但确认后置</b><p>AI 可以主动做准备，但保存、覆盖、送审、发布必须经过用户确认。</p></div>
+        <div class="note"><b>设计抓手 3：失败路径也是主路径</b><p>采集失败、召回不准、审核高风险、生成相似度过高，都要有重试、替换、回滚和反馈入口。</p></div>
+      </div>
+    </section>
+
+    <section class="section" id="principle">
+      <div class="card pad">
+        <div class="miniTitle">Design View</div>
+        <h2 style="font-size:26px;margin:8px 0 16px">人机协作设计观：四个张力，八个落点</h2>
+        <div class="principles">
+          <div class="principle"><div class="icon" style="background:var(--blueSoft);color:var(--blue)">01</div><h3>增强 vs 替代</h3><p>高风险环节偏增强，低风险重复环节偏自动。内容中台里：AI 可自动打标，但不能自动通过合规。</p></div>
+          <div class="principle"><div class="icon" style="background:var(--orangeSoft);color:var(--orange)">02</div><h3>控制权交接</h3><p>用户可以随时中断、覆盖、撤销。AI 只拿“临时方向盘”，最终控制权在人。</p></div>
+          <div class="principle"><div class="icon" style="background:var(--tealSoft);color:var(--teal)">03</div><h3>信任校准</h3><p>AI 有把握时清晰推荐，没把握时暴露不确定性，避免盲信和完全不信。</p></div>
+          <div class="principle"><div class="icon" style="background:var(--redSoft);color:var(--red)">04</div><h3>默认容错</h3><p>AI 一定会错。设计必须回答：错了怎么发现、纠正、恢复、学习。</p></div>
+        </div>
+      </div>
+      <div class="grid2" style="margin-top:18px">
+        <div class="card pad">
+          <h3 style="margin-top:0">落到产品里的 8 个设计组件</h3>
+          <table class="smallTable">
+            <thead><tr><th>组件</th><th>解决的问题</th><th>在内容工作台里怎么用</th></tr></thead>
+            <tbody>
+              <tr><td>置信度条</td><td>信任校准</td><td>素材召回、事实核查、审核风险都展示置信度。</td></tr>
+              <tr><td>推荐理由</td><td>透明度</td><td>告诉用户为什么推荐这条素材或这个脚本结构。</td></tr>
+              <tr><td>多候选卡</td><td>概率性输出</td><td>脚本、切片、图文变体默认多选一。</td></tr>
+              <tr><td>人工确认门</td><td>控制权</td><td>入库、送审、覆盖、导出需要人工确认。</td></tr>
+              <tr><td>撤销/回滚</td><td>容错</td><td>恢复上一个脚本版本、撤回错误标签、回退切片。</td></tr>
+              <tr><td>反馈入口</td><td>学习闭环</td><td>不准、无关、风险误判、好用，反馈回模型和规则。</td></tr>
+              <tr><td>任务队列</td><td>延迟管理</td><td>采集、切片、生成、审核全部可追踪。</td></tr>
+              <tr><td>血缘树</td><td>责任追溯</td><td>看到素材来自哪条爆款、怎样变体、用于哪个成片。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card pad">
+          <h3 style="margin-top:0">产品语言模板</h3>
+          <div class="explain">
+            <div class="explainItem"><b>高把握</b><p>“我找到了 12 条高匹配素材，其中 4 条来自最近 7 天高表现内容，建议优先使用。”</p></div>
+            <div class="explainItem"><b>低把握</b><p>“这段脚本意图不够明确，我先按‘亲子酒店体验’召回素材，你可以切换到‘性价比/避坑’方向。”</p></div>
+            <div class="explainItem"><b>有风险</b><p>“这处价格描述可能需要事实核查，建议补充来源或改成更稳妥表达。”</p></div>
+            <div class="explainItem"><b>可回滚</b><p>“已生成 5 个变体，暂未覆盖原素材。你可以保存、对比或全部丢弃。”</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="drafts">
+      <div class="card pad">
+        <div class="miniTitle">Multiple Drafts</div>
+        <h2 style="font-size:26px;margin:8px 0 10px">4 套产品形态稿：同一个内核，不同侧重点</h2>
+        <p class="sub">建议你可以拿这四套去跟团队讨论：如果目标是营销短期价值，用 A；如果目标是管理大量异步任务，用 B；如果目标是 Claude Design 高级感，用 C；如果目标是审核安全和交付，用 D。</p>
+        <div class="draftNav" id="draftNav">
+          <button class="draftBtn active" data-draft="a">稿 A：副驾式工作台</button>
+          <button class="draftBtn" data-draft="b">稿 B：流水线任务台</button>
+          <button class="draftBtn" data-draft="c">稿 C：协作画布</button>
+          <button class="draftBtn" data-draft="d">稿 D：审核安全台</button>
+        </div>
+        <div class="draftPanel active" id="draft-a">
+          <div class="proto">
+            <div class="protoTop"><div class="windowDots"><i></i><i></i><i></i></div><div class="intent">输入关键词、贴链接、上传 SRT，或描述你想做的内容……</div><button class="btn orange">+ 采集</button></div>
+            <div class="protoBody">
+              <div class="side"><div class="sideItem on">工作台 <span>⌘1</span></div><div class="sideItem">爆款机会</div><div class="sideItem">资产库</div><div class="sideItem">创作台</div><div class="sideItem">剪辑台</div><div class="sideItem">审核台</div><div class="sideItem">复盘</div><div style="flex:1"></div><div class="sideItem">任务队列</div></div>
+              <div class="mainArea"><div class="split" style="justify-content:space-between;margin-bottom:12px"><div><b>今日爆款机会</b><div class="sub">AI 昨夜筛选 42 条，已过滤昨日 pass 内容</div></div><span class="tag teal">看过不看已开启</span></div><div class="cardFlow"><div class="asset"><div class="thumb orange"><span>火车短途 7日增长 +218%</span></div><div class="assetBody"><b>年轻人周末坐火车去小城</b><div class="meta"><span class="tag orange">强钩子</span><span class="tag blue">可复刻</span></div></div></div><div class="asset"><div class="thumb teal"><span>酒店亲子房 爆款开头</span></div><div class="assetBody"><b>亲子酒店避坑 3 个镜头</b><div class="meta"><span class="tag teal">评论热</span><span class="tag amber">待切片</span></div></div></div><div class="asset"><div class="thumb purple"><span>风景素材 高潜未用</span></div><div class="assetBody"><b>海边落日 B-roll 素材包</b><div class="meta"><span class="tag green">高潜</span><span class="tag purple">已向量化</span></div></div></div><div class="asset"><div class="thumb blue"><span>脚本草稿 待审核</span></div><div class="assetBody"><b>上海周边周末游 5 条标题</b><div class="meta"><span class="tag red">1 个风险</span><span class="tag blue">AI生成</span></div></div></div></div><div class="basket"><div><b>创作篮：已选 7 个素材</b><br><span>视频4 / 图片2 / 脚本1 · 缺少酒店内景素材</span></div><button class="btn orange">去视频创作</button></div></div>
+              <div class="rightPanel"><div class="drawerTitle"><div><span class="tag blue">AI 副驾</span><h3>为什么推荐这条爆款？</h3></div></div><div class="confidence"><i></i></div><div class="sub">置信度 76% · 建议人工确认目的地事实信息</div><div class="explain" style="margin-top:12px"><div class="explainItem"><b>钩子强</b><p>前 3 秒直接给出“周末不用请假”的利益点。</p></div><div class="explainItem"><b>可切片</b><p>识别到 6 个完整镜头，可直接入库为 B-roll。</p></div><div class="explainItem"><b>可复刻</b><p>结构适合火车/酒店/小城三个赛道复用。</p></div></div><div class="aiActions"><button class="action">智能切片</button><button class="action">生成脚本</button><button class="action">收藏打标</button><button class="action">入库</button></div></div>
+            </div>
+          </div>
+          <p class="caption">适合 P0：最快体现“营销每天打开就能找到爆款、切素材、出草稿”的价值。</p>
+        </div>
+        <div class="draftPanel" id="draft-b">
+          <div class="card pad" style="background:#F9F6EF">
+            <div class="split" style="justify-content:space-between"><div><b>稿 B：流水线任务台</b><div class="sub">突出采集、切片、生成、审核这些异步任务的状态和交接点。</div></div><button class="btn primary">新建内容任务</button></div>
+            <div class="laneWrap" style="margin-top:16px"><div class="laneLabel"><div>Human<br/>目标</div><div>AI<br/>执行</div><div>Human<br/>确认</div><div>System<br/>学习</div></div><div><div class="lane"><div class="laneCard"><b>输入关键词</b><small>火车短途旅行</small></div><div class="laneCard"><b>选择平台</b><small>小红书/抖音</small></div><div class="laneCard"><b>设置规则</b><small>只看近7天</small></div><div class="laneCard"><b>目标产物</b><small>视频草稿</small></div><div class="laneCard"><b>风险边界</b><small>需事实核查</small></div></div><div class="lane" style="margin-top:10px"><div class="laneCard"><b>抓取中 68%</b><small>32 条候选</small></div><div class="laneCard"><b>分析中</b><small>评论/结构/钩子</small></div><div class="laneCard"><b>切片中</b><small>预计 2 分钟</small></div><div class="laneCard"><b>召回中</b><small>匹配 47 个素材</small></div><div class="laneCard"><b>初审中</b><small>1 个风险</small></div></div><div class="lane" style="margin-top:10px"><div class="laneCard"><b>保留 12 条</b><small>删除低相关</small></div><div class="laneCard"><b>确认切点</b><small>拖拽微调</small></div><div class="laneCard"><b>替换素材</b><small>2 处不准</small></div><div class="laneCard"><b>送审</b><small>人工终审</small></div><div class="laneCard"><b>导出</b><small>生成 output_code</small></div></div><div class="lane" style="margin-top:10px"><div class="laneCard"><b>表现回流</b><small>播放/互动</small></div><div class="laneCard"><b>素材贡献</b><small>标记高潜</small></div><div class="laneCard"><b>配方沉淀</b><small>结构可复刻</small></div><div class="laneCard"><b>提示词迭代</b><small>版本对比</small></div><div class="laneCard"><b>下次推荐</b><small>更准召回</small></div></div></div></div>
+          </div>
+          <p class="caption">适合中后台团队：把 AI 慢任务、失败重试、成本配额、人工确认点全部可视化。</p>
+        </div>
+        <div class="draftPanel" id="draft-c">
+          <div class="legend"><span class="legendItem"><i class="sw human"></i>人主导</span><span class="legendItem"><i class="sw ai"></i>AI 主导</span><span class="legendItem"><i class="sw output"></i>产出资产</span></div>
+          <div class="canvas">
+            <div class="node human" style="left:42px;top:70px"><h4>内容意图</h4><p>“做 5 条火车短途视频”</p></div>
+            <div class="edge" style="left:205px;top:112px;width:120px;transform:rotate(0deg)"></div>
+            <div class="node ai" style="left:350px;top:54px"><h4>AI 拆任务</h4><p>找爆款 / 召回素材 / 写脚本</p></div>
+            <div class="edge" style="left:515px;top:112px;width:105px;transform:rotate(8deg)"></div>
+            <div class="node ai" style="left:650px;top:82px"><h4>爆款机会池</h4><p>42 条候选，12 条高相关</p></div>
+            <div class="edge" style="left:725px;top:176px;width:95px;transform:rotate(62deg)"></div>
+            <div class="node human" style="left:790px;top:260px"><h4>人工筛选</h4><p>保留 6 条，pass 其余</p></div>
+            <div class="edge" style="left:720px;top:310px;width:90px;transform:rotate(180deg)"></div>
+            <div class="node ai" style="left:510px;top:250px"><h4>切片 / 向量化</h4><p>生成 18 个镜头资产</p></div>
+            <div class="edge" style="left:468px;top:320px;width:100px;transform:rotate(145deg)"></div>
+            <div class="node output" style="left:250px;top:365px"><h4>创作篮</h4><p>素材 7 个，脚本 1 个</p></div>
+            <div class="edge" style="left:420px;top:418px;width:120px;transform:rotate(0deg)"></div>
+            <div class="node ai" style="left:570px;top:380px"><h4>SRT 召回拼接</h4><p>生成时间轴草稿</p></div>
+            <div class="edge" style="left:740px;top:420px;width:96px;transform:rotate(-15deg)"></div>
+            <div class="node human" style="left:855px;top:354px"><h4>修改 & 终审</h4><p>替换 2 段素材，确认风险</p></div>
+            <div class="node output" style="left:650px;bottom:52px"><h4>成片 + 配方</h4><p>output_code / recipe_code</p></div>
+          </div>
+          <p class="caption">适合做高级概念原型：把“对象、动作、控制权、产出血缘”画在一张协作画布里。</p>
+        </div>
+        <div class="draftPanel" id="draft-d">
+          <div class="reviewGrid">
+            <div class="videoMock"><div class="play">▶</div><div class="timeline"><div class="seg"></div><div class="seg warn"></div><div class="seg"></div><div class="seg warn"></div><div class="seg"></div></div></div>
+            <div class="card pad"><div class="split" style="justify-content:space-between"><h3 style="margin:0">AI 初审结果</h3><span class="tag red">需人工确认</span></div><div class="risk"><h4>事实风险 <span>高</span></h4><p>“全网最低价”缺少来源，建议改成“近期优惠价”。</p></div><div class="risk"><h4>平台合规 <span>中</span></h4><p>第 18 秒画面可能出现未经授权品牌 logo。</p></div><div class="risk"><h4>同质化 <span>中</span></h4><p>与库内 3 条成片结构相似度超过阈值。</p></div><div class="aiActions"><button class="action">接受修改</button><button class="action">手动编辑</button><button class="action">查看依据</button><button class="action">回滚版本</button></div></div>
+          </div>
+          <p class="caption">适合合规敏感场景：AI 负责发现风险和给依据，人负责修改、覆盖和终审。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="handoff">
+      <div class="card pad">
+        <div class="miniTitle">Control Handoff</div>
+        <h2 style="font-size:26px;margin:8px 0 16px">控制权交接：让用户感觉“方向盘在我手里”</h2>
+        <div class="handoff">
+          <div class="step"><div class="num">A</div><h4>AI 准备</h4><p>后台抓取、预分析、预召回，不打断用户。</p><span class="tag blue" style="margin-top:12px">自动</span></div>
+          <div class="step"><div class="num">B</div><h4>AI 提议</h4><p>以候选卡呈现，不直接覆盖结果。</p><span class="tag blue" style="margin-top:12px">建议</span></div>
+          <div class="step"><div class="num">C</div><h4>人选择</h4><p>保留、删除、加入创作篮，决定方向。</p><span class="tag orange" style="margin-top:12px">确认</span></div>
+          <div class="step"><div class="num">D</div><h4>AI 执行</h4><p>切片、召回、生成、拼接，进入任务队列。</p><span class="tag purple" style="margin-top:12px">执行</span></div>
+          <div class="step"><div class="num">E</div><h4>人干预</h4><p>替换、微调、打回、重试、覆盖判断。</p><span class="tag orange" style="margin-top:12px">接管</span></div>
+          <div class="step"><div class="num">F</div><h4>系统记录</h4><p>记录反馈、版本、血缘、code 码归因。</p><span class="tag green" style="margin-top:12px">学习</span></div>
+        </div>
+      </div>
+      <div class="grid3" style="margin-top:18px">
+        <div class="card pad"><h3 style="margin-top:0">可中断 Interrupt</h3><p class="sub">AI 生成过程中，用户可以暂停任务、修改输入、取消某个分支。适用于批量生成、视频拼接、采集任务。</p><button class="btn">暂停生成</button></div>
+        <div class="card pad"><h3 style="margin-top:0">可覆盖 Override</h3><p class="sub">用户可以说“这条不是酒店内景，改成大堂素材”，系统记录纠正并重新召回。</p><button class="btn">手动替换素材</button></div>
+        <div class="card pad"><h3 style="margin-top:0">可撤销 Undo</h3><p class="sub">所有 AI 写入动作先成为草稿版本，用户确认后才覆盖正式资产。</p><button class="btn">回滚到上一版</button></div>
+      </div>
+    </section>
+
+    <section class="section" id="review">
+      <div class="grid2">
+        <div class="card pad">
+          <div class="miniTitle">Trust & Error Recovery</div>
+          <h2 style="font-size:26px;margin:8px 0 10px">信任与容错：不要假装 AI 永远正确</h2>
+          <p class="sub">内容中台最容易出问题的地方不是 AI 不会生成，而是 AI 生成后没人知道哪里不可靠。设计上要把不确定性、依据、风险和恢复路径做在界面里。</p>
+          <div class="reviewGrid" style="grid-template-columns:1fr 300px;margin-top:16px">
+            <div class="videoMock" style="height:360px"><div class="play">▶</div><div class="timeline"><div class="seg"></div><div class="seg warn"></div><div class="seg"></div><div class="seg"></div></div></div>
+            <div><div class="risk"><h4>AI 置信度 <span>62%</span></h4><p>脚本里“最便宜”缺少可验证来源。</p></div><div class="risk"><h4>建议动作</h4><p>改为“近期优惠较多”，或补充数据来源。</p></div><div class="risk"><h4>恢复路径</h4><p>保留原文、采纳建议、手动编辑、标记误报。</p></div></div>
+          </div>
+        </div>
+        <div class="card pad">
+          <h3 style="margin-top:0">错误状态设计清单</h3>
+          <div class="explain">
+            <div class="explainItem"><b>召回不准</b><p>展示“为什么召回”，允许用户点“不相关”，并一键换方向。</p></div>
+            <div class="explainItem"><b>生成同质化</b><p>展示相似度风险，提供“增加差异”按钮，而不是直接保存。</p></div>
+            <div class="explainItem"><b>事实不确定</b><p>标黄、列出待核查字段，要求补来源或人工确认。</p></div>
+            <div class="explainItem"><b>任务失败</b><p>展示失败原因、消耗额度、重试入口、替代路径。</p></div>
+            <div class="explainItem"><b>用户不信任</b><p>展示依据、样例、历史表现，不用“AI 说了算”的语气。</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="card pad" style="margin-top:18px">
+        <h3 style="margin-top:0">审核台状态流</h3>
+        <div class="handoff">
+          <div class="step"><div class="num">01</div><h4>AI 初筛</h4><p>事实、合规、同质化、敏感词、平台规则。</p></div>
+          <div class="step"><div class="num">02</div><h4>风险解释</h4><p>标出位置、风险等级、判断依据。</p></div>
+          <div class="step"><div class="num">03</div><h4>建议修改</h4><p>给出更稳妥表达或替代素材。</p></div>
+          <div class="step"><div class="num">04</div><h4>人工决策</h4><p>通过、驳回、覆盖、退回修改。</p></div>
+          <div class="step"><div class="num">05</div><h4>记录原因</h4><p>形成审核日志和规则反馈。</p></div>
+          <div class="step"><div class="num">06</div><h4>规则迭代</h4><p>优化提示词、审核规则和召回策略。</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="feedback">
+      <div class="flywheel">
+        <div class="circle">
+          <div class="circleCore">内容增长<br/>人机协作飞轮</div>
+          <div class="orbit o1"><b>爆款发现</b><p>AI 抓取、榜单、博主跟踪，人筛选机会。</p></div>
+          <div class="orbit o2"><b>资产沉淀</b><p>切片、打标、向量化、去重，人确认入库。</p></div>
+          <div class="orbit o3"><b>创作生成</b><p>脚本、图文、视频草稿，多候选可编辑。</p></div>
+          <div class="orbit o4"><b>审核交付</b><p>AI 初筛风险，人做终审拍板。</p></div>
+          <div class="orbit o5"><b>复盘学习</b><p>表现回流，沉淀爆款配方与提示词版本。</p></div>
+        </div>
+        <div class="card pad">
+          <div class="miniTitle">Metrics</div>
+          <h3 style="font-size:22px;margin:8px 0 14px">衡量“协作质量”，不只看模型准确率</h3>
+          <div class="metricList">
+            <div class="metric"><b>AI 建议采纳率</b><span>42%</span></div>
+            <div class="metric"><b>人工纠正率</b><span>18%</span></div>
+            <div class="metric"><b>错误恢复耗时</b><span>↓ 36%</span></div>
+            <div class="metric"><b>素材召回可用率</b><span>71%</span></div>
+            <div class="metric"><b>审核误报反馈率</b><span>9%</span></div>
+            <div class="metric"><b>爆款配方复刻成功率</b><span>23%</span></div>
+          </div>
+          <p class="caption">这些指标能证明你不是只会讲“AI 赋能”，而是在设计人和 AI 的真实协作质量。</p>
+        </div>
+      </div>
+      <div class="card pad" style="margin-top:18px">
+        <h3 style="margin-top:0">code 码归因链路</h3>
+        <div class="handoff">
+          <div class="step"><div class="num">asset_code</div><h4>原始素材</h4><p>来源、平台、标签、权限。</p></div>
+          <div class="step"><div class="num">clip_code</div><h4>切片</h4><p>时间码、字幕、镜头语义。</p></div>
+          <div class="step"><div class="num">script_code</div><h4>脚本</h4><p>钩子、结构、版本。</p></div>
+          <div class="step"><div class="num">workflow_code</div><h4>工作流</h4><p>Skill、模型、提示词版本。</p></div>
+          <div class="step"><div class="num">output_code</div><h4>成片</h4><p>作品、审核、导出记录。</p></div>
+          <div class="step"><div class="num">recipe_code</div><h4>爆款配方</h4><p>表现、归因、复刻建议。</p></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">内容增长工作台 · 人机协作视觉方案集 v0.1</div>
+  </div>
+</div>
+<script>
+const tabs=document.querySelectorAll('.tab');
+const sections=document.querySelectorAll('.section');
+tabs.forEach(btn=>btn.addEventListener('click',()=>{tabs.forEach(b=>b.classList.remove('active'));btn.classList.add('active');sections.forEach(s=>s.classList.remove('active'));document.getElementById(btn.dataset.tab).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}));
+const dBtns=document.querySelectorAll('.draftBtn');
+const dPanels=document.querySelectorAll('.draftPanel');
+dBtns.forEach(btn=>btn.addEventListener('click',()=>{dBtns.forEach(b=>b.classList.remove('active'));btn.classList.add('active');dPanels.forEach(p=>p.classList.remove('active'));document.getElementById('draft-'+btn.dataset.draft).classList.add('active');}));
+</script>
+</body>
+</html>

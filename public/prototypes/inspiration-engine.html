@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>灵感生成模块 · 高保真原型</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#15171C; --ink-2:#1D2027; --canvas:#F5F4EF; --surface:#FFFFFF;
+  --line:#E8E5DC; --line-2:#F0EEE7; --muted:#8C887B; --muted-2:#A8A498;
+  --text:#23262D; --text-soft:#52555E;
+  --accent:#F24E29; --accent-2:#D63E1D; --accent-soft:#FDEAE3; --accent-tint:#FFF4F0;
+  --teal:#0E8388; --teal-soft:#E2F1F1;
+  --amber:#D9892B; --amber-soft:#FBEED7;
+  --blue:#2F6FED; --blue-soft:#E7EEFD;
+  --green:#2E9E5B; --green-soft:#E4F4EA;
+  --purple:#7A5AF0; --purple-soft:#EEEAFC;
+  --red-xhs:#FE3B5C;
+  --radius:14px; --radius-sm:9px; --radius-lg:20px;
+  --shadow-sm:0 1px 2px rgba(20,22,28,.04),0 1px 3px rgba(20,22,28,.05);
+  --shadow:0 4px 14px rgba(20,22,28,.06),0 1px 3px rgba(20,22,28,.05);
+  --shadow-lg:0 18px 50px rgba(20,22,28,.12),0 4px 12px rgba(20,22,28,.06);
+  --mono:"DM Mono",ui-monospace,monospace;
+  --sans:"Sora","PingFang SC","Microsoft YaHei",-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--canvas);color:var(--text);
+  -webkit-font-smoothing:antialiased;font-size:14px;line-height:1.5}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:#D9D6CC;border-radius:8px;border:2px solid var(--canvas)}
+::-webkit-scrollbar-thumb:hover{background:#C8C5BA}
+.mono{font-family:var(--mono);font-feature-settings:"tnum"}
+
+/* ---------- App shell ---------- */
+.app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+.sidebar{background:var(--ink);color:#C9C7C0;display:flex;flex-direction:column;
+  position:sticky;top:0;height:100vh;padding:20px 14px}
+.brand{display:flex;align-items:center;gap:11px;padding:6px 8px 22px}
+.brand-mark{width:34px;height:34px;border-radius:10px;flex:none;position:relative;
+  background:linear-gradient(135deg,var(--accent),#FF7A4D);
+  box-shadow:0 4px 12px rgba(242,78,41,.4)}
+.brand-mark::after{content:"";position:absolute;inset:9px 11px;border-radius:2px;
+  background:#fff;clip-path:polygon(0 0,100% 50%,0 100%)}
+.brand-name{font-weight:700;font-size:15px;color:#fff;letter-spacing:.2px;line-height:1.1}
+.brand-sub{font-size:10.5px;color:#79766E;letter-spacing:.4px;margin-top:2px}
+.nav-label{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#615E57;
+  padding:14px 10px 8px;font-weight:600}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav-item{display:flex;align-items:center;gap:11px;padding:9px 11px;border-radius:10px;
+  cursor:pointer;color:#B5B2AB;font-size:13.5px;font-weight:500;transition:.16s;
+  border:none;background:none;text-align:left;width:100%;font-family:inherit}
+.nav-item:hover{background:rgba(255,255,255,.06);color:#fff}
+.nav-item.active{background:var(--accent);color:#fff;box-shadow:0 4px 14px rgba(242,78,41,.35)}
+.nav-item .ic{width:18px;height:18px;flex:none;opacity:.9}
+.nav-item .tagn{margin-left:auto;font-size:9.5px;background:rgba(255,255,255,.14);
+  padding:2px 7px;border-radius:20px;font-weight:600}
+.nav-item.active .tagn{background:rgba(255,255,255,.22)}
+.side-foot{margin-top:auto;padding:14px 10px 4px;border-top:1px solid rgba(255,255,255,.08);
+  font-size:11px;color:#615E57;line-height:1.6}
+.side-foot b{color:#9A968E;font-weight:600}
+
+/* ---------- Topbar ---------- */
+.main{min-width:0;display:flex;flex-direction:column}
+.topbar{position:sticky;top:0;z-index:20;background:rgba(245,244,239,.85);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--line);
+  padding:15px 32px;display:flex;align-items:center;gap:16px}
+.topbar h1{font-size:18px;font-weight:700;letter-spacing:-.2px}
+.topbar .crumb{font-size:12px;color:var(--muted);margin-top:1px}
+.topbar-r{margin-left:auto;display:flex;align-items:center;gap:10px}
+.tb-search{display:flex;align-items:center;gap:8px;background:var(--surface);
+  border:1px solid var(--line);border-radius:10px;padding:8px 13px;width:280px;
+  color:var(--muted);font-size:13px}
+.tb-search input{border:none;outline:none;font-family:inherit;font-size:13px;
+  width:100%;background:none;color:var(--text)}
+.avatar{width:34px;height:34px;border-radius:50%;flex:none;
+  background:linear-gradient(135deg,var(--teal),#3BB5BA);display:grid;place-items:center;
+  color:#fff;font-weight:600;font-size:13px}
+.content{padding:28px 32px 60px;max-width:1180px;width:100%}
+
+/* ---------- Screens ---------- */
+.screen{display:none;animation:fade .4s ease}
+.screen.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ---------- Generic bits ---------- */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow-sm)}
+.section-head{display:flex;align-items:center;gap:10px;margin:30px 0 14px}
+.section-head .dot{width:7px;height:18px;border-radius:4px;background:var(--accent)}
+.section-head h2{font-size:16px;font-weight:700;letter-spacing:-.2px}
+.section-head .sub{font-size:12.5px;color:var(--muted);font-weight:400}
+.section-head .right{margin-left:auto}
+.eyebrow{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;
+  color:var(--accent);font-weight:600}
+
+.btn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);
+  background:var(--surface);color:var(--text);border-radius:9px;padding:8px 14px;
+  font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;transition:.15s}
+.btn:hover{border-color:#D5D2C8;background:#FBFAF7;transform:translateY(-1px)}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:#fff;
+  box-shadow:0 4px 12px rgba(242,78,41,.28)}
+.btn-primary:hover{background:var(--accent-2);border-color:var(--accent-2)}
+.btn-dark{background:var(--ink);border-color:var(--ink);color:#fff}
+.btn-dark:hover{background:#000}
+.btn-sm{padding:6px 11px;font-size:12px;border-radius:8px}
+.btn-ghost{background:none;border-color:transparent}
+.btn-ghost:hover{background:#EFEDE6;border-color:transparent}
+
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:500;
+  padding:3px 9px;border-radius:7px;background:var(--line-2);color:var(--text-soft);
+  white-space:nowrap}
+.tag .d{width:6px;height:6px;border-radius:50%;background:currentColor}
+.tag.rail{background:var(--blue-soft);color:var(--blue)}
+.tag.hotel{background:var(--teal-soft);color:var(--teal)}
+.tag.flight{background:var(--purple-soft);color:var(--purple)}
+.tag.travel{background:var(--accent-soft);color:var(--accent-2)}
+.tag.holiday{background:var(--amber-soft);color:var(--amber)}
+.tag.go{background:var(--green-soft);color:var(--green)}
+.tag.solid{background:var(--ink);color:#fff}
+
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;
+  padding:3px 8px;border-radius:6px;letter-spacing:.2px}
+.badge .pd{width:7px;height:7px;border-radius:2px}
+.bg-dy{background:#111;color:#fff}
+.bg-xhs{background:#FFE9ED;color:var(--red-xhs)}
+.bg-wb{background:#FDEBE0;color:#E6712B}
+.bg-tk{background:#111;color:#fff}
+.bg-yt{background:#FEE7E7;color:#E11}
+.bg-ig{background:linear-gradient(135deg,#F58529,#DD2A7B);color:#fff}
+.bg-x{background:#111;color:#fff}
+
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;
+  padding:4px 10px;border-radius:30px}
+.pill.ok{background:var(--green-soft);color:var(--green)}
+.pill.warn{background:var(--amber-soft);color:var(--amber)}
+.pill.off{background:#F0EEE7;color:var(--muted)}
+
+.note{display:flex;gap:10px;background:var(--amber-soft);border:1px solid #F0DCB4;
+  border-radius:var(--radius-sm);padding:11px 14px;font-size:12.5px;color:#8A6520;
+  line-height:1.55}
+.note .ni{flex:none;font-size:14px}
+
+.thumb{position:relative;border-radius:11px;overflow:hidden;aspect-ratio:9/13;
+  display:grid;place-items:center}
+.thumb .play{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.92);
+  display:grid;place-items:center;backdrop-filter:blur(4px);box-shadow:0 4px 14px rgba(0,0,0,.2)}
+.thumb .play::after{content:"";border-left:13px solid var(--ink);
+  border-top:8px solid transparent;border-bottom:8px solid transparent;margin-left:3px}
+.thumb .dur{position:absolute;right:7px;bottom:7px;background:rgba(0,0,0,.62);
+  color:#fff;font-size:10.5px;padding:2px 6px;border-radius:5px;font-family:var(--mono)}
+.thumb .lab{position:absolute;left:8px;top:8px;font-size:10px;color:#fff;font-weight:600;
+  background:rgba(0,0,0,.32);padding:2px 7px;border-radius:5px;backdrop-filter:blur(4px)}
+.g1{background:linear-gradient(150deg,#2C5364,#203A43,#0F2027)}
+.g2{background:linear-gradient(150deg,#FF6B6B,#FFA07A,#FFD194)}
+.g3{background:linear-gradient(150deg,#1A2980,#26D0CE)}
+.g4{background:linear-gradient(150deg,#654EA3,#EAAFC8)}
+.g5{background:linear-gradient(150deg,#F7971E,#FFD200)}
+.g6{background:linear-gradient(150deg,#11998E,#38EF7D)}
+.g7{background:linear-gradient(150deg,#373B44,#4286f4)}
+.g8{background:linear-gradient(150deg,#DD5E89,#F7BB97)}
+
+.metric{font-family:var(--mono);font-weight:500}
+.kv{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted)}
+.kv .v{font-family:var(--mono);color:var(--text-soft);font-weight:500}
+
+/* sentiment bar */
+.senti{display:flex;height:7px;border-radius:6px;overflow:hidden;background:var(--line-2)}
+.senti i{display:block;height:100%}
+.senti .pos{background:var(--green)}
+.senti .neu{background:#D8D4C8}
+.senti .neg{background:var(--accent)}
+
+/* relevance score */
+.relv{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:600;
+  color:var(--teal);background:var(--teal-soft);padding:4px 10px;border-radius:8px}
+.relv b{font-family:var(--mono);font-size:13px}
+
+/* why-it-works block */
+.why{background:var(--accent-tint);border:1px solid #FBD9CD;border-radius:10px;padding:11px 13px}
+.why-h{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;
+  color:var(--accent-2);margin-bottom:7px;letter-spacing:.2px}
+.why ul{list-style:none;display:flex;flex-direction:column;gap:5px}
+.why li{font-size:12px;color:#7A3A28;display:flex;gap:7px;line-height:1.45}
+.why li b{color:var(--accent-2);font-weight:600}
+.why li::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--accent);
+  margin-top:6px;flex:none}
+
+/* ---------- Flow diagrams ---------- */
+.flowwrap{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:20px 22px;box-shadow:var(--shadow-sm)}
+.flow-title{display:flex;align-items:center;gap:9px;margin-bottom:4px}
+.flow-title .badge{font-size:11px}
+.flow-title h3{font-size:14.5px;font-weight:700}
+.flow-desc{font-size:12px;color:var(--muted);margin-bottom:16px}
+.flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap}
+.fnode{background:var(--canvas);border:1px solid var(--line);border-radius:11px;
+  padding:11px 13px;min-width:130px;max-width:170px;position:relative}
+.fnode .fn-ic{width:26px;height:26px;border-radius:7px;display:grid;place-items:center;
+  margin-bottom:7px;font-size:14px}
+.fnode .fn-t{font-size:12.5px;font-weight:600;line-height:1.3}
+.fnode .fn-s{font-size:10.5px;color:var(--muted);margin-top:3px;line-height:1.35}
+.fnode.accent{background:var(--accent-tint);border-color:#FBD9CD}
+.fnode.accent .fn-ic{background:var(--accent);color:#fff}
+.fnode.teal{background:var(--teal-soft);border-color:#C9E6E6}
+.fnode.teal .fn-ic{background:var(--teal);color:#fff}
+.fnode.blue{background:var(--blue-soft);border-color:#CBDCFB}
+.fnode.blue .fn-ic{background:var(--blue);color:#fff}
+.fnode.ink{background:var(--ink);border-color:var(--ink)}
+.fnode.ink .fn-t{color:#fff}.fnode.ink .fn-s{color:#9C988F}
+.fnode.ink .fn-ic{background:rgba(255,255,255,.16);color:#fff}
+.fnode.dash{background:#fff;border-style:dashed;border-color:#D5D2C8}
+.farrow{display:flex;align-items:center;padding:0 4px;color:#C2BEB2;align-self:center}
+.farrow svg{width:26px;height:14px}
+.flow-branch{display:flex;flex-direction:column;gap:8px}
+.fork{display:flex;align-items:center;color:#C2BEB2;font-size:11px;padding:0 6px;align-self:center}
+
+/* layer architecture */
+.layers{display:flex;flex-direction:column;gap:10px}
+.layer{display:grid;grid-template-columns:170px 1fr;gap:16px;align-items:center;
+  border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;background:var(--surface)}
+.layer .lhead{display:flex;flex-direction:column;gap:3px}
+.layer .lhead .ln{font-size:13.5px;font-weight:700}
+.layer .lhead .ls{font-size:11px;color:var(--muted)}
+.layer .lbody{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-size:11.5px;font-weight:500;padding:5px 11px;border-radius:8px;
+  background:var(--line-2);color:var(--text-soft)}
+.layer.core{background:linear-gradient(180deg,#fff,var(--accent-tint));border-color:#FBD9CD}
+.layer.core .lhead .ln{color:var(--accent-2)}
+.layer.core .chip{background:#fff;border:1px solid #FBD9CD;color:var(--accent-2)}
+.layer.l1 .chip{background:var(--blue-soft);color:var(--blue)}
+.layer.l3 .chip{background:var(--teal-soft);color:var(--teal)}
+.lflag{font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;margin-top:5px;display:inline-block}
+.lflag.warn{background:var(--amber-soft);color:var(--amber)}
+.lflag.hot{background:var(--accent-soft);color:var(--accent-2)}
+.lflag.ok{background:var(--green-soft);color:var(--green)}
+
+/* hero */
+.hero{background:var(--ink);border-radius:var(--radius-lg);padding:30px 34px;color:#fff;
+  position:relative;overflow:hidden;margin-bottom:6px}
+.hero::before{content:"";position:absolute;right:-60px;top:-60px;width:280px;height:280px;
+  border-radius:50%;background:radial-gradient(circle,rgba(242,78,41,.5),transparent 70%)}
+.hero::after{content:"";position:absolute;right:120px;bottom:-90px;width:240px;height:240px;
+  border-radius:50%;background:radial-gradient(circle,rgba(14,131,136,.35),transparent 70%)}
+.hero-eye{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#FF8E6B;font-weight:600;position:relative}
+.hero h2{font-size:26px;font-weight:800;letter-spacing:-.5px;margin:8px 0 10px;position:relative}
+.hero p{font-size:13.5px;color:#B7B4AC;max-width:620px;line-height:1.6;position:relative}
+.hero-stats{display:flex;gap:30px;margin-top:22px;position:relative}
+.hs .n{font-family:var(--mono);font-size:22px;font-weight:500;color:#fff}
+.hs .l{font-size:11px;color:#8B877F;margin-top:2px}
+.hs .n .u{font-size:13px;color:#FF8E6B}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+
+/* tables */
+.tbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.tbl th{text-align:left;font-size:11px;color:var(--muted);font-weight:600;
+  text-transform:uppercase;letter-spacing:.5px;padding:10px 12px;border-bottom:1px solid var(--line)}
+.tbl td{padding:13px 12px;border-bottom:1px solid var(--line-2);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:#FBFAF7}
+.acct{display:flex;align-items:center;gap:10px}
+.acct .ava{width:34px;height:34px;border-radius:10px;flex:none}
+.acct .an{font-weight:600;font-size:13px}
+.acct .am{font-size:11px;color:var(--muted);margin-top:1px}
+.trend-up{color:var(--green);font-family:var(--mono);font-size:11.5px;font-weight:500}
+.trend-dn{color:var(--accent);font-family:var(--mono);font-size:11.5px;font-weight:500}
+
+/* mini bar chart */
+.bars{display:flex;align-items:flex-end;gap:6px;height:60px}
+.bars .b{flex:1;background:var(--blue-soft);border-radius:4px 4px 0 0;position:relative;min-height:6px}
+.bars .b.hl{background:var(--accent)}
+.bars .b span{position:absolute;top:-16px;left:50%;transform:translateX(-50%);
+  font-size:9px;color:var(--muted);font-family:var(--mono)}
+
+/* responsive */
+@media(max-width:1080px){
+  .app{grid-template-columns:64px 1fr}
+  .brand-name,.brand-sub,.nav-label,.nav-item span,.nav-item .tagn,.side-foot{display:none}
+  .nav-item{justify-content:center;padding:11px}
+  .tb-search{display:none}
+  .grid-2,.grid-3{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark"></div>
+      <div>
+        <div class="brand-name">灵感引擎</div>
+        <div class="brand-sub">INSPIRATION ENGINE</div>
+      </div>
+    </div>
+    <div class="nav-label">产品蓝图</div>
+    <nav class="nav">
+      <button class="nav-item active" data-screen="overview" data-title="总览 · 部门流程" data-crumb="产品架构 / 三部门功能流程">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        <span>总览 · 部门流程</span></button>
+    </nav>
+    <div class="nav-label">核心界面</div>
+    <nav class="nav">
+      <button class="nav-item" data-screen="workbench" data-title="灵感工作台" data-crumb="发现 / 洞察卡片流">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l1.5 4L11 8.5 6.5 10 5 14 3.5 10 -1 8.5"/><path d="M5 3l1.5 4L11 8.5 6.5 10 5 14 3.5 10" transform="translate(0 0)"/><path d="M16 9l1 3 3 1-3 1-1 3-1-3-3-1 3-1z"/><path d="M12 16l.8 2 2 .8-2 .8L12 22l-.8-2.4-2-.8 2-.8z"/></svg>
+        <span>灵感工作台</span><span class="tagn">核心</span></button>
+      <button class="nav-item" data-screen="slice" data-title="爆款详情 · 一键切片" data-crumb="发现 → 切片 → 资产库">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.1 8.1L20 16M8.1 15.9L20 8"/></svg>
+        <span>爆款 · 一键切片</span><span class="tagn">新</span></button>
+      <button class="nav-item" data-screen="assets" data-title="资产库" data-crumb="素材沉淀 / 切片复用">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4v10l-9 4-9-4z"/><path d="M3 7l9 4 9-4M12 11v10"/></svg>
+        <span>资产库</span></button>
+    </nav>
+    <div class="nav-label">部门视图</div>
+    <nav class="nav">
+      <button class="nav-item" data-screen="report" data-title="竞品社媒报告" data-crumb="营销 / Lucy 周报 · 月报">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3h11l3 3v15H5z"/><path d="M8 12h8M8 16h5M8 8h4"/></svg>
+        <span>竞品报告 · 营销</span></button>
+      <button class="nav-item" data-screen="overseas" data-title="海外社媒监控" data-crumb="营销 / 出海 Agent 日报">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 2.5 15 0 18M12 3c-2.5 2.5-2.5 15 0 18"/></svg>
+        <span>海外监控 · 营销</span></button>
+    </nav>
+    <div class="side-foot">
+      <b>原型 v0.1</b> · 仅演示交互<br>数据均为示意，非真实抓取
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <div class="main">
+    <header class="topbar">
+      <div>
+        <h1 id="pgTitle">总览 · 部门流程</h1>
+        <div class="crumb" id="pgCrumb">产品架构 / 三部门功能流程</div>
+      </div>
+      <div class="topbar-r">
+        <div class="tb-search">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+          <input placeholder="搜索灵感、博主、素材…">
+        </div>
+        <button class="btn btn-sm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></button>
+        <div class="avatar">营</div>
+      </div>
+    </header>
+
+    <div class="content">
+
+    <!-- ========================================================= -->
+    <!-- SCREEN: OVERVIEW + FLOWCHARTS                              -->
+    <!-- ========================================================= -->
+    <section class="screen active" id="screen-overview">
+      <div class="hero">
+        <div class="hero-eye">PRODUCT BLUEPRINT</div>
+        <h2>从「数据搬运」到「洞察生成」</h2>
+        <p>模块已接入大量数据，但价值卡在采集。重构后把价值上移到 AI 洞察与产出：让用户从「我做英国火车 / 国内酒店营销」直接得到 —— 与我相关的爆款 + 为什么火 + 一键切片入库 + 一键改编成稿。</p>
+        <div class="hero-stats">
+          <div class="hs"><div class="n">3<span class="u"> 层</span></div><div class="l">架构重构</div></div>
+          <div class="hs"><div class="n">3<span class="u"> 部门</span></div><div class="l">营销 · 国际 · 国内公域</div></div>
+          <div class="hs"><div class="n">+1<span class="u"> 链路</span></div><div class="l">一键切片 → 资产库</div></div>
+        </div>
+      </div>
+
+      <div class="section-head"><div class="dot"></div><h2>产品架构 · 三层</h2>
+        <span class="sub">第 1 层已建成，第 2 层是价值核心需重点投入，第 3 层负责把灵感落到动作</span></div>
+      <div class="layers">
+        <div class="layer l3">
+          <div class="lhead"><div class="ln">产出 · 应用层</div><div class="ls">用户直接接触</div>
+            <span class="lflag ok">体验重做</span></div>
+          <div class="lbody">
+            <span class="chip">灵感工作台 · 洞察卡片流</span>
+            <span class="chip">一键切片 → 资产库</span>
+            <span class="chip">一键改编 → 生成模块</span>
+            <span class="chip">周报 / 日报 · 飞书推送</span>
+          </div>
+        </div>
+        <div class="layer core">
+          <div class="lhead"><div class="ln">AI 洞察层</div><div class="ls">当前最薄弱 · 价值核心</div>
+            <span class="lflag hot">重点投入</span></div>
+          <div class="lbody">
+            <span class="chip">爆款归因 · 为什么火</span>
+            <span class="chip">评论情绪聚合</span>
+            <span class="chip">业务关联打标</span>
+            <span class="chip">选题 & 卖点提炼</span>
+            <span class="chip">国内 / 国际自动判断</span>
+          </div>
+        </div>
+        <div class="layer l1">
+          <div class="lhead"><div class="ln">数据接入层</div><div class="ls">已建成</div>
+            <span class="lflag warn">补质量 / 完整性</span></div>
+          <div class="lbody">
+            <span class="chip">国内 · 抖音 / 微博 / 小红书</span>
+            <span class="chip">海外 · IG / TikTok / YouTube / X</span>
+            <span class="chip">博主跟踪 · 单链分析 · 切片</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- New pipeline highlight -->
+      <div class="section-head"><div class="dot" style="background:var(--teal)"></div><h2>新增链路 · 一键切片 → 资产库</h2>
+        <span class="sub">把「发现」直接接到「沉淀」，爆款的精彩片段一键变成可复用素材</span></div>
+      <div class="flowwrap" style="border-color:#C9E6E6;background:linear-gradient(180deg,#fff,var(--teal-soft))">
+        <div class="flow">
+          <div class="fnode"><div class="fn-ic" style="background:#fff;border:1px solid var(--line)">🎬</div><div class="fn-t">爆款视频</div><div class="fn-s">工作台 / 详情页选中</div></div>
+          <div class="farrow"><svg viewBox="0 0 26 14"><path d="M0 7h22m0 0l-5-5m5 5l-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></div>
+          <div class="fnode teal"><div class="fn-ic">✂️</div><div class="fn-t">AI 智能切片</div><div class="fn-s">自动识别开场/反转/卖点分镜</div></div>
+          <div class="farrow"><svg viewBox="0 0 26 14"><path d="M0 7h22m0 0l-5-5m5 5l-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></div>
+          <div class="fnode"><div class="fn-ic" style="background:#fff;border:1px solid var(--line)">👁</div><div class="fn-t">片段预览 / 微调</div><div class="fn-s">手动改切点、加字幕</div></div>
+          <div class="farrow"><svg viewBox="0 0 26 14"><path d="M0 7h22m0 0l-5-5m5 5l-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></div>
+          <div class="fnode teal"><div class="fn-ic">📦</div><div class="fn-t">打标分类入库</div><div class="fn-s">自动标 业务线/类型/来源</div></div>
+          <div class="farrow"><svg viewBox="0 0 26 14"><path d="M0 7h22m0 0l-5-5m5 5l-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></div>
+          <div class="fnode ink"><div class="fn-ic">♻️</div><div class="fn-t">生成 & 剪辑复用</div><div class="fn-s">混剪 / SRT 召回拼接</div></div>
+        </div>
+      </div>
+
+      <!-- Department flows -->
+      <div class="section-head"><div class="dot"></div><h2>分部门功能流程</h2>
+        <span class="sub">每个部门要做什么，一图说清</span></div>
+
+      <!-- 营销 -->
+      <div class="flowwrap" style="margin-bottom:14px">
+        <div class="flow-title"><span class="badge" style="background:var(--blue-soft);color:var(--blue)">营销</span><h3>流程 A · Lucy 竞品周报 / 月报</h3></div>
+        <div class="flow-desc">竞品 OK 即用，进一步沉淀为定期报告，自动推送</div>
+        <div class="flow">
+          <div class="fnode blue"><div class="fn-ic">🎯</div><div class="fn-t">竞品账号监测</div><div class="fn-s">官方号 + 合作博主</div></div>
+          <div class="farrow"><svg viewBox="0 0 26 14"><path d="M0 7h22m0 0l-5-5m5 5l-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></div>
+          <div class="fnode"><div class="fn-ic" style="background:#fff;border:1px solid var(--line)">🗂</div><div class="fn-t">数据时序沉淀</div><div class="fn-s">粉丝/发帖快照算增长</div></div>
+          <div class="farrow"><svg viewBox="0 0 26 14"><path d="M0 7h22m0 0l-5-5m5 5l-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></div>
+          <div class="fnode accent"><div class="fn-ic">🧠</div><div class="fn-t">AI 提炼</div><div class="fn-s">内容分类·卖点·摘要</div></div>
+          <div class="farrow"><svg viewBox="0 0 26 14"><path d="M0 7h22m0 0l-5-5m5 5l-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></div>
+          <div class="fnode"><div class="fn-ic" style="background:#fff;border:1px solid var(--line)">📊</div><div class="fn-t">生成周报/月报</div><div class="fn-s">结构化模板</div></div>
+          <div class="farrow"><svg viewBox="0 0 26 14"><path d="M0 7h22m0 0l-5-5m5 5l-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></div>
+          <div class="fnode ink"><div class="fn-ic">🔔</div><div class="fn-t">飞书推送</div><div class="fn-s">定时发给负责人</div></div>
+        </div>
+        <div class="note" style="margin-top:14px"><span class="ni">⚠️</span><div>「曝光数据」竞品公开接口多数拿不到，<b>用互动量作代理并标注</b>，避免失真。</div></div>
+      </div>
+
+      <div class="flowwrap" style="margin-bottom:14px">
+        <div class="flow-title"><span class="badge" style="background:var(--blue-soft);color:var(--blue)">营销</span><h3>流程 B · 海外社媒监控 Agent</h3></div>
+        <div class="flow-desc">竞品自动监测 + 多维热点捕获 + 飞书日报闭环（IG/TikTok 受平台限制，建议 YT/X 先行）</div>
+        <div class="flow">
+          <div class="fnode blue"><div class="fn-ic">🌍</div><div class="fn-t">多平台抓取</div><div class="fn-s">YT/X 先行 · IG/TK 接入中</div></div>
+          <div class="farrow"><svg viewBox="0 0 26 14"><path d="M0 7h22m0 0l-5-5m5 5l-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></div>
+          <div class="fnode accent"><div class="fn-ic">🧠</div><div class="fn-t">AI 策略提炼</div><div class="fn-s">竞品运营方向 + 热点</div></div>
+          <div class="farrow"><svg viewBox="0 0 26 14"><path d="M0 7h22m0 0l-5-5m5 5l-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></div>
+          <div class="flow-branch">
+            <div class="fnode dash"><div class="fn-ic" style="background:#fff;border:1px solid var(--line)">🚆</div><div class="fn-t">火车行业趋势</div></div>
+            <div class="fnode dash"><div class="fn-ic" style="background:#fff;border:1px solid var(--line)">🇬🇧</div><div class="fn-t">英国本地动态</div></div>
+            <div class="fnode dash"><div class="fn-ic" style="background:#fff;border:1px solid var(--line)">🔥</div><div class="fn-t">全站爆款</div></div>
+          </div>
+          <div class="farrow"><svg viewBox="0 0 26 14"><path d="M0 7h22m0 0l-5-5m5 5l-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></div>
+          <div class="fnode"><div class="fn-ic" style="background:#fff;border:1px solid var(--line)">📰</div><div class="fn-t">生成每日日报</div></div>
+          <div class="farrow"><svg viewBox="0 0 26 14"><path d="M0 7h22m0 0l-5-5m5 5l-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></div>
+          <div class="fnode ink"><div class="fn-ic">🤖</div><div class="fn-t">飞书机器人推送</div></div>
+        </div>
+        <div class="note" style="margin-top:14px"><span class="ni">🚧</span><div>头号卡点是<b>平台数据获取</b>：YouTube 接口友好、X 付费可行；IG / TikTok 抓任意竞品难、TikTok 评论受限。<b>先拍板获取方案再定档期</b>。</div></div>
+      </div>
+
+      <!-- 国际 -->
+      <div class="flowwrap" style="margin-bottom:14px">
+        <div class="flow-title"><span class="badge" style="background:var(--green-soft);color:var(--green)">国际</span><h3>流程 · 浏览体验闭环（修体验 + 接洞察）</h3></div>
+        <div class="flow-desc">解决「返回刷新、看不到评论、用起来割裂」三个痛点</div>
+        <div class="flow">
+          <div class="fnode go"><div class="fn-ic" style="background:var(--green);color:#fff">📱</div><div class="fn-t">浏览爆款</div><div class="fn-s">返回保留状态·不刷新</div></div>
+          <div class="farrow"><svg viewBox="0 0 26 14"><path d="M0 7h22m0 0l-5-5m5 5l-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></div>
+          <div class="fnode accent"><div class="fn-ic">💬</div><div class="fn-t">内嵌评论 + 情绪</div><div class="fn-s">不跳出即可看</div></div>
+          <div class="farrow"><svg viewBox="0 0 26 14"><path d="M0 7h22m0 0l-5-5m5 5l-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></div>
+          <div class="fnode accent"><div class="fn-ic">💡</div><div class="fn-t">看懂为什么火</div><div class="fn-s">爆款归因</div></div>
+          <div class="farrow"><svg viewBox="0 0 26 14"><path d="M0 7h22m0 0l-5-5m5 5l-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></div>
+          <div class="flow-branch">
+            <div class="fnode teal"><div class="fn-ic">✂️</div><div class="fn-t">一键切片入库</div></div>
+            <div class="fnode"><div class="fn-ic" style="background:#fff;border:1px solid var(--line)">↗</div><div class="fn-t">原视频新标签打开</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 国内公域 -->
+      <div class="flowwrap">
+        <div class="flow-title"><span class="badge" style="background:var(--accent-soft);color:var(--accent-2)">国内公域</span><h3>流程 · 关键词搜索 → 洞察 → 产出</h3></div>
+        <div class="flow-desc">核心改造：榜单 API → 关键词搜索 + 聚合排序；并补图文抓取与本地化</div>
+        <div class="flow">
+          <div class="fnode dash"><div class="fn-ic" style="background:#fff;border:1px solid var(--line)">📥</div><div class="fn-t">数据质量底座</div><div class="fn-s">图文抓取 + 粉丝数修复</div></div>
+          <div class="farrow"><svg viewBox="0 0 26 14"><path d="M0 7h22m0 0l-5-5m5 5l-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></div>
+          <div class="fnode accent"><div class="fn-ic">🔎</div><div class="fn-t">关键词搜索+聚合</div><div class="fn-s">旅游/酒店/机票/火车…</div></div>
+          <div class="farrow"><svg viewBox="0 0 26 14"><path d="M0 7h22m0 0l-5-5m5 5l-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></div>
+          <div class="fnode accent"><div class="fn-ic">🧠</div><div class="fn-t">AI 洞察</div><div class="fn-s">归因·打标·本地化判断</div></div>
+          <div class="farrow"><svg viewBox="0 0 26 14"><path d="M0 7h22m0 0l-5-5m5 5l-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></div>
+          <div class="fnode"><div class="fn-ic" style="background:#fff;border:1px solid var(--line)">🗃</div><div class="fn-t">洞察卡片流</div></div>
+          <div class="farrow"><svg viewBox="0 0 26 14"><path d="M0 7h22m0 0l-5-5m5 5l-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></div>
+          <div class="flow-branch">
+            <div class="fnode teal"><div class="fn-ic">✂️</div><div class="fn-t">一键切片→资产库</div></div>
+            <div class="fnode ink"><div class="fn-ic">✍️</div><div class="fn-t">一键改编→生成</div></div>
+          </div>
+        </div>
+        <div class="note" style="margin-top:14px"><span class="ni">📌</span><div>三个需先拍板的决策：<b>排序规则</b>（点赞/转发/时间加权）·<b>关键词管理</b>（预设库+自定义）·<b>去重逻辑</b>（多词搜索去重）。</div></div>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- SCREEN: WORKBENCH                                          -->
+    <!-- ========================================================= -->
+    <section class="screen" id="screen-workbench">
+      <!-- conversational search -->
+      <div class="card" style="padding:16px 18px;display:flex;align-items:center;gap:12px;border-color:#FBD9CD;box-shadow:var(--shadow)">
+        <div style="width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--accent),#FF7A4D);display:grid;place-items:center;flex:none;color:#fff">✨</div>
+        <input style="flex:1;border:none;outline:none;font-family:inherit;font-size:14.5px;background:none;color:var(--text)" value="找几条适合「火车出行」的近 7 天爆款，告诉我为什么火">
+        <button class="btn btn-sm">近7天 ▾</button>
+        <button class="btn btn-sm">国内 ▾</button>
+        <button class="btn btn-primary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>智能检索</button>
+      </div>
+
+      <!-- filters -->
+      <div style="display:flex;align-items:center;gap:18px;margin:16px 0 8px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:7px">
+          <span style="font-size:11.5px;color:var(--muted);font-weight:600">平台</span>
+          <span class="tag solid">全部</span><span class="tag">抖音</span><span class="tag">小红书</span><span class="tag">TikTok</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:7px">
+          <span style="font-size:11.5px;color:var(--muted);font-weight:600">业务线</span>
+          <span class="tag rail"><span class="d"></span>火车</span><span class="tag hotel"><span class="d"></span>酒店</span><span class="tag flight"><span class="d"></span>机票</span><span class="tag go"><span class="d"></span>出行</span><span class="tag holiday"><span class="d"></span>假期</span>
+        </div>
+        <div style="margin-left:auto;font-size:12px;color:var(--muted)">为你找到 <b class="mono" style="color:var(--text)">128</b> 条 · 按业务相关性排序</div>
+      </div>
+
+      <!-- card list -->
+      <div style="display:flex;flex-direction:column;gap:14px">
+
+        <!-- card -->
+        <div class="card" style="display:grid;grid-template-columns:132px 1fr;gap:18px;padding:14px">
+          <div class="thumb g2"><span class="lab">抖音</span><div class="play"></div><span class="dur">0:47</span></div>
+          <div style="min-width:0;display:flex;flex-direction:column;gap:11px">
+            <div style="display:flex;align-items:flex-start;gap:12px">
+              <div style="flex:1;min-width:0">
+                <div style="font-size:14.5px;font-weight:600;line-height:1.35">坐着绿皮火车去看海，全程 38 块钱的快乐</div>
+                <div style="display:flex;align-items:center;gap:10px;margin-top:6px">
+                  <span class="badge bg-dy">抖音</span>
+                  <span style="font-size:12px;color:var(--text-soft);font-weight:500">@火车漫游记</span>
+                  <span class="kv">粉丝 <span class="v">28.6w</span></span>
+                </div>
+              </div>
+              <div style="display:flex;gap:14px;flex:none">
+                <div class="kv">❤️ <span class="v">52.3w</span></div>
+                <div class="kv">💬 <span class="v">8,204</span></div>
+                <div class="kv">↗ <span class="v">3.1w</span></div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:12px">
+              <div class="why">
+                <div class="why-h">💡 为什么火 · AI 归因</div>
+                <ul>
+                  <li><b>反差钩子</b>：标题用「38 块」制造极致性价比反差，前 3 秒抓人</li>
+                  <li><b>情绪价值</b>：慢节奏 + 治愈感，戳中「逃离班味」情绪</li>
+                  <li><b>可复制</b>：低成本路线攻略，评论区大量「求路线」=强转化意图</li>
+                </ul>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted)"><span>评论情绪</span><span><b style="color:var(--green)">正面 78%</b></span></div>
+                <div class="senti"><i class="pos" style="width:78%"></i><i class="neu" style="width:16%"></i><i class="neg" style="width:6%"></i></div>
+                <div style="font-size:11.5px;color:var(--text-soft);background:var(--line-2);padding:7px 9px;border-radius:7px;line-height:1.4">热门评论：<b>「求完整路线和车次！」</b>（赞 2.1w）</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span class="relv">业务相关 <b>94</b></span>
+              <span class="tag rail"><span class="d"></span>火车</span>
+              <span class="tag go"><span class="d"></span>出行</span>
+              <span class="tag travel"><span class="d"></span>旅游</span>
+              <div style="margin-left:auto;display:flex;gap:8px">
+                <button class="btn btn-sm" onclick="goScreen('slice','爆款详情 · 一键切片','发现 → 切片 → 资产库')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.1 8.1L20 16M8.1 15.9L20 8"/></svg>一键切片</button>
+                <button class="btn btn-sm btn-dark"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7-3-3-7 7v3z"/><path d="M14 6l3 3"/></svg>一键改编</button>
+                <button class="btn btn-sm btn-ghost">🔖</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- card -->
+        <div class="card" style="display:grid;grid-template-columns:132px 1fr;gap:18px;padding:14px">
+          <div class="thumb g8"><span class="lab">小红书</span><div class="play"></div><span class="dur">图文</span></div>
+          <div style="min-width:0;display:flex;flex-direction:column;gap:11px">
+            <div style="display:flex;align-items:flex-start;gap:12px">
+              <div style="flex:1;min-width:0">
+                <div style="font-size:14.5px;font-weight:600;line-height:1.35">周末逃离计划｜2 小时高铁直达的 5 个宝藏小城</div>
+                <div style="display:flex;align-items:center;gap:10px;margin-top:6px">
+                  <span class="badge bg-xhs">小红书</span>
+                  <span style="font-size:12px;color:var(--text-soft);font-weight:500">@周末去哪儿</span>
+                  <span class="kv">粉丝 <span class="v">12.1w</span></span>
+                </div>
+              </div>
+              <div style="display:flex;gap:14px;flex:none">
+                <div class="kv">❤️ <span class="v">18.9w</span></div>
+                <div class="kv">⭐ <span class="v">9.7w</span></div>
+                <div class="kv">💬 <span class="v">3,560</span></div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:12px">
+              <div class="why">
+                <div class="why-h">💡 为什么火 · AI 归因</div>
+                <ul>
+                  <li><b>清单体</b>：「5 个宝藏小城」结构清晰，强收藏属性（收藏 ≈ 点赞）</li>
+                  <li><b>痛点精准</b>：锚定「周末 + 2 小时高铁」，决策门槛低</li>
+                  <li><b>本地化强</b>：国内城市 + 高铁，与酒店/出行业务高度契合</li>
+                </ul>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted)"><span>评论情绪</span><span><b style="color:var(--green)">正面 85%</b></span></div>
+                <div class="senti"><i class="pos" style="width:85%"></i><i class="neu" style="width:12%"></i><i class="neg" style="width:3%"></i></div>
+                <div style="font-size:11.5px;color:var(--text-soft);background:var(--line-2);padding:7px 9px;border-radius:7px;line-height:1.4">热门评论：<b>「已存，下个周末就去第 3 个！」</b></div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span class="relv">业务相关 <b>91</b></span>
+              <span class="tag hotel"><span class="d"></span>酒店</span>
+              <span class="tag go"><span class="d"></span>出行</span>
+              <span class="tag rail"><span class="d"></span>火车</span>
+              <div style="margin-left:auto;display:flex;gap:8px">
+                <button class="btn btn-sm" onclick="goScreen('slice','爆款详情 · 一键切片','发现 → 切片 → 资产库')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.1 8.1L20 16M8.1 15.9L20 8"/></svg>一键切片</button>
+                <button class="btn btn-sm btn-dark"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7-3-3-7 7v3z"/><path d="M14 6l3 3"/></svg>一键改编</button>
+                <button class="btn btn-sm btn-ghost">🔖</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- card -->
+        <div class="card" style="display:grid;grid-template-columns:132px 1fr;gap:18px;padding:14px">
+          <div class="thumb g3"><span class="lab">抖音</span><div class="play"></div><span class="dur">1:12</span></div>
+          <div style="min-width:0;display:flex;flex-direction:column;gap:11px">
+            <div style="display:flex;align-items:flex-start;gap:12px">
+              <div style="flex:1;min-width:0">
+                <div style="font-size:14.5px;font-weight:600;line-height:1.35">机票捡漏教程：我是怎么 400 块飞三亚过五一的</div>
+                <div style="display:flex;align-items:center;gap:10px;margin-top:6px">
+                  <span class="badge bg-dy">抖音</span>
+                  <span style="font-size:12px;color:var(--text-soft);font-weight:500">@穷游攻略菌</span>
+                  <span class="kv">粉丝 <span class="v">45.3w</span></span>
+                </div>
+              </div>
+              <div style="display:flex;gap:14px;flex:none">
+                <div class="kv">❤️ <span class="v">38.1w</span></div>
+                <div class="kv">💬 <span class="v">1.2w</span></div>
+                <div class="kv">↗ <span class="v">6.8w</span></div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:12px">
+              <div class="why">
+                <div class="why-h">💡 为什么火 · AI 归因</div>
+                <ul>
+                  <li><b>干货钩子</b>：「400 块飞三亚」具体数字 + 教程承诺，转发率极高</li>
+                  <li><b>稀缺感</b>：捡漏=独家信息，驱动「先存再说」</li>
+                  <li><b>蹭节点</b>：贴五一假期热点，时效性拉满</li>
+                </ul>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted)"><span>评论情绪</span><span><b style="color:var(--amber)">混合 · 求更新</b></span></div>
+                <div class="senti"><i class="pos" style="width:62%"></i><i class="neu" style="width:28%"></i><i class="neg" style="width:10%"></i></div>
+                <div style="font-size:11.5px;color:var(--text-soft);background:var(--line-2);padding:7px 9px;border-radius:7px;line-height:1.4">热门评论：<b>「现在还有这价吗？平台叫啥」</b></div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span class="relv">业务相关 <b>88</b></span>
+              <span class="tag flight"><span class="d"></span>机票</span>
+              <span class="tag holiday"><span class="d"></span>假期</span>
+              <div style="margin-left:auto;display:flex;gap:8px">
+                <button class="btn btn-sm" onclick="goScreen('slice','爆款详情 · 一键切片','发现 → 切片 → 资产库')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.1 8.1L20 16M8.1 15.9L20 8"/></svg>一键切片</button>
+                <button class="btn btn-sm btn-dark"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7-3-3-7 7v3z"/><path d="M14 6l3 3"/></svg>一键改编</button>
+                <button class="btn btn-sm btn-ghost">🔖</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div style="text-align:center;margin-top:18px"><button class="btn">加载更多 · 还有 125 条</button></div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- SCREEN: SLICE                                              -->
+    <!-- ========================================================= -->
+    <section class="screen" id="screen-slice">
+      <div style="display:grid;grid-template-columns:1.55fr 1fr;gap:18px;align-items:start">
+
+        <!-- LEFT: player + slicing -->
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="badge bg-dy">抖音</span>
+            <span style="font-weight:600;font-size:14px">@火车漫游记 · 坐着绿皮火车去看海</span>
+            <button class="btn btn-sm btn-ghost" style="margin-left:auto" onclick="goScreen('workbench','灵感工作台','发现 / 洞察卡片流')">← 返回工作台</button>
+          </div>
+
+          <!-- player stage -->
+          <div style="background:var(--ink);border-radius:var(--radius);padding:18px;display:grid;place-items:center">
+            <div class="thumb g2" style="width:200px;aspect-ratio:9/16;border-radius:12px"><div class="play"></div><span class="dur">0:47</span></div>
+          </div>
+
+          <!-- slicing timeline -->
+          <div class="card" style="padding:16px 18px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:13px">
+              <span style="font-size:13.5px;font-weight:700">🎬 AI 智能切片</span>
+              <span style="font-size:11.5px;color:var(--muted)">已自动识别 5 个分镜片段，可微调切点</span>
+              <button class="btn btn-sm" style="margin-left:auto">＋ 手动加切点</button>
+            </div>
+            <!-- track -->
+            <div style="display:flex;gap:3px;height:46px;border-radius:8px;overflow:hidden;margin-bottom:6px">
+              <div style="flex:12;background:var(--accent);display:grid;place-items:center;color:#fff;font-size:10.5px;font-weight:600;position:relative">钩子</div>
+              <div style="flex:26;background:var(--blue);display:grid;place-items:center;color:#fff;font-size:10.5px;font-weight:600">痛点铺垫</div>
+              <div style="flex:28;background:var(--teal);display:grid;place-items:center;color:#fff;font-size:10.5px;font-weight:600">反转高潮</div>
+              <div style="flex:23;background:var(--purple);display:grid;place-items:center;color:#fff;font-size:10.5px;font-weight:600">卖点</div>
+              <div style="flex:11;background:var(--amber);display:grid;place-items:center;color:#fff;font-size:10.5px;font-weight:600">CTA</div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);font-family:var(--mono)">
+              <span>0:00</span><span>0:12</span><span>0:24</span><span>0:36</span><span>0:47</span>
+            </div>
+
+            <!-- segment cards -->
+            <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-top:16px">
+              <div style="border:1.5px solid var(--accent);border-radius:10px;padding:8px;background:var(--accent-tint)">
+                <div class="thumb g2" style="aspect-ratio:1/1;border-radius:7px;margin-bottom:7px"><span class="dur">0:06</span></div>
+                <div style="font-size:11px;font-weight:600">开场钩子</div>
+                <div style="font-size:9.5px;color:var(--accent-2);margin:3px 0 6px">反差·性价比</div>
+                <div style="display:flex;align-items:center;gap:5px;font-size:10.5px;font-weight:600;color:var(--accent-2)"><span style="width:14px;height:14px;border-radius:4px;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:9px">✓</span>已选</div>
+              </div>
+              <div style="border:1.5px solid var(--line);border-radius:10px;padding:8px">
+                <div class="thumb g3" style="aspect-ratio:1/1;border-radius:7px;margin-bottom:7px"><span class="dur">0:12</span></div>
+                <div style="font-size:11px;font-weight:600">痛点铺垫</div>
+                <div style="font-size:9.5px;color:var(--muted);margin:3px 0 6px">通勤·班味</div>
+                <div style="display:flex;align-items:center;gap:5px;font-size:10.5px;color:var(--muted)"><span style="width:14px;height:14px;border-radius:4px;border:1.5px solid var(--line)"></span>选取</div>
+              </div>
+              <div style="border:1.5px solid var(--accent);border-radius:10px;padding:8px;background:var(--accent-tint)">
+                <div class="thumb g6" style="aspect-ratio:1/1;border-radius:7px;margin-bottom:7px"><span class="dur">0:13</span></div>
+                <div style="font-size:11px;font-weight:600">反转高潮</div>
+                <div style="font-size:9.5px;color:var(--accent-2);margin:3px 0 6px">海景·治愈</div>
+                <div style="display:flex;align-items:center;gap:5px;font-size:10.5px;font-weight:600;color:var(--accent-2)"><span style="width:14px;height:14px;border-radius:4px;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:9px">✓</span>已选</div>
+              </div>
+              <div style="border:1.5px solid var(--accent);border-radius:10px;padding:8px;background:var(--accent-tint)">
+                <div class="thumb g5" style="aspect-ratio:1/1;border-radius:7px;margin-bottom:7px"><span class="dur">0:11</span></div>
+                <div style="font-size:11px;font-weight:600">卖点呈现</div>
+                <div style="font-size:9.5px;color:var(--accent-2);margin:3px 0 6px">路线·38元</div>
+                <div style="display:flex;align-items:center;gap:5px;font-size:10.5px;font-weight:600;color:var(--accent-2)"><span style="width:14px;height:14px;border-radius:4px;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:9px">✓</span>已选</div>
+              </div>
+              <div style="border:1.5px solid var(--line);border-radius:10px;padding:8px">
+                <div class="thumb g8" style="aspect-ratio:1/1;border-radius:7px;margin-bottom:7px"><span class="dur">0:05</span></div>
+                <div style="font-size:11px;font-weight:600">行动号召</div>
+                <div style="font-size:9.5px;color:var(--muted);margin:3px 0 6px">引导·关注</div>
+                <div style="display:flex;align-items:center;gap:5px;font-size:10.5px;color:var(--muted)"><span style="width:14px;height:14px;border-radius:4px;border:1.5px solid var(--line)"></span>选取</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- save bar -->
+          <div class="card" style="padding:14px 18px;display:flex;align-items:center;gap:14px;border-color:#C9E6E6;background:var(--teal-soft)">
+            <div style="font-size:13px;font-weight:600">已选 <b class="mono" style="color:var(--teal)">3</b> 个片段</div>
+            <div style="height:18px;width:1px;background:#C9E6E6"></div>
+            <span style="font-size:12px;color:var(--text-soft)">存入</span>
+            <button class="btn btn-sm">📦 资产库 ▸ 视频切片 ▸ 火车出行 ▾</button>
+            <span style="font-size:11.5px;color:var(--teal)">将自动打标：火车 · 出行 · 钩子素材</span>
+            <button class="btn btn-primary" style="margin-left:auto" onclick="saveSlices()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4v10l-9 4-9-4z"/><path d="M3 7l9 4 9-4"/></svg>存入资产库</button>
+          </div>
+          <div id="sliceToast" style="display:none;align-items:center;gap:10px;background:var(--green-soft);border:1px solid #BEE6CC;border-radius:10px;padding:12px 16px;font-size:13px;color:#1E6E3C">
+            <span style="font-size:16px">✓</span> 已成功存入 3 个切片到 <b>资产库 · 火车出行</b>
+            <button class="btn btn-sm" style="margin-left:auto" onclick="goScreen('assets','资产库','素材沉淀 / 切片复用')">查看资产库 →</button>
+          </div>
+        </div>
+
+        <!-- RIGHT rail -->
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="why">
+            <div class="why-h">💡 为什么火 · AI 归因</div>
+            <ul>
+              <li><b>反差钩子</b>：标题「38 块」制造极致性价比反差，前 3 秒完播率高</li>
+              <li><b>情绪价值</b>：慢节奏治愈感，戳中「逃离班味」</li>
+              <li><b>强转化信号</b>：评论区大量「求路线」，可直接承接出行业务</li>
+            </ul>
+          </div>
+
+          <div class="card" style="padding:14px 16px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+              <span style="font-size:13px;font-weight:700">💬 评论情绪聚合</span>
+              <span class="pill ok">正面 78%</span>
+            </div>
+            <div class="senti" style="margin-bottom:5px"><i class="pos" style="width:78%"></i><i class="neu" style="width:16%"></i><i class="neg" style="width:6%"></i></div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:13px"><span>正面 78%</span><span>中性 16%</span><span>负面 6%</span></div>
+            <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:8px">高频话题</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:13px">
+              <span class="tag">求路线 ·2.1w</span><span class="tag">想去 ·8.6k</span><span class="tag">治愈 ·5.2k</span><span class="tag">车次 ·3.1k</span>
+            </div>
+            <div style="border-top:1px solid var(--line-2);padding-top:11px;display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;gap:9px"><div style="width:26px;height:26px;border-radius:50%;background:var(--g4,linear-gradient(135deg,#654EA3,#EAAFC8));flex:none;background:linear-gradient(135deg,#654EA3,#EAAFC8)"></div><div><div style="font-size:11.5px;color:var(--text-soft);line-height:1.45">求完整路线和车次！太想去了 😭</div><div style="font-size:10px;color:var(--muted);margin-top:2px">❤️ 2.1w</div></div></div>
+              <div style="display:flex;gap:9px"><div style="width:26px;height:26px;border-radius:50%;flex:none;background:linear-gradient(135deg,#11998E,#38EF7D)"></div><div><div style="font-size:11.5px;color:var(--text-soft);line-height:1.45">这就是我向往的生活，逃离一下</div><div style="font-size:10px;color:var(--muted);margin-top:2px">❤️ 8.6k</div></div></div>
+            </div>
+            <button class="btn btn-sm" style="width:100%;margin-top:13px;justify-content:center">↗ 在抖音打开原视频（新标签）</button>
+          </div>
+
+          <div class="card" style="padding:14px 16px">
+            <div style="font-size:13px;font-weight:700;margin-bottom:10px">🎯 选题 & 卖点提炼</div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:5px">可迁移选题</div>
+            <div style="font-size:12px;color:var(--text-soft);line-height:1.5;margin-bottom:11px">「低价短途火车治愈游」是可复制选题，建议结合自家线路出系列。</div>
+            <button class="btn btn-dark btn-sm" style="width:100%;justify-content:center"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7-3-3-7 7v3z"/><path d="M14 6l3 3"/></svg>按此选题一键改编脚本</button>
+          </div>
+        </div>
+      </div>
+      <script>
+        function saveSlices(){var t=document.getElementById('sliceToast');t.style.display='flex';t.scrollIntoView({behavior:'smooth',block:'center'});}
+      </script>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- SCREEN: ASSETS                                             -->
+    <!-- ========================================================= -->
+    <section class="screen" id="screen-assets">
+      <!-- stats -->
+      <div class="grid-3" style="grid-template-columns:repeat(4,1fr);margin-bottom:4px">
+        <div class="card" style="padding:15px 17px"><div style="font-size:11.5px;color:var(--muted)">总素材</div><div class="mono" style="font-size:23px;font-weight:500;margin-top:3px">1,284</div></div>
+        <div class="card" style="padding:15px 17px;border-color:#C9E6E6"><div style="font-size:11.5px;color:var(--teal)">本周新增</div><div class="mono" style="font-size:23px;font-weight:500;margin-top:3px;color:var(--teal)">+86</div></div>
+        <div class="card" style="padding:15px 17px"><div style="font-size:11.5px;color:var(--muted)">视频切片</div><div class="mono" style="font-size:23px;font-weight:500;margin-top:3px">642</div></div>
+        <div class="card" style="padding:15px 17px"><div style="font-size:11.5px;color:var(--muted)">被复用次数</div><div class="mono" style="font-size:23px;font-weight:500;margin-top:3px">312</div></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:210px 1fr;gap:18px;margin-top:18px;align-items:start">
+        <!-- category tree -->
+        <div class="card" style="padding:14px 10px">
+          <div style="font-size:11px;color:var(--muted);font-weight:600;padding:4px 10px 8px">分类</div>
+          <div style="display:flex;flex-direction:column;gap:1px">
+            <div style="display:flex;align-items:center;padding:8px 11px;border-radius:8px;font-size:13px;color:var(--text-soft)"><span>📁 全部素材</span><span class="mono" style="margin-left:auto;font-size:11px;color:var(--muted)">1,284</span></div>
+            <div style="display:flex;align-items:center;padding:8px 11px;border-radius:8px;font-size:13px;font-weight:600;background:var(--accent-tint);color:var(--accent-2)"><span>📹 视频切片</span><span class="mono" style="margin-left:auto;font-size:11px">642</span></div>
+            <div style="display:flex;align-items:center;padding:6px 11px 6px 26px;border-radius:8px;font-size:12px;color:var(--text-soft)"><span>火车出行</span><span class="mono" style="margin-left:auto;font-size:11px;color:var(--muted)">128</span></div>
+            <div style="display:flex;align-items:center;padding:6px 11px 6px 26px;border-radius:8px;font-size:12px;color:var(--text-soft)"><span>酒店</span><span class="mono" style="margin-left:auto;font-size:11px;color:var(--muted)">96</span></div>
+            <div style="display:flex;align-items:center;padding:6px 11px 6px 26px;border-radius:8px;font-size:12px;color:var(--text-soft)"><span>机票</span><span class="mono" style="margin-left:auto;font-size:11px;color:var(--muted)">74</span></div>
+            <div style="display:flex;align-items:center;padding:8px 11px;border-radius:8px;font-size:13px;color:var(--text-soft)"><span>🎵 BGM / 音效</span><span class="mono" style="margin-left:auto;font-size:11px;color:var(--muted)">210</span></div>
+            <div style="display:flex;align-items:center;padding:8px 11px;border-radius:8px;font-size:13px;color:var(--text-soft)"><span>✨ 贴纸 / 转场</span><span class="mono" style="margin-left:auto;font-size:11px;color:var(--muted)">168</span></div>
+            <div style="display:flex;align-items:center;padding:8px 11px;border-radius:8px;font-size:13px;color:var(--text-soft)"><span>🖼 图文素材</span><span class="mono" style="margin-left:auto;font-size:11px;color:var(--muted)">264</span></div>
+            <div style="display:flex;align-items:center;padding:8px 11px;border-radius:8px;font-size:13px;color:var(--text-soft)"><span>🔖 我的收藏</span><span class="mono" style="margin-left:auto;font-size:11px;color:var(--muted)">53</span></div>
+          </div>
+          <div style="border-top:1px solid var(--line-2);margin-top:10px;padding-top:10px">
+            <div style="font-size:11px;color:var(--muted);font-weight:600;padding:4px 10px 8px">权限</div>
+            <div style="padding:0 11px"><span class="pill off">团队共享 · 营销组</span></div>
+          </div>
+        </div>
+
+        <!-- asset grid -->
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <span style="font-size:14px;font-weight:700">视频切片 · 火车出行</span>
+            <div style="margin-left:auto;display:flex;gap:8px">
+              <button class="btn btn-sm">来源 ▾</button>
+              <button class="btn btn-sm">最近添加 ▾</button>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+            <!-- new ones -->
+            <div class="card" style="padding:8px;border-color:var(--accent);position:relative">
+              <div style="position:absolute;right:12px;top:12px;z-index:2;background:var(--accent);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:5px">新</div>
+              <div class="thumb g2" style="aspect-ratio:1/1;border-radius:8px;margin-bottom:8px"><span class="dur">0:06</span></div>
+              <div style="font-size:12px;font-weight:600;line-height:1.3">开场钩子·反差性价比</div>
+              <div style="font-size:10.5px;color:var(--muted);margin:4px 0 6px">来自 @火车漫游记</div>
+              <div style="display:flex;gap:4px"><span class="tag rail" style="font-size:10px;padding:2px 7px"><span class="d"></span>火车</span><span class="tag" style="font-size:10px;padding:2px 7px">钩子</span></div>
+            </div>
+            <div class="card" style="padding:8px;border-color:var(--accent);position:relative">
+              <div style="position:absolute;right:12px;top:12px;z-index:2;background:var(--accent);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:5px">新</div>
+              <div class="thumb g6" style="aspect-ratio:1/1;border-radius:8px;margin-bottom:8px"><span class="dur">0:13</span></div>
+              <div style="font-size:12px;font-weight:600;line-height:1.3">反转高潮·海景治愈</div>
+              <div style="font-size:10.5px;color:var(--muted);margin:4px 0 6px">来自 @火车漫游记</div>
+              <div style="display:flex;gap:4px"><span class="tag rail" style="font-size:10px;padding:2px 7px"><span class="d"></span>火车</span><span class="tag" style="font-size:10px;padding:2px 7px">高潮</span></div>
+            </div>
+            <div class="card" style="padding:8px;border-color:var(--accent);position:relative">
+              <div style="position:absolute;right:12px;top:12px;z-index:2;background:var(--accent);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:5px">新</div>
+              <div class="thumb g5" style="aspect-ratio:1/1;border-radius:8px;margin-bottom:8px"><span class="dur">0:11</span></div>
+              <div style="font-size:12px;font-weight:600;line-height:1.3">卖点呈现·38元路线</div>
+              <div style="font-size:10.5px;color:var(--muted);margin:4px 0 6px">来自 @火车漫游记</div>
+              <div style="display:flex;gap:4px"><span class="tag rail" style="font-size:10px;padding:2px 7px"><span class="d"></span>火车</span><span class="tag" style="font-size:10px;padding:2px 7px">卖点</span></div>
+            </div>
+            <div class="card" style="padding:8px">
+              <div class="thumb g3" style="aspect-ratio:1/1;border-radius:8px;margin-bottom:8px"><span class="dur">0:09</span></div>
+              <div style="font-size:12px;font-weight:600;line-height:1.3">高铁穿城延时镜头</div>
+              <div style="font-size:10.5px;color:var(--muted);margin:4px 0 6px">来自 @周末去哪儿</div>
+              <div style="display:flex;gap:4px"><span class="tag rail" style="font-size:10px;padding:2px 7px"><span class="d"></span>火车</span><span class="tag" style="font-size:10px;padding:2px 7px">空镜</span></div>
+            </div>
+            <div class="card" style="padding:8px">
+              <div class="thumb g7" style="aspect-ratio:1/1;border-radius:8px;margin-bottom:8px"><span class="dur">0:08</span></div>
+              <div style="font-size:12px;font-weight:600;line-height:1.3">车窗风景第一视角</div>
+              <div style="font-size:10.5px;color:var(--muted);margin:4px 0 6px">来自 @铁道旅行家</div>
+              <div style="display:flex;gap:4px"><span class="tag go" style="font-size:10px;padding:2px 7px"><span class="d"></span>出行</span><span class="tag" style="font-size:10px;padding:2px 7px">空镜</span></div>
+            </div>
+            <div class="card" style="padding:8px">
+              <div class="thumb g1" style="aspect-ratio:1/1;border-radius:8px;margin-bottom:8px"><span class="dur">0:15</span></div>
+              <div style="font-size:12px;font-weight:600;line-height:1.3">站台离别情绪片段</div>
+              <div style="font-size:10.5px;color:var(--muted);margin:4px 0 6px">来自 @火车漫游记</div>
+              <div style="display:flex;gap:4px"><span class="tag rail" style="font-size:10px;padding:2px 7px"><span class="d"></span>火车</span><span class="tag" style="font-size:10px;padding:2px 7px">情绪</span></div>
+            </div>
+            <div class="card" style="padding:8px">
+              <div class="thumb g8" style="aspect-ratio:1/1;border-radius:8px;margin-bottom:8px"><span class="dur">0:07</span></div>
+              <div style="font-size:12px;font-weight:600;line-height:1.3">便当美食特写</div>
+              <div style="font-size:10.5px;color:var(--muted);margin:4px 0 6px">来自 @穷游攻略菌</div>
+              <div style="display:flex;gap:4px"><span class="tag go" style="font-size:10px;padding:2px 7px"><span class="d"></span>出行</span><span class="tag" style="font-size:10px;padding:2px 7px">美食</span></div>
+            </div>
+            <div class="card" style="padding:8px">
+              <div class="thumb g4" style="aspect-ratio:1/1;border-radius:8px;margin-bottom:8px"><span class="dur">0:10</span></div>
+              <div style="font-size:12px;font-weight:600;line-height:1.3">日落到站氛围镜头</div>
+              <div style="font-size:10.5px;color:var(--muted);margin:4px 0 6px">来自 @周末去哪儿</div>
+              <div style="display:flex;gap:4px"><span class="tag rail" style="font-size:10px;padding:2px 7px"><span class="d"></span>火车</span><span class="tag" style="font-size:10px;padding:2px 7px">空镜</span></div>
+            </div>
+          </div>
+
+          <div class="note" style="margin-top:18px"><span class="ni">♻️</span><div>这些切片可在 <b>生成 / 智能剪辑</b> 中被 SRT 召回拼接复用 —— 灵感模块产出的素材，直接喂给下游创作。</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- SCREEN: REPORT                                             -->
+    <!-- ========================================================= -->
+    <section class="screen" id="screen-report">
+      <div style="display:flex;align-items:flex-end;gap:14px;margin-bottom:18px">
+        <div>
+          <div class="eyebrow">营销 · LUCY 自动报告</div>
+          <h2 style="font-size:22px;font-weight:800;letter-spacing:-.4px;margin-top:6px">竞品社媒周报 · 2026 W22</h2>
+          <div style="font-size:12.5px;color:var(--muted);margin-top:4px">数据区间 05/26 – 06/01 · 监测 4 个竞品官方号 + 23 位合作博主</div>
+        </div>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
+          <div style="display:inline-flex;background:var(--line-2);border-radius:9px;padding:3px">
+            <span style="font-size:12.5px;font-weight:600;padding:6px 14px;border-radius:7px;background:#fff;box-shadow:var(--shadow-sm)">周报</span>
+            <span style="font-size:12.5px;font-weight:500;padding:6px 14px;color:var(--muted)">月报</span>
+          </div>
+          <button class="btn btn-sm">导出 PDF</button>
+          <button class="btn btn-primary btn-sm">🔔 推送飞书</button>
+        </div>
+      </div>
+
+      <!-- competitor official accounts -->
+      <div class="section-head" style="margin-top:6px"><div class="dot"></div><h2>竞品官方账号概览</h2></div>
+      <div class="card" style="padding:6px 8px;overflow:hidden">
+        <table class="tbl">
+          <thead><tr><th>账号</th><th>平台</th><th>粉丝数</th><th>周发帖</th><th>周均互动 ≈曝光</th><th>主要内容类型</th><th>核心卖点</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><div class="acct"><div class="ava" style="background:linear-gradient(135deg,#11998E,#38EF7D)"></div><div><div class="an">去哪儿旅行</div><div class="am">@QunarTravel</div></div></div></td>
+              <td><span class="badge bg-dy">抖音</span></td>
+              <td><span class="mono" style="font-weight:500">286.4w</span> <span class="trend-up">↑1.2%</span></td>
+              <td class="mono">14</td>
+              <td class="mono">8.6w</td>
+              <td><span class="tag travel" style="font-size:10.5px"><span class="d"></span>促销</span> <span class="tag" style="font-size:10.5px">攻略</span></td>
+              <td style="font-size:12px;color:var(--text-soft)">低价机票 + 酒店捡漏</td>
+            </tr>
+            <tr>
+              <td><div class="acct"><div class="ava" style="background:linear-gradient(135deg,#2C5364,#4286f4)"></div><div><div class="an">携程旅行</div><div class="am">@Ctrip</div></div></div></td>
+              <td><span class="badge bg-dy">抖音</span></td>
+              <td><span class="mono" style="font-weight:500">512.0w</span> <span class="trend-up">↑0.8%</span></td>
+              <td class="mono">21</td>
+              <td class="mono">12.3w</td>
+              <td><span class="tag go" style="font-size:10.5px"><span class="d"></span>口碑</span> <span class="tag" style="font-size:10.5px">种草</span></td>
+              <td style="font-size:12px;color:var(--text-soft)">一站式预订 · 服务保障</td>
+            </tr>
+            <tr>
+              <td><div class="acct"><div class="ava" style="background:linear-gradient(135deg,#F58529,#DD2A7B)"></div><div><div class="an">飞猪旅行</div><div class="am">@Fliggy</div></div></div></td>
+              <td><span class="badge bg-xhs">小红书</span></td>
+              <td><span class="mono" style="font-weight:500">198.7w</span> <span class="trend-up">↑2.4%</span></td>
+              <td class="mono">18</td>
+              <td class="mono">5.1w</td>
+              <td><span class="tag" style="font-size:10.5px">种草</span> <span class="tag" style="font-size:10.5px">攻略</span></td>
+              <td style="font-size:12px;color:var(--text-soft)">88VIP 权益 · 会员价</td>
+            </tr>
+            <tr>
+              <td><div class="acct"><div class="ava" style="background:linear-gradient(135deg,#654EA3,#EAAFC8)"></div><div><div class="an">同程旅行</div><div class="am">@Tongcheng</div></div></div></td>
+              <td><span class="badge bg-dy">抖音</span></td>
+              <td><span class="mono" style="font-weight:500">143.2w</span> <span class="trend-up">↑1.6%</span></td>
+              <td class="mono">12</td>
+              <td class="mono">4.2w</td>
+              <td><span class="tag travel" style="font-size:10.5px"><span class="d"></span>促销</span> <span class="tag holiday" style="font-size:10.5px"><span class="d"></span>福利</span></td>
+              <td style="font-size:12px;color:var(--text-soft)">火车票 + 酒店打包</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note" style="margin-top:10px"><span class="ni">ⓘ</span><div>「周均互动 ≈ 曝光」采用<b>公开互动量（赞+评+转）作曝光代理</b>，竞品真实曝光/播放公开接口不可得，仅供横向对比，非平台官方曝光值。</div></div>
+
+      <!-- trends -->
+      <div class="section-head"><div class="dot" style="background:var(--blue)"></div><h2>趋势</h2></div>
+      <div class="grid-2">
+        <div class="card" style="padding:18px 20px">
+          <div style="font-size:13px;font-weight:600;margin-bottom:6px">粉丝周增长（去哪儿）</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:22px">近 8 周 · 单位 千</div>
+          <div class="bars">
+            <div class="b" style="height:42%"><span>18</span></div>
+            <div class="b" style="height:55%"><span>24</span></div>
+            <div class="b" style="height:48%"><span>21</span></div>
+            <div class="b" style="height:68%"><span>30</span></div>
+            <div class="b" style="height:60%"><span>26</span></div>
+            <div class="b" style="height:72%"><span>32</span></div>
+            <div class="b" style="height:64%"><span>28</span></div>
+            <div class="b hl" style="height:88%"><span>34</span></div>
+          </div>
+        </div>
+        <div class="card" style="padding:18px 20px">
+          <div style="font-size:13px;font-weight:600;margin-bottom:6px">四竞品周发帖频率</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:22px">本周对比 · 单位 条</div>
+          <div class="bars">
+            <div class="b" style="height:66%"><span>14</span></div>
+            <div class="b hl" style="height:100%"><span>21</span></div>
+            <div class="b" style="height:86%"><span>18</span></div>
+            <div class="b" style="height:57%"><span>12</span></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:8px"><span>去哪儿</span><span>携程</span><span>飞猪</span><span>同程</span></div>
+        </div>
+      </div>
+
+      <!-- partner bloggers -->
+      <div class="section-head"><div class="dot" style="background:var(--teal)"></div><h2>竞品合作博主</h2>
+        <span class="sub">AI 内容总结 + 卖点 + 视频链接</span></div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="card" style="padding:14px 18px;display:flex;align-items:center;gap:16px">
+          <div style="width:46px;height:46px;border-radius:12px;flex:none;background:linear-gradient(135deg,#FF6B6B,#FFD194)"></div>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:9px"><span style="font-weight:600;font-size:13.5px">@旅行的菜菜</span><span class="badge bg-dy">抖音</span><span class="kv">粉丝 <span class="v">88.5w</span></span><span class="tag travel" style="font-size:10.5px"><span class="d"></span>合作:去哪儿</span></div>
+            <div style="font-size:12px;color:var(--text-soft);margin-top:6px;line-height:1.5"><b>AI 总结：</b>主打沉浸式旅拍 + 价格揭秘，本周为去哪儿产出 3 条「酒店性价比测评」，核心卖点突出「同房型比官网低 30%」。</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:7px;flex:none">
+            <span class="tag hotel" style="justify-content:center"><span class="d"></span>酒店性价比</span>
+            <button class="btn btn-sm">↗ 视频链接 ×3</button>
+          </div>
+        </div>
+        <div class="card" style="padding:14px 18px;display:flex;align-items:center;gap:16px">
+          <div style="width:46px;height:46px;border-radius:12px;flex:none;background:linear-gradient(135deg,#1A2980,#26D0CE)"></div>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:9px"><span style="font-weight:600;font-size:13.5px">@高铁上的日记本</span><span class="badge bg-xhs">小红书</span><span class="kv">粉丝 <span class="v">34.2w</span></span><span class="tag go" style="font-size:10.5px"><span class="d"></span>合作:同程</span></div>
+            <div style="font-size:12px;color:var(--text-soft);margin-top:6px;line-height:1.5"><b>AI 总结：</b>清单体高铁短途攻略，本周「火车票+酒店打包省钱」图文爆了，强调一键打包预订的便利与节省。</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:7px;flex:none">
+            <span class="tag rail" style="justify-content:center"><span class="d"></span>火车+酒店打包</span>
+            <button class="btn btn-sm">↗ 视频链接 ×2</button>
+          </div>
+        </div>
+        <div class="card" style="padding:14px 18px;display:flex;align-items:center;gap:16px">
+          <div style="width:46px;height:46px;border-radius:12px;flex:none;background:linear-gradient(135deg,#11998E,#38EF7D)"></div>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:9px"><span style="font-weight:600;font-size:13.5px">@省钱出行研究所</span><span class="badge bg-dy">抖音</span><span class="kv">粉丝 <span class="v">120.7w</span></span><span class="tag travel" style="font-size:10.5px"><span class="d"></span>合作:携程</span></div>
+            <div style="font-size:12px;color:var(--text-soft);margin-top:6px;line-height:1.5"><b>AI 总结：</b>干货教程型，本周「假期机票捡漏」系列转发高，卖点是携程「比价 + 退改保障」。</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:7px;flex:none">
+            <span class="tag flight" style="justify-content:center"><span class="d"></span>机票捡漏</span>
+            <button class="btn btn-sm">↗ 视频链接 ×4</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- SCREEN: OVERSEAS                                           -->
+    <!-- ========================================================= -->
+    <section class="screen" id="screen-overseas">
+      <div style="display:flex;align-items:flex-end;gap:14px;margin-bottom:18px">
+        <div>
+          <div class="eyebrow">营销 · 出海 AGENT</div>
+          <h2 style="font-size:22px;font-weight:800;letter-spacing:-.4px;margin-top:6px">海外社媒监控 · 每日日报</h2>
+          <div style="font-size:12.5px;color:var(--muted);margin-top:4px">2026-06-04 · UK 市场 · 火车行业</div>
+        </div>
+        <button class="btn btn-primary btn-sm" style="margin-left:auto">🤖 推送飞书机器人</button>
+      </div>
+
+      <!-- platform status (honest about blockers) -->
+      <div class="card" style="padding:14px 18px;margin-bottom:6px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><span style="font-size:13px;font-weight:700">数据接入状态</span><span style="font-size:11.5px;color:var(--muted)">平台获取能力差异大，建议 YouTube / X 先行</span></div>
+        <div class="grid-2" style="grid-template-columns:repeat(4,1fr);gap:10px">
+          <div style="border:1px solid var(--line);border-radius:10px;padding:11px 13px"><div style="display:flex;justify-content:space-between;align-items:center"><span class="badge bg-yt">YouTube</span><span class="pill ok">已接入</span></div><div style="font-size:10.5px;color:var(--muted);margin-top:8px">Data API · 频道/视频/评论全开放</div></div>
+          <div style="border:1px solid var(--line);border-radius:10px;padding:11px 13px"><div style="display:flex;justify-content:space-between;align-items:center"><span class="badge bg-x">X</span><span class="pill ok">已接入</span></div><div style="font-size:10.5px;color:var(--muted);margin-top:8px">付费档 · 限额内可用</div></div>
+          <div style="border:1px solid var(--line);border-radius:10px;padding:11px 13px"><div style="display:flex;justify-content:space-between;align-items:center"><span class="badge bg-ig">Instagram</span><span class="pill warn">接入中</span></div><div style="font-size:10.5px;color:var(--muted);margin-top:8px">Graph API 仅自有号 · 待第三方源</div></div>
+          <div style="border:1px solid var(--line);border-radius:10px;padding:11px 13px"><div style="display:flex;justify-content:space-between;align-items:center"><span class="badge bg-tk">TikTok</span><span class="pill warn">评论受限</span></div><div style="font-size:10.5px;color:var(--muted);margin-top:8px">Research API 审批中 · 评论受限</div></div>
+        </div>
+      </div>
+
+      <!-- competitor moves -->
+      <div class="section-head"><div class="dot"></div><h2>竞品今日动态</h2><span class="sub">自动抓取 + AI 策略提炼</span></div>
+      <div class="grid-3">
+        <div class="card" style="padding:14px 16px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><div style="width:30px;height:30px;border-radius:9px;background:#111;flex:none"></div><div><div style="font-weight:600;font-size:13px">Trainline</div><div style="font-size:10.5px;color:var(--muted)">@thetrainline</div></div><span class="badge bg-x" style="margin-left:auto">X</span></div>
+          <div style="font-size:11.5px;color:var(--text-soft);line-height:1.5;background:var(--line-2);padding:9px 11px;border-radius:8px;margin-bottom:10px">今日 2 条更新：暑期 Advance 票价促销 + 「绿色出行」环保数据可视化贴文。</div>
+          <div class="why" style="padding:9px 11px"><div class="why-h" style="margin-bottom:5px">🧠 策略提炼</div><ul><li>价格锚点 + 环保叙事双线，绑定 Z 世代环保情绪</li></ul></div>
+        </div>
+        <div class="card" style="padding:14px 16px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#11998E,#38EF7D);flex:none"></div><div><div style="font-weight:600;font-size:13px">Omio</div><div style="font-size:10.5px;color:var(--muted)">@omio</div></div><span class="badge bg-yt" style="margin-left:auto">YouTube</span></div>
+          <div style="font-size:11.5px;color:var(--text-soft);line-height:1.5;background:var(--line-2);padding:9px 11px;border-radius:8px;margin-bottom:10px">新视频「One trip, 4 countries by train」播放 12 万，强调跨国联程一站式预订。</div>
+          <div class="why" style="padding:9px 11px"><div class="why-h" style="margin-bottom:5px">🧠 策略提炼</div><ul><li>主打「跨国联程便利」，用旅程故事化弱化比价感</li></ul></div>
+        </div>
+        <div class="card" style="padding:14px 16px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#2C5364,#4286f4);flex:none"></div><div><div style="font-weight:600;font-size:13px">LNER</div><div style="font-size:10.5px;color:var(--muted)">@LNER</div></div><span class="badge bg-yt" style="margin-left:auto">YouTube</span></div>
+          <div style="font-size:11.5px;color:var(--text-soft);line-height:1.5;background:var(--line-2);padding:9px 11px;border-radius:8px;margin-bottom:10px">发布新车厢体验短片，聚焦舒适座椅、餐饮与车上 Wi-Fi 升级。</div>
+          <div class="why" style="padding:9px 11px"><div class="why-h" style="margin-bottom:5px">🧠 策略提炼</div><ul><li>体验升级叙事，对标航空头等舒适，拉高溢价感知</li></ul></div>
+        </div>
+      </div>
+
+      <!-- multi-dim hotspots -->
+      <div class="section-head"><div class="dot" style="background:var(--blue)"></div><h2>多维度热点</h2></div>
+      <div class="grid-3">
+        <div class="card" style="padding:16px 18px">
+          <div style="font-size:13px;font-weight:700;margin-bottom:13px">🚆 火车行业趋势</div>
+          <div style="display:flex;flex-direction:column;gap:11px">
+            <div><div style="font-size:12.5px;font-weight:500;line-height:1.4">英国暑期铁路票价调整引发热议</div><div style="font-size:10.5px;color:var(--muted);margin-top:3px">热度 <span class="mono">高</span> · 4.2k 讨论</div></div>
+            <div style="border-top:1px solid var(--line-2);padding-top:11px"><div style="font-size:12.5px;font-weight:500;line-height:1.4">夜间火车（sleeper）复兴话题升温</div><div style="font-size:10.5px;color:var(--muted);margin-top:3px">热度 <span class="mono">中</span> · 1.8k 讨论</div></div>
+            <div style="border-top:1px solid var(--line-2);padding-top:11px"><div style="font-size:12.5px;font-weight:500;line-height:1.4">Eurostar 扩线计划官宣</div><div style="font-size:10.5px;color:var(--muted);margin-top:3px">热度 <span class="mono">中</span> · 2.5k 讨论</div></div>
+          </div>
+        </div>
+        <div class="card" style="padding:16px 18px">
+          <div style="font-size:13px;font-weight:700;margin-bottom:13px">🇬🇧 英国本地动态</div>
+          <div style="display:flex;flex-direction:column;gap:11px">
+            <div><div style="font-size:12.5px;font-weight:500;line-height:1.4">夏季出游高峰 + 音乐节交通需求激增</div><div style="font-size:10.5px;color:var(--muted);margin-top:3px">关联出行 · 强</div></div>
+            <div style="border-top:1px solid var(--line-2);padding-top:11px"><div style="font-size:12.5px;font-weight:500;line-height:1.4">部分线路罢工预告影响周末出行</div><div style="font-size:10.5px;color:var(--muted);margin-top:3px">关联出行 · 中</div></div>
+            <div style="border-top:1px solid var(--line-2);padding-top:11px"><div style="font-size:12.5px;font-weight:500;line-height:1.4">海滨小镇周末游搜索量上升</div><div style="font-size:10.5px;color:var(--muted);margin-top:3px">关联出行 · 中</div></div>
+          </div>
+        </div>
+        <div class="card" style="padding:16px 18px">
+          <div style="font-size:13px;font-weight:700;margin-bottom:13px">🔥 全站爆款</div>
+          <div style="display:flex;flex-direction:column;gap:11px">
+            <div><div style="font-size:12.5px;font-weight:500;line-height:1.4">#traveltok 短途逃离 vlog 持续走高</div><div style="font-size:10.5px;color:var(--muted);margin-top:3px">可借鉴 · ✂️ 可切片</div></div>
+            <div style="border-top:1px solid var(--line-2);padding-top:11px"><div style="font-size:12.5px;font-weight:500;line-height:1.4">车窗风景延时摄影合集爆火</div><div style="font-size:10.5px;color:var(--muted);margin-top:3px">可借鉴 · ✂️ 可切片</div></div>
+            <div style="border-top:1px solid var(--line-2);padding-top:11px"><div style="font-size:12.5px;font-weight:500;line-height:1.4">「£X 玩转一座城」性价比挑战</div><div style="font-size:10.5px;color:var(--muted);margin-top:3px">可借鉴 · 选题模板</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- feishu push preview -->
+      <div class="section-head"><div class="dot" style="background:var(--teal)"></div><h2>飞书日报推送预览</h2></div>
+      <div style="max-width:520px;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)">
+        <div style="background:var(--ink);color:#fff;padding:13px 18px;display:flex;align-items:center;gap:10px"><div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--teal),#3BB5BA);display:grid;place-items:center;font-size:14px">🤖</div><div><div style="font-weight:600;font-size:13px">海外监控 Agent</div><div style="font-size:10.5px;color:#9C988F">每日 09:00 · 已推送给 3 位负责人</div></div></div>
+        <div style="padding:16px 18px">
+          <div style="font-weight:700;font-size:13.5px;margin-bottom:10px">📊 UK 火车市场日报 · 06-04</div>
+          <div style="font-size:12px;color:var(--text-soft);line-height:1.7">
+            <b>竞品动态：</b>Trainline 价格+环保双线 / Omio 主推跨国联程 / LNER 体验升级。<br>
+            <b>行业热点：</b>暑期票价调整热议 ↑ · 夜间火车复兴。<br>
+            <b>本地动态：</b>音乐节 + 暑期出游高峰，交通需求激增。<br>
+            <b>可借鉴爆款：</b>短途逃离 vlog、车窗延时摄影（均可一键切片入库）。
+          </div>
+          <div style="display:flex;gap:8px;margin-top:14px"><button class="btn btn-sm">查看完整日报</button><button class="btn btn-sm btn-ghost">在工作台打开</button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MORE_SCREENS -->
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div>
+
+<script>
+const items=document.querySelectorAll('.nav-item');
+const screens=document.querySelectorAll('.screen');
+function go(name,title,crumb){
+  screens.forEach(s=>s.classList.toggle('active',s.id==='screen-'+name));
+  items.forEach(i=>i.classList.toggle('active',i.dataset.screen===name));
+  if(title)document.getElementById('pgTitle').textContent=title;
+  if(crumb)document.getElementById('pgCrumb').textContent=crumb;
+  document.querySelector('.content').scrollIntoView({behavior:'instant',block:'start'});
+  window.scrollTo(0,0);
+}
+items.forEach(i=>i.addEventListener('click',()=>go(i.dataset.screen,i.dataset.title,i.dataset.crumb)));
+// expose for in-page links
+window.goScreen=go;
+</script>
+</body>
+</html>

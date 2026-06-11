@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TripFlow · 产品形态整合蓝图</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#15171C; --ink-2:#1D2027; --canvas:#F5F4EF; --surface:#FFFFFF;
+  --line:#E8E5DC; --line-2:#F0EEE7; --muted:#8C887B; --muted-2:#A8A498;
+  --text:#23262D; --text-soft:#52555E;
+  --accent:#F24E29; --accent-2:#D63E1D; --accent-soft:#FDEAE3; --accent-tint:#FFF4F0;
+  --teal:#0E8388; --teal-soft:#E2F1F1; --teal-bd:#C9E6E6;
+  --amber:#D9892B; --amber-soft:#FBEED7;
+  --blue:#2F6FED; --blue-soft:#E7EEFD; --blue-bd:#CBDCFB;
+  --green:#2E9E5B; --green-soft:#E4F4EA;
+  --purple:#7A5AF0; --purple-soft:#EEEAFC; --purple-bd:#DBD2F8;
+  --radius:14px; --radius-sm:9px;
+  --shadow-sm:0 1px 2px rgba(20,22,28,.04),0 1px 3px rgba(20,22,28,.05);
+  --shadow:0 4px 14px rgba(20,22,28,.06),0 1px 3px rgba(20,22,28,.05);
+  --shadow-lg:0 18px 50px rgba(20,22,28,.14),0 4px 12px rgba(20,22,28,.06);
+  --mono:"DM Mono",ui-monospace,monospace; --sans:"Sora","PingFang SC","Microsoft YaHei",-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--canvas);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.45}
+button{font-family:inherit;cursor:pointer}
+.wrap{max-width:1300px;margin:0 auto;padding:24px 24px 64px}
+
+/* header */
+.top{display:flex;align-items:center;gap:13px;margin-bottom:6px}
+.logo{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#fff;font-size:17px;background:linear-gradient(135deg,var(--accent),#FF7A4D)}
+.top h1{font-size:19px;font-weight:800;letter-spacing:-.3px}
+.top .sub{font-size:12px;color:var(--muted);font-weight:500}
+.lead{font-size:13px;color:var(--text-soft);max-width:820px;margin:9px 0 16px;line-height:1.6}
+.lead b{color:var(--ink);font-weight:600}
+
+/* 3 principles */
+.princ{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:22px}
+.pr{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;box-shadow:var(--shadow-sm)}
+.pr .n{font-family:var(--mono);font-size:10px;color:var(--accent-2);background:var(--accent-soft);width:20px;height:20px;border-radius:6px;display:grid;place-items:center;margin-bottom:7px}
+.pr .t{font-size:12.5px;font-weight:700;margin-bottom:3px}
+.pr .d{font-size:11px;color:var(--text-soft);line-height:1.5}
+
+/* layout: map + detail */
+.grid{display:grid;grid-template-columns:1fr 300px;gap:16px;align-items:start}
+.mapcol{min-width:0}
+
+/* data-in rail */
+.datarow{display:flex;align-items:stretch;gap:10px;margin-bottom:12px}
+.datain{flex:1;background:#fff;border:1px dashed var(--blue-bd);border-radius:12px;padding:9px 13px;display:flex;align-items:center;gap:10px}
+.datain .di{width:26px;height:26px;border-radius:8px;background:var(--blue-soft);display:grid;place-items:center;font-size:13px;flex-shrink:0}
+.datain .dl{font-size:11px;color:var(--text-soft)}
+.datain .dl b{color:var(--ink);font-weight:600}
+.datain .dchips{display:flex;gap:5px;flex-wrap:wrap;margin-left:auto}
+.dchip{font-family:var(--mono);font-size:9px;padding:2px 7px;border-radius:5px;background:var(--blue-soft);color:#1d4ed8;white-space:nowrap}
+
+/* spine */
+.spine{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;position:relative;margin-bottom:14px}
+.stage{background:var(--surface);border:1px solid var(--line);border-radius:13px;box-shadow:var(--shadow-sm);overflow:hidden;cursor:pointer;transition:.16s;display:flex;flex-direction:column}
+.stage:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+.stage.on{border-color:var(--ink);box-shadow:0 0 0 2px rgba(21,23,28,.08),var(--shadow)}
+.shead{padding:11px 12px 9px;border-bottom:1px solid var(--line-2);position:relative}
+.shead .sn{font-size:13.5px;font-weight:800;letter-spacing:-.2px;display:flex;align-items:center;gap:6px}
+.shead .sx{font-family:var(--mono);font-size:8.5px;color:var(--muted-2);letter-spacing:.06em;margin-top:2px;text-transform:uppercase}
+.shead .dotid{position:absolute;right:11px;top:11px;width:18px;height:18px;border-radius:50%;font-family:var(--mono);font-size:9px;font-weight:600;display:grid;place-items:center;color:#fff}
+.feats{padding:9px 11px 12px;display:flex;flex-direction:column;gap:5px;flex:1}
+.feat{font-size:11px;font-weight:500;padding:5px 8px;border-radius:7px;background:var(--canvas);border:1px solid var(--line-2);display:flex;align-items:center;gap:5px;cursor:help;transition:.12s}
+.feat:hover{background:#fff;border-color:var(--muted-2)}
+.feat .fd{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.feat .new{margin-left:auto;font-family:var(--mono);font-size:8px;color:var(--green);font-weight:600}
+.sproc{padding:8px 11px;border-top:1px dashed var(--line-2);background:#FBFAF7}
+.sproc .pl{font-family:var(--mono);font-size:8.5px;color:var(--muted-2);margin-bottom:4px;letter-spacing:.04em}
+.sproc .ps{display:flex;gap:4px;flex-wrap:wrap}
+.pchip{font-size:9.5px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--ink);color:#fff}
+/* arrows between stages */
+.spine .arr{position:absolute;top:30px;width:16px;height:16px;border-radius:50%;background:var(--canvas);border:1px solid var(--line);display:grid;place-items:center;font-size:9px;color:var(--muted);z-index:3;transform:translateX(-50%)}
+
+/* single/batch toggle in 创作 */
+.mode{display:flex;gap:4px;margin:0 11px 8px;background:var(--canvas);border:1px solid var(--line-2);border-radius:8px;padding:3px}
+.mode button{flex:1;border:none;background:none;font-size:10.5px;font-weight:600;color:var(--muted);padding:4px;border-radius:6px;transition:.14s}
+.mode button.on{background:var(--ink);color:#fff}
+
+/* base layers */
+.bands{display:flex;flex-direction:column;gap:9px;margin-top:4px}
+.band{background:var(--surface);border:1px solid var(--line);border-radius:13px;box-shadow:var(--shadow-sm);padding:11px 14px;display:flex;align-items:center;gap:13px;position:relative;overflow:hidden}
+.band::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px}
+.band.b1::before{background:var(--teal)} .band.b2::before{background:var(--purple)} .band.b3::before{background:var(--amber)}
+.band .blabel{flex-shrink:0;width:150px}
+.band .bt{font-size:12.5px;font-weight:800;display:flex;align-items:center;gap:6px}
+.band .bs{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.4}
+.band .bchips{display:flex;gap:6px;flex-wrap:wrap;flex:1}
+.bchip{font-size:10.5px;font-weight:500;padding:4px 9px;border-radius:7px;border:1px solid var(--line);background:var(--canvas);white-space:nowrap}
+.band.b1 .bchip{background:var(--teal-soft);border-color:var(--teal-bd);color:#0a5b5f}
+.band.b2 .bchip{background:var(--purple-soft);border-color:var(--purple-bd);color:#4c3a9e}
+.band.b3 .bchip{background:var(--amber-soft);border-color:#f0dcb0;color:#8a5510}
+.spans{font-family:var(--mono);font-size:8.5px;color:var(--muted-2);margin-left:auto;flex-shrink:0;align-self:flex-start;letter-spacing:.04em}
+
+/* return arrow */
+.loop{display:flex;align-items:center;gap:8px;justify-content:center;margin-top:12px;font-size:11px;color:var(--muted)}
+.loop b{color:var(--accent-2);font-weight:600}
+.loop .ln{height:1px;flex:1;background:repeating-linear-gradient(90deg,var(--line) 0 6px,transparent 6px 11px)}
+
+/* detail panel */
+.detail{position:sticky;top:16px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+.dh{padding:14px 16px;border-bottom:1px solid var(--line-2);position:relative}
+.dh .dstage{font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;margin-bottom:3px}
+.dh .dname{font-size:16px;font-weight:800;letter-spacing:-.3px;display:flex;align-items:center;gap:7px}
+.db{padding:14px 16px}
+.db .dsec{font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:0 0 8px}
+.db .dnote{font-size:12px;line-height:1.6;color:var(--text-soft);margin-bottom:15px}
+.db .dnote b{color:var(--ink)}
+.maplist{display:flex;flex-direction:column;gap:6px;margin-bottom:15px}
+.mi{display:flex;gap:8px;font-size:11.5px;align-items:flex-start}
+.mi .mc{font-size:11px;flex-shrink:0;margin-top:1px}
+.mi .mx{color:var(--text)} .mi .mx i{font-style:normal;color:var(--muted);font-size:10px}
+.dproc{display:flex;gap:5px;flex-wrap:wrap}
+
+/* tooltip */
+#tip{position:fixed;z-index:200;background:var(--ink);color:#fff;font-size:10.5px;padding:6px 10px;border-radius:8px;max-width:220px;line-height:1.4;box-shadow:var(--shadow-lg);opacity:0;pointer-events:none;transition:opacity .12s;transform:translateY(4px)}
+#tip.on{opacity:1}
+#tip b{color:#ffd9cc}
+
+@media(max-width:1080px){.grid{grid-template-columns:1fr}.detail{position:static}.spine{grid-template-columns:1fr;}.spine .arr{display:none}.princ{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div class="logo">⊞</div>
+    <div>
+      <h1>TripFlow · 产品形态整合蓝图</h1>
+      <div class="sub">把 v15 的几十个功能收进「一条主轴 × 三层底座 × 两端数据」—— 点任意阶段看它收纳了什么</div>
+    </div>
+  </div>
+  <p class="lead">
+    v15 的功能不少,但它们其实不是几十个并列工具,而是<b>一条内容生产旅程</b>上的不同动作,加上几层一直在背后的<b>底座</b>。
+    把它们这样归位之后,「单条 vs 批量」「平台规则/词包」「各种 Agent」就都各就各位,不再是散落的入口。
+  </p>
+
+  <div class="princ">
+    <div class="pr"><div class="n">1</div><div class="t">一条主轴收纳全部功能</div><div class="d">所有界面都挂在「找灵感 → 攒素材 → 创作 → 成片 → 复盘」上,没有游离的工具入口;跳转带着上下文走。</div></div>
+    <div class="pr"><div class="n">2</div><div class="t">单条 = 批量 = 同一道工序</div><div class="d">批量工作台不是另一个产品,而是同一道工序作用在「选中集 / 源池」的 N 张卡上 —— 选 1 张是单条,选一组是批量。</div></div>
+    <div class="pr"><div class="n">3</div><div class="t">规则 · 模板 · 词包是可换的「包」</div><div class="d">切平台不换界面,只换一个平台规则包(规则+提示词+词包)。模板库就是注册表,JSON 可导出克隆。</div></div>
+  </div>
+
+  <div class="grid">
+    <div class="mapcol">
+
+      <!-- data in -->
+      <div class="datarow">
+        <div class="datain">
+          <div class="di">🔌</div>
+          <div class="dl"><b>数据接入 · 入</b><br><span style="font-size:10px">外部信号进入旅程左端</span></div>
+          <div class="dchips">
+            <span class="dchip">抖音创作者中心 API</span><span class="dchip">聚光后台 CSV</span><span class="dchip">RSS</span><span class="dchip">竞品监控 MCP</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- journey spine -->
+      <div class="spine" id="spine"></div>
+
+      <!-- base layers -->
+      <div class="bands">
+        <div class="band b1">
+          <div class="blabel"><div class="bt">🗃️ 资产库</div><div class="bs">唯一真源 · 一切产出/采集都落成卡</div></div>
+          <div class="bchips">
+            <span class="bchip">视频库 290</span><span class="bchip">图片素材库</span><span class="bchip">脚本库</span><span class="bchip">混剪素材池</span><span class="bchip">爆款切片 47</span><span class="bchip">爆款收藏</span><span class="bchip">词包</span><span class="bchip">一句话语义召回</span>
+          </div>
+          <span class="spans">贯穿 5 阶段</span>
+        </div>
+        <div class="band b2">
+          <div class="blabel"><div class="bt">🤖 副驾 TripYoYo</div><div class="bs">编排 · 调度 · 跨阶段串联</div></div>
+          <div class="bchips">
+            <span class="bchip">全局任务调度</span><span class="bchip">关键词管理</span><span class="bchip">消耗排行</span><span class="bchip">素材召回</span><span class="bchip">一键调用 Frank 审核</span><span class="bchip">知识库(合规·产品文档)</span><span class="bchip">第三方监控 MCP</span><span class="bchip">Agent Run Time</span>
+          </div>
+          <span class="spans">贯穿 5 阶段</span>
+        </div>
+        <div class="band b3">
+          <div class="blabel"><div class="bt">📦 规则·模板·词包</div><div class="bs">平台化配置 · 切平台=换包</div></div>
+          <div class="bchips">
+            <span class="bchip">平台规则包 · 抖音</span><span class="bchip">小红书</span><span class="bchip">TikTok</span><span class="bchip">提示词模板库</span><span class="bchip">标题模板</span><span class="bchip">风格模板</span><span class="bchip">变量占位符</span><span class="bchip">JSON 导出 / 克隆</span>
+          </div>
+          <span class="spans">喂给 创作 · 成片</span>
+        </div>
+      </div>
+
+      <!-- closed loop -->
+      <div class="loop"><span class="ln"></span><span>复盘的<b>表现数据</b>回流 → 反哺爆款 DB 与模板库 → 让下一轮「找灵感」更准</span><span class="ln"></span></div>
+
+    </div>
+
+    <!-- detail -->
+    <aside class="detail">
+      <div class="dh">
+        <div class="dstage" id="dStage">JOURNEY STAGE</div>
+        <div class="dname" id="dName">选一个阶段</div>
+      </div>
+      <div class="db">
+        <div class="dnote" id="dNote">点上方主轴里的任意阶段,这里会告诉你:它收纳了 v15 的哪些功能、对应哪些工序、以及为什么放在这里。</div>
+        <div id="dMapWrap" style="display:none">
+          <div class="dsec">收纳的 v15 功能</div>
+          <div class="maplist" id="dMap"></div>
+          <div class="dsec">暴露的工序</div>
+          <div class="dproc" id="dProc"></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<div id="tip"></div>
+
+<script>
+/* ============ stage model: every v15 feature gets a home ============ */
+const C={find:'var(--accent)',collect:'var(--teal)',create:'var(--purple)',publish:'var(--blue)',review:'var(--green)'};
+const STAGES=[
+  {id:'find',name:'找灵感',en:'INSPIRE',color:'var(--accent)',
+   note:'外部信号在这里变成<b>选题与对标卡</b>。抓取、榜单、收藏、监控都是「找」这一步的不同来源,产出统一收进资产库供后续调用。',
+   feats:[
+     ['实时爆款抓取','源自 v15 · 爆款抓取 / Agent Run Time / 实时爆款'],
+     ['视频 / 选题榜单','源自 v15 · 视频榜单 · 选题榜单'],
+     ['创作者热点榜 · 舆情榜','源自 v15 · 创作者热点榜 / 舆情素材榜'],
+     ['选题分析 · 召回','源自 v15 · 读爆款DB → 输出选题清单'],
+     ['爆款收藏(二创参考)','源自 v15 · 手动收藏高分爆款,用于二创/复刻'],
+     ['竞品监控','源自 v15 · 第三方竞品监控 MCP'],
+   ],
+   procs:['为什么火(归因)','收藏打标','送去创作']},
+  {id:'collect',name:'攒素材',en:'ASSETS',color:'var(--teal)',
+   note:'资产库是<b>唯一真源</b>。切片把爆款拆成可复用片段,语义召回让"一句话找视频"成立,词包/标签管理让批量生成有料可用。',
+   feats:[
+     ['视频/图片/脚本/混剪库','源自 v15 · 资产库 / 视频库 / 脚本库 / 混剪素材库'],
+     ['智能切片 · 高分区间','源自 v15 · 已自动识别 3 个高分切片区间'],
+     ['一句话语义召回','源自 v15 · 智能召回 · 一句话找视频'],
+     ['标签 · 词包管理','源自 v15 · 词包 / 业务标签 / 新标签加入词包'],
+     ['四源采集入口','本轮补充 · 全网/链接/本地/云端统一采集'],
+   ],
+   procs:['切片','召回','打标入库']},
+  {id:'create',name:'创作',en:'CREATE',color:'var(--purple)',mode:'batch',
+   note:'',
+   feats:[
+     ['模板 · 提示词 · 标题/风格库','源自 v15 · 模板库 / 提示词模板 / 标题模板 / 风格模板'],
+     ['跨平台改写','源自 v15 · 小红书爆款 → 抖音版图文'],
+     ['标题+文案+标签一次出齐','源自 v15 · 一次性复制到剪贴板'],
+     ['AI 改图(锁定位/品牌位)','源自 v15 · P1/P5 保留 · 中间 AI 改 · 锁定位不参与'],
+     ['脚本 / 分镜 / 口播(双语)','源自 v15 · 完整分镜脚本 · 口播感↔文学感 · 中英'],
+   ],
+   procs:['生成','改编','AI改图','写脚本','同质化实时校验']},
+  {id:'publish',name:'成片',en:'FINISH',color:'var(--blue)',
+   note:'拼接、合规、审核、排期收口成可发布成片。<b>合规扫描与审核</b>放在发布前最后一关,AI 初筛 + 人(或 Frank)终审。',
+   feats:[
+     ['精修剪辑 · 混剪','源自 v15 · 精修工作台 / 剪辑创作 / 混剪素材池'],
+     ['字幕 · 配音','源自 v15 · 字幕 67 · 配音'],
+     ['封面优选','源自 v15 · 封面图 / 樱花季封面'],
+     ['合规扫描','源自 v15 · 排除竞品Logo/绝对化用语等违规'],
+     ['审核流程 · 一键调 Frank','源自 v15 · 提交/通过/拒绝 · 一键调用 Frank 审核'],
+     ['排期发布','源自 v15 · 计划 2026/5/9 · 待发布/已发布'],
+   ],
+   procs:['剪辑','字幕配音','合规','送审','排期']},
+  {id:'review',name:'复盘',en:'REVIEW',color:'var(--green)',
+   note:'表现数据回流形成<b>闭环</b>:哪条爆了、什么配方有效,反哺爆款 DB 和模板库,让下一轮找灵感与批量生成更准。',
+   feats:[
+     ['任务概览 · 数据复盘','源自 v15 · 任务概览 / 复盘与案例'],
+     ['召回率 · 标签数 · 消耗排行','源自 v15 · 召回率 / 标签数量 / 消耗排行'],
+     ['表现回流 → 反哺','源自 v15 · 数据回流到工作台 · 反哺模板'],
+     ['导出(CSV/JSON/数据)','源自 v15 · 导出 CSV / 导出配置 / 导出数据'],
+   ],
+   procs:['复盘','导出','反哺模板']},
+];
+const CREATE_MODES={
+  batch:{label:'批量工作台',note:'同一道工序作用在<b>选中集 / 爆款源池</b>的 N 张卡上:一行一条、批量上限 50,可拆成「批量组」共用一套提示词生成 P2/P3/P5,产出排成队列。<b>本批锁定为该平台的规则包</b>。'},
+  single:{label:'单条创作',note:'同一道工序只作用在<b>一张卡</b>上:对单条内容精雕。和批量共用一套工序、模板与规则包 —— 区别只是入料是 1 张还是 N 张。'},
+};
+
+let active='create';
+
+function renderSpine(){
+  const sp=document.getElementById('spine');
+  sp.innerHTML=STAGES.map((s,i)=>`
+    <div class="stage ${s.id===active?'on':''}" data-id="${s.id}" onclick="select('${s.id}')">
+      <div class="shead">
+        <div class="sn">${s.name}</div>
+        <div class="sx">${s.en}</div>
+        <span class="dotid" style="background:${s.color}">${i+1}</span>
+      </div>
+      ${s.id==='create'?`<div class="mode" onclick="event.stopPropagation()">
+        <button class="${s.mode==='single'?'on':''}" onclick="setMode('single')">单条</button>
+        <button class="${s.mode==='batch'?'on':''}" onclick="setMode('batch')">批量</button>
+      </div>`:''}
+      <div class="feats">
+        ${s.feats.map(f=>`<div class="feat" data-tip="${f[1]}"><span class="fd" style="background:${s.color}"></span>${f[0]}${f[1].startsWith('本轮')||f[1].startsWith('本批')?'<span class="new">+新</span>':''}</div>`).join('')}
+      </div>
+      <div class="sproc"><div class="pl">工序</div><div class="ps">${s.procs.map(p=>`<span class="pchip" style="background:${s.color}">${p}</span>`).join('')}</div></div>
+    </div>`).join('');
+  // arrows between columns
+  for(let i=1;i<STAGES.length;i++){
+    const a=document.createElement('div'); a.className='arr'; a.textContent='→';
+    a.style.left=(i*20)+'%'; sp.appendChild(a);
+  }
+  armTips();
+}
+
+function renderDetail(){
+  const s=STAGES.find(x=>x.id===active);
+  document.getElementById('dStage').textContent=s.en+' · 第 '+(STAGES.indexOf(s)+1)+' 站';
+  document.getElementById('dStage').style.color=s.color;
+  document.getElementById('dName').innerHTML=`<span style="width:10px;height:10px;border-radius:3px;background:${s.color};display:inline-block"></span>${s.name}${s.id==='create'?' · '+CREATE_MODES[s.mode].label:''}`;
+  let note=s.note;
+  if(s.id==='create') note=CREATE_MODES[s.mode].note;
+  document.getElementById('dNote').innerHTML=note;
+  document.getElementById('dMapWrap').style.display='block';
+  document.getElementById('dMap').innerHTML=s.feats.map(f=>`<div class="mi"><span class="mc">${f[1].startsWith('本')?'🆕':'✓'}</span><span class="mx">${f[0]}　<i>${f[1].replace('源自 v15 · ','← ').replace('本轮补充 · ','← 新增 · ').replace('本批锁定','← ')}</i></span></div>`).join('');
+  document.getElementById('dProc').innerHTML=s.procs.map(p=>`<span class="pchip" style="background:${s.color}">${p}</span>`).join('');
+}
+
+function select(id){ active=id; renderSpine(); renderDetail(); }
+function setMode(m){ STAGES.find(x=>x.id==='create').mode=m; if(active!=='create') active='create'; renderSpine(); renderDetail(); }
+
+/* tooltip */
+function armTips(){
+  document.querySelectorAll('.feat').forEach(el=>{
+    el.onmouseenter=e=>{ const t=document.getElementById('tip'); t.innerHTML=el.dataset.tip.replace(/^(源自 v15|本轮补充|本批锁定)/,'<b>$1</b>'); t.classList.add('on'); moveTip(e); };
+    el.onmousemove=moveTip;
+    el.onmouseleave=()=>document.getElementById('tip').classList.remove('on');
+  });
+}
+function moveTip(e){ const t=document.getElementById('tip'); let x=e.clientX+13,y=e.clientY+13; if(x+230>innerWidth)x=e.clientX-230; t.style.left=x+'px'; t.style.top=y+'px'; }
+
+renderSpine(); renderDetail();
+</script>
+</body>
+</html>

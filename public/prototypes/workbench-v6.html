@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>内容工作台 · 一屏主工作台原型</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#15171C; --ink-2:#1D2027; --ink-3:#262A33; --canvas:#F5F4EF; --surface:#FFFFFF;
+  --line:#E8E5DC; --line-2:#F0EEE7; --muted:#8C887B; --muted-2:#A8A498;
+  --text:#23262D; --text-soft:#52555E;
+  --accent:#F24E29; --accent-2:#D63E1D; --accent-soft:#FDEAE3; --accent-tint:#FFF4F0;
+  --teal:#0E8388; --teal-soft:#E2F1F1; --teal-bd:#C9E6E6;
+  --amber:#D9892B; --amber-soft:#FBEED7;
+  --blue:#2F6FED; --blue-soft:#E7EEFD; --blue-bd:#CBDCFB;
+  --green:#2E9E5B; --green-soft:#E4F4EA;
+  --purple:#7A5AF0; --purple-soft:#EEEAFC; --purple-bd:#DBD2F8;
+  --red-xhs:#FE3B5C;
+  --radius:14px; --radius-sm:9px; --radius-lg:20px;
+  --shadow-sm:0 1px 2px rgba(20,22,28,.04),0 1px 3px rgba(20,22,28,.05);
+  --shadow:0 4px 14px rgba(20,22,28,.06),0 1px 3px rgba(20,22,28,.05);
+  --shadow-lg:0 18px 50px rgba(20,22,28,.14),0 4px 12px rgba(20,22,28,.06);
+  --shadow-xl:0 30px 80px rgba(20,22,28,.22),0 8px 24px rgba(20,22,28,.10);
+  --mono:"DM Mono",ui-monospace,monospace;
+  --sans:"Sora","PingFang SC","Microsoft YaHei",-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--canvas);color:var(--text);
+  -webkit-font-smoothing:antialiased;font-size:14px;line-height:1.5;
+  background-image:radial-gradient(1200px 600px at 85% -10%,rgba(242,78,41,.05),transparent 60%),
+                   radial-gradient(900px 500px at -5% 110%,rgba(14,131,136,.05),transparent 55%);
+  background-attachment:fixed}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:#D9D6CC;border-radius:8px;border:2px solid var(--canvas)}
+::-webkit-scrollbar-thumb:hover{background:#C8C5BA}
+.mono{font-family:var(--mono);font-feature-settings:"tnum"}
+button{font-family:inherit}
+
+/* ============ TOP BAR (journey nav) ============ */
+.topbar{position:sticky;top:0;z-index:60;background:rgba(245,244,239,.82);
+  backdrop-filter:blur(16px);border-bottom:1px solid var(--line);
+  padding:11px 22px;display:flex;align-items:center;gap:18px}
+.brand{display:flex;align-items:center;gap:10px;flex:none}
+.brand-mark{width:32px;height:32px;border-radius:9px;flex:none;position:relative;
+  background:linear-gradient(135deg,var(--accent),#FF7A4D);box-shadow:0 4px 12px rgba(242,78,41,.4)}
+.brand-mark::after{content:"";position:absolute;inset:9px 10px;border-radius:2px;background:#fff;
+  clip-path:polygon(0 0,100% 50%,0 100%)}
+.brand-name{font-weight:700;font-size:14.5px;letter-spacing:.2px;line-height:1.05}
+.brand-sub{font-size:9.5px;color:var(--muted);letter-spacing:.5px;margin-top:1px}
+
+/* journey tabs */
+.journey{display:flex;align-items:center;gap:3px;background:#ECEAE2;border:1px solid var(--line);
+  border-radius:12px;padding:4px}
+.jtab{display:flex;align-items:center;gap:8px;padding:7px 13px;border-radius:9px;border:none;
+  background:none;cursor:pointer;color:var(--text-soft);font-size:13px;font-weight:600;transition:.16s;position:relative}
+.jtab .jn{font-family:var(--mono);font-size:10.5px;color:var(--muted-2);font-weight:500}
+.jtab:hover{color:var(--text)}
+.jtab.active{background:var(--surface);color:var(--ink);box-shadow:var(--shadow-sm)}
+.jtab.active .jn{color:var(--accent)}
+.jtab .arr{color:var(--muted-2);font-size:11px;margin:0 -2px}
+
+.topbar-r{margin-left:auto;display:flex;align-items:center;gap:10px}
+.ctx-chip{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);
+  border-radius:10px;padding:6px 11px;font-size:12px;box-shadow:var(--shadow-sm)}
+.ctx-chip .lab{color:var(--muted);font-size:10.5px;font-weight:600}
+.ctx-chip b{font-weight:600}
+.ctx-chip .selcount{font-family:var(--mono);background:var(--accent-soft);color:var(--accent-2);
+  font-weight:600;border-radius:6px;padding:1px 7px;font-size:11px}
+.tour-btn{display:flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);
+  border-radius:10px;padding:7px 12px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--text-soft);
+  box-shadow:var(--shadow-sm);transition:.16s}
+.tour-btn:hover{border-color:#D5D2C8;color:var(--text)}
+.tour-btn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.avatar{width:32px;height:32px;border-radius:50%;flex:none;
+  background:linear-gradient(135deg,var(--teal),#3BB5BA);display:grid;place-items:center;color:#fff;font-weight:600;font-size:12.5px}
+
+/* ============ WORKSPACE LAYOUT ============ */
+.workspace{display:flex;position:relative;min-height:calc(100vh - 56px)}
+.main{flex:1;min-width:0;padding:22px 24px 120px;transition:padding .34s cubic-bezier(.4,0,.2,1)}
+.app.drawer-open .main{padding-right:524px}
+.maxw{max-width:1120px;margin:0 auto;transition:max-width .34s cubic-bezier(.4,0,.2,1)}
+@media(max-width:1180px){.app.drawer-open .main{padding-right:24px}}
+
+.panel{display:none;animation:fade .4s ease}
+.panel.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ---- conversational search ---- */
+.qbar{display:flex;align-items:center;gap:11px;background:var(--surface);border:1px solid #FBD9CD;
+  border-radius:14px;padding:13px 15px;box-shadow:var(--shadow)}
+.qbar .spark{width:32px;height:32px;border-radius:9px;flex:none;display:grid;place-items:center;color:#fff;
+  font-size:15px;background:linear-gradient(135deg,var(--accent),#FF7A4D)}
+.qbar input{flex:1;border:none;outline:none;font-family:inherit;font-size:14px;background:none;color:var(--text)}
+.qbar input::placeholder{color:var(--muted-2)}
+.mini{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);background:var(--surface);
+  color:var(--text-soft);border-radius:9px;padding:7px 11px;font-size:12px;font-weight:500;cursor:pointer;transition:.15s}
+.mini:hover{border-color:#D5D2C8;background:#FBFAF7}
+.btn-primary{display:inline-flex;align-items:center;gap:6px;background:var(--accent);border:1px solid var(--accent);
+  color:#fff;border-radius:9px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;
+  box-shadow:0 4px 12px rgba(242,78,41,.28);transition:.15s}
+.btn-primary:hover{background:var(--accent-2);border-color:var(--accent-2)}
+
+.filters{display:flex;align-items:center;gap:16px;margin:15px 2px 4px;flex-wrap:wrap}
+.flab{font-size:11px;color:var(--muted);font-weight:600;margin-right:1px}
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:500;padding:4px 10px;
+  border-radius:8px;background:var(--line-2);color:var(--text-soft);cursor:pointer;white-space:nowrap;transition:.14s;border:1px solid transparent}
+.tag:hover{background:#E9E6DD}
+.tag .d{width:6px;height:6px;border-radius:50%;background:currentColor}
+.tag.solid{background:var(--ink);color:#fff}
+.tag.rail{background:var(--blue-soft);color:var(--blue)} .tag.hotel{background:var(--teal-soft);color:var(--teal)}
+.tag.flight{background:var(--purple-soft);color:var(--purple)} .tag.travel{background:var(--accent-soft);color:var(--accent-2)}
+.tag.holiday{background:var(--amber-soft);color:var(--amber)} .tag.go{background:var(--green-soft);color:var(--green)}
+.found{margin-left:auto;font-size:12px;color:var(--muted)} .found b{color:var(--text)}
+
+/* ---- card grid (waterfall) ---- */
+.grid{column-count:2;column-gap:16px;margin-top:16px}
+.app.drawer-open .grid{column-count:1}
+@media(max-width:1180px){.grid{column-count:2}}
+
+.kard{break-inside:avoid;margin-bottom:16px;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;cursor:pointer;
+  transition:transform .18s cubic-bezier(.4,0,.2,1),box-shadow .18s,border-color .18s;position:relative;
+  opacity:0;transform:translateY(14px);animation:cardin .5s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes cardin{to{opacity:1;transform:none}}
+.kard:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:#DAD6CC}
+.kard.sel{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent),var(--shadow-lg)}
+.kard.sel::after{content:"已选";position:absolute;top:10px;right:10px;background:var(--accent);color:#fff;
+  font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:.5px;z-index:3}
+
+.kcheck{position:absolute;top:10px;left:10px;width:22px;height:22px;border-radius:7px;
+  background:rgba(255,255,255,.85);backdrop-filter:blur(4px);border:1.5px solid rgba(0,0,0,.12);
+  display:grid;place-items:center;z-index:3;opacity:0;transition:.15s}
+.kard:hover .kcheck,.kard.inset .kcheck{opacity:1}
+.kcheck.on{background:var(--ink);border-color:var(--ink)}
+.kcheck.on::after{content:"";width:10px;height:6px;border-left:2px solid #fff;border-bottom:2px solid #fff;
+  transform:rotate(-45deg) translateY(-1px)}
+
+.kcover{position:relative;aspect-ratio:16/10;display:grid;place-items:center}
+.kcover.tall{aspect-ratio:9/12}
+.kcover .play{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;
+  backdrop-filter:blur(4px);box-shadow:0 4px 14px rgba(0,0,0,.2);transition:.18s}
+.kard:hover .play{transform:scale(1.08)}
+.kcover .play::after{content:"";border-left:14px solid var(--ink);border-top:9px solid transparent;border-bottom:9px solid transparent;margin-left:3px}
+.kcover .dur{position:absolute;right:8px;bottom:8px;background:rgba(0,0,0,.62);color:#fff;font-size:10.5px;
+  padding:2px 7px;border-radius:5px;font-family:var(--mono)}
+.kcover .plat{position:absolute;left:8px;bottom:8px;font-size:10px;color:#fff;font-weight:600;
+  background:rgba(0,0,0,.34);padding:3px 8px;border-radius:6px;backdrop-filter:blur(4px)}
+.g1{background:linear-gradient(150deg,#2C5364,#203A43,#0F2027)} .g2{background:linear-gradient(150deg,#FF6B6B,#FFA07A,#FFD194)}
+.g3{background:linear-gradient(150deg,#1A2980,#26D0CE)} .g4{background:linear-gradient(150deg,#654EA3,#EAAFC8)}
+.g5{background:linear-gradient(150deg,#F7971E,#FFD200)} .g6{background:linear-gradient(150deg,#11998E,#38EF7D)}
+.g7{background:linear-gradient(150deg,#373B44,#4286f4)} .g8{background:linear-gradient(150deg,#DD5E89,#F7BB97)}
+
+.kbody{padding:13px 14px 14px}
+.ktitle{font-size:14px;font-weight:600;line-height:1.38;letter-spacing:-.1px}
+.kmeta{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:600;padding:3px 8px;border-radius:6px}
+.bg-dy{background:#111;color:#fff} .bg-xhs{background:#FFE9ED;color:var(--red-xhs)} .bg-tk{background:#111;color:#fff}
+.bg-wb{background:#FDEBE0;color:#E6712B} .bg-yt{background:#FEE7E7;color:#E11}
+.kauthor{font-size:11.5px;color:var(--text-soft);font-weight:500}
+.kfollow{font-size:11px;color:var(--muted)} .kfollow .v{font-family:var(--mono);color:var(--text-soft)}
+.kstats{display:flex;gap:13px;margin-top:9px}
+.kv{display:flex;align-items:center;gap:4px;font-size:11.5px;color:var(--muted)}
+.kv .v{font-family:var(--mono);color:var(--text-soft);font-weight:500}
+
+/* AI insight zone on card */
+.kwhy{margin-top:11px;background:var(--accent-tint);border:1px solid #FBD9CD;border-radius:10px;padding:9px 11px}
+.kwhy-h{display:flex;align-items:center;gap:6px;font-size:10.5px;font-weight:700;color:var(--accent-2);
+  letter-spacing:.2px;margin-bottom:5px}
+.kwhy p{font-size:11.5px;color:#7A3A28;line-height:1.45}
+.kwhy p b{color:var(--accent-2);font-weight:600}
+.ksenti-row{display:flex;align-items:center;gap:9px;margin-top:10px}
+.senti{flex:1;display:flex;height:6px;border-radius:6px;overflow:hidden;background:var(--line-2)}
+.senti i{display:block;height:100%} .senti .pos{background:var(--green)} .senti .neu{background:#D8D4C8} .senti .neg{background:var(--accent)}
+.senti-lab{font-size:10.5px;color:var(--muted);font-weight:600;white-space:nowrap}
+.senti-lab b{color:var(--green)}
+
+.ktagrow{display:flex;align-items:center;gap:6px;margin-top:11px;flex-wrap:wrap}
+.relv{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--teal);
+  background:var(--teal-soft);padding:3px 9px;border-radius:7px}
+.relv b{font-family:var(--mono);font-size:12px}
+.lineage{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:600;color:var(--purple);
+  background:var(--purple-soft);border:1px solid var(--purple-bd);padding:2px 8px;border-radius:7px}
+
+/* quick hover actions on card */
+.kquick{position:absolute;left:0;right:0;bottom:0;padding:10px 12px;display:flex;gap:7px;
+  background:linear-gradient(180deg,transparent,var(--surface) 38%);transform:translateY(8px);opacity:0;
+  transition:.18s;pointer-events:none}
+.kard:hover .kquick{transform:none;opacity:1;pointer-events:auto}
+.qa{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);background:var(--surface);
+  color:var(--text);border-radius:8px;padding:6px 10px;font-size:11.5px;font-weight:600;cursor:pointer;
+  box-shadow:var(--shadow-sm);transition:.14s}
+.qa:hover{border-color:#D5D2C8;background:#FBFAF7;transform:translateY(-1px)}
+.qa.dark{background:var(--ink);border-color:var(--ink);color:#fff}
+.qa.dark:hover{background:#000}
+.qa svg{width:13px;height:13px}
+
+.loadmore{text-align:center;margin-top:6px}
+.loadmore button{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 18px;
+  font-size:13px;font-weight:500;color:var(--text-soft);cursor:pointer;box-shadow:var(--shadow-sm)}
+
+/* ============ FLOATING ACTION BAR ============ */
+.actionbar{position:fixed;left:50%;bottom:26px;transform:translate(-50%,140%);z-index:70;
+  display:flex;align-items:center;gap:6px;background:var(--ink);border-radius:16px;padding:9px 10px 9px 16px;
+  box-shadow:var(--shadow-xl);transition:transform .34s cubic-bezier(.34,1.3,.5,1);max-width:min(940px,92vw)}
+.actionbar.show{transform:translate(-50%,0)}
+.app.drawer-open .actionbar{left:calc(50% - 250px)}
+.ab-sel{display:flex;align-items:center;gap:9px;color:#fff;padding-right:13px;border-right:1px solid rgba(255,255,255,.14);max-width:230px}
+.ab-sel .thumb{width:30px;height:30px;border-radius:7px;flex:none}
+.ab-sel .t{font-size:12px;font-weight:600;line-height:1.25;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.ab-sel .c{font-size:10px;color:#9A968E;margin-top:1px}
+.abtn{display:inline-flex;align-items:center;gap:6px;border:none;border-radius:10px;padding:8px 12px;
+  font-size:12.5px;font-weight:600;cursor:pointer;transition:.15s;background:rgba(255,255,255,.10);color:#fff;white-space:nowrap}
+.abtn:hover{background:rgba(255,255,255,.18)}
+.abtn.hot{background:var(--accent);color:#fff} .abtn.hot:hover{background:#FF6242}
+.abtn svg{width:14px;height:14px}
+.ab-close{margin-left:4px;width:30px;height:30px;border-radius:9px;border:none;background:rgba(255,255,255,.08);
+  color:#C9C7C0;cursor:pointer;display:grid;place-items:center;font-size:15px}
+.ab-close:hover{background:rgba(255,255,255,.16);color:#fff}
+
+/* ============ CONTEXT DRAWER ============ */
+.drawer{position:fixed;top:0;right:0;height:100vh;width:500px;max-width:94vw;z-index:65;
+  background:var(--surface);border-left:1px solid var(--line);box-shadow:var(--shadow-xl);
+  transform:translateX(100%);transition:transform .34s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
+.drawer.open{transform:none}
+.dwrap{display:flex;flex-direction:column;height:100%}
+.dhead{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:11px;flex:none;
+  background:rgba(245,244,239,.5)}
+.dhead .dico{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;color:#fff;font-size:15px;flex:none}
+.dhead .dt{font-size:14.5px;font-weight:700;letter-spacing:-.1px} .dhead .ds{font-size:11.5px;color:var(--muted);margin-top:1px}
+.dhead .dclose{margin-left:auto;width:30px;height:30px;border-radius:8px;border:1px solid var(--line);
+  background:var(--surface);color:var(--text-soft);cursor:pointer;display:grid;place-items:center;font-size:16px}
+.dhead .dclose:hover{background:#F0EEE7}
+.dbody{flex:1;overflow-y:auto;padding:18px 20px}
+.dpane{display:none} .dpane.active{display:block}
+.dfoot{flex:none;padding:14px 20px;border-top:1px solid var(--line);background:rgba(245,244,239,.5)}
+
+.tinybtn{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);background:var(--surface);
+  color:var(--text);border-radius:8px;padding:6px 11px;font-size:12px;font-weight:600;cursor:pointer;transition:.14s}
+.tinybtn:hover{border-color:#D5D2C8;background:#FBFAF7}
+.tinybtn.dark{background:var(--ink);color:#fff;border-color:var(--ink)} .tinybtn.dark:hover{background:#000}
+.tinybtn.hot{background:var(--accent);color:#fff;border-color:var(--accent)} .tinybtn.hot:hover{background:var(--accent-2)}
+
+/* why drawer */
+.dcover{border-radius:12px;aspect-ratio:16/9;position:relative;display:grid;place-items:center;margin-bottom:14px}
+.dsubt{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.dsubt .badge{font-size:10.5px}
+.why-block{background:var(--accent-tint);border:1px solid #FBD9CD;border-radius:11px;padding:13px 15px;margin-bottom:14px}
+.why-h{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:var(--accent-2);margin-bottom:9px}
+.why-li{display:flex;gap:9px;margin-bottom:9px}
+.why-li:last-child{margin-bottom:0}
+.why-li .num{width:18px;height:18px;border-radius:6px;background:var(--accent);color:#fff;font-size:10px;font-weight:700;
+  display:grid;place-items:center;flex:none;font-family:var(--mono)}
+.why-li .txt{font-size:12.5px;color:#7A3A28;line-height:1.5} .why-li .txt b{color:var(--accent-2);font-weight:600}
+.why-li .src{display:inline-block;margin-top:4px;font-size:10px;color:#A06650;background:#fff;border:1px solid #FBD9CD;
+  border-radius:5px;padding:1px 7px;font-weight:500}
+
+.sub-h{font-size:12px;font-weight:700;color:var(--text);margin:16px 0 9px;display:flex;align-items:center;gap:7px}
+.sub-h .dot{width:6px;height:14px;border-radius:3px;background:var(--accent)}
+
+/* transcript / 拉片 */
+.script{display:flex;flex-direction:column;gap:2px}
+.sline{display:grid;grid-template-columns:42px 56px 1fr;gap:10px;align-items:start;padding:8px 9px;border-radius:9px;transition:.14s;cursor:default}
+.sline:hover{background:var(--accent-tint)}
+.sline .tc{font-family:var(--mono);font-size:11px;color:var(--muted);padding-top:1px}
+.sline .fn{font-size:10px;font-weight:700;padding:2px 0;text-align:center;border-radius:5px}
+.fn-hook{background:var(--accent-soft);color:var(--accent-2)} .fn-pain{background:var(--blue-soft);color:var(--blue)}
+.fn-turn{background:var(--teal-soft);color:var(--teal)} .fn-sell{background:var(--purple-soft);color:var(--purple)}
+.fn-cta{background:var(--amber-soft);color:var(--amber)}
+.sline .st{font-size:12.5px;color:var(--text);line-height:1.45}
+
+/* comment block */
+.cmt{display:flex;gap:9px;padding:9px 0;border-top:1px solid var(--line-2)}
+.cmt:first-child{border-top:none}
+.cmt .av{width:26px;height:26px;border-radius:50%;flex:none}
+.cmt .ct{font-size:11.5px;color:var(--text-soft);line-height:1.45}
+.cmt .cl{font-size:10px;color:var(--muted);margin-top:2px;font-family:var(--mono)}
+
+/* slice drawer */
+.player{background:var(--ink);border-radius:12px;padding:16px;display:grid;place-items:center;margin-bottom:14px}
+.player .scr{width:150px;aspect-ratio:9/16;border-radius:10px;position:relative;display:grid;place-items:center}
+.sliceinfo{display:flex;align-items:center;gap:8px;margin-bottom:11px}
+.sliceinfo .t{font-size:13px;font-weight:700} .sliceinfo .s{font-size:11px;color:var(--muted)}
+.track{display:flex;gap:2px;height:42px;border-radius:8px;overflow:hidden;margin-bottom:6px;position:relative}
+.seg{display:grid;place-items:center;color:#fff;font-size:10px;font-weight:600;position:relative;user-select:none}
+.seg .grip{position:absolute;right:-3px;top:0;bottom:0;width:7px;cursor:ew-resize;z-index:2;display:flex;align-items:center;justify-content:center}
+.seg .grip::after{content:"";width:3px;height:16px;border-radius:3px;background:rgba(255,255,255,.85);box-shadow:0 0 0 1px rgba(0,0,0,.15)}
+.ticks{display:flex;justify-content:space-between;font-size:9.5px;color:var(--muted);font-family:var(--mono);margin-bottom:14px}
+.segcards{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.sc{border:1.5px solid var(--line);border-radius:10px;padding:8px;cursor:pointer;transition:.15s;background:var(--surface)}
+.sc:hover{border-color:#D5D2C8}
+.sc.on{border-color:var(--accent);background:var(--accent-tint)}
+.sc .scov{aspect-ratio:1/1;border-radius:7px;margin-bottom:7px;position:relative;display:grid;place-items:center}
+.sc .scov .dur{position:absolute;right:5px;bottom:5px;background:rgba(0,0,0,.6);color:#fff;font-size:9px;padding:1px 5px;border-radius:4px;font-family:var(--mono)}
+.sc .sn{font-size:11px;font-weight:600} .sc .sd{font-size:9.5px;color:var(--muted);margin:2px 0 6px}
+.sc .pick{display:flex;align-items:center;gap:5px;font-size:10.5px;font-weight:600;color:var(--muted)}
+.sc .pick .box{width:14px;height:14px;border-radius:4px;border:1.5px solid var(--line);display:grid;place-items:center}
+.sc.on .pick{color:var(--accent-2)} .sc.on .pick .box{background:var(--accent);border-color:var(--accent)}
+.sc.on .pick .box::after{content:"";width:7px;height:4px;border-left:1.5px solid #fff;border-bottom:1.5px solid #fff;transform:rotate(-45deg) translateY(-1px)}
+
+.savebar{display:flex;align-items:center;gap:11px;background:var(--teal-soft);border:1px solid var(--teal-bd);
+  border-radius:11px;padding:11px 13px}
+.savebar .n{font-size:12.5px;font-weight:600} .savebar .n b{color:var(--teal);font-family:var(--mono)}
+.savebar .auto{font-size:10.5px;color:var(--teal)}
+
+/* adapt drawer */
+.draft{border:1px solid var(--line);border-radius:11px;overflow:hidden;margin-bottom:13px}
+.draft-h{display:flex;align-items:center;gap:8px;padding:10px 13px;background:#FBFAF7;border-bottom:1px solid var(--line)}
+.draft-h .vt{font-size:10px;font-weight:600;color:var(--muted);font-family:var(--mono)}
+.draft textarea{width:100%;border:none;outline:none;resize:none;font-family:inherit;font-size:13px;line-height:1.7;
+  padding:14px;color:var(--text);background:none;min-height:230px}
+.lineage-box{display:flex;align-items:center;gap:9px;background:var(--purple-soft);border:1px solid var(--purple-bd);
+  border-radius:10px;padding:10px 12px;margin-bottom:13px;font-size:11.5px;color:#5b40c4;line-height:1.45}
+.lineage-box .ic{flex:none}
+.chiprow{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:13px}
+.varchip{font-size:11px;font-weight:600;border:1px solid var(--line);background:var(--surface);border-radius:20px;
+  padding:5px 12px;cursor:pointer;transition:.14s;color:var(--text-soft)}
+.varchip:hover{border-color:#D5D2C8} .varchip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* ============ COPILOT DOCK ============ */
+.dock{position:fixed;right:22px;bottom:22px;z-index:80}
+.dock-pill{display:flex;align-items:center;gap:10px;background:var(--ink);color:#fff;border:none;cursor:pointer;
+  border-radius:16px;padding:11px 16px 11px 13px;box-shadow:var(--shadow-xl);transition:.2s;position:relative}
+.dock-pill:hover{transform:translateY(-2px)}
+.dock-pill .yoyo{width:30px;height:30px;border-radius:9px;flex:none;position:relative;
+  background:linear-gradient(135deg,var(--accent),#FF7A4D)}
+.dock-pill .yoyo::before,.dock-pill .yoyo::after{content:"";position:absolute;background:#fff;border-radius:50%}
+.dock-pill .yoyo::before{width:7px;height:7px;left:7px;top:10px} .dock-pill .yoyo::after{width:7px;height:7px;right:7px;top:10px}
+.dock-pill .yoyo .mouth{position:absolute;left:9px;right:9px;bottom:8px;height:4px;border-radius:0 0 8px 8px;background:#fff;opacity:.92}
+.dock-pill .pn{font-size:13px;font-weight:700;line-height:1.1} .dock-pill .ps{font-size:10px;color:#9A968E;margin-top:1px}
+.dock-nudge{position:absolute;top:-7px;right:-5px;background:var(--accent);color:#fff;font-size:10px;font-weight:700;
+  min-width:19px;height:19px;border-radius:20px;display:grid;place-items:center;padding:0 5px;border:2px solid var(--canvas);
+  box-shadow:0 2px 6px rgba(242,78,41,.5)}
+.pulse{position:absolute;inset:0;border-radius:16px;box-shadow:0 0 0 0 rgba(242,78,41,.5);animation:pulse 2.6s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(242,78,41,.4)}70%{box-shadow:0 0 0 14px rgba(242,78,41,0)}100%{box-shadow:0 0 0 0 rgba(242,78,41,0)}}
+
+/* proactive toast above pill */
+.dock-toast{position:absolute;right:0;bottom:64px;width:268px;background:var(--surface);border:1px solid var(--line);
+  border-radius:14px;box-shadow:var(--shadow-xl);padding:13px 14px;transform:translateY(10px) scale(.96);opacity:0;
+  pointer-events:none;transition:.26s cubic-bezier(.34,1.3,.5,1);transform-origin:bottom right}
+.dock-toast.show{transform:none;opacity:1;pointer-events:auto}
+.dock-toast .dh{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:700;color:var(--accent-2);margin-bottom:6px}
+.dock-toast p{font-size:12px;color:var(--text-soft);line-height:1.5;margin-bottom:10px} .dock-toast p b{color:var(--text);font-weight:600}
+.dock-toast .row{display:flex;gap:7px}
+
+/* expanded panel */
+.dpanel{position:fixed;right:22px;bottom:22px;z-index:81;width:360px;max-width:92vw;height:560px;max-height:82vh;
+  background:var(--ink);border-radius:20px;box-shadow:var(--shadow-xl);display:flex;flex-direction:column;overflow:hidden;
+  transform:translateY(20px) scale(.96);opacity:0;pointer-events:none;transition:.28s cubic-bezier(.34,1.2,.5,1);transform-origin:bottom right}
+.dpanel.open{transform:none;opacity:1;pointer-events:auto}
+.dp-head{padding:15px 17px;display:flex;align-items:center;gap:11px;border-bottom:1px solid rgba(255,255,255,.08)}
+.dp-head .yoyo{width:34px;height:34px;border-radius:10px;flex:none;position:relative;background:linear-gradient(135deg,var(--accent),#FF7A4D)}
+.dp-head .yoyo::before,.dp-head .yoyo::after{content:"";position:absolute;background:#fff;border-radius:50%;width:8px;height:8px;top:11px}
+.dp-head .yoyo::before{left:8px} .dp-head .yoyo::after{right:8px}
+.dp-head .yoyo .mouth{position:absolute;left:10px;right:10px;bottom:9px;height:4px;border-radius:0 0 8px 8px;background:#fff}
+.dp-head .nm{font-size:14px;font-weight:700;color:#fff} .dp-head .st{font-size:10.5px;color:#8B877F;margin-top:1px;display:flex;align-items:center;gap:5px}
+.dp-head .st .live{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(46,158,91,.25)}
+.dp-head .x{margin-left:auto;width:28px;height:28px;border-radius:8px;border:none;background:rgba(255,255,255,.08);color:#C9C7C0;cursor:pointer;font-size:15px}
+.dp-head .x:hover{background:rgba(255,255,255,.16);color:#fff}
+.dp-body{flex:1;overflow-y:auto;padding:15px 16px;display:flex;flex-direction:column;gap:11px}
+.dp-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.16);border-color:var(--ink)}
+
+.msg{max-width:90%}
+.msg.bot .bub{background:var(--ink-3);color:#E6E4DE;border-radius:13px 13px 13px 4px;padding:10px 13px;font-size:12.5px;line-height:1.55}
+.msg.me{align-self:flex-end} .msg.me .bub{background:var(--accent);color:#fff;border-radius:13px 13px 4px 13px;padding:10px 13px;font-size:12.5px;line-height:1.5}
+.msg .bub b{font-weight:700}
+
+.dp-card{background:var(--ink-2);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:11px 12px}
+.dp-card .ch{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:700;color:#FF8E6B;margin-bottom:7px}
+.dp-card p{font-size:11.5px;color:#B5B2AB;line-height:1.5} .dp-card p b{color:#fff}
+.dp-card .act{display:flex;gap:7px;margin-top:10px}
+.yb{display:inline-flex;align-items:center;gap:5px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);
+  color:#fff;border-radius:8px;padding:6px 11px;font-size:11.5px;font-weight:600;cursor:pointer;transition:.14s}
+.yb:hover{background:rgba(255,255,255,.14)} .yb.hot{background:var(--accent);border-color:var(--accent)} .yb.hot:hover{background:#FF6242}
+
+/* run steps */
+.steps{display:flex;flex-direction:column;gap:0}
+.step{display:flex;align-items:center;gap:10px;padding:7px 0;font-size:12px;color:#8B877F;position:relative}
+.step .sdot{width:18px;height:18px;border-radius:50%;border:2px solid #3A3E47;flex:none;display:grid;place-items:center;font-size:10px;transition:.2s}
+.step.done{color:#E6E4DE} .step.done .sdot{background:var(--green);border-color:var(--green);color:#fff}
+.step.run{color:#fff} .step.run .sdot{border-color:var(--accent);border-top-color:transparent;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.step .sline2{position:absolute;left:8px;top:24px;bottom:-2px;width:2px;background:#3A3E47}
+.step:last-child .sline2{display:none}
+.step.done .sline2{background:var(--green)}
+
+/* mini draft result cards in dock */
+.ycard{display:flex;gap:9px;background:var(--ink-2);border:1px solid rgba(255,255,255,.08);border-radius:11px;padding:9px;align-items:center}
+.ycard .yt{width:38px;height:48px;border-radius:7px;flex:none}
+.ycard .yi{font-size:11.5px;font-weight:600;color:#fff;line-height:1.3} .ycard .ym{font-size:10px;color:#8B877F;margin-top:3px}
+.ycard .ybadge{font-size:9px;font-weight:700;color:#FF8E6B;background:rgba(242,78,41,.14);border-radius:5px;padding:1px 6px;margin-top:4px;display:inline-block}
+
+.dp-input{flex:none;padding:11px 13px;border-top:1px solid rgba(255,255,255,.08);background:var(--ink-2)}
+.dp-chips{display:flex;gap:6px;margin-bottom:9px;flex-wrap:wrap}
+.dp-chip{font-size:10.5px;color:#C9C7C0;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);
+  border-radius:20px;padding:5px 10px;cursor:pointer;transition:.14s}
+.dp-chip:hover{background:rgba(255,255,255,.14);color:#fff}
+.dp-field{display:flex;align-items:center;gap:8px;background:var(--ink-3);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:8px 10px 8px 13px}
+.dp-field input{flex:1;border:none;outline:none;background:none;color:#fff;font-family:inherit;font-size:12.5px}
+.dp-field input::placeholder{color:#6E6B62}
+.dp-send{width:30px;height:30px;border-radius:9px;border:none;background:var(--accent);color:#fff;cursor:pointer;display:grid;place-items:center;flex:none}
+.dp-send:hover{background:var(--accent-2)}
+
+/* ============ ASSET / CREATE / PUBLISH / REVIEW panels ============ */
+.phead{display:flex;align-items:flex-end;gap:12px;margin-bottom:4px}
+.phead h2{font-size:21px;font-weight:800;letter-spacing:-.4px} .phead .ps{font-size:12.5px;color:var(--muted);padding-bottom:3px}
+.statrow{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin:16px 0}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:14px 16px;box-shadow:var(--shadow-sm)}
+.stat .n{font-family:var(--mono);font-size:23px;font-weight:500;color:var(--ink)} .stat .n .u{font-size:13px;color:var(--accent)}
+.stat .l{font-size:11.5px;color:var(--muted);margin-top:3px}
+.asset-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:13px;margin-top:16px}
+.acard{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow-sm);
+  transition:.16s;cursor:pointer}
+.acard:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.acover{aspect-ratio:1/1;position:relative;display:grid;place-items:center}
+.acover .dur{position:absolute;right:6px;bottom:6px;background:rgba(0,0,0,.6);color:#fff;font-size:9.5px;padding:1px 6px;border-radius:4px;font-family:var(--mono)}
+.acover .hot{position:absolute;left:6px;top:6px;background:var(--accent);color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:5px}
+.abody{padding:9px 11px 11px} .abody .an{font-size:12px;font-weight:600;line-height:1.3}
+.abody .am{display:flex;align-items:center;gap:7px;margin-top:6px;font-size:10px;color:var(--muted)}
+.abody .used{font-family:var(--mono);background:var(--line-2);color:var(--text-soft);border-radius:5px;padding:1px 6px;font-weight:600}
+.nudge{display:flex;align-items:center;gap:11px;background:linear-gradient(100deg,var(--accent-tint),#fff);
+  border:1px solid #FBD9CD;border-radius:13px;padding:13px 16px;margin-top:16px}
+.nudge .ic{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#FF7A4D);
+  display:grid;place-items:center;color:#fff;font-size:16px;flex:none}
+.nudge .nt{font-size:13px;font-weight:600} .nudge .ns{font-size:11.5px;color:var(--text-soft);margin-top:2px}
+
+.carryin{display:flex;align-items:center;gap:13px;background:var(--teal-soft);border:1px solid var(--teal-bd);
+  border-radius:13px;padding:13px 16px;margin-bottom:16px}
+.carryin .seg-thumb{width:54px;height:68px;border-radius:9px;flex:none;position:relative;display:grid;place-items:center}
+.carryin .ct{font-size:13px;font-weight:600} .carryin .cs{font-size:11.5px;color:var(--text-soft);margin-top:2px}
+
+.create-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:4px}
+.cbox{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:15px 16px;box-shadow:var(--shadow-sm)}
+.cbox h4{font-size:13px;font-weight:700;margin-bottom:9px;display:flex;align-items:center;gap:7px}
+.cbox h4 .dot{width:7px;height:15px;border-radius:3px;background:var(--accent)}
+.cbox textarea{width:100%;border:1px solid var(--line);border-radius:9px;padding:11px;font-family:inherit;font-size:12.5px;
+  line-height:1.6;resize:vertical;min-height:140px;outline:none;color:var(--text)}
+.cbox textarea:focus{border-color:#FBD9CD}
+
+.board{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:16px}
+.col{background:#EEECE4;border:1px solid var(--line);border-radius:13px;padding:12px}
+.col-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;padding:0 3px}
+.col-h .ct{font-size:12.5px;font-weight:700} .col-h .cn{font-family:var(--mono);font-size:11px;color:var(--muted);background:var(--surface);border-radius:6px;padding:1px 8px}
+.tcard{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:11px 12px;margin-bottom:9px;box-shadow:var(--shadow-sm)}
+.tcard .tt{font-size:12px;font-weight:600;line-height:1.35} .tcard .tm{display:flex;align-items:center;gap:7px;margin-top:8px}
+.dotpill{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px}
+.dp-ok{background:var(--green-soft);color:var(--green)} .dp-wait{background:var(--amber-soft);color:var(--amber)} .dp-ai{background:var(--blue-soft);color:var(--blue)}
+
+.recipe{display:flex;align-items:center;gap:14px;background:var(--ink);border-radius:14px;padding:16px 18px;color:#fff;margin-top:16px;position:relative;overflow:hidden}
+.recipe::before{content:"";position:absolute;right:-50px;top:-50px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(242,78,41,.4),transparent 70%)}
+.recipe .rt{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#FF8E6B;font-weight:600;position:relative}
+.recipe h3{font-size:16px;font-weight:700;margin:6px 0 4px;position:relative} .recipe p{font-size:12px;color:#B5B2AB;position:relative;max-width:520px;line-height:1.55}
+
+/* ============ TOUR overlay ============ */
+.tourtag{position:fixed;z-index:90;background:var(--ink);color:#fff;border-radius:11px;padding:9px 12px;
+  box-shadow:var(--shadow-xl);max-width:218px;font-size:11.5px;line-height:1.45;opacity:0;pointer-events:none;
+  transform:scale(.9);transition:.3s cubic-bezier(.34,1.3,.5,1);border:1px solid rgba(255,255,255,.12)}
+.app.tour .tourtag{opacity:1;transform:none}
+.tourtag .tn{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:6px;
+  background:var(--accent);font-family:var(--mono);font-size:11px;font-weight:700;margin-right:7px;vertical-align:-4px}
+.tourtag b{color:#FF8E6B;font-weight:700}
+.tourtag::after{content:"";position:absolute;width:11px;height:11px;background:var(--ink);transform:rotate(45deg);border:1px solid rgba(255,255,255,.12);border-top:none;border-left:none}
+.tt-1{top:60px;left:50%;transform:translateX(-50%) scale(.9)} .app.tour .tt-1{transform:translateX(-50%)}
+.tt-1::after{top:-6px;left:50%;margin-left:-5px;border:1px solid rgba(255,255,255,.12);border-bottom:none;border-right:none}
+.tt-2{top:300px;left:26px} .tt-2::after{left:-6px;top:24px;transform:rotate(135deg)}
+.tt-3{right:24px;bottom:90px} .tt-3::after{bottom:-6px;right:40px}
+.tt-4{top:13px;left:330px} .tt-4::after{left:-6px;top:18px;transform:rotate(135deg)}
+.tt-5{top:560px;left:26px} .tt-5::after{left:-6px;top:24px;transform:rotate(135deg)}
+.app.drawer-open .tt-2,.app.drawer-open .tt-5{display:none}
+
+.toast-go{position:fixed;left:50%;bottom:26px;transform:translate(-50%,140%);z-index:75;display:flex;align-items:center;gap:12px;
+  background:var(--green-soft);border:1px solid #BEE6CC;border-radius:13px;padding:12px 16px;font-size:13px;color:#1E6E3C;
+  box-shadow:var(--shadow-lg);transition:transform .34s cubic-bezier(.34,1.3,.5,1)}
+.toast-go.show{transform:translate(-50%,0)}
+.toast-go .gg{display:inline-flex;align-items:center;gap:6px;background:var(--green);color:#fff;border:none;border-radius:9px;
+  padding:7px 13px;font-size:12.5px;font-weight:600;cursor:pointer}
+.toast-go .gg:hover{background:#268a4e}
+
+@media(max-width:920px){
+  .journey .jn{display:none} .ctx-chip{display:none}
+  .statrow,.create-grid,.board{grid-template-columns:1fr}
+  .grid{column-count:1}
+}
+
+/* ========== shared modal scaffold ========== */
+.mask{position:fixed;inset:0;background:rgba(20,22,28,.46);backdrop-filter:blur(2px);z-index:95;display:none;align-items:center;justify-content:center;padding:22px}
+.mask.on{display:flex}
+.modal{background:var(--surface);border-radius:18px;box-shadow:var(--shadow-xl);animation:mpop .26s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;max-height:90vh;overflow:hidden}
+@keyframes mpop{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
+.mhead{display:flex;align-items:center;gap:11px;padding:17px 20px;border-bottom:1px solid var(--line-2)}
+.mhead .mt{font-size:16px;font-weight:800;letter-spacing:-.3px}
+.mhead .msub{font-size:11.5px;color:var(--muted);margin-top:2px}
+.mhead .mx{margin-left:auto;width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:14px;display:grid;place-items:center;cursor:pointer}
+.mhead .mx:hover{background:var(--canvas);color:var(--ink)}
+
+/* ========== 采集 modal ========== */
+.cmodal{width:760px;max-width:100%}
+.cbody{display:flex;min-height:380px}
+.crail{width:188px;border-right:1px solid var(--line-2);padding:12px;flex-shrink:0;background:#FBFAF7}
+.src{display:flex;gap:10px;align-items:flex-start;padding:11px 11px;border-radius:11px;cursor:pointer;margin-bottom:5px;transition:.14s}
+.src:hover{background:var(--surface)}
+.src.on{background:var(--surface);box-shadow:var(--shadow-sm);border:1px solid var(--line)}
+.src .si{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:15px;flex-shrink:0}
+.src .sn{font-size:12.5px;font-weight:700}
+.src .sd{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.4}
+.cform{flex:1;padding:18px 20px;overflow-y:auto}
+.cft{font-size:14px;font-weight:700;margin-bottom:3px}
+.cfs{font-size:11.5px;color:var(--muted);margin-bottom:15px;line-height:1.5}
+.csrc-pane{display:none} .csrc-pane.on{display:block}
+.fld{margin-bottom:14px}
+.fld>label{display:block;font-size:11.5px;font-weight:600;margin-bottom:7px}
+.fld input[type=text]{width:100%;border:1px solid var(--line);border-radius:9px;padding:9px 11px;font-family:inherit;font-size:12.5px;color:var(--text);outline:none}
+.fld input[type=text]:focus{border-color:var(--accent)}
+.plats{display:flex;gap:7px;flex-wrap:wrap}
+.plat-pk{font-size:11px;font-weight:600;padding:6px 11px;border-radius:8px;border:1px solid var(--line);background:var(--surface);cursor:pointer;transition:.14s;user-select:none}
+.plat-pk.on{border-color:var(--ink);background:var(--ink);color:#fff}
+.drop{border:1.5px dashed var(--line);border-radius:12px;padding:26px;text-align:center;color:var(--muted);background:var(--canvas);font-size:12px}
+.drop .di{font-size:26px;margin-bottom:7px}
+.amt{display:flex;gap:7px}
+.amt .ab2{font-family:var(--mono);font-size:11px;padding:6px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);cursor:pointer}
+.amt .ab2.on{border-color:var(--accent);background:var(--accent-tint);color:var(--accent-2)}
+.policy{background:var(--teal-soft);border:1px solid var(--teal-bd);border-radius:10px;padding:10px 12px;display:flex;gap:9px;align-items:flex-start;margin-top:4px}
+.policy .pi{font-size:14px}
+.policy .pt{font-size:10.5px;color:#0a5b5f;line-height:1.55}
+.policy .pt b{color:#073f42}
+.cfoot{display:flex;align-items:center;gap:10px;padding:13px 20px;border-top:1px solid var(--line-2);background:#FBFAF7}
+.cfoot .ci{font-size:10.5px;color:var(--muted);display:flex;align-items:center;gap:5px}
+.cfoot .ci .cb{font-family:var(--mono);background:var(--line-2);padding:1px 6px;border-radius:5px;color:var(--text-soft)}
+
+/* asset card affordances */
+.acard{cursor:pointer}
+.acard .alin{position:absolute;right:6px;top:6px;font-family:var(--mono);font-size:8.5px;font-weight:600;background:rgba(122,90,240,.92);color:#fff;padding:2px 6px;border-radius:5px;display:flex;align-items:center;gap:2px}
+.acard .ahint{position:absolute;inset:0;background:linear-gradient(to top,rgba(20,22,28,.78),rgba(20,22,28,0) 55%);opacity:0;transition:.16s;display:flex;align-items:flex-end;justify-content:center;padding-bottom:9px;color:#fff;font-size:10.5px;font-weight:600}
+.acover{position:relative}
+.acard:hover .ahint{opacity:1}
+
+/* ========== asset detail · lineage tree ========== */
+.amodal{width:880px;max-width:100%}
+.adbody{padding:0;overflow-y:auto}
+.adhead{display:flex;gap:14px;padding:17px 22px;border-bottom:1px solid var(--line-2);background:#FBFAF7}
+.adhead .adcov{width:62px;height:82px;border-radius:9px;position:relative;flex-shrink:0;overflow:hidden}
+.adhead .adcov .dur{position:absolute;right:4px;bottom:4px;background:rgba(0,0,0,.62);color:#fff;font-size:9px;padding:0 5px;border-radius:4px;font-family:var(--mono)}
+.adhead .adn{font-size:16px;font-weight:800;letter-spacing:-.3px}
+.adhead .adm{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+.admchip{font-family:var(--mono);font-size:10px;padding:3px 8px;border-radius:6px;background:var(--surface);border:1px solid var(--line);color:var(--text-soft)}
+.admchip.hot{background:var(--accent-soft);border-color:transparent;color:var(--accent-2)}
+.admchip.use{background:var(--teal-soft);border-color:transparent;color:var(--teal)}
+.treewrap{padding:16px 22px 8px}
+.tree-h{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;margin-bottom:3px}
+.tree-s{font-size:11px;color:var(--muted);margin-bottom:14px;line-height:1.5}
+.gens{display:flex;font-family:var(--mono);font-size:9.5px;color:var(--muted-2);letter-spacing:.04em;padding-left:2px;margin-bottom:6px}
+.gens span{text-align:center}
+.tree{position:relative;width:720px;height:404px;margin:0 auto}
+.tree svg{position:absolute;inset:0;width:720px;height:404px;overflow:visible}
+.tree svg path{fill:none;stroke:var(--line);stroke-width:1.6}
+.tree svg path.flow{stroke:var(--purple);stroke-width:1.8;opacity:.5}
+.tnode{position:absolute;border:1px solid var(--line);border-radius:10px;background:var(--surface);box-shadow:var(--shadow-sm);padding:8px 10px;transition:.15s;cursor:default}
+.tnode:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:var(--muted-2);z-index:5}
+.tnode .tlab{font-family:var(--mono);font-size:8.5px;letter-spacing:.03em;margin-bottom:3px;display:flex;align-items:center;gap:4px}
+.tnode .tnm{font-size:11px;font-weight:700;line-height:1.25}
+.tnode .tmeta{font-size:9.5px;color:var(--muted);margin-top:3px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.tnode .tdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.tbadge{font-family:var(--mono);font-size:8px;font-weight:600;padding:1px 5px;border-radius:4px}
+.tlegend{display:flex;gap:14px;flex-wrap:wrap;padding:6px 22px 18px;font-size:10.5px;color:var(--text-soft)}
+.tlegend .lg{display:flex;align-items:center;gap:5px}
+.tlegend .lg i{width:9px;height:9px;border-radius:3px;display:inline-block}
+
+/* ========== live homogeneity meter (改编抽屉) ========== */
+.dupe{border:1px solid var(--line);border-radius:11px;padding:10px 12px;margin-bottom:12px;transition:.2s}
+.dupe.safe{background:var(--green-soft);border-color:#bfe6cc}
+.dupe.warn{background:var(--amber-soft);border-color:#f0dcb0}
+.dupe.bad{background:var(--accent-soft);border-color:#f7cdbf}
+.dupe .dh{display:flex;align-items:center;gap:7px;margin-bottom:8px}
+.dupe .dh .dl{font-size:11.5px;font-weight:700}
+.dupe .dh .dstate{margin-left:auto;font-family:var(--mono);font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px}
+.dupe.safe .dstate{background:var(--green);color:#fff} .dupe.warn .dstate{background:var(--amber);color:#fff} .dupe.bad .dstate{background:var(--accent);color:#fff}
+.dupe .dbar{height:8px;border-radius:5px;background:rgba(255,255,255,.6);overflow:hidden;margin-bottom:7px}
+.dupe .dbar i{display:block;height:100%;border-radius:5px;transition:width .25s ease}
+.dupe.safe .dbar i{background:var(--green)} .dupe.warn .dbar i{background:var(--amber)} .dupe.bad .dbar i{background:var(--accent)}
+.dupe .dmsg{font-size:10.5px;line-height:1.5;color:var(--text-soft)}
+.dupe .dmsg b{color:var(--ink)}
+.dupe .dsug{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;margin-top:7px;padding:4px 9px;border-radius:7px;background:var(--surface);border:1px solid var(--line);cursor:pointer;color:var(--text)}
+.dupe .dsug:hover{border-color:var(--muted-2)}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- ============ TOP BAR ============ -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark"></div>
+      <div><div class="brand-name">内容工作台</div><div class="brand-sub">CONTENT WORKBENCH</div></div>
+    </div>
+
+    <div class="journey" id="journey">
+      <button class="jtab active" data-stage="find"><span class="jn">01</span>找灵感</button>
+      <span class="arr">›</span>
+      <button class="jtab" data-stage="collect"><span class="jn">02</span>攒素材</button>
+      <span class="arr">›</span>
+      <button class="jtab" data-stage="create"><span class="jn">03</span>创作</button>
+      <span class="arr">›</span>
+      <button class="jtab" data-stage="publish"><span class="jn">04</span>成片</button>
+      <span class="arr">›</span>
+      <button class="jtab" data-stage="review"><span class="jn">05</span>复盘</button>
+    </div>
+
+    <div class="topbar-r">
+      <div class="ctx-chip">
+        <span class="lab">项目</span><b>火车出行 · 五一</b>
+        <span style="width:1px;height:14px;background:var(--line)"></span>
+        <span class="lab">选中集</span><span class="selcount" id="selCount">0</span>
+      </div>
+      <button class="tour-btn" id="tourBtn" onclick="toggleTour()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
+        产品形态导览
+      </button>
+      <div class="avatar">编</div>
+    </div>
+  </header>
+
+  <!-- ============ WORKSPACE ============ -->
+  <div class="workspace">
+    <main class="main">
+      <div class="maxw">
+
+        <!-- ===== PANEL: 找灵感 ===== -->
+        <section class="panel active" id="panel-find">
+          <div class="qbar">
+            <div class="spark">✨</div>
+            <input value="找几条适合「火车出行」的近 7 天爆款，告诉我为什么火" id="qInput">
+            <button class="mini">近7天 ▾</button>
+            <button class="mini">国内 ▾</button>
+            <button class="btn-primary"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>智能检索</button>
+          </div>
+
+          <div class="filters">
+            <span class="flab">平台</span>
+            <span class="tag solid">全部</span><span class="tag">抖音</span><span class="tag">小红书</span><span class="tag">TikTok</span>
+            <span style="width:1px;height:16px;background:var(--line);margin:0 2px"></span>
+            <span class="flab">业务线</span>
+            <span class="tag rail"><span class="d"></span>火车</span><span class="tag hotel"><span class="d"></span>酒店</span><span class="tag flight"><span class="d"></span>机票</span><span class="tag go"><span class="d"></span>出行</span>
+            <span class="found">副驾已为你筛掉昨天看过的，今日新增 <b class="mono">128</b> 条 · 按业务相关性排序</span>
+          </div>
+
+          <div class="grid" id="cardGrid"></div>
+          <div class="loadmore"><button onclick="this.textContent='已是今日全部 · 明日副驾再为你刷新'">加载更多 · 还有 125 条</button></div>
+        </section>
+
+        <!-- ===== PANEL: 攒素材 ===== -->
+        <section class="panel" id="panel-collect">
+          <div class="phead"><h2>资产库 · 攒素材</h2><span class="ps">连接「采集 → 加工 → 存储 → 创作」的素材中台 — 用得快、用得对、用出爆款</span>
+            <button class="btn-primary" style="margin-left:auto" onclick="openCollect()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>采集素材</button>
+          </div>
+          <div class="statrow">
+            <div class="stat"><div class="n">2,847</div><div class="l">素材总量</div></div>
+            <div class="stat"><div class="n">316<span class="u"> 条</span></div><div class="l">爆款切片素材</div></div>
+            <div class="stat"><div class="n">94<span class="u">%</span></div><div class="l">已向量化 · 可语义召回</div></div>
+            <div class="stat"><div class="n">+3<span class="u"> 条</span></div><div class="l">刚从「找灵感」切入</div></div>
+          </div>
+
+          <div class="filters" style="margin-top:4px">
+            <span class="flab">筛选</span>
+            <span class="tag solid">全部</span><span class="tag travel">🔥 只看爆款</span><span class="tag rail"><span class="d"></span>火车</span><span class="tag">视频切片</span><span class="tag">BGM</span><span class="tag">AI 生成</span>
+            <span class="found">支持 <b>关键词 + 语义 + 自然语言描述片段</b> · 以图搜图</span>
+          </div>
+
+          <div class="asset-grid" id="assetGrid"></div>
+
+          <div class="nudge">
+            <div class="ic">💡</div>
+            <div style="flex:1"><div class="nt">你有 8 条「高潜但未充分使用」的素材</div><div class="ns">3 条火车开场钩子用过 1 次以下，且与当前项目相关度 &gt; 90 — 副驾建议优先复用，或一键生成相似变体。</div></div>
+            <button class="tinybtn dark" onclick="openDock()">让副驾安排 →</button>
+          </div>
+        </section>
+
+        <!-- ===== PANEL: 创作 ===== -->
+        <section class="panel" id="panel-create">
+          <div class="phead"><h2>创作台</h2><span class="ps">选题 · 脚本 · 图文 · 视频 — AI 出草稿，你改成定稿</span></div>
+
+          <div class="carryin" id="carryBox" style="display:none">
+            <div class="seg-thumb g6"><div style="width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.9);display:grid;place-items:center"><span style="border-left:8px solid var(--ink);border-top:5px solid transparent;border-bottom:5px solid transparent;margin-left:2px"></span></div></div>
+            <div style="flex:1"><div class="ct">✓ 片段已带入：<b>「反转高潮 · 海景治愈」</b> 来自 @火车漫游记</div><div class="cs">从「找灵感 → 切片」一路带着上下文走到这里，没切过工具。</div></div>
+            <button class="tinybtn" onclick="setStage('collect')">查看资产库</button>
+          </div>
+
+          <div class="create-grid">
+            <div class="cbox">
+              <h4><span class="dot"></span>选题 · 由副驾从爆款提炼</h4>
+              <p style="font-size:12px;color:var(--text-soft);line-height:1.6;margin-bottom:11px">「低价短途火车治愈游」是可复制选题。建议结合自家线路出系列，承接评论区大量「求路线」的强转化意图。</p>
+              <div class="chiprow"><span class="varchip on">38 元绿皮看海</span><span class="varchip">2 小时高铁宝藏城</span><span class="varchip">周末逃离班味</span></div>
+              <button class="tinybtn hot" onclick="openDock()">让副驾按此出 3 条草稿 →</button>
+            </div>
+            <div class="cbox">
+              <h4><span class="dot" style="background:var(--teal)"></span>脚本草稿 · 可改可回退</h4>
+              <textarea>【开场 0-3s · 钩子】你敢信？38 块钱就能坐火车去看一整天的海。
+
+【痛点 3-8s】每天挤地铁、加不完的班，是时候逃一下了。
+
+【反转 8-20s】（带入海景片段）周六早上出发，中午就躺在海边——全程只花了一张电影票的钱。
+
+【卖点 20-35s】路线、车次、时刻表我都整理好了，新手也能照着走。
+
+【CTA 35s】完整攻略放评论区，想去的扣个「1」。</textarea>
+              <div style="display:flex;gap:8px;margin-top:11px"><button class="tinybtn">↺ 重新生成</button><button class="tinybtn">⎌ 回到上一版</button><button class="tinybtn dark" style="margin-left:auto" onclick="setStage('publish')">送审 →</button></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== PANEL: 成片 ===== -->
+        <section class="panel" id="panel-publish">
+          <div class="phead"><h2>成片 · 审核合规</h2><span class="ps">AI 初筛 + 合规标记，你终审拍板 — AI 永远不越过拍板这一步</span></div>
+          <div class="board">
+            <div class="col">
+              <div class="col-h"><span class="ct">🎬 待生成 / 拼接</span><span class="cn">2</span></div>
+              <div class="tcard"><div class="tt">38 元绿皮看海 · 图文版</div><div class="tm"><span class="dotpill dp-ai">AI 召回素材中</span><span style="font-size:10px;color:var(--muted);font-family:var(--mono)">3 段已匹配</span></div></div>
+              <div class="tcard"><div class="tt">周末逃离班味 · 短视频</div><div class="tm"><span class="dotpill dp-wait">SRT 召回拼接</span></div></div>
+            </div>
+            <div class="col">
+              <div class="col-h"><span class="ct">🔎 AI 初筛 / 待终审</span><span class="cn">2</span></div>
+              <div class="tcard"><div class="tt">38 元绿皮看海 · 视频成片</div><div class="tm"><span class="dotpill dp-ok">合规 ✓</span><span class="dotpill dp-wait">待你终审</span></div><div style="font-size:11px;color:var(--text-soft);margin-top:8px;line-height:1.4">AI：事实核查通过，1 处「最便宜」建议改为「较低价」更稳。</div></div>
+              <div class="tcard"><div class="tt">2 小时高铁宝藏城 · 图文</div><div class="tm"><span class="dotpill dp-ok">合规 ✓</span><span class="dotpill dp-wait">待你终审</span></div></div>
+            </div>
+            <div class="col">
+              <div class="col-h"><span class="ct">✅ 已发布</span><span class="cn">1</span></div>
+              <div class="tcard"><div class="tt">绿皮火车看海 · 抖音首发</div><div class="tm"><span class="dotpill dp-ok">已发布</span><span style="font-size:10px;color:var(--green);font-family:var(--mono)">↑ 表现回流中</span></div></div>
+            </div>
+          </div>
+          <p style="font-size:11.5px;color:var(--muted);margin-top:13px;text-align:center">每条成片都带血缘：从哪条爆款切的、改自哪个草稿，错了能追回。</p>
+        </section>
+
+        <!-- ===== PANEL: 复盘 ===== -->
+        <section class="panel" id="panel-review">
+          <div class="phead"><h2>数据复盘</h2><span class="ps">表现回流 → 爆款归因 → 反哺推荐，闭环跑起来</span></div>
+          <div class="statrow">
+            <div class="stat"><div class="n">52.3<span class="u">w</span></div><div class="l">绿皮看海 · 点赞</div></div>
+            <div class="stat"><div class="n">+318<span class="u">%</span></div><div class="l">较账号均值</div></div>
+            <div class="stat"><div class="n">2.1<span class="u">w</span></div><div class="l">「求路线」转化评论</div></div>
+            <div class="stat"><div class="n">3<span class="u"> 条</span></div><div class="l">已复刻同配方</div></div>
+          </div>
+          <div class="recipe">
+            <div style="flex:1"><div class="rt">★ 爆款配方 · AUTO-TAGGED</div><h3>反差钩子 + 治愈情绪 + 低成本攻略</h3><p>这条已被标成「爆款配方」。明天副驾会据此推更像的爆款、并优先召回「开场钩子 + 海景治愈」类素材，让你照着配方再做一批。</p></div>
+            <button class="tinybtn hot" onclick="setStage('find')">按配方再找一批 →</button>
+          </div>
+          <div class="nudge" style="margin-top:14px">
+            <div class="ic">🔁</div>
+            <div style="flex:1"><div class="nt">闭环已合上</div><div class="ns">成片表现回流 → 标记爆款素材与配方 → 反哺「找灵感」排序与「攒素材」推荐。全程没切过工具，每一步都是 AI 做重、你做判断。</div></div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ============ FLOATING ACTION BAR ============ -->
+  <div class="actionbar" id="actionbar">
+    <div class="ab-sel"><div class="thumb" id="abThumb"></div><div><div class="t" id="abTitle">—</div><div class="c">已选中 · 上下文动作</div></div></div>
+    <button class="abtn hot" onclick="openDrawer('why')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12c.5.5 1 1.5 1 3h6c0-1.5.5-2.5 1-3a7 7 0 0 0-4-12z"/></svg>为什么火</button>
+    <button class="abtn" onclick="openDrawer('slice')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.1 8.1L20 16M8.1 15.9L20 8"/></svg>切片</button>
+    <button class="abtn" onclick="openDrawer('adapt')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7-3-3-7 7v3z"/><path d="M14 6l3 3"/></svg>改编</button>
+    <button class="abtn" onclick="openDock('recall')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v4h4"/></svg>召回</button>
+    <button class="abtn" onclick="quickToast('🔖 已收藏并打标，明天不再重复出现')">🔖</button>
+    <button class="abtn" onclick="setStage('publish')">送审</button>
+    <button class="ab-close" onclick="clearSel()">✕</button>
+  </div>
+
+  <!-- ============ CONTEXT DRAWER ============ -->
+  <aside class="drawer" id="drawer">
+    <div class="dwrap">
+      <div class="dhead">
+        <div class="dico" id="dIco" style="background:var(--accent)">💡</div>
+        <div><div class="dt" id="dTitle">为什么火 · AI 归因</div><div class="ds" id="dSub">在原地展开一层 · 不跳转新页面</div></div>
+        <button class="dclose" onclick="closeDrawer()">✕</button>
+      </div>
+
+      <div class="dbody">
+        <!-- WHY pane -->
+        <div class="dpane" id="pane-why">
+          <div class="dcover g2" id="whyCover"><div style="width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center"><span style="border-left:14px solid var(--ink);border-top:9px solid transparent;border-bottom:9px solid transparent;margin-left:3px"></span></div></div>
+          <div class="dsubt"><span class="badge bg-dy" id="whyPlat">抖音</span><span style="font-size:12.5px;font-weight:600" id="whyTitle">坐着绿皮火车去看海</span></div>
+
+          <div class="why-block">
+            <div class="why-h">💡 为什么火 · 三条依据</div>
+            <div id="whyList"></div>
+          </div>
+
+          <div class="sub-h"><span class="dot"></span>逐句拉片 · 每句对应一个作用</div>
+          <div class="script" id="whyScript"></div>
+
+          <div class="sub-h"><span class="dot" style="background:var(--green)"></span>评论情绪聚合</div>
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:11px">
+            <div class="senti" style="height:8px"><i class="pos" style="width:78%"></i><i class="neu" style="width:16%"></i><i class="neg" style="width:6%"></i></div>
+            <span class="senti-lab">正面 <b>78%</b></span>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:13px">
+            <span class="tag">求路线 ·2.1w</span><span class="tag">想去 ·8.6k</span><span class="tag">治愈 ·5.2k</span><span class="tag">车次 ·3.1k</span>
+          </div>
+          <div class="cmt"><div class="av g4"></div><div><div class="ct">求完整路线和车次！太想去了 😭</div><div class="cl">❤️ 2.1w</div></div></div>
+          <div class="cmt"><div class="av g6"></div><div><div class="ct">这就是我向往的生活，逃离一下班味</div><div class="cl">❤️ 8.6k</div></div></div>
+        </div>
+
+        <!-- SLICE pane -->
+        <div class="dpane" id="pane-slice">
+          <div class="player"><div class="scr g2" id="sliceScr"><div style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center"><span style="border-left:12px solid var(--ink);border-top:8px solid transparent;border-bottom:8px solid transparent;margin-left:2px"></span></div><span style="position:absolute;right:7px;bottom:7px;background:rgba(0,0,0,.6);color:#fff;font-size:10px;padding:1px 6px;border-radius:4px;font-family:var(--mono)">0:47</span></div></div>
+          <div class="sliceinfo"><span class="t">🎬 AI 智能切片</span><span class="s">已识别 5 个分镜，<b>拖动切点可微调</b></span><button class="tinybtn" style="margin-left:auto">＋ 加切点</button></div>
+          <div class="track" id="track">
+            <div class="seg" style="flex:12;background:var(--accent)">钩子<span class="grip" data-i="0"></span></div>
+            <div class="seg" style="flex:26;background:var(--blue)">痛点<span class="grip" data-i="1"></span></div>
+            <div class="seg" style="flex:28;background:var(--teal)">反转<span class="grip" data-i="2"></span></div>
+            <div class="seg" style="flex:23;background:var(--purple)">卖点<span class="grip" data-i="3"></span></div>
+            <div class="seg" style="flex:11;background:var(--amber)">CTA</div>
+          </div>
+          <div class="ticks"><span>0:00</span><span>0:12</span><span>0:24</span><span>0:36</span><span>0:47</span></div>
+
+          <div class="segcards" id="segCards">
+            <div class="sc on" onclick="toggleSeg(this)"><div class="scov g2"><span class="dur">0:06</span></div><div class="sn">开场钩子</div><div class="sd">反差·性价比</div><div class="pick"><span class="box"></span><span>已选</span></div></div>
+            <div class="sc" onclick="toggleSeg(this)"><div class="scov g3"><span class="dur">0:12</span></div><div class="sn">痛点铺垫</div><div class="sd">通勤·班味</div><div class="pick"><span class="box"></span><span>选取</span></div></div>
+            <div class="sc on" onclick="toggleSeg(this)"><div class="scov g6"><span class="dur">0:13</span></div><div class="sn">反转高潮</div><div class="sd">海景·治愈</div><div class="pick"><span class="box"></span><span>已选</span></div></div>
+            <div class="sc on" onclick="toggleSeg(this)"><div class="scov g5"><span class="dur">0:11</span></div><div class="sn">卖点呈现</div><div class="sd">路线·38元</div><div class="pick"><span class="box"></span><span>已选</span></div></div>
+            <div class="sc" onclick="toggleSeg(this)"><div class="scov g8"><span class="dur">0:05</span></div><div class="sn">行动号召</div><div class="sd">引导·关注</div><div class="pick"><span class="box"></span><span>选取</span></div></div>
+          </div>
+        </div>
+
+        <!-- ADAPT pane -->
+        <div class="dpane" id="pane-adapt">
+          <div class="lineage-box"><span class="ic">🧬</span><div><b>血缘：</b>本草稿改编自 <b id="adaptFrom">@火车漫游记 · 坐着绿皮火车去看海</b> · 版本 v1 · 错了可一键回退到原始爆款重新改。</div></div>
+          <div class="chiprow"><span class="varchip on">小红书图文</span><span class="varchip">抖音口播脚本</span><span class="varchip">视频分镜</span></div>
+          <div class="dupe safe" id="dupe">
+            <div class="dh"><span style="font-size:14px">🧮</span><span class="dl">同质化实时校验</span><span class="dstate" id="dupeState">差异大 · 安全</span></div>
+            <div class="dbar"><i id="dupeBar" style="width:72%"></i></div>
+            <div class="dmsg" id="dupeMsg">边写边和库内已发布内容比对，<b>过近会变红</b>提醒你换角度。</div>
+          </div>
+          <div class="draft">
+            <div class="draft-h"><span style="font-size:12px;font-weight:600">改编草稿</span><span class="vt">v1 · AI 生成</span><span style="margin-left:auto;font-size:10.5px;color:var(--muted)">可直接编辑 ↓</span></div>
+            <textarea id="adaptTA" oninput="updateDupe()">周末逃离计划｜38 块钱坐绿皮火车去看海 🌊
+
+谁说穷游不能很治愈？这条路线我帮你扒好了——
+
+📍 路线：城区 → 海边小城（绿皮直达，全程 38 元）
+⏰ 时刻：周六早班车出发，中午抵达
+🎒 装备：一杯热咖啡 + 一首歌的单曲循环
+💛 体验：慢节奏、看海、躺一下午，把班味全留在城里
+
+新手照着走也不会错，完整车次和时刻表放评论区啦～
+想去的姐妹扣个「1」，给你们做下一条路线！</textarea>
+          </div>
+          <p style="font-size:11px;color:var(--muted);line-height:1.5">AI 出的是默认值，不是终判。你改两句、换个平台口吻，定稿后送审 —— 拍板永远在你手里。</p>
+        </div>
+      </div>
+
+      <!-- drawer footer (contextual) -->
+      <div class="dfoot">
+        <div id="foot-why" class="dfoot-pane"><button class="tinybtn hot" style="width:100%;justify-content:center" onclick="openDrawer('adapt')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7-3-3-7 7v3z"/><path d="M14 6l3 3"/></svg>按这个选题一键改编 →</button></div>
+        <div id="foot-slice" class="dfoot-pane" style="display:none">
+          <div class="savebar">
+            <div class="n">已选 <b id="segCount">3</b> 个片段</div>
+            <span style="font-size:11px;color:var(--text-soft)">→ 资产库 · 火车出行</span>
+            <span class="auto">自动打标：火车 · 出行 · 钩子素材</span>
+            <button class="tinybtn hot" style="margin-left:auto" onclick="saveSlices()">存入资产库</button>
+          </div>
+        </div>
+        <div id="foot-adapt" class="dfoot-pane" style="display:none;display:flex;gap:8px">
+          <button class="tinybtn">↺ 重新生成</button>
+          <button class="tinybtn">＋ 存为素材</button>
+          <button class="tinybtn dark" style="margin-left:auto;flex:1;justify-content:center" onclick="closeDrawer();setStage('publish')">送审 · 进入成片台 →</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============ COPILOT DOCK ============ -->
+  <div class="dock" id="dock">
+    <div class="dock-toast" id="dockToast">
+      <div class="dh">🔔 副驾提醒</div>
+      <p>你有 <b>8 条高潜素材</b>没用，其中 3 条火车开场钩子与当前项目高度相关。</p>
+      <div class="row"><button class="tinybtn hot" style="flex:1;justify-content:center" onclick="openDock('nudge')">看看 →</button><button class="tinybtn" onclick="hideToast()">稍后</button></div>
+    </div>
+    <button class="dock-pill" id="dockPill" onclick="openDock()">
+      <span class="pulse" id="pulse"></span>
+      <div class="yoyo"><div class="mouth"></div></div>
+      <div><div class="pn">TripYoYo</div><div class="ps">副驾 · 默认安静</div></div>
+      <span class="dock-nudge" id="dockNudge">8</span>
+    </button>
+  </div>
+
+  <!-- expanded copilot panel -->
+  <div class="dpanel" id="dpanel">
+    <div class="dp-head">
+      <div class="yoyo"><div class="mouth"></div></div>
+      <div><div class="nm">TripYoYo</div><div class="st"><span class="live"></span>陪看 · 代办 · 提醒</div></div>
+      <button class="x" onclick="closeDock()">✕</button>
+    </div>
+    <div class="dp-body" id="dpBody">
+      <div class="msg bot"><div class="bub">早，我把昨晚筛好的今日爆款摆上了，<b>昨天看过的今天不再出现</b>。有 3 条火车短途很值得做。需要我直接帮你做几条吗？</div></div>
+    </div>
+    <div class="dp-input">
+      <div class="dp-chips">
+        <span class="dp-chip" onclick="runYoYo('给我做 5 条火车短途的图文')">做 5 条火车短途图文</span>
+        <span class="dp-chip" onclick="askYoYo('这条为什么火？')">这条为什么火？</span>
+        <span class="dp-chip" onclick="askYoYo('评论在说什么？')">评论在说什么？</span>
+      </div>
+      <div class="dp-field">
+        <input id="yoyoInput" placeholder="让 TripYoYo 帮你做点什么…" onkeydown="if(event.key==='Enter')sendYoYo()">
+        <button class="dp-send" onclick="sendYoYo()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- go-to-create toast -->
+  <div class="toast-go" id="goToast">
+    <span style="font-size:16px">✓</span>
+    <span>已存入 <b>3 个切片</b> 到资产库 · 火车出行</span>
+    <button class="gg" onclick="goCreate()">去创作 →</button>
+    <button class="ab-close" style="background:rgba(46,158,91,.15);color:#1E6E3C" onclick="hideGo()">✕</button>
+  </div>
+
+  <!-- TOUR tags -->
+  <div class="tourtag tt-1"><span class="tn">④</span><b>旅程动线</b> — 导航读作「找灵感·攒素材·创作·成片·复盘」，不是功能模块；跳转时选中集 / 筛选 / 项目一起带过去。</div>
+  <div class="tourtag tt-2"><span class="tn">①</span><b>卡片是唯一原子</b> — 爆款、素材、草稿、成片都是同一种卡：封面 → AI 洞察区 → 动作栏。学会一张卡就会用整个产品。</div>
+  <div class="tourtag tt-3"><span class="tn">③</span><b>常驻副驾</b> — 右下角的 TripYoYo，默认安静，只做陪看 / 代办 / 提醒；产出一律落成卡片草稿，由你收口。</div>
+  <div class="tourtag tt-4"><span class="tn">⑤</span><b>可解释 · 可干预 · 可回退</b> — 选中集让多条卡片带着上下文一起走，每条衍生都带血缘和版本。</div>
+  <div class="tourtag tt-5"><span class="tn">②</span><b>选中即用，不开 Tab</b> — 选中卡片浮出动作栏；点动作在右侧「原地展开一层」抽屉，人不离开当前卡片流。试试点一张卡。</div>
+
+  <!-- ============ 采集 MODAL · 四源统一入口 ============ -->
+  <div class="mask" id="collectMask">
+    <div class="modal cmodal">
+      <div class="mhead">
+        <span style="width:30px;height:30px;border-radius:9px;background:var(--accent-soft);display:grid;place-items:center;font-size:16px">📥</span>
+        <div><div class="mt">采集素材 · 四源统一入口</div><div class="msub">一个入口，把全网爆款 / 链接 / 本地文件 / 云端库都收进资产库，自动向量化 + 打标</div></div>
+        <button class="mx" onclick="closeCollect()">✕</button>
+      </div>
+      <div class="cbody">
+        <div class="crail">
+          <div class="src on" data-s="scrape" onclick="pickSrc('scrape')"><div class="si" style="background:var(--accent-soft)">🔥</div><div><div class="sn">全网爆款</div><div class="sd">按平台+话题抓取</div></div></div>
+          <div class="src" data-s="link" onclick="pickSrc('link')"><div class="si" style="background:var(--blue-soft)">🔗</div><div><div class="sn">链接导入</div><div class="sd">粘贴单条 / 批量</div></div></div>
+          <div class="src" data-s="local" onclick="pickSrc('local')"><div class="si" style="background:var(--teal-soft)">📁</div><div><div class="sn">本地上传</div><div class="sd">拖拽视频 / 图 / 音</div></div></div>
+          <div class="src" data-s="cloud" onclick="pickSrc('cloud')"><div class="si" style="background:var(--purple-soft)">☁️</div><div><div class="sn">云端 / 三方库</div><div class="sd">网盘 · 素材市场</div></div></div>
+        </div>
+        <div class="cform">
+          <div class="csrc-pane on" id="cp-scrape">
+            <div class="cft">全网爆款采集</div>
+            <div class="cfs">选平台 + 给个话题或对标账号，TripYoYo 自动抓取近一周爆款，去重后入库。</div>
+            <div class="fld"><label>平台</label><div class="plats"><span class="plat-pk on" onclick="tp(this)">抖音</span><span class="plat-pk on" onclick="tp(this)">小红书</span><span class="plat-pk" onclick="tp(this)">B站</span><span class="plat-pk" onclick="tp(this)">快手</span><span class="plat-pk" onclick="tp(this)">TikTok</span><span class="plat-pk" onclick="tp(this)">YouTube</span></div></div>
+            <div class="fld"><label>话题 / 对标账号</label><input type="text" value="火车 出行 看海 周边游" placeholder="如：城市周边游 / @火车漫游记"></div>
+            <div class="fld"><label>采集量</label><div class="amt"><span class="ab2" onclick="ta(this)">20 条</span><span class="ab2 on" onclick="ta(this)">50 条</span><span class="ab2" onclick="ta(this)">100 条</span></div></div>
+          </div>
+          <div class="csrc-pane" id="cp-link">
+            <div class="cft">链接导入</div>
+            <div class="cfs">粘贴一个或多个作品链接，系统抓取原片 + 文案 + 评论，整条入库。</div>
+            <div class="fld"><label>作品链接（每行一个）</label><input type="text" value="https://v.douyin.com/xxxx　绿皮看海" placeholder="粘贴抖音 / 小红书 / B站 链接"></div>
+            <div class="fld"><label>同时抓取</label><div class="plats"><span class="plat-pk on" onclick="tp(this)">原片</span><span class="plat-pk on" onclick="tp(this)">文案</span><span class="plat-pk on" onclick="tp(this)">评论</span><span class="plat-pk" onclick="tp(this)">BGM</span></div></div>
+          </div>
+          <div class="csrc-pane" id="cp-local">
+            <div class="cft">本地上传</div>
+            <div class="cfs">把自己拍的素材拖进来，自动转码 + 抽帧理解 + 打标，和爆款素材一视同仁。</div>
+            <div class="drop"><div class="di">⬆️</div>拖拽视频 / 图片 / 音频到这里，或 <b style="color:var(--accent)">点击选择</b><br><span style="font-size:10px">支持 mp4 · mov · jpg · png · mp3 · wav</span></div>
+          </div>
+          <div class="csrc-pane" id="cp-cloud">
+            <div class="cft">云端 / 三方库</div>
+            <div class="cfs">对接已有的网盘和素材市场，增量同步，不必重复搬运。</div>
+            <div class="fld"><label>选择来源</label><div class="plats"><span class="plat-pk on" onclick="tp(this)">企业网盘</span><span class="plat-pk" onclick="tp(this)">阿里云盘</span><span class="plat-pk" onclick="tp(this)">素材市场</span><span class="plat-pk" onclick="tp(this)">竞品监控库</span></div></div>
+            <div class="fld"><label>同步文件夹</label><input type="text" value="/共享/火车出行/2025春" placeholder="选择要同步的目录"></div>
+          </div>
+          <div class="policy"><span class="pi">🛡️</span><div class="pt"><b>入库即生效两条规则：</b>① 自动向量化 + 打标（火车 · 出行 · 钩子…），可语义召回；② 「看过不看」去重 —— 今天已看过的内容明天不再重复出现，避免素材污染。</div></div>
+        </div>
+      </div>
+      <div class="cfoot">
+        <span class="ci">预计入库 <span class="cb" id="collectN">50</span> 条 · 自动去重后</span>
+        <button class="tinybtn" style="margin-left:auto" onclick="closeCollect()">取消</button>
+        <button class="tinybtn hot" onclick="doCollect()">开始采集 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ ASSET DETAIL · 血缘衍生树 ============ -->
+  <div class="mask" id="assetMask">
+    <div class="modal amodal">
+      <div class="mhead" style="padding-bottom:14px">
+        <span style="width:30px;height:30px;border-radius:9px;background:var(--purple-soft);display:grid;place-items:center;font-size:15px">🧬</span>
+        <div><div class="mt">资产详情 · 血缘衍生树</div><div class="msub">一条素材的来龙去脉：源 → 切片 → 改编 → 成片，带版本 · 用量 · 表现</div></div>
+        <button class="mx" onclick="closeAsset()">✕</button>
+      </div>
+      <div class="adbody">
+        <div class="adhead">
+          <div class="adcov g2" id="adCov"><span class="dur" id="adDur">0:06</span></div>
+          <div>
+            <div class="adn" id="adName">开场钩子 · 38元看海</div>
+            <div class="adm">
+              <span class="admchip hot" id="adHot">🔥 爆款素材</span>
+              <span class="admchip use" id="adUse">用 ×7</span>
+              <span class="admchip">已向量化 · 可语义召回</span>
+              <span class="admchip">标签：火车 · 出行 · 钩子</span>
+            </div>
+          </div>
+        </div>
+        <div class="treewrap">
+          <div class="gens"><span style="width:228px">源 · 原始爆款</span><span style="width:194px">切片 · 裂变</span><span style="width:170px">改编 · 多平台</span><span style="flex:1">成片 · 表现回流</span></div>
+          <div class="tree">
+            <svg viewBox="0 0 720 404">
+              <path d="M158 202 C197 202 197 36 236 36"/><path d="M158 202 C197 202 197 114 236 114"/><path d="M158 202 C197 202 197 192 236 192"/><path d="M158 202 C197 202 197 270 236 270"/><path d="M158 202 C197 202 197 348 236 348"/>
+              <path d="M354 36 C392 36 392 98 430 98"/><path d="M354 192 C392 192 392 98 430 98"/><path d="M354 192 C392 192 392 206 430 206"/><path d="M354 270 C392 270 392 206 430 206"/><path d="M354 114 C392 114 392 314 430 314"/><path d="M354 348 C392 348 392 314 430 314"/>
+              <path class="flow" d="M570 98 C585 98 585 146 600 146"/><path class="flow" d="M570 206 C585 206 585 146 600 146"/><path class="flow" d="M570 314 C585 314 585 298 600 298"/>
+            </svg>
+            <div class="tnode" style="left:8px;top:166px;width:150px;border-color:var(--accent)">
+              <div class="tlab" style="color:var(--accent-2)"><span class="tdot" style="background:var(--accent)"></span>源 · 原始爆款</div>
+              <div class="tnm">坐着绿皮火车去看海</div>
+              <div class="tmeta"><span>抖音</span><span>128w 赞</span></div>
+            </div>
+            <div class="tnode" style="left:236px;top:12px;width:118px"><div class="tlab" style="color:var(--teal)"><span class="tdot" style="background:var(--teal)"></span>切片 · 0:06</div><div class="tnm">开场钩子</div><div class="tmeta"><span class="tbadge" style="background:var(--teal-soft);color:var(--teal)">用×7</span></div></div>
+            <div class="tnode" style="left:236px;top:90px;width:118px"><div class="tlab" style="color:var(--teal)"><span class="tdot" style="background:var(--teal)"></span>切片 · 0:12</div><div class="tnm">痛点铺垫</div><div class="tmeta"><span class="tbadge" style="background:var(--teal-soft);color:var(--teal)">用×3</span></div></div>
+            <div class="tnode" style="left:236px;top:168px;width:118px"><div class="tlab" style="color:var(--teal)"><span class="tdot" style="background:var(--teal)"></span>切片 · 0:13</div><div class="tnm">反转高潮</div><div class="tmeta"><span class="tbadge" style="background:var(--teal-soft);color:var(--teal)">用×4</span></div></div>
+            <div class="tnode" style="left:236px;top:246px;width:118px"><div class="tlab" style="color:var(--teal)"><span class="tdot" style="background:var(--teal)"></span>切片 · 0:11</div><div class="tnm">卖点呈现</div><div class="tmeta"><span class="tbadge" style="background:var(--teal-soft);color:var(--teal)">用×2</span></div></div>
+            <div class="tnode" style="left:236px;top:324px;width:118px"><div class="tlab" style="color:var(--teal)"><span class="tdot" style="background:var(--teal)"></span>切片 · 0:05</div><div class="tnm">行动号召</div><div class="tmeta"><span class="tbadge" style="background:var(--teal-soft);color:var(--teal)">用×1</span></div></div>
+            <div class="tnode" style="left:430px;top:70px;width:140px"><div class="tlab" style="color:var(--purple)"><span class="tdot" style="background:var(--purple)"></span>改编 · 图文</div><div class="tnm">小红书图文 <span style="font-family:var(--mono);font-size:8.5px;color:var(--muted-2)">v1</span></div><div class="tmeta"><span class="tbadge" style="background:var(--green-soft);color:#1d7a42">已发布</span></div></div>
+            <div class="tnode" style="left:430px;top:178px;width:140px"><div class="tlab" style="color:var(--purple)"><span class="tdot" style="background:var(--purple)"></span>改编 · 口播</div><div class="tnm">抖音口播脚本 <span style="font-family:var(--mono);font-size:8.5px;color:var(--muted-2)">v2</span></div><div class="tmeta"><span class="tbadge" style="background:var(--green-soft);color:#1d7a42">已发布</span></div></div>
+            <div class="tnode" style="left:430px;top:286px;width:140px"><div class="tlab" style="color:var(--purple)"><span class="tdot" style="background:var(--purple)"></span>改编 · 分镜</div><div class="tnm">视频分镜稿 <span style="font-family:var(--mono);font-size:8.5px;color:var(--muted-2)">v1</span></div><div class="tmeta"><span class="tbadge" style="background:var(--purple-soft);color:var(--purple)">草稿</span></div></div>
+            <div class="tnode" style="left:600px;top:110px;width:112px;border-color:#bfe6cc"><div class="tlab" style="color:#1d7a42"><span class="tdot" style="background:var(--green)"></span>成片 · 已发布</div><div class="tnm">五一 · 绿皮看海</div><div class="tmeta"><span>▶ 86w</span><span>❤ 12.8w</span></div></div>
+            <div class="tnode" style="left:600px;top:262px;width:112px"><div class="tlab" style="color:var(--amber)"><span class="tdot" style="background:var(--amber)"></span>成片 · 待终审</div><div class="tnm">短途攻略合集</div><div class="tmeta"><span>AI 初筛通过</span></div></div>
+          </div>
+        </div>
+        <div class="tlegend">
+          <span class="lg"><i style="background:var(--accent)"></i>源</span>
+          <span class="lg"><i style="background:var(--teal)"></i>切片（裂变）</span>
+          <span class="lg"><i style="background:var(--purple)"></i>改编</span>
+          <span class="lg"><i style="background:var(--green)"></i>已发布成片</span>
+          <span class="lg"><i style="background:var(--amber)"></i>待终审</span>
+          <span class="lg" style="margin-left:auto;color:var(--muted)">本支血缘累计 <b style="color:var(--ink)">▶ 142w · ❤ 21.3w</b></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ============ DATA ============ */
+const CARDS = [
+  {id:'c1',plat:'抖音',pc:'bg-dy',title:'坐着绿皮火车去看海，全程 38 块钱的快乐',author:'@火车漫游记',followers:'28.6w',
+   cover:'g2',tall:true,dur:'0:47',stats:[['❤️','52.3w'],['💬','8,204'],['↗','3.1w']],
+   why:[['反差钩子','标题用「38 块」制造极致性价比反差，前 3 秒完播率高','标题 · 前3秒完播'],
+        ['情绪价值','慢节奏 + 治愈感，精准戳中「逃离班味」情绪','BGM · 画面节奏'],
+        ['强转化信号','评论区大量「求路线」，可直接承接出行业务','评论区 2.1w 互动']],
+   senti:[78,16,6],relv:94,tags:[['rail','火车'],['go','出行'],['travel','旅游']]},
+  {id:'c2',plat:'小红书',pc:'bg-xhs',title:'周末逃离计划｜2 小时高铁直达的 5 个宝藏小城',author:'@周末去哪儿',followers:'12.1w',
+   cover:'g8',tall:false,dur:'图文',stats:[['❤️','18.9w'],['⭐','9.7w'],['💬','3,560']],
+   why:[['清单体','「5 个宝藏小城」结构清晰，强收藏属性（收藏≈点赞）','正文结构'],
+        ['痛点精准','锚定「周末 + 2 小时高铁」，决策门槛极低','标题关键词'],
+        ['本地化强','国内城市 + 高铁，与酒店 / 出行业务高度契合','业务关联打标']],
+   senti:[85,12,3],relv:91,tags:[['hotel','酒店'],['go','出行'],['rail','火车']]},
+  {id:'c3',plat:'抖音',pc:'bg-dy',title:'机票捡漏教程：我是怎么 400 块飞三亚过五一的',author:'@穷游攻略菌',followers:'45.3w',
+   cover:'g3',tall:true,dur:'1:12',stats:[['❤️','38.1w'],['💬','1.2w'],['↗','6.8w']],
+   why:[['干货钩子','「400 块飞三亚」具体数字 + 教程承诺，转发率极高','标题 · 转发率'],
+        ['稀缺感','捡漏 = 独家信息，驱动「先存再说」','收藏 / 转发比'],
+        ['蹭节点','贴五一假期热点，时效性拉满','发布时机']],
+   senti:[62,28,10],relv:88,tags:[['flight','机票'],['holiday','假期']]},
+  {id:'c4',plat:'小红书',pc:'bg-xhs',title:'被这家海边民宿治愈了，落地窗就是一整片太平洋',author:'@慢游小姐',followers:'33.8w',
+   cover:'g4',tall:false,dur:'图文',stats:[['❤️','24.6w'],['⭐','11.2w'],['💬','2,180']],
+   why:[['视觉冲击','首图落地窗海景，3 秒留人，强封面属性','首图 CTR'],
+        ['场景代入','「被治愈」第一人称叙事，情绪共鸣强','文案语气'],
+        ['可转化','评论问「民宿叫啥 / 多少钱」，直连酒店业务','评论意图']],
+   senti:[81,15,4],relv:90,tags:[['hotel','酒店'],['travel','旅游']]},
+  {id:'c5',plat:'抖音',pc:'bg-dy',title:'凌晨 5 点的高铁站，藏着打工人最后的体面',author:'@铁路边的人',followers:'9.4w',
+   cover:'g1',tall:true,dur:'0:38',stats:[['❤️','41.7w'],['💬','2.3w'],['↗','9.1w']],
+   why:[['情绪钩子','「打工人体面」共情切口，转发驱动力强','标题情绪词'],
+        ['真实感','纪实运镜 + 环境音，对抗滤镜疲劳','拍摄手法'],
+        ['话题度','评论区自发讨论，带动二次传播','评论 2.3w']],
+   senti:[70,22,8],relv:79,tags:[['rail','火车'],['go','出行']],
+   lineage:'已切 2 段入库'},
+  {id:'c6',plat:'TikTok',pc:'bg-tk',title:'POV: you take the slow train just to watch the sea',author:'@slowtravel.diary',followers:'88.2k',
+   cover:'g6',tall:false,dur:'0:29',stats:[['❤️','120k'],['💬','4,102'],['↗','22k']],
+   why:[['POV 钩子','「POV」第二人称沉浸，海外短视频高完播范式','开场形式'],
+        ['普世情绪','慢生活治愈无国界，可迁移到国内同款','内容母题'],
+        ['可借鉴','适合出海账号复刻，标记为国际参考','国内/国际判断']],
+   senti:[88,10,2],relv:74,tags:[['rail','火车'],['travel','旅游']]},
+];
+
+const SCRIPTS = {
+  c1:[['0:00','钩子','fn-hook','你敢信？38 块钱就能坐火车去看一整天的海'],
+      ['0:06','痛点','fn-pain','每天挤地铁通勤、加不完的班，班味太重了'],
+      ['0:14','反转','fn-turn','周六早上出发，中午就躺在海边的礁石上'],
+      ['0:27','卖点','fn-sell','路线、车次、时刻表我都整理好了，38 元全程'],
+      ['0:40','CTA','fn-cta','完整攻略放评论区，想去的扣个「1」']],
+  c3:[['0:00','钩子','fn-hook','400 块飞三亚？我真的做到了，全程教学'],
+      ['0:09','痛点','fn-pain','一到假期机票就翻三倍，根本下不去手'],
+      ['0:22','反转','fn-turn','换个思路捡漏，我这趟来回只花了别人单程的钱'],
+      ['0:45','卖点','fn-sell','3 个捡漏渠道 + 蹲点时间，新手也能抄'],
+      ['1:02','CTA','fn-cta','怕忘的先收藏，评论区告诉我你想去哪']],
+};
+// default script fallback
+function scriptFor(id){return SCRIPTS[id]||SCRIPTS.c1;}
+
+let selId=null, selSet=new Set();
+
+/* ============ RENDER CARDS ============ */
+function thumbHTML(){return '';}
+function renderCards(){
+  const g=document.getElementById('cardGrid');
+  g.innerHTML=CARDS.map((c,i)=>`
+    <div class="kard" data-id="${c.id}" style="animation-delay:${i*60}ms" onclick="cardClick(event,'${c.id}')">
+      <div class="kcheck" onclick="toggleSet(event,'${c.id}')"></div>
+      <div class="kcover ${c.cover} ${c.tall?'tall':''}"><div class="play"></div><span class="plat">${c.plat}</span><span class="dur">${c.dur}</span></div>
+      <div class="kbody">
+        <div class="ktitle">${c.title}</div>
+        <div class="kmeta"><span class="badge ${c.pc}">${c.plat}</span><span class="kauthor">${c.author}</span><span class="kfollow">粉丝 <span class="v">${c.followers}</span></span></div>
+        <div class="kstats">${c.stats.map(s=>`<span class="kv">${s[0]} <span class="v">${s[1]}</span></span>`).join('')}</div>
+        <div class="kwhy"><div class="kwhy-h">💡 为什么火 · AI 归因</div><p><b>${c.why[0][0]}</b>：${c.why[0][1]}</p></div>
+        <div class="ksenti-row"><div class="senti"><i class="pos" style="width:${c.senti[0]}%"></i><i class="neu" style="width:${c.senti[1]}%"></i><i class="neg" style="width:${c.senti[2]}%"></i></div><span class="senti-lab">正面 <b>${c.senti[0]}%</b></span></div>
+        <div class="ktagrow">
+          <span class="relv">业务相关 <b>${c.relv}</b></span>
+          ${c.tags.map(t=>`<span class="tag ${t[0]}"><span class="d"></span>${t[1]}</span>`).join('')}
+          ${c.lineage?`<span class="lineage">🧬 ${c.lineage}</span>`:''}
+        </div>
+      </div>
+      <div class="kquick">
+        <button class="qa" onclick="cardAct(event,'${c.id}','why')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M12 2a7 7 0 0 0-4 12c.5.5 1 1.5 1 3h6c0-1.5.5-2.5 1-3a7 7 0 0 0-4-12z"/></svg>为什么火</button>
+        <button class="qa" onclick="cardAct(event,'${c.id}','slice')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.1 8.1L20 16M8.1 15.9L20 8"/></svg>切片</button>
+        <button class="qa dark" onclick="cardAct(event,'${c.id}','adapt')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7-3-3-7 7v3z"/><path d="M14 6l3 3"/></svg>改编</button>
+      </div>
+    </div>`).join('');
+}
+
+/* ============ ASSETS ============ */
+const ASSETS=[
+  {n:'开场钩子 · 38元看海',d:'g2',dur:'0:06',hot:true,used:'用 ×7',der:9},
+  {n:'反转高潮 · 海景治愈',d:'g6',dur:'0:13',hot:true,used:'用 ×4',der:5},
+  {n:'卖点 · 路线攻略',d:'g5',dur:'0:11',hot:false,used:'用 ×2',der:2},
+  {n:'落地窗海景民宿',d:'g4',dur:'图',hot:true,used:'用 ×5',der:3},
+  {n:'凌晨高铁站纪实',d:'g1',dur:'0:08',hot:false,used:'用 ×1'},
+  {n:'治愈系 BGM · 慢',d:'g3',dur:'BGM',hot:false,used:'用 ×12',der:6},
+  {n:'POV 海边空镜',d:'g6',dur:'0:05',hot:false,used:'用 ×0'},
+  {n:'高铁车窗延时',d:'g7',dur:'0:09',hot:true,used:'用 ×6',der:4},
+  {n:'AI 生成 · 海边日落',d:'g8',dur:'AI',hot:false,used:'用 ×3'},
+  {n:'字幕模板 · 攻略体',d:'g1',dur:'模板',hot:false,used:'用 ×9'},
+];
+function renderAssets(){
+  document.getElementById('assetGrid').innerHTML=ASSETS.map((a,i)=>`
+    <div class="acard" onclick="openAsset(${i})">
+      <div class="acover ${a.d}">${a.hot?'<span class="hot">🔥 爆款</span>':''}${a.der?`<span class="alin">🧬 衍生 ${a.der}</span>`:''}<span class="dur">${a.dur}</span><div class="ahint">🧬 看血缘衍生树</div></div>
+      <div class="abody"><div class="an">${a.n}</div><div class="am"><span class="used">${a.used}</span><span>· 已向量化</span></div></div>
+    </div>`).join('');
+}
+
+/* ============ SELECTION + ACTION BAR ============ */
+function cardClick(e,id){ if(e.target.closest('.kquick')||e.target.closest('.kcheck'))return; selectCard(id); }
+function selectCard(id){
+  selId=id;
+  document.querySelectorAll('.kard').forEach(k=>k.classList.toggle('sel',k.dataset.id===id));
+  const c=CARDS.find(x=>x.id===id);
+  document.getElementById('abThumb').className='thumb '+c.cover;
+  document.getElementById('abTitle').textContent=c.title;
+  document.getElementById('actionbar').classList.add('show');
+  // selection set auto-includes primary
+  if(!selSet.has(id)){selSet.add(id);updateSet();markChecks();}
+}
+function clearSel(){
+  selId=null;
+  document.querySelectorAll('.kard').forEach(k=>k.classList.remove('sel'));
+  document.getElementById('actionbar').classList.remove('show');
+}
+function toggleSet(e,id){ e.stopPropagation();
+  if(selSet.has(id))selSet.delete(id); else selSet.add(id);
+  updateSet(); markChecks();
+}
+function markChecks(){ document.querySelectorAll('.kard').forEach(k=>{ const cb=k.querySelector('.kcheck'); cb.classList.toggle('on',selSet.has(k.dataset.id)); }); }
+function updateSet(){ document.getElementById('selCount').textContent=selSet.size; }
+function cardAct(e,id,mode){ e.stopPropagation(); selectCard(id); openDrawer(mode); }
+
+/* ============ DRAWER ============ */
+function openDrawer(mode){
+  if(!selId) selectCard(CARDS[0].id);
+  const c=CARDS.find(x=>x.id===selId);
+  document.getElementById('app').classList.add('drawer-open');
+  document.getElementById('drawer').classList.add('open');
+  ['why','slice','adapt'].forEach(m=>{
+    document.getElementById('pane-'+m).classList.toggle('active',m===mode);
+    const f=document.getElementById('foot-'+m); if(f) f.style.display = m===mode ? (m==='adapt'?'flex':'block') : 'none';
+  });
+  const head={why:['💡','为什么火 · AI 归因','逐句拉片 + 归因，可解释','var(--accent)'],
+              slice:['✂️','一键切片','AI 已分镜，拖一下确认入库','var(--teal)'],
+              adapt:['✍️','一键改编','AI 出草稿，你改成定稿','var(--purple)']}[mode];
+  document.getElementById('dIco').textContent=head[0];
+  document.getElementById('dIco').style.background=head[3];
+  document.getElementById('dTitle').textContent=head[1];
+  document.getElementById('dSub').textContent=head[2];
+
+  if(mode==='why'){
+    document.getElementById('whyCover').className='dcover '+c.cover;
+    document.getElementById('whyPlat').textContent=c.plat;
+    document.getElementById('whyPlat').className='badge '+c.pc;
+    document.getElementById('whyTitle').textContent=c.title;
+    document.getElementById('whyList').innerHTML=c.why.map((w,i)=>`
+      <div class="why-li"><span class="num">${i+1}</span><div class="txt"><b>${w[0]}</b>：${w[1]}<br><span class="src">依据 · ${w[2]}</span></div></div>`).join('');
+    document.getElementById('whyScript').innerHTML=scriptFor(c.id).map(s=>`
+      <div class="sline"><span class="tc">${s[0]}</span><span class="fn ${s[2]}">${s[1]}</span><span class="st">${s[3]}</span></div>`).join('');
+  }
+  if(mode==='slice'){ document.getElementById('sliceScr').className='scr '+c.cover; }
+  if(mode==='adapt'){ document.getElementById('adaptFrom').textContent=c.author+' · '+c.title; }
+}
+function closeDrawer(){
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('app').classList.remove('drawer-open');
+}
+
+/* slice seg toggle + count */
+function toggleSeg(el){ el.classList.toggle('on'); el.querySelector('.pick span:last-child').textContent=el.classList.contains('on')?'已选':'选取';
+  document.getElementById('segCount').textContent=document.querySelectorAll('#segCards .sc.on').length; }
+function saveSlices(){ closeDrawer(); showGo(); }
+function showGo(){ document.getElementById('goToast').classList.add('show'); }
+function hideGo(){ document.getElementById('goToast').classList.remove('show'); }
+function goCreate(){ hideGo(); document.getElementById('carryBox').style.display='flex'; setStage('create'); }
+
+/* slice grip drag (可干预 demo) */
+(function(){
+  let active=null,startX=0,track,segs,leftFlex,rightFlex;
+  document.addEventListener('mousedown',e=>{ const g=e.target.closest('.grip'); if(!g)return;
+    active=parseInt(g.dataset.i); track=document.getElementById('track'); segs=[...track.children];
+    startX=e.clientX; leftFlex=parseFloat(segs[active].style.flex); rightFlex=parseFloat(segs[active+1].style.flex);
+    e.preventDefault(); });
+  document.addEventListener('mousemove',e=>{ if(active===null)return;
+    const w=track.offsetWidth; const total=segs.reduce((s,x)=>s+parseFloat(x.style.flex),0);
+    const dx=(e.clientX-startX)/w*total; let nl=leftFlex+dx, nr=rightFlex-dx;
+    if(nl<4||nr<4)return; segs[active].style.flex=nl; segs[active+1].style.flex=nr; });
+  document.addEventListener('mouseup',()=>{ active=null; });
+})();
+
+/* ============ JOURNEY STAGES ============ */
+function setStage(stage){
+  clearSel(); closeDrawer();
+  document.querySelectorAll('.jtab').forEach(t=>t.classList.toggle('active',t.dataset.stage===stage));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+stage).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('.jtab').forEach(t=>t.addEventListener('click',()=>setStage(t.dataset.stage)));
+
+/* ============ COPILOT DOCK ============ */
+function openDock(intent){
+  document.getElementById('dpanel').classList.add('open');
+  document.getElementById('dock').style.opacity='0';
+  document.getElementById('dock').style.pointerEvents='none';
+  hideToast(); document.getElementById('pulse').style.display='none';
+  document.getElementById('dockNudge').style.display='none';
+  if(intent==='recall'){ askYoYo('帮我召回能拼这条的素材'); }
+  if(intent==='nudge'){ pushBot('这 3 条高潜素材和「火车出行」相关度都 &gt; 90：<b>开场钩子·38元看海</b>、<b>反转高潮·海景治愈</b>、<b>高铁车窗延时</b>。要我用它们直接拼 2 条草稿吗？'); }
+}
+function closeDock(){
+  document.getElementById('dpanel').classList.remove('open');
+  document.getElementById('dock').style.opacity='1';
+  document.getElementById('dock').style.pointerEvents='auto';
+}
+function hideToast(){ document.getElementById('dockToast').classList.remove('show'); }
+function pushBot(html){ const b=document.getElementById('dpBody');
+  const d=document.createElement('div'); d.className='msg bot'; d.innerHTML='<div class="bub">'+html+'</div>'; b.appendChild(d); b.scrollTop=b.scrollHeight; return d; }
+function pushMe(t){ const b=document.getElementById('dpBody');
+  const d=document.createElement('div'); d.className='msg me'; d.innerHTML='<div class="bub">'+t+'</div>'; b.appendChild(d); b.scrollTop=b.scrollHeight; }
+function pushNode(node){ const b=document.getElementById('dpBody'); b.appendChild(node); b.scrollTop=b.scrollHeight; return node; }
+
+function askYoYo(q){
+  pushMe(q);
+  setTimeout(()=>{
+    if(q.includes('为什么火')) pushBot('这条火在三点：<b>反差钩子</b>（38 块的极致性价比）、<b>治愈情绪</b>（戳逃离班味）、<b>强转化</b>（评论区 2.1w 在求路线）。我把逐句拉片放进右侧抽屉了，点卡片上的「为什么火」可展开。');
+    else if(q.includes('评论')) pushBot('评论整体 <b>正面 78%</b>，最高频是「求路线 / 车次」（2.1w）和「想去」（8.6k）—— 这是很强的出行转化信号，建议直接做攻略承接。');
+    else pushBot('好的，我用语义检索匹配了 5 条能拼这条的素材，已按相关度排好。要我直接拼成草稿吗？');
+  },650);
+}
+function sendYoYo(){ const i=document.getElementById('yoyoInput'); const v=i.value.trim(); if(!v)return; i.value='';
+  if(v.includes('做')&&(v.includes('图文')||v.includes('条'))) runYoYo(v); else askYoYo(v); }
+
+function runYoYo(prompt){
+  pushMe(prompt);
+  // running steps
+  const steps=['理解需求 · 拆解任务','检索 / 选题 · 匹配爆款','生成 5 条草稿','智能排版','送审前自检'];
+  const wrap=document.createElement('div'); wrap.className='dp-card';
+  wrap.innerHTML='<div class="ch">⚙️ 自动编排中 · 你可随时打断</div><div class="steps">'+
+    steps.map((s,i)=>`<div class="step" id="stp${i}"><span class="sdot"></span><span>${s}</span><span class="sline2"></span></div>`).join('')+'</div>';
+  pushNode(wrap);
+  let i=0;
+  const tick=()=>{
+    if(i>0) document.getElementById('stp'+(i-1)).className='step done';
+    if(i<steps.length){ const el=document.getElementById('stp'+i); el.className='step run'; i++; setTimeout(tick,720); }
+    else { finishRun(); }
+  };
+  setTimeout(tick,300);
+}
+function finishRun(){
+  const done=pushBot('做好了 ✦ 5 条草稿都已生成、排好版，<b>没有自动发布 — 等你拍板</b>。先放 3 条给你看：');
+  const items=[['38 元绿皮看海 · 攻略图文','改自 @火车漫游记','g2'],
+               ['2 小时高铁宝藏城 · 清单','改自 @周末去哪儿','g8'],
+               ['周末逃离班味 · 口播脚本','新选题 · 治愈向','g6']];
+  items.forEach((it,k)=>{ setTimeout(()=>{
+    const n=document.createElement('div'); n.className='msg bot'; n.style.maxWidth='100%';
+    n.innerHTML=`<div class="ycard"><div class="yt ${it[2]}"></div><div style="flex:1"><div class="yi">${it[0]}</div><div class="ym">🧬 ${it[1]}</div><span class="ybadge">草稿 · 待你收口</span></div></div>`;
+    pushNode(n);
+  },k*260); });
+  setTimeout(()=>{ const n=document.createElement('div'); n.className='dp-card';
+    n.innerHTML='<div class="ch">↪ 回到主工作流</div><p>草稿都已落到 <b>创作台</b>，你去那里改两句、定稿、送审就行。</p><div class="act"><button class="yb hot" onclick="closeDock();setStage(\'create\')">去创作台收口 →</button></div>';
+    pushNode(n);
+  },items.length*260+200);
+}
+function quickToast(msg){
+  const t=document.getElementById('goToast');
+  t.querySelector('span:nth-child(2)').innerHTML=msg;
+  t.querySelector('.gg').style.display='none';
+  showGo(); setTimeout(()=>{ t.querySelector('.gg').style.display=''; t.querySelector('span:nth-child(2)').innerHTML='已存入 <b>3 个切片</b> 到资产库 · 火车出行'; hideGo(); },2200);
+}
+
+/* ============ 采集 MODAL · 四源统一入口 ============ */
+function openCollect(){ document.getElementById('collectMask').classList.add('on'); }
+function closeCollect(){ document.getElementById('collectMask').classList.remove('on'); }
+function pickSrc(s){
+  document.querySelectorAll('.src').forEach(el=>el.classList.toggle('on',el.dataset.s===s));
+  document.querySelectorAll('.csrc-pane').forEach(el=>el.classList.remove('on'));
+  document.getElementById('cp-'+s).classList.add('on');
+}
+function tp(el){ el.classList.toggle('on'); }
+function ta(el){ el.parentElement.querySelectorAll('.ab2').forEach(b=>b.classList.remove('on')); el.classList.add('on');
+  document.getElementById('collectN').textContent=el.textContent.replace(/[^0-9]/g,''); }
+function doCollect(){
+  const src=document.querySelector('.src.on'); const name=src?src.querySelector('.sn').textContent:'采集';
+  const fresh=[
+    {n:'新采 · 海边日落延时',d:'g6',dur:'0:07',hot:true,used:'用 ×0'},
+    {n:'新采 · 站台告别空镜',d:'g1',dur:'0:05',hot:false,used:'用 ×0'},
+    {n:'新采 · 车厢窗外稻田',d:'g3',dur:'0:06',hot:false,used:'用 ×0'},
+  ];
+  ASSETS.unshift(...fresh);
+  renderAssets();
+  closeCollect();
+  setStage('collect');
+  quickToast('✓ 已通过「'+name+'」采集入库 <b>'+fresh.length+' 条</b> · 自动打标 + 去重');
+}
+
+/* ============ ASSET DETAIL · 血缘衍生树 ============ */
+function openAsset(i){
+  const a=ASSETS[i];
+  document.getElementById('adCov').className='adcov '+a.d;
+  document.getElementById('adDur').textContent=a.dur;
+  document.getElementById('adName').textContent=a.n;
+  document.getElementById('adHot').style.display=a.hot?'':'none';
+  document.getElementById('adUse').textContent=a.used;
+  document.getElementById('assetMask').classList.add('on');
+}
+function closeAsset(){ document.getElementById('assetMask').classList.remove('on'); }
+
+/* ============ 改编抽屉 · 实时同质化校验 ============ */
+function simRatio(a,b){           // char-bigram Jaccard, 0..1
+  const grams=s=>{ s=(s||'').replace(/\s/g,''); const set=new Set(); for(let i=0;i<s.length-1;i++) set.add(s.slice(i,i+2)); return set; };
+  const A=grams(a),B=grams(b); if(!A.size||!B.size) return 0;
+  let inter=0; A.forEach(g=>{ if(B.has(g)) inter++; });
+  return inter/(A.size+B.size-inter);
+}
+const DUPE_REF={ name:'《周末看海 · 已发布》', text:`周末逃离计划 38 块钱坐绿皮火车去看海
+谁说穷游不能很治愈 这条路线我帮你扒好了
+城区到海边小城 绿皮直达 全程 38 元
+周六早班车出发 中午抵达
+慢节奏 看海 把班味全留在城里
+完整车次和时刻表放评论区 想去的姐妹扣 1` };
+function updateDupe(){
+  const ta=document.getElementById('adaptTA'); if(!ta) return;
+  const sim=simRatio(ta.value,DUPE_REF.text);
+  const diff=Math.max(2,Math.round((1-sim)*100));
+  const box=document.getElementById('dupe'), bar=document.getElementById('dupeBar'),
+        st=document.getElementById('dupeState'), msg=document.getElementById('dupeMsg');
+  bar.style.width=diff+'%';
+  box.classList.remove('safe','warn','bad');
+  if(sim>=0.55){ box.classList.add('bad'); st.textContent='过近 · 撞稿风险';
+    msg.innerHTML='与 <b>'+DUPE_REF.name+'</b> 高度相似（差异度仅 <b>'+diff+'%</b>）—— 容易被判搬运或自我竞争。<span class="dsug" onclick="dupeFix()">💡 换个开场角度</span>'; }
+  else if(sim>=0.32){ box.classList.add('warn'); st.textContent='临界 · 再改改';
+    msg.innerHTML='和 <b>'+DUPE_REF.name+'</b> 有部分重合，差异度 <b>'+diff+'%</b>。改两句钩子或换个利益点会更稳。<span class="dsug" onclick="dupeFix()">💡 差异化建议</span>'; }
+  else { box.classList.add('safe'); st.textContent='差异大 · 安全';
+    msg.innerHTML='与库内最接近的 <b>'+DUPE_REF.name+'</b> 差异度 <b>'+diff+'%</b>，可放心定稿送审。'; }
+}
+function dupeFix(){
+  const ta=document.getElementById('adaptTA'); if(!ta) return;
+  const add='【反向开场】别人都在拍海，我先拍了凌晨空无一人的站台 —— 那种安静，本身就治愈。\n\n';
+  if(ta.value.indexOf('反向开场')<0) ta.value=add+ta.value;
+  updateDupe();
+  quickToast('已换上差异化开场，差异度实时回升 ↑');
+}
+
+/* ============ TOUR ============ */
+function toggleTour(){
+  const on=document.getElementById('app').classList.toggle('tour');
+  document.getElementById('tourBtn').classList.toggle('on',on);
+}
+
+/* ============ INIT ============ */
+renderCards(); renderAssets(); updateDupe();
+document.querySelectorAll('.mask').forEach(m=>m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('on'); }));
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.querySelectorAll('.mask.on').forEach(m=>m.classList.remove('on')); });
+// proactive copilot: stays quiet, then surfaces a nudge after a beat
+setTimeout(()=>{ if(!document.getElementById('dpanel').classList.contains('open')) document.getElementById('dockToast').classList.add('show'); },4200);
+</script>
+</body>
+</html>
