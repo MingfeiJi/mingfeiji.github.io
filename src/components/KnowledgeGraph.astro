@@ -1,0 +1,215 @@
+---
+interface Props {
+  height?: string;
+}
+const { height = '72vh' } = Astro.props;
+---
+
+<div class="kg-shell" style={`height:${height}`}>
+  <canvas id="kg-canvas"></canvas>
+  <div class="kg-legend">
+    <span><i style="background:#fbbf24"></i>投资概念</span>
+    <span><i style="background:#7dd3fc"></i>AI 概念</span>
+    <span><i style="background:#34d399"></i>来源摘要</span>
+    <span><i style="background:#a78bfa"></i>哲学概念</span>
+    <span><i style="background:#fb7185"></i>哲学命题</span>
+    <span><i style="background:#e8ecff"></i>文章</span>
+  </div>
+  <div class="kg-hint">拖拽节点 · 滚轮缩放 · 点击进入全文</div>
+  <div id="kg-tip" class="kg-tip"></div>
+</div>
+
+<script>
+  import { forceSimulation, forceLink, forceManyBody, forceCenter, forceCollide, forceX, forceY } from 'd3-force';
+  import graph from '../data/graph.json';
+
+  const COLORS: Record<string, string> = {
+    投资概念: '#fbbf24',
+    'AI 概念': '#7dd3fc',
+    来源摘要: '#34d399',
+    哲学概念: '#a78bfa',
+    哲学命题: '#fb7185',
+    文章: '#e8ecff',
+  };
+
+  const canvas = document.getElementById('kg-canvas') as HTMLCanvasElement;
+  const tip = document.getElementById('kg-tip')!;
+  const shell = canvas.parentElement!;
+  const ctx = canvas.getContext('2d')!;
+  const DPR = Math.min(devicePixelRatio, 2);
+
+  let W = 0, H = 0;
+  function resize() {
+    W = shell.clientWidth; H = shell.clientHeight;
+    canvas.width = W * DPR; canvas.height = H * DPR;
+    canvas.style.width = `${W}px`; canvas.style.height = `${H}px`;
+  }
+  resize();
+  addEventListener('resize', resize);
+
+  type N = { id: string; title: string; cat: string; url: string; deg: number; x?: number; y?: number; fx?: number | null; fy?: number | null };
+  const nodes: N[] = graph.nodes as any;
+  const links = (graph.links as any[]).map((l) => ({ ...l }));
+
+  const sim = forceSimulation(nodes as any)
+    .force('link', forceLink(links).id((d: any) => d.id).distance(58).strength(0.5))
+    .force('charge', forceManyBody().strength(-90))
+    .force('center', forceCenter(0, 0))
+    .force('collide', forceCollide().radius((d: any) => r(d) + 4))
+    .force('x', forceX(0).strength(0.045))
+    .force('y', forceY(0).strength(0.06));
+
+  function r(d: N) { return 3.5 + Math.min(d.deg, 8) * 1.1; }
+
+  // 视图变换
+  let scale = 0.9, tx = 0, ty = 0;
+  function toScreen(x: number, y: number) { return [W / 2 + (x + tx) * scale, H / 2 + (y + ty) * scale]; }
+  function toWorld(px: number, py: number) { return [(px - W / 2) / scale - tx, (py - H / 2) / scale - ty]; }
+
+  let hovered: N | null = null;
+
+  function draw() {
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+
+    // 边
+    ctx.lineWidth = 0.7;
+    for (const l of links) {
+      const s = l.source as N, t = l.target as N;
+      const [x1, y1] = toScreen(s.x!, s.y!);
+      const [x2, y2] = toScreen(t.x!, t.y!);
+      const active = hovered && (s === hovered || t === hovered);
+      ctx.strokeStyle = active ? 'rgba(125,211,252,.65)' : 'rgba(125,211,252,.13)';
+      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+    }
+
+    // 节点
+    for (const n of nodes) {
+      const [x, y] = toScreen(n.x!, n.y!);
+      const rad = r(n) * scale;
+      const c = COLORS[n.cat] || '#fff';
+      const dim = hovered && n !== hovered && !links.some((l) => (l.source === hovered && l.target === n) || (l.target === hovered && l.source === n));
+      ctx.globalAlpha = dim ? 0.25 : 1;
+      ctx.shadowColor = c; ctx.shadowBlur = n === hovered ? 22 : 8;
+      ctx.fillStyle = c;
+      ctx.beginPath(); ctx.arc(x, y, rad, 0, Math.PI * 2); ctx.fill();
+      ctx.shadowBlur = 0;
+      // 高度数节点常显标签
+      if ((n.deg >= 5 && scale > 0.7) || n === hovered || scale > 1.6) {
+        ctx.font = `${Math.max(10, 11 * Math.min(scale, 1.3))}px "LXGW WenKai", sans-serif`;
+        ctx.fillStyle = dim ? 'rgba(154,166,207,.3)' : 'rgba(232,236,255,.92)';
+        ctx.textAlign = 'center';
+        ctx.fillText(n.title.slice(0, 12), x, y + rad + 13);
+      }
+      ctx.globalAlpha = 1;
+    }
+  }
+  sim.on('tick', draw);
+
+  // ---------- 交互 ----------
+  function pick(px: number, py: number): N | null {
+    const [wx, wy] = toWorld(px, py);
+    let best: N | null = null, bd = Infinity;
+    for (const n of nodes) {
+      const d = Math.hypot(n.x! - wx, n.y! - wy);
+      if (d < Math.max(r(n) + 4, 10 / scale) && d < bd) { best = n; bd = d; }
+    }
+    return best;
+  }
+
+  let dragging: N | null = null, panning = false, lastX = 0, lastY = 0, moved = 0;
+
+  canvas.style.pointerEvents = 'auto';
+  canvas.addEventListener('pointerdown', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const px = e.clientX - rect.left, py = e.clientY - rect.top;
+    moved = 0; lastX = px; lastY = py;
+    const n = pick(px, py);
+    if (n) { dragging = n; sim.alphaTarget(0.25).restart(); }
+    else panning = true;
+    canvas.setPointerCapture(e.pointerId);
+  });
+
+  canvas.addEventListener('pointermove', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const px = e.clientX - rect.left, py = e.clientY - rect.top;
+    moved += Math.abs(px - lastX) + Math.abs(py - lastY);
+    if (dragging) {
+      const [wx, wy] = toWorld(px, py);
+      dragging.fx = wx; dragging.fy = wy;
+    } else if (panning) {
+      tx += (px - lastX) / scale; ty += (py - lastY) / scale;
+      draw();
+    } else {
+      const n = pick(px, py);
+      if (n !== hovered) {
+        hovered = n;
+        canvas.style.cursor = n ? 'pointer' : 'grab';
+        if (n) {
+          tip.textContent = `${n.title} · ${n.cat}`;
+          tip.style.opacity = '1';
+          tip.style.left = `${px + 14}px`; tip.style.top = `${py - 10}px`;
+        } else tip.style.opacity = '0';
+        draw();
+      } else if (n) {
+        tip.style.left = `${px + 14}px`; tip.style.top = `${py - 10}px`;
+      }
+    }
+    lastX = px; lastY = py;
+  });
+
+  canvas.addEventListener('pointerup', (e) => {
+    if (dragging) {
+      if (moved < 6) location.href = dragging.url; // 点击 → 进入全文
+      dragging.fx = null; dragging.fy = null;
+      dragging = null;
+      sim.alphaTarget(0);
+    }
+    panning = false;
+    canvas.releasePointerCapture(e.pointerId);
+  });
+
+  canvas.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const k = e.deltaY < 0 ? 1.12 : 0.89;
+    scale = Math.min(Math.max(scale * k, 0.3), 4);
+    draw();
+  }, { passive: false });
+</script>
+
+<style>
+  .kg-shell {
+    position: relative;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background:
+      radial-gradient(900px 500px at 70% 20%, rgba(124, 58, 237, .07), transparent 60%),
+      rgba(3, 4, 18, .72);
+    backdrop-filter: blur(8px);
+    overflow: hidden;
+  }
+  #kg-canvas { position: absolute; inset: 0; cursor: grab; touch-action: none; }
+  .kg-legend {
+    position: absolute; top: 16px; left: 18px;
+    display: flex; flex-wrap: wrap; gap: 12px;
+    font-family: var(--mono); font-size: 11px; color: var(--ink2);
+    pointer-events: none;
+  }
+  .kg-legend i {
+    display: inline-block; width: 9px; height: 9px; border-radius: 50%;
+    margin-right: 5px; vertical-align: -1px;
+  }
+  .kg-hint {
+    position: absolute; bottom: 14px; right: 18px;
+    font-family: var(--mono); font-size: 11px; color: var(--ink3);
+    pointer-events: none;
+  }
+  .kg-tip {
+    position: absolute; pointer-events: none; opacity: 0;
+    background: rgba(7, 11, 31, .92); border: 1px solid var(--line2);
+    border-radius: 8px; padding: 6px 12px;
+    font-size: 12.5px; color: #fff; white-space: nowrap;
+    transition: opacity .15s; z-index: 5;
+    backdrop-filter: blur(6px);
+  }
+</style>

@@ -23,7 +23,14 @@ for (const f of files) {
   n++;
   const slug = `p${String(n).padStart(3, '0')}`;
   // 移除 Obsidian 专属语法 [[...]] → 纯文本
-  const cleaned = raw.replace(/\[\[([^\]|]+)(\|([^\]]+))?\]\]/g, (_, a, __, b) => b || a);
+  let cleaned = raw.replace(/\[\[([^\]|]+)(\|([^\]]+))?\]\]/g, (_, a, __, b) => b || a);
+  // 公开站脱敏：公司真名 → 通用描述
+  cleaned = cleaned
+    .replace(/在携程独自研究/g, '在大厂独自研究')
+    .replace(/在携程通过合规审核/g, '在我们公司通过合规审核')
+    .replace(/携程/g, '大厂')
+    .replace(/vidaXL|荷贝/g, '某跨境电商')
+    .replace(/北京更好玩科技?/g, '某AI初创');
   writeFileSync(join(DEST, `${slug}.md`), cleaned);
   console.log(`${slug}  ←  ${f}`);
 }

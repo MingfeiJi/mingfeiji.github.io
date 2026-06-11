@@ -13,4 +13,15 @@ const articles = defineCollection({
     .passthrough(),
 });
 
-export const collections = { articles };
+const notes = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/notes' }),
+  schema: z
+    .object({
+      title: z.string(),
+      category: z.string(),
+      created: z.coerce.date().optional(),
+    })
+    .passthrough(),
+});
+
+export const collections = { articles, notes };

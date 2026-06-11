@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import KnowledgeGraph from '../components/KnowledgeGraph.astro';
+import graphData from '../data/graph.json';
+
+const counts: Record<string, number> = {};
+for (const n of graphData.nodes as any[]) counts[n.cat] = (counts[n.cat] || 0) + 1;
+---
+
+<Base title="知识图谱 — 纪鸣飞的知识星系" description="151 个节点的个人知识网络：AI 概念、投资概念、哲学思辨、方法论文章的关联图谱。">
+  <section class="chapter" style="padding-top:130px;padding-bottom:60px">
+    <div class="wrap" style="max-width:1280px">
+      <div class="chapter-head">
+        <div class="ch-no"><em>KNOWLEDGE GALAXY</em> FULL GRAPH</div>
+        <h2>知识图谱 · 全景</h2>
+        <div class="ch-sub">
+          {(graphData.nodes as any[]).length} 个节点 · {(graphData.links as any[]).length} 条关联 ——
+          {Object.entries(counts).map(([c, n]) => `${c} ${n}`).join(' · ')}。
+          每个光点都是一篇可读的全文：拖拽探索，点击进入。
+        </div>
+      </div>
+      <KnowledgeGraph height="76vh" />
+      <div style="margin-top:28px;display:flex;gap:14px;justify-content:center">
+        <a class="btn" href="/articles/">📡 文章列表视图</a>
+        <a class="btn" href="/">返回主站</a>
+      </div>
+    </div>
+  </section>
+</Base>

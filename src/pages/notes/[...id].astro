@@ -1,0 +1,66 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+import graphData from '../../data/graph.json';
+
+export async function getStaticPaths() {
+  const notes = await getCollection('notes');
+  return notes.map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+
+// 图谱里的相邻节点 → "关联笔记"
+const related = (graphData.links as any[])
+  .filter((l) => l.source === entry.id || l.target === entry.id)
+  .map((l) => (l.source === entry.id ? l.target : l.source))
+  .map((id) => (graphData.nodes as any[]).find((n) => n.id === id))
+  .filter(Boolean)
+  .slice(0, 8);
+---
+
+<Base title={`${d.title} — 纪鸣飞的知识星系`} description={`${d.category} · ${d.title}`}>
+  <article class="chapter" style="padding-top:150px">
+    <div class="wrap article-wrap" style="max-width:760px">
+      <header class="article-head" style="margin-bottom:44px;padding-bottom:32px;border-bottom:1px solid var(--line)">
+        <div class="kicker">KNOWLEDGE GALAXY · {d.category}</div>
+        <h1 style="font-size:clamp(26px,4.6vw,38px);line-height:1.4;margin:16px 0 10px;background:linear-gradient(120deg,#fff 30%,var(--nebula) 90%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">{d.title}</h1>
+        <div style="display:flex;gap:18px;font-family:var(--mono);font-size:12.5px;color:var(--ink3)">
+          <span>{d.category}</span>
+          {d.created && <span>{d.created.toISOString().slice(0, 10)}</span>}
+          <span>纪鸣飞 · 个人知识库编译</span>
+        </div>
+      </header>
+
+      <div class="prose">
+        <Content />
+      </div>
+
+      {related.length > 0 && (
+        <div class="related-box">
+          <div class="kicker" style="margin-bottom:14px">✦ 图谱关联</div>
+          <div class="t-chips">
+            {related.map((rn: any) => (
+              <a class="chip violet" href={rn.url}>{rn.title}</a>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div style="margin-top:48px;display:flex;gap:14px;justify-content:center">
+        <a class="btn" href="/graph/">🕸 返回知识图谱</a>
+        <a class="btn" href="/">返回主站</a>
+      </div>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .related-box {
+    margin-top: 64px; padding: 24px 28px;
+    background: rgba(167, 139, 250, .06);
+    border: 1px solid var(--line2); border-radius: 14px;
+  }
+</style>

@@ -1,0 +1,2653 @@
+{
+ "nodes": [
+  {
+   "id": "k001",
+   "title": "LLM Compiler",
+   "cat": "AI 概念",
+   "url": "/notes/k001/",
+   "deg": 0
+  },
+  {
+   "id": "k002",
+   "title": "Context Engineering",
+   "cat": "AI 概念",
+   "url": "/notes/k002/",
+   "deg": 0
+  },
+  {
+   "id": "k003",
+   "title": "RLVR",
+   "cat": "AI 概念",
+   "url": "/notes/k003/",
+   "deg": 2
+  },
+  {
+   "id": "k004",
+   "title": "Vibe Coding",
+   "cat": "AI 概念",
+   "url": "/notes/k004/",
+   "deg": 1
+  },
+  {
+   "id": "k005",
+   "title": "MCP",
+   "cat": "AI 概念",
+   "url": "/notes/k005/",
+   "deg": 1
+  },
+  {
+   "id": "k006",
+   "title": "买入价格",
+   "cat": "投资概念",
+   "url": "/notes/k006/",
+   "deg": 8
+  },
+  {
+   "id": "k007",
+   "title": "企业文化",
+   "cat": "投资概念",
+   "url": "/notes/k007/",
+   "deg": 8
+  },
+  {
+   "id": "k008",
+   "title": "低估",
+   "cat": "投资概念",
+   "url": "/notes/k008/",
+   "deg": 17
+  },
+  {
+   "id": "k009",
+   "title": "保险业",
+   "cat": "投资概念",
+   "url": "/notes/k009/",
+   "deg": 7
+  },
+  {
+   "id": "k010",
+   "title": "保险浮存金",
+   "cat": "投资概念",
+   "url": "/notes/k010/",
+   "deg": 8
+  },
+  {
+   "id": "k011",
+   "title": "债券",
+   "cat": "投资概念",
+   "url": "/notes/k011/",
+   "deg": 9
+  },
+  {
+   "id": "k012",
+   "title": "公司治理",
+   "cat": "投资概念",
+   "url": "/notes/k012/",
+   "deg": 4
+  },
+  {
+   "id": "k013",
+   "title": "内在价值",
+   "cat": "投资概念",
+   "url": "/notes/k013/",
+   "deg": 26
+  },
+  {
+   "id": "k014",
+   "title": "分散投资",
+   "cat": "投资概念",
+   "url": "/notes/k014/",
+   "deg": 7
+  },
+  {
+   "id": "k015",
+   "title": "可转换证券",
+   "cat": "投资概念",
+   "url": "/notes/k015/",
+   "deg": 8
+  },
+  {
+   "id": "k016",
+   "title": "品牌",
+   "cat": "投资概念",
+   "url": "/notes/k016/",
+   "deg": 9
+  },
+  {
+   "id": "k017",
+   "title": "商业模式",
+   "cat": "投资概念",
+   "url": "/notes/k017/",
+   "deg": 12
+  },
+  {
+   "id": "k018",
+   "title": "商誉",
+   "cat": "投资概念",
+   "url": "/notes/k018/",
+   "deg": 6
+  },
+  {
+   "id": "k019",
+   "title": "回购",
+   "cat": "投资概念",
+   "url": "/notes/k019/",
+   "deg": 7
+  },
+  {
+   "id": "k020",
+   "title": "复利",
+   "cat": "投资概念",
+   "url": "/notes/k020/",
+   "deg": 9
+  },
+  {
+   "id": "k021",
+   "title": "套利",
+   "cat": "投资概念",
+   "url": "/notes/k021/",
+   "deg": 6
+  },
+  {
+   "id": "k022",
+   "title": "媒体与出版",
+   "cat": "投资概念",
+   "url": "/notes/k022/",
+   "deg": 6
+  },
+  {
+   "id": "k023",
+   "title": "安全边际",
+   "cat": "投资概念",
+   "url": "/notes/k023/",
+   "deg": 17
+  },
+  {
+   "id": "k024",
+   "title": "市场先生",
+   "cat": "投资概念",
+   "url": "/notes/k024/",
+   "deg": 7
+  },
+  {
+   "id": "k025",
+   "title": "市场预测",
+   "cat": "投资概念",
+   "url": "/notes/k025/",
+   "deg": 6
+  },
+  {
+   "id": "k026",
+   "title": "市盈率",
+   "cat": "投资概念",
+   "url": "/notes/k026/",
+   "deg": 7
+  },
+  {
+   "id": "k027",
+   "title": "承保纪律",
+   "cat": "投资概念",
+   "url": "/notes/k027/",
+   "deg": 6
+  },
+  {
+   "id": "k028",
+   "title": "护城河",
+   "cat": "投资概念",
+   "url": "/notes/k028/",
+   "deg": 20
+  },
+  {
+   "id": "k029",
+   "title": "收购",
+   "cat": "投资概念",
+   "url": "/notes/k029/",
+   "deg": 9
+  },
+  {
+   "id": "k030",
+   "title": "有效市场",
+   "cat": "投资概念",
+   "url": "/notes/k030/",
+   "deg": 6
+  },
+  {
+   "id": "k031",
+   "title": "杠杆",
+   "cat": "投资概念",
+   "url": "/notes/k031/",
+   "deg": 12
+  },
+  {
+   "id": "k032",
+   "title": "特许经营权",
+   "cat": "投资概念",
+   "url": "/notes/k032/",
+   "deg": 6
+  },
+  {
+   "id": "k033",
+   "title": "留存收益",
+   "cat": "投资概念",
+   "url": "/notes/k033/",
+   "deg": 7
+  },
+  {
+   "id": "k034",
+   "title": "科技与互联网",
+   "cat": "投资概念",
+   "url": "/notes/k034/",
+   "deg": 6
+  },
+  {
+   "id": "k035",
+   "title": "税收效率",
+   "cat": "投资概念",
+   "url": "/notes/k035/",
+   "deg": 6
+  },
+  {
+   "id": "k036",
+   "title": "竞争优势",
+   "cat": "投资概念",
+   "url": "/notes/k036/",
+   "deg": 9
+  },
+  {
+   "id": "k037",
+   "title": "管理层",
+   "cat": "投资概念",
+   "url": "/notes/k037/",
+   "deg": 11
+  },
+  {
+   "id": "k038",
+   "title": "纺织业务",
+   "cat": "投资概念",
+   "url": "/notes/k038/",
+   "deg": 8
+  },
+  {
+   "id": "k039",
+   "title": "股东导向",
+   "cat": "投资概念",
+   "url": "/notes/k039/",
+   "deg": 8
+  },
+  {
+   "id": "k040",
+   "title": "股息",
+   "cat": "投资概念",
+   "url": "/notes/k040/",
+   "deg": 6
+  },
+  {
+   "id": "k041",
+   "title": "能力圈",
+   "cat": "投资概念",
+   "url": "/notes/k041/",
+   "deg": 9
+  },
+  {
+   "id": "k042",
+   "title": "能源",
+   "cat": "投资概念",
+   "url": "/notes/k042/",
+   "deg": 7
+  },
+  {
+   "id": "k043",
+   "title": "航空业",
+   "cat": "投资概念",
+   "url": "/notes/k043/",
+   "deg": 6
+  },
+  {
+   "id": "k044",
+   "title": "衍生品",
+   "cat": "投资概念",
+   "url": "/notes/k044/",
+   "deg": 6
+  },
+  {
+   "id": "k045",
+   "title": "诚信",
+   "cat": "投资概念",
+   "url": "/notes/k045/",
+   "deg": 6
+  },
+  {
+   "id": "k046",
+   "title": "账面价值",
+   "cat": "投资概念",
+   "url": "/notes/k046/",
+   "deg": 8
+  },
+  {
+   "id": "k047",
+   "title": "资本配置",
+   "cat": "投资概念",
+   "url": "/notes/k047/",
+   "deg": 15
+  },
+  {
+   "id": "k048",
+   "title": "透视盈余",
+   "cat": "投资概念",
+   "url": "/notes/k048/",
+   "deg": 6
+  },
+  {
+   "id": "k049",
+   "title": "通货膨胀",
+   "cat": "投资概念",
+   "url": "/notes/k049/",
+   "deg": 6
+  },
+  {
+   "id": "k050",
+   "title": "铁路运输",
+   "cat": "投资概念",
+   "url": "/notes/k050/",
+   "deg": 6
+  },
+  {
+   "id": "k051",
+   "title": "银行业",
+   "cat": "投资概念",
+   "url": "/notes/k051/",
+   "deg": 6
+  },
+  {
+   "id": "k052",
+   "title": "长期持有",
+   "cat": "投资概念",
+   "url": "/notes/k052/",
+   "deg": 8
+  },
+  {
+   "id": "k053",
+   "title": "集中投资",
+   "cat": "投资概念",
+   "url": "/notes/k053/",
+   "deg": 6
+  },
+  {
+   "id": "k054",
+   "title": "零售与消费",
+   "cat": "投资概念",
+   "url": "/notes/k054/",
+   "deg": 6
+  },
+  {
+   "id": "k055",
+   "title": "Karpathy LLM Knowledge Bases",
+   "cat": "来源摘要",
+   "url": "/notes/k055/",
+   "deg": 0
+  },
+  {
+   "id": "k056",
+   "title": "Karpathy 2025 LLM Year Review",
+   "cat": "来源摘要",
+   "url": "/notes/k056/",
+   "deg": 2
+  },
+  {
+   "id": "k057",
+   "title": "Claude Code Best Practices",
+   "cat": "来源摘要",
+   "url": "/notes/k057/",
+   "deg": 1
+  },
+  {
+   "id": "k058",
+   "title": "AI Agent Progress",
+   "cat": "来源摘要",
+   "url": "/notes/k058/",
+   "deg": 1
+  },
+  {
+   "id": "k059",
+   "title": "AI时代的知识民主化",
+   "cat": "哲学概念",
+   "url": "/notes/k059/",
+   "deg": 0
+  },
+  {
+   "id": "k060",
+   "title": "PP理论",
+   "cat": "哲学概念",
+   "url": "/notes/k060/",
+   "deg": 0
+  },
+  {
+   "id": "k061",
+   "title": "SOAR分析法：探索组织发展的新路径",
+   "cat": "哲学概念",
+   "url": "/notes/k061/",
+   "deg": 0
+  },
+  {
+   "id": "k062",
+   "title": "「游戏」的概念分析",
+   "cat": "哲学概念",
+   "url": "/notes/k062/",
+   "deg": 0
+  },
+  {
+   "id": "k063",
+   "title": "决定论",
+   "cat": "哲学概念",
+   "url": "/notes/k063/",
+   "deg": 2
+  },
+  {
+   "id": "k064",
+   "title": "分段学习",
+   "cat": "哲学概念",
+   "url": "/notes/k064/",
+   "deg": 1
+  },
+  {
+   "id": "k065",
+   "title": "同一性幻觉",
+   "cat": "哲学概念",
+   "url": "/notes/k065/",
+   "deg": 0
+  },
+  {
+   "id": "k066",
+   "title": "后现代辩证法",
+   "cat": "哲学概念",
+   "url": "/notes/k066/",
+   "deg": 0
+  },
+  {
+   "id": "k067",
+   "title": "否定性推演",
+   "cat": "哲学概念",
+   "url": "/notes/k067/",
+   "deg": 0
+  },
+  {
+   "id": "k068",
+   "title": "图式理论",
+   "cat": "哲学概念",
+   "url": "/notes/k068/",
+   "deg": 0
+  },
+  {
+   "id": "k069",
+   "title": "尼采哲学思想解析：人如何超越自己？",
+   "cat": "哲学概念",
+   "url": "/notes/k069/",
+   "deg": 0
+  },
+  {
+   "id": "k070",
+   "title": "强项发展模型",
+   "cat": "哲学概念",
+   "url": "/notes/k070/",
+   "deg": 0
+  },
+  {
+   "id": "k071",
+   "title": "循环论证之网",
+   "cat": "哲学概念",
+   "url": "/notes/k071/",
+   "deg": 0
+  },
+  {
+   "id": "k072",
+   "title": "意向领域",
+   "cat": "哲学概念",
+   "url": "/notes/k072/",
+   "deg": 3
+  },
+  {
+   "id": "k073",
+   "title": "拉康的欲望理论",
+   "cat": "哲学概念",
+   "url": "/notes/k073/",
+   "deg": 0
+  },
+  {
+   "id": "k074",
+   "title": "概念外延",
+   "cat": "哲学概念",
+   "url": "/notes/k074/",
+   "deg": 0
+  },
+  {
+   "id": "k075",
+   "title": "概念重组",
+   "cat": "哲学概念",
+   "url": "/notes/k075/",
+   "deg": 1
+  },
+  {
+   "id": "k076",
+   "title": "消费主义",
+   "cat": "哲学概念",
+   "url": "/notes/k076/",
+   "deg": 1
+  },
+  {
+   "id": "k077",
+   "title": "现象学",
+   "cat": "哲学概念",
+   "url": "/notes/k077/",
+   "deg": 2
+  },
+  {
+   "id": "k078",
+   "title": "知识表示",
+   "cat": "哲学概念",
+   "url": "/notes/k078/",
+   "deg": 1
+  },
+  {
+   "id": "k079",
+   "title": "社会加速理论",
+   "cat": "哲学概念",
+   "url": "/notes/k079/",
+   "deg": 1
+  },
+  {
+   "id": "k080",
+   "title": "系统分析",
+   "cat": "哲学概念",
+   "url": "/notes/k080/",
+   "deg": 2
+  },
+  {
+   "id": "k081",
+   "title": "经院哲学的发展史",
+   "cat": "哲学概念",
+   "url": "/notes/k081/",
+   "deg": 1
+  },
+  {
+   "id": "k082",
+   "title": "美诺悖论",
+   "cat": "哲学概念",
+   "url": "/notes/k082/",
+   "deg": 0
+  },
+  {
+   "id": "k083",
+   "title": "膜状方法",
+   "cat": "哲学概念",
+   "url": "/notes/k083/",
+   "deg": 0
+  },
+  {
+   "id": "k084",
+   "title": "自我决定论",
+   "cat": "哲学概念",
+   "url": "/notes/k084/",
+   "deg": 1
+  },
+  {
+   "id": "k085",
+   "title": "解构主义",
+   "cat": "哲学概念",
+   "url": "/notes/k085/",
+   "deg": 1
+  },
+  {
+   "id": "k086",
+   "title": "语义分析：解构语言的意义",
+   "cat": "哲学概念",
+   "url": "/notes/k086/",
+   "deg": 0
+  },
+  {
+   "id": "k087",
+   "title": "资产负债表衰退",
+   "cat": "哲学概念",
+   "url": "/notes/k087/",
+   "deg": 1
+  },
+  {
+   "id": "k088",
+   "title": "逆向工程",
+   "cat": "哲学概念",
+   "url": "/notes/k088/",
+   "deg": 0
+  },
+  {
+   "id": "k089",
+   "title": "问题解决",
+   "cat": "哲学概念",
+   "url": "/notes/k089/",
+   "deg": 6
+  },
+  {
+   "id": "k090",
+   "title": "Flomo：不懂如何建立标签体系？或许你可以试试十字坐标标签法",
+   "cat": "哲学命题",
+   "url": "/notes/k090/",
+   "deg": 1
+  },
+  {
+   "id": "k091",
+   "title": "Flomo：不知道积累什么知识，是因为你没有自己关注的领域",
+   "cat": "哲学命题",
+   "url": "/notes/k091/",
+   "deg": 0
+  },
+  {
+   "id": "k092",
+   "title": "一直在一起的两个人最后也可能走得比谁都远",
+   "cat": "哲学命题",
+   "url": "/notes/k092/",
+   "deg": 0
+  },
+  {
+   "id": "k093",
+   "title": "为什么好男孩总是遇不到好女孩？",
+   "cat": "哲学命题",
+   "url": "/notes/k093/",
+   "deg": 0
+  },
+  {
+   "id": "k094",
+   "title": "卡片写作法",
+   "cat": "哲学命题",
+   "url": "/notes/k094/",
+   "deg": 0
+  },
+  {
+   "id": "k095",
+   "title": "卡片的粒度",
+   "cat": "哲学命题",
+   "url": "/notes/k095/",
+   "deg": 0
+  },
+  {
+   "id": "k096",
+   "title": "压缩信息&保留细节",
+   "cat": "哲学命题",
+   "url": "/notes/k096/",
+   "deg": 0
+  },
+  {
+   "id": "k097",
+   "title": "原子化笔记",
+   "cat": "哲学命题",
+   "url": "/notes/k097/",
+   "deg": 0
+  },
+  {
+   "id": "k098",
+   "title": "反思：营造惊艳的感觉？",
+   "cat": "哲学命题",
+   "url": "/notes/k098/",
+   "deg": 0
+  },
+  {
+   "id": "k099",
+   "title": "变优秀才能找到另一半",
+   "cat": "哲学命题",
+   "url": "/notes/k099/",
+   "deg": 0
+  },
+  {
+   "id": "k100",
+   "title": "坚持原子化记录",
+   "cat": "哲学命题",
+   "url": "/notes/k100/",
+   "deg": 0
+  },
+  {
+   "id": "k101",
+   "title": "小心效率陷阱：为什么你不需要第二大脑或者个人知识库？",
+   "cat": "哲学命题",
+   "url": "/notes/k101/",
+   "deg": 1
+  },
+  {
+   "id": "k102",
+   "title": "差异性中的爱情",
+   "cat": "哲学命题",
+   "url": "/notes/k102/",
+   "deg": 0
+  },
+  {
+   "id": "k103",
+   "title": "最好的爱情就是一生只爱一个人",
+   "cat": "哲学命题",
+   "url": "/notes/k103/",
+   "deg": 0
+  },
+  {
+   "id": "k104",
+   "title": "树懒为什么这么慢？",
+   "cat": "哲学命题",
+   "url": "/notes/k104/",
+   "deg": 0
+  },
+  {
+   "id": "k105",
+   "title": "爱情经不起等待",
+   "cat": "哲学命题",
+   "url": "/notes/k105/",
+   "deg": 0
+  },
+  {
+   "id": "k106",
+   "title": "真正去接受爱，很难得",
+   "cat": "哲学命题",
+   "url": "/notes/k106/",
+   "deg": 0
+  },
+  {
+   "id": "k107",
+   "title": "老鼠：追赶比喻",
+   "cat": "哲学命题",
+   "url": "/notes/k107/",
+   "deg": 0
+  },
+  {
+   "id": "k108",
+   "title": "艺术品的内在价值与市场价值",
+   "cat": "哲学命题",
+   "url": "/notes/k108/",
+   "deg": 1
+  },
+  {
+   "id": "p001",
+   "title": "为什么我们把所有开源 Agent 框架都放弃了",
+   "cat": "文章",
+   "url": "/articles/p001/",
+   "deg": 7
+  },
+  {
+   "id": "p002",
+   "title": "企业级AI读飞书文档没你想的那么简单",
+   "cat": "文章",
+   "url": "/articles/p002/",
+   "deg": 6
+  },
+  {
+   "id": "p003",
+   "title": "做自媒体起号我之前的思路全错了",
+   "cat": "文章",
+   "url": "/articles/p003/",
+   "deg": 4
+  },
+  {
+   "id": "p004",
+   "title": "凌晨三点我被一个学员的问题问住了",
+   "cat": "文章",
+   "url": "/articles/p004/",
+   "deg": 0
+  },
+  {
+   "id": "p005",
+   "title": "出海内容 AI 策略：从 TikTok 选题到本地化运营",
+   "cat": "文章",
+   "url": "/articles/p005/",
+   "deg": 1
+  },
+  {
+   "id": "p006",
+   "title": "别再学框架了，AI产品的壁垒根本不在那",
+   "cat": "文章",
+   "url": "/articles/p006/",
+   "deg": 0
+  },
+  {
+   "id": "p007",
+   "title": "原来 7 个人干的活现在 1 个 AI 操盘手就够了",
+   "cat": "文章",
+   "url": "/articles/p007/",
+   "deg": 2
+  },
+  {
+   "id": "p008",
+   "title": "多模态素材库建设：让 AI 真正\"看懂\"你的图片和视频",
+   "cat": "文章",
+   "url": "/articles/p008/",
+   "deg": 7
+  },
+  {
+   "id": "p009",
+   "title": "大厂工作经验怎么变成自媒体内容，我的脱敏方法论",
+   "cat": "文章",
+   "url": "/articles/p009/",
+   "deg": 4
+  },
+  {
+   "id": "p010",
+   "title": "当助教居然比自己学习成长还快",
+   "cat": "文章",
+   "url": "/articles/p010/",
+   "deg": 1
+  },
+  {
+   "id": "p011",
+   "title": "我用 AI 搭了一套内容生产系统，每周省 10 小时",
+   "cat": "文章",
+   "url": "/articles/p011/",
+   "deg": 4
+  },
+  {
+   "id": "p012",
+   "title": "我跟老板吵了一架：关于做AI要不要用最新技术",
+   "cat": "文章",
+   "url": "/articles/p012/",
+   "deg": 0
+  },
+  {
+   "id": "p013",
+   "title": "数字人拟人度从 2.8 到 3.5，我们做对了什么",
+   "cat": "文章",
+   "url": "/articles/p013/",
+   "deg": 0
+  },
+  {
+   "id": "p014",
+   "title": "自媒体定位不是想出来的是发出来的",
+   "cat": "文章",
+   "url": "/articles/p014/",
+   "deg": 4
+  },
+  {
+   "id": "p015",
+   "title": "面了 50 个 AI 产品经理，我发现大多数人搞错了方向",
+   "cat": "文章",
+   "url": "/articles/p015/",
+   "deg": 3
+  },
+  {
+   "id": "p016",
+   "title": "AI Agent 代码执行安全：沙箱方案选型的那些坑",
+   "cat": "文章",
+   "url": "/articles/p016/",
+   "deg": 3
+  },
+  {
+   "id": "p017",
+   "title": "AI Agent 落地实战：从架构设计到知识库建设，我踩过的那些坑",
+   "cat": "文章",
+   "url": "/articles/p017/",
+   "deg": 13
+  },
+  {
+   "id": "p018",
+   "title": "AI 产品 MVP 方法论：三天验证一个想法的实战指南",
+   "cat": "文章",
+   "url": "/articles/p018/",
+   "deg": 1
+  },
+  {
+   "id": "p019",
+   "title": "AI 产品评测体系设计：别让\"主观感觉\"骗了你",
+   "cat": "文章",
+   "url": "/articles/p019/",
+   "deg": 8
+  },
+  {
+   "id": "p020",
+   "title": "AI 内容生产别信全自动化的鬼话",
+   "cat": "文章",
+   "url": "/articles/p020/",
+   "deg": 5
+  },
+  {
+   "id": "p021",
+   "title": "AI 选题工具落地：从 TikTok 热榜到爆款预测，我们踩了哪些坑",
+   "cat": "文章",
+   "url": "/articles/p021/",
+   "deg": 1
+  },
+  {
+   "id": "p022",
+   "title": "AI 项目跨团队协作：产品、技术、业务如何不打架",
+   "cat": "文章",
+   "url": "/articles/p022/",
+   "deg": 8
+  },
+  {
+   "id": "p023",
+   "title": "RAG 召回准确率从 65% 到 92%：我在大厂踩过的 7 个坑",
+   "cat": "文章",
+   "url": "/articles/p023/",
+   "deg": 13
+  },
+  {
+   "id": "p024",
+   "title": "RAG 召回准确率从 75% 到 90%：我做对了这三件事",
+   "cat": "文章",
+   "url": "/articles/p024/",
+   "deg": 13
+  },
+  {
+   "id": "p025",
+   "title": "上下文管理才是AI Agent的核心壁垒",
+   "cat": "文章",
+   "url": "/articles/p025/",
+   "deg": 6
+  },
+  {
+   "id": "p026",
+   "title": "下一代协作工具的第一用户居然不是人",
+   "cat": "文章",
+   "url": "/articles/p026/",
+   "deg": 6
+  },
+  {
+   "id": "p027",
+   "title": "企业知识库建设：让 AI 不再\"胡说八道\"的秘密",
+   "cat": "文章",
+   "url": "/articles/p027/",
+   "deg": 13
+  },
+  {
+   "id": "p028",
+   "title": "做AI Agent别瞎折腾全栈现成基建直接用",
+   "cat": "文章",
+   "url": "/articles/p028/",
+   "deg": 2
+  },
+  {
+   "id": "p029",
+   "title": "做 AI Agent 落地半年我踩过的那些坑",
+   "cat": "文章",
+   "url": "/articles/p029/",
+   "deg": 9
+  },
+  {
+   "id": "p030",
+   "title": "做AI产品跑通闭环比什么都重要",
+   "cat": "文章",
+   "url": "/articles/p030/",
+   "deg": 2
+  },
+  {
+   "id": "p031",
+   "title": "做AI系统别为了技术概念把架构做重",
+   "cat": "文章",
+   "url": "/articles/p031/",
+   "deg": 7
+  },
+  {
+   "id": "p032",
+   "title": "做 AI 自媒体半年，我学到的一个内容公式",
+   "cat": "文章",
+   "url": "/articles/p032/",
+   "deg": 4
+  },
+  {
+   "id": "p033",
+   "title": "做打车 Agent 半年，我终于搞懂了置信度这个东西",
+   "cat": "文章",
+   "url": "/articles/p033/",
+   "deg": 5
+  },
+  {
+   "id": "p034",
+   "title": "招 AI 人才的血泪教训：主动性比技术能力重要 100 倍",
+   "cat": "文章",
+   "url": "/articles/p034/",
+   "deg": 0
+  },
+  {
+   "id": "p035",
+   "title": "AI产品经理完整转型指南：从入门到拿Offer",
+   "cat": "文章",
+   "url": "/articles/p035/",
+   "deg": 3
+  },
+  {
+   "id": "p036",
+   "title": "PE四象限：用AI的正确姿势",
+   "cat": "文章",
+   "url": "/articles/p036/",
+   "deg": 0
+  },
+  {
+   "id": "p037",
+   "title": "RAG知识库完整实战手册：从原理到落地",
+   "cat": "文章",
+   "url": "/articles/p037/",
+   "deg": 6
+  },
+  {
+   "id": "p038",
+   "title": "RAG知识库落地：我踩过的坑和方法论",
+   "cat": "文章",
+   "url": "/articles/p038/",
+   "deg": 6
+  },
+  {
+   "id": "p039",
+   "title": "从0到1搭建AI Agent系统：完整方法论",
+   "cat": "文章",
+   "url": "/articles/p039/",
+   "deg": 2
+  },
+  {
+   "id": "p040",
+   "title": "搭Agent踩过的坑和正确姿势",
+   "cat": "文章",
+   "url": "/articles/p040/",
+   "deg": 2
+  },
+  {
+   "id": "p041",
+   "title": "转AI产品经理：我走过的路和建议",
+   "cat": "文章",
+   "url": "/articles/p041/",
+   "deg": 3
+  },
+  {
+   "id": "p042",
+   "title": "做AI自媒体，我把算法当成了第一个用户｜一个AI PM的口播方法论",
+   "cat": "文章",
+   "url": "/articles/p042/",
+   "deg": 2
+  },
+  {
+   "id": "p043",
+   "title": "面 30K 的 AI 产品岗，我被一道\"人\"的题刷掉",
+   "cat": "文章",
+   "url": "/articles/p043/",
+   "deg": 0
+  }
+ ],
+ "links": [
+  {
+   "source": "k010",
+   "target": "k047",
+   "w": 6
+  },
+  {
+   "source": "k013",
+   "target": "k019",
+   "w": 6
+  },
+  {
+   "source": "k013",
+   "target": "k023",
+   "w": 6
+  },
+  {
+   "source": "k013",
+   "target": "k024",
+   "w": 6
+  },
+  {
+   "source": "k013",
+   "target": "k028",
+   "w": 6
+  },
+  {
+   "source": "k013",
+   "target": "k041",
+   "w": 6
+  },
+  {
+   "source": "k013",
+   "target": "k046",
+   "w": 6
+  },
+  {
+   "source": "k013",
+   "target": "k048",
+   "w": 6
+  },
+  {
+   "source": "k014",
+   "target": "k023",
+   "w": 6
+  },
+  {
+   "source": "k014",
+   "target": "k030",
+   "w": 6
+  },
+  {
+   "source": "k019",
+   "target": "k033",
+   "w": 6
+  },
+  {
+   "source": "k019",
+   "target": "k046",
+   "w": 6
+  },
+  {
+   "source": "k019",
+   "target": "k047",
+   "w": 6
+  },
+  {
+   "source": "k020",
+   "target": "k052",
+   "w": 6
+  },
+  {
+   "source": "k023",
+   "target": "k024",
+   "w": 6
+  },
+  {
+   "source": "k023",
+   "target": "k041",
+   "w": 6
+  },
+  {
+   "source": "k024",
+   "target": "k025",
+   "w": 6
+  },
+  {
+   "source": "k024",
+   "target": "k030",
+   "w": 6
+  },
+  {
+   "source": "k024",
+   "target": "k052",
+   "w": 6
+  },
+  {
+   "source": "k028",
+   "target": "k041",
+   "w": 6
+  },
+  {
+   "source": "k028",
+   "target": "k052",
+   "w": 6
+  },
+  {
+   "source": "k031",
+   "target": "k044",
+   "w": 6
+  },
+  {
+   "source": "k033",
+   "target": "k047",
+   "w": 6
+  },
+  {
+   "source": "k033",
+   "target": "k048",
+   "w": 6
+  },
+  {
+   "source": "k006",
+   "target": "k023",
+   "w": 4
+  },
+  {
+   "source": "k008",
+   "target": "k021",
+   "w": 4
+  },
+  {
+   "source": "k008",
+   "target": "k023",
+   "w": 4
+  },
+  {
+   "source": "k008",
+   "target": "k024",
+   "w": 4
+  },
+  {
+   "source": "k009",
+   "target": "k010",
+   "w": 4
+  },
+  {
+   "source": "k009",
+   "target": "k027",
+   "w": 4
+  },
+  {
+   "source": "k009",
+   "target": "k038",
+   "w": 4
+  },
+  {
+   "source": "k010",
+   "target": "k027",
+   "w": 4
+  },
+  {
+   "source": "k010",
+   "target": "k031",
+   "w": 4
+  },
+  {
+   "source": "k011",
+   "target": "k031",
+   "w": 4
+  },
+  {
+   "source": "k011",
+   "target": "k049",
+   "w": 4
+  },
+  {
+   "source": "k013",
+   "target": "k033",
+   "w": 4
+  },
+  {
+   "source": "k013",
+   "target": "k047",
+   "w": 4
+  },
+  {
+   "source": "k014",
+   "target": "k053",
+   "w": 4
+  },
+  {
+   "source": "k016",
+   "target": "k028",
+   "w": 4
+  },
+  {
+   "source": "k018",
+   "target": "k028",
+   "w": 4
+  },
+  {
+   "source": "k018",
+   "target": "k046",
+   "w": 4
+  },
+  {
+   "source": "k019",
+   "target": "k040",
+   "w": 4
+  },
+  {
+   "source": "k020",
+   "target": "k040",
+   "w": 4
+  },
+  {
+   "source": "k021",
+   "target": "k030",
+   "w": 4
+  },
+  {
+   "source": "k021",
+   "target": "k031",
+   "w": 4
+  },
+  {
+   "source": "k023",
+   "target": "k053",
+   "w": 4
+  },
+  {
+   "source": "k027",
+   "target": "k041",
+   "w": 4
+  },
+  {
+   "source": "k028",
+   "target": "k032",
+   "w": 4
+  },
+  {
+   "source": "k028",
+   "target": "k036",
+   "w": 4
+  },
+  {
+   "source": "k028",
+   "target": "k037",
+   "w": 4
+  },
+  {
+   "source": "k029",
+   "target": "k037",
+   "w": 4
+  },
+  {
+   "source": "k029",
+   "target": "k042",
+   "w": 4
+  },
+  {
+   "source": "k029",
+   "target": "k047",
+   "w": 4
+  },
+  {
+   "source": "k033",
+   "target": "k040",
+   "w": 4
+  },
+  {
+   "source": "k033",
+   "target": "k046",
+   "w": 4
+  },
+  {
+   "source": "k036",
+   "target": "k038",
+   "w": 4
+  },
+  {
+   "source": "k037",
+   "target": "k047",
+   "w": 4
+  },
+  {
+   "source": "k038",
+   "target": "k043",
+   "w": 4
+  },
+  {
+   "source": "k040",
+   "target": "k047",
+   "w": 4
+  },
+  {
+   "source": "k041",
+   "target": "k051",
+   "w": 4
+  },
+  {
+   "source": "k041",
+   "target": "k053",
+   "w": 4
+  },
+  {
+   "source": "k003",
+   "target": "k056",
+   "w": 4
+  },
+  {
+   "source": "k005",
+   "target": "k058",
+   "w": 4
+  },
+  {
+   "source": "p017",
+   "target": "p029",
+   "w": 4
+  },
+  {
+   "source": "p023",
+   "target": "p024",
+   "w": 4
+  },
+  {
+   "source": "p037",
+   "target": "p038",
+   "w": 4
+  },
+  {
+   "source": "k009",
+   "target": "k028",
+   "w": 3
+  },
+  {
+   "source": "k009",
+   "target": "k047",
+   "w": 3
+  },
+  {
+   "source": "k010",
+   "target": "k013",
+   "w": 3
+  },
+  {
+   "source": "k010",
+   "target": "k020",
+   "w": 3
+  },
+  {
+   "source": "k011",
+   "target": "k020",
+   "w": 3
+  },
+  {
+   "source": "k011",
+   "target": "k023",
+   "w": 3
+  },
+  {
+   "source": "k011",
+   "target": "k047",
+   "w": 3
+  },
+  {
+   "source": "k014",
+   "target": "k041",
+   "w": 3
+  },
+  {
+   "source": "k013",
+   "target": "k015",
+   "w": 3
+  },
+  {
+   "source": "k015",
+   "target": "k023",
+   "w": 3
+  },
+  {
+   "source": "k015",
+   "target": "k031",
+   "w": 3
+  },
+  {
+   "source": "k015",
+   "target": "k037",
+   "w": 3
+  },
+  {
+   "source": "k015",
+   "target": "k047",
+   "w": 3
+  },
+  {
+   "source": "k013",
+   "target": "k020",
+   "w": 3
+  },
+  {
+   "source": "k020",
+   "target": "k023",
+   "w": 3
+  },
+  {
+   "source": "k021",
+   "target": "k023",
+   "w": 3
+  },
+  {
+   "source": "k021",
+   "target": "k053",
+   "w": 3
+  },
+  {
+   "source": "k016",
+   "target": "k022",
+   "w": 3
+  },
+  {
+   "source": "k017",
+   "target": "k022",
+   "w": 3
+  },
+  {
+   "source": "k022",
+   "target": "k028",
+   "w": 3
+  },
+  {
+   "source": "k022",
+   "target": "k032",
+   "w": 3
+  },
+  {
+   "source": "k022",
+   "target": "k038",
+   "w": 3
+  },
+  {
+   "source": "k013",
+   "target": "k025",
+   "w": 3
+  },
+  {
+   "source": "k023",
+   "target": "k025",
+   "w": 3
+  },
+  {
+   "source": "k025",
+   "target": "k052",
+   "w": 3
+  },
+  {
+   "source": "k017",
+   "target": "k029",
+   "w": 3
+  },
+  {
+   "source": "k028",
+   "target": "k029",
+   "w": 3
+  },
+  {
+   "source": "k013",
+   "target": "k030",
+   "w": 3
+  },
+  {
+   "source": "k023",
+   "target": "k030",
+   "w": 3
+  },
+  {
+   "source": "k023",
+   "target": "k031",
+   "w": 3
+  },
+  {
+   "source": "k016",
+   "target": "k034",
+   "w": 3
+  },
+  {
+   "source": "k017",
+   "target": "k034",
+   "w": 3
+  },
+  {
+   "source": "k028",
+   "target": "k034",
+   "w": 3
+  },
+  {
+   "source": "k034",
+   "target": "k036",
+   "w": 3
+  },
+  {
+   "source": "k034",
+   "target": "k041",
+   "w": 3
+  },
+  {
+   "source": "k017",
+   "target": "k038",
+   "w": 3
+  },
+  {
+   "source": "k028",
+   "target": "k038",
+   "w": 3
+  },
+  {
+   "source": "k041",
+   "target": "k052",
+   "w": 3
+  },
+  {
+   "source": "k028",
+   "target": "k042",
+   "w": 3
+  },
+  {
+   "source": "k037",
+   "target": "k042",
+   "w": 3
+  },
+  {
+   "source": "k042",
+   "target": "k047",
+   "w": 3
+  },
+  {
+   "source": "k028",
+   "target": "k043",
+   "w": 3
+  },
+  {
+   "source": "k036",
+   "target": "k043",
+   "w": 3
+  },
+  {
+   "source": "k010",
+   "target": "k044",
+   "w": 3
+  },
+  {
+   "source": "k023",
+   "target": "k044",
+   "w": 3
+  },
+  {
+   "source": "k027",
+   "target": "k044",
+   "w": 3
+  },
+  {
+   "source": "k046",
+   "target": "k048",
+   "w": 3
+  },
+  {
+   "source": "k047",
+   "target": "k048",
+   "w": 3
+  },
+  {
+   "source": "k010",
+   "target": "k049",
+   "w": 3
+  },
+  {
+   "source": "k013",
+   "target": "k049",
+   "w": 3
+  },
+  {
+   "source": "k018",
+   "target": "k049",
+   "w": 3
+  },
+  {
+   "source": "k028",
+   "target": "k049",
+   "w": 3
+  },
+  {
+   "source": "k028",
+   "target": "k050",
+   "w": 3
+  },
+  {
+   "source": "k029",
+   "target": "k050",
+   "w": 3
+  },
+  {
+   "source": "k038",
+   "target": "k050",
+   "w": 3
+  },
+  {
+   "source": "k047",
+   "target": "k050",
+   "w": 3
+  },
+  {
+   "source": "k027",
+   "target": "k051",
+   "w": 3
+  },
+  {
+   "source": "k028",
+   "target": "k051",
+   "w": 3
+  },
+  {
+   "source": "k031",
+   "target": "k051",
+   "w": 3
+  },
+  {
+   "source": "k037",
+   "target": "k051",
+   "w": 3
+  },
+  {
+   "source": "k013",
+   "target": "k052",
+   "w": 3
+  },
+  {
+   "source": "k016",
+   "target": "k054",
+   "w": 3
+  },
+  {
+   "source": "k017",
+   "target": "k054",
+   "w": 3
+  },
+  {
+   "source": "k028",
+   "target": "k054",
+   "w": 3
+  },
+  {
+   "source": "k032",
+   "target": "k054",
+   "w": 3
+  },
+  {
+   "source": "k052",
+   "target": "k054",
+   "w": 3
+  },
+  {
+   "source": "p005",
+   "target": "p021",
+   "w": 3
+  },
+  {
+   "source": "p009",
+   "target": "p011",
+   "w": 3
+  },
+  {
+   "source": "p017",
+   "target": "p023",
+   "w": 3
+  },
+  {
+   "source": "p017",
+   "target": "p024",
+   "w": 3
+  },
+  {
+   "source": "p017",
+   "target": "p027",
+   "w": 3
+  },
+  {
+   "source": "p023",
+   "target": "p027",
+   "w": 3
+  },
+  {
+   "source": "p023",
+   "target": "p029",
+   "w": 3
+  },
+  {
+   "source": "p023",
+   "target": "p037",
+   "w": 3
+  },
+  {
+   "source": "p024",
+   "target": "p027",
+   "w": 3
+  },
+  {
+   "source": "p024",
+   "target": "p029",
+   "w": 3
+  },
+  {
+   "source": "p024",
+   "target": "p037",
+   "w": 3
+  },
+  {
+   "source": "p027",
+   "target": "p029",
+   "w": 3
+  },
+  {
+   "source": "p035",
+   "target": "p041",
+   "w": 3
+  },
+  {
+   "source": "p039",
+   "target": "p040",
+   "w": 3
+  },
+  {
+   "source": "k006",
+   "target": "k008",
+   "w": 2
+  },
+  {
+   "source": "k006",
+   "target": "k017",
+   "w": 2
+  },
+  {
+   "source": "k006",
+   "target": "k037",
+   "w": 2
+  },
+  {
+   "source": "k007",
+   "target": "k017",
+   "w": 2
+  },
+  {
+   "source": "k007",
+   "target": "k027",
+   "w": 2
+  },
+  {
+   "source": "k007",
+   "target": "k036",
+   "w": 2
+  },
+  {
+   "source": "k007",
+   "target": "k037",
+   "w": 2
+  },
+  {
+   "source": "k008",
+   "target": "k013",
+   "w": 2
+  },
+  {
+   "source": "k008",
+   "target": "k014",
+   "w": 2
+  },
+  {
+   "source": "k008",
+   "target": "k026",
+   "w": 2
+  },
+  {
+   "source": "k008",
+   "target": "k046",
+   "w": 2
+  },
+  {
+   "source": "k009",
+   "target": "k017",
+   "w": 2
+  },
+  {
+   "source": "k011",
+   "target": "k052",
+   "w": 2
+  },
+  {
+   "source": "k012",
+   "target": "k039",
+   "w": 2
+  },
+  {
+   "source": "k013",
+   "target": "k018",
+   "w": 2
+  },
+  {
+   "source": "k013",
+   "target": "k036",
+   "w": 2
+  },
+  {
+   "source": "k016",
+   "target": "k017",
+   "w": 2
+  },
+  {
+   "source": "k016",
+   "target": "k018",
+   "w": 2
+  },
+  {
+   "source": "k016",
+   "target": "k032",
+   "w": 2
+  },
+  {
+   "source": "k017",
+   "target": "k032",
+   "w": 2
+  },
+  {
+   "source": "k018",
+   "target": "k036",
+   "w": 2
+  },
+  {
+   "source": "k019",
+   "target": "k023",
+   "w": 2
+  },
+  {
+   "source": "k023",
+   "target": "k026",
+   "w": 2
+  },
+  {
+   "source": "k032",
+   "target": "k036",
+   "w": 2
+  },
+  {
+   "source": "k035",
+   "target": "k040",
+   "w": 2
+  },
+  {
+   "source": "k037",
+   "target": "k039",
+   "w": 2
+  },
+  {
+   "source": "k040",
+   "target": "k046",
+   "w": 2
+  },
+  {
+   "source": "p002",
+   "target": "p026",
+   "w": 2
+  },
+  {
+   "source": "p003",
+   "target": "p009",
+   "w": 2
+  },
+  {
+   "source": "p003",
+   "target": "p011",
+   "w": 2
+  },
+  {
+   "source": "p009",
+   "target": "p032",
+   "w": 2
+  },
+  {
+   "source": "p011",
+   "target": "p032",
+   "w": 2
+  },
+  {
+   "source": "p017",
+   "target": "p037",
+   "w": 2
+  },
+  {
+   "source": "p017",
+   "target": "p038",
+   "w": 2
+  },
+  {
+   "source": "p018",
+   "target": "p030",
+   "w": 2
+  },
+  {
+   "source": "p023",
+   "target": "p038",
+   "w": 2
+  },
+  {
+   "source": "p024",
+   "target": "p038",
+   "w": 2
+  },
+  {
+   "source": "p027",
+   "target": "p037",
+   "w": 2
+  },
+  {
+   "source": "p027",
+   "target": "p038",
+   "w": 2
+  },
+  {
+   "source": "p029",
+   "target": "p037",
+   "w": 2
+  },
+  {
+   "source": "p029",
+   "target": "p038",
+   "w": 2
+  },
+  {
+   "source": "k003",
+   "target": "k089",
+   "w": 1
+  },
+  {
+   "source": "k006",
+   "target": "k013",
+   "w": 1
+  },
+  {
+   "source": "k006",
+   "target": "k024",
+   "w": 1
+  },
+  {
+   "source": "k006",
+   "target": "k026",
+   "w": 1
+  },
+  {
+   "source": "k007",
+   "target": "k009",
+   "w": 1
+  },
+  {
+   "source": "k007",
+   "target": "k013",
+   "w": 1
+  },
+  {
+   "source": "k007",
+   "target": "k039",
+   "w": 1
+  },
+  {
+   "source": "k011",
+   "target": "k021",
+   "w": 1
+  },
+  {
+   "source": "k012",
+   "target": "k037",
+   "w": 1
+  },
+  {
+   "source": "k012",
+   "target": "k045",
+   "w": 1
+  },
+  {
+   "source": "k012",
+   "target": "k047",
+   "w": 1
+  },
+  {
+   "source": "k013",
+   "target": "k043",
+   "w": 1
+  },
+  {
+   "source": "k013",
+   "target": "k014",
+   "w": 1
+  },
+  {
+   "source": "k008",
+   "target": "k015",
+   "w": 1
+  },
+  {
+   "source": "k015",
+   "target": "k043",
+   "w": 1
+  },
+  {
+   "source": "k015",
+   "target": "k051",
+   "w": 1
+  },
+  {
+   "source": "k017",
+   "target": "k042",
+   "w": 1
+  },
+  {
+   "source": "k008",
+   "target": "k022",
+   "w": 1
+  },
+  {
+   "source": "k014",
+   "target": "k025",
+   "w": 1
+  },
+  {
+   "source": "k025",
+   "target": "k031",
+   "w": 1
+  },
+  {
+   "source": "k011",
+   "target": "k026",
+   "w": 1
+  },
+  {
+   "source": "k013",
+   "target": "k026",
+   "w": 1
+  },
+  {
+   "source": "k017",
+   "target": "k026",
+   "w": 1
+  },
+  {
+   "source": "k026",
+   "target": "k048",
+   "w": 1
+  },
+  {
+   "source": "k030",
+   "target": "k031",
+   "w": 1
+  },
+  {
+   "source": "k034",
+   "target": "k043",
+   "w": 1
+  },
+  {
+   "source": "k008",
+   "target": "k035",
+   "w": 1
+  },
+  {
+   "source": "k020",
+   "target": "k035",
+   "w": 1
+  },
+  {
+   "source": "k031",
+   "target": "k035",
+   "w": 1
+  },
+  {
+   "source": "k033",
+   "target": "k035",
+   "w": 1
+  },
+  {
+   "source": "k035",
+   "target": "k047",
+   "w": 1
+  },
+  {
+   "source": "k036",
+   "target": "k080",
+   "w": 1
+  },
+  {
+   "source": "k008",
+   "target": "k039",
+   "w": 1
+  },
+  {
+   "source": "k013",
+   "target": "k039",
+   "w": 1
+  },
+  {
+   "source": "k019",
+   "target": "k039",
+   "w": 1
+  },
+  {
+   "source": "k039",
+   "target": "k080",
+   "w": 1
+  },
+  {
+   "source": "k008",
+   "target": "k042",
+   "w": 1
+  },
+  {
+   "source": "k011",
+   "target": "k044",
+   "w": 1
+  },
+  {
+   "source": "k029",
+   "target": "k044",
+   "w": 1
+  },
+  {
+   "source": "k007",
+   "target": "k045",
+   "w": 1
+  },
+  {
+   "source": "k029",
+   "target": "k045",
+   "w": 1
+  },
+  {
+   "source": "k037",
+   "target": "k045",
+   "w": 1
+  },
+  {
+   "source": "k038",
+   "target": "k045",
+   "w": 1
+  },
+  {
+   "source": "k039",
+   "target": "k045",
+   "w": 1
+  },
+  {
+   "source": "k008",
+   "target": "k048",
+   "w": 1
+  },
+  {
+   "source": "k008",
+   "target": "k049",
+   "w": 1
+  },
+  {
+   "source": "k042",
+   "target": "k050",
+   "w": 1
+  },
+  {
+   "source": "k046",
+   "target": "k050",
+   "w": 1
+  },
+  {
+   "source": "k006",
+   "target": "k053",
+   "w": 1
+  },
+  {
+   "source": "k008",
+   "target": "k053",
+   "w": 1
+  },
+  {
+   "source": "k029",
+   "target": "k054",
+   "w": 1
+  },
+  {
+   "source": "k004",
+   "target": "k056",
+   "w": 1
+  },
+  {
+   "source": "k031",
+   "target": "k057",
+   "w": 1
+  },
+  {
+   "source": "k064",
+   "target": "k089",
+   "w": 1
+  },
+  {
+   "source": "k072",
+   "target": "k077",
+   "w": 1
+  },
+  {
+   "source": "k072",
+   "target": "k078",
+   "w": 1
+  },
+  {
+   "source": "k072",
+   "target": "k089",
+   "w": 1
+  },
+  {
+   "source": "k075",
+   "target": "k089",
+   "w": 1
+  },
+  {
+   "source": "k076",
+   "target": "k079",
+   "w": 1
+  },
+  {
+   "source": "k063",
+   "target": "k081",
+   "w": 1
+  },
+  {
+   "source": "k063",
+   "target": "k084",
+   "w": 1
+  },
+  {
+   "source": "k077",
+   "target": "k085",
+   "w": 1
+  },
+  {
+   "source": "k031",
+   "target": "k087",
+   "w": 1
+  },
+  {
+   "source": "k020",
+   "target": "k090",
+   "w": 1
+  },
+  {
+   "source": "k020",
+   "target": "k101",
+   "w": 1
+  },
+  {
+   "source": "k013",
+   "target": "k108",
+   "w": 1
+  },
+  {
+   "source": "k016",
+   "target": "p001",
+   "w": 1
+  },
+  {
+   "source": "k008",
+   "target": "p010",
+   "w": 1
+  },
+  {
+   "source": "k016",
+   "target": "p015",
+   "w": 1
+  },
+  {
+   "source": "k089",
+   "target": "p035",
+   "w": 1
+  },
+  {
+   "source": "k089",
+   "target": "p041",
+   "w": 1
+  },
+  {
+   "source": "k028",
+   "target": "p042",
+   "w": 1
+  },
+  {
+   "source": "p001",
+   "target": "p016",
+   "w": 1
+  },
+  {
+   "source": "p001",
+   "target": "p020",
+   "w": 1
+  },
+  {
+   "source": "p001",
+   "target": "p031",
+   "w": 1
+  },
+  {
+   "source": "p001",
+   "target": "p033",
+   "w": 1
+  },
+  {
+   "source": "p001",
+   "target": "p039",
+   "w": 1
+  },
+  {
+   "source": "p001",
+   "target": "p040",
+   "w": 1
+  },
+  {
+   "source": "p002",
+   "target": "p017",
+   "w": 1
+  },
+  {
+   "source": "p002",
+   "target": "p023",
+   "w": 1
+  },
+  {
+   "source": "p002",
+   "target": "p024",
+   "w": 1
+  },
+  {
+   "source": "p002",
+   "target": "p027",
+   "w": 1
+  },
+  {
+   "source": "p002",
+   "target": "p029",
+   "w": 1
+  },
+  {
+   "source": "p003",
+   "target": "p032",
+   "w": 1
+  },
+  {
+   "source": "p003",
+   "target": "p042",
+   "w": 1
+  },
+  {
+   "source": "p007",
+   "target": "p020",
+   "w": 1
+  },
+  {
+   "source": "p007",
+   "target": "p027",
+   "w": 1
+  },
+  {
+   "source": "p008",
+   "target": "p014",
+   "w": 1
+  },
+  {
+   "source": "p008",
+   "target": "p017",
+   "w": 1
+  },
+  {
+   "source": "p008",
+   "target": "p019",
+   "w": 1
+  },
+  {
+   "source": "p008",
+   "target": "p022",
+   "w": 1
+  },
+  {
+   "source": "p008",
+   "target": "p023",
+   "w": 1
+  },
+  {
+   "source": "p008",
+   "target": "p024",
+   "w": 1
+  },
+  {
+   "source": "p008",
+   "target": "p031",
+   "w": 1
+  },
+  {
+   "source": "p009",
+   "target": "p014",
+   "w": 1
+  },
+  {
+   "source": "p011",
+   "target": "p014",
+   "w": 1
+  },
+  {
+   "source": "p014",
+   "target": "p032",
+   "w": 1
+  },
+  {
+   "source": "p015",
+   "target": "p035",
+   "w": 1
+  },
+  {
+   "source": "p015",
+   "target": "p041",
+   "w": 1
+  },
+  {
+   "source": "p016",
+   "target": "p020",
+   "w": 1
+  },
+  {
+   "source": "p016",
+   "target": "p033",
+   "w": 1
+  },
+  {
+   "source": "p017",
+   "target": "p019",
+   "w": 1
+  },
+  {
+   "source": "p017",
+   "target": "p022",
+   "w": 1
+  },
+  {
+   "source": "p017",
+   "target": "p025",
+   "w": 1
+  },
+  {
+   "source": "p017",
+   "target": "p026",
+   "w": 1
+  },
+  {
+   "source": "p017",
+   "target": "p031",
+   "w": 1
+  },
+  {
+   "source": "p019",
+   "target": "p022",
+   "w": 1
+  },
+  {
+   "source": "p019",
+   "target": "p023",
+   "w": 1
+  },
+  {
+   "source": "p019",
+   "target": "p024",
+   "w": 1
+  },
+  {
+   "source": "p019",
+   "target": "p027",
+   "w": 1
+  },
+  {
+   "source": "p019",
+   "target": "p031",
+   "w": 1
+  },
+  {
+   "source": "p019",
+   "target": "p033",
+   "w": 1
+  },
+  {
+   "source": "p020",
+   "target": "p027",
+   "w": 1
+  },
+  {
+   "source": "p020",
+   "target": "p033",
+   "w": 1
+  },
+  {
+   "source": "p022",
+   "target": "p023",
+   "w": 1
+  },
+  {
+   "source": "p022",
+   "target": "p024",
+   "w": 1
+  },
+  {
+   "source": "p022",
+   "target": "p027",
+   "w": 1
+  },
+  {
+   "source": "p022",
+   "target": "p028",
+   "w": 1
+  },
+  {
+   "source": "p022",
+   "target": "p030",
+   "w": 1
+  },
+  {
+   "source": "p023",
+   "target": "p025",
+   "w": 1
+  },
+  {
+   "source": "p023",
+   "target": "p026",
+   "w": 1
+  },
+  {
+   "source": "p023",
+   "target": "p031",
+   "w": 1
+  },
+  {
+   "source": "p024",
+   "target": "p025",
+   "w": 1
+  },
+  {
+   "source": "p024",
+   "target": "p026",
+   "w": 1
+  },
+  {
+   "source": "p024",
+   "target": "p031",
+   "w": 1
+  },
+  {
+   "source": "p025",
+   "target": "p027",
+   "w": 1
+  },
+  {
+   "source": "p025",
+   "target": "p028",
+   "w": 1
+  },
+  {
+   "source": "p025",
+   "target": "p029",
+   "w": 1
+  },
+  {
+   "source": "p026",
+   "target": "p027",
+   "w": 1
+  },
+  {
+   "source": "p026",
+   "target": "p029",
+   "w": 1
+  },
+  {
+   "source": "p031",
+   "target": "p033",
+   "w": 1
+  }
+ ]
+}
