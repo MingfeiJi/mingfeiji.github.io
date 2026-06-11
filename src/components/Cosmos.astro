@@ -1,0 +1,183 @@
+<canvas id="cosmos"></canvas>
+
+<script>
+  import * as THREE from 'three';
+
+  const canvas = document.getElementById('cosmos') as HTMLCanvasElement;
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x030412, 0.0011);
+
+  const camera = new THREE.PerspectiveCamera(62, innerWidth / innerHeight, 0.1, 2200);
+  camera.position.z = 420;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setSize(innerWidth, innerHeight);
+
+  /* ---------- 圆形光点贴图（避免方块星）---------- */
+  function starTexture() {
+    const cv = document.createElement('canvas');
+    cv.width = cv.height = 64;
+    const ctx = cv.getContext('2d')!;
+    const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+    g.addColorStop(0, 'rgba(255,255,255,1)');
+    g.addColorStop(0.25, 'rgba(255,255,255,.85)');
+    g.addColorStop(0.55, 'rgba(255,255,255,.25)');
+    g.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, 64, 64);
+    return new THREE.CanvasTexture(cv);
+  }
+  const STAR_MAP = starTexture();
+
+  /* ---------- 星场：三层深度，各自漂移 ---------- */
+  function makeStars(count: number, spread: number, size: number, palette: number[]) {
+    const geo = new THREE.BufferGeometry();
+    const pos = new Float32Array(count * 3);
+    const col = new Float32Array(count * 3);
+    const c = new THREE.Color();
+    for (let i = 0; i < count; i++) {
+      pos[i * 3] = (Math.random() - 0.5) * spread;
+      pos[i * 3 + 1] = (Math.random() - 0.5) * spread;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * spread;
+      c.setHex(palette[(Math.random() * palette.length) | 0]);
+      c.toArray(col, i * 3);
+    }
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    const mat = new THREE.PointsMaterial({
+      size,
+      map: STAR_MAP,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.9,
+      sizeAttenuation: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    return new THREE.Points(geo, mat);
+  }
+
+  const PALETTE = [0xffffff, 0xdbeafe, 0x7dd3fc, 0xc4b5fd, 0xfbbf24, 0xffffff, 0xffffff];
+  const starsFar = makeStars(4200, 1900, 1.6, PALETTE);
+  const starsMid = makeStars(2200, 1300, 2.6, PALETTE);
+  const starsNear = makeStars(700, 850, 4.2, PALETTE);
+  scene.add(starsFar, starsMid, starsNear);
+
+  /* ---------- 星云：径向渐变 sprite ---------- */
+  function nebulaTexture(hex: string) {
+    const cv = document.createElement('canvas');
+    cv.width = cv.height = 256;
+    const ctx = cv.getContext('2d')!;
+    const g = ctx.createRadialGradient(128, 128, 0, 128, 128, 128);
+    g.addColorStop(0, hex);
+    g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, 256, 256);
+    return new THREE.CanvasTexture(cv);
+  }
+  const nebulas: THREE.Sprite[] = [];
+  const nebulaSpecs: Array<[string, number, number, number, number]> = [
+    ['rgba(124,58,237,0.16)', -260, 130, -420, 900],
+    ['rgba(37,99,235,0.15)', 320, -90, -520, 1000],
+    ['rgba(14,165,160,0.10)', 80, 240, -640, 850],
+    ['rgba(244,114,82,0.08)', -380, -220, -560, 760],
+  ];
+  for (const [color, x, y, z, scale] of nebulaSpecs) {
+    const sp = new THREE.Sprite(
+      new THREE.SpriteMaterial({ map: nebulaTexture(color), blending: THREE.AdditiveBlending, depthWrite: false })
+    );
+    sp.position.set(x, y, z);
+    sp.scale.setScalar(scale);
+    nebulas.push(sp);
+    scene.add(sp);
+  }
+
+  /* ---------- 流星 ---------- */
+  const meteors: Array<{ line: THREE.Line; vel: THREE.Vector3; life: number }> = [];
+  function spawnMeteor() {
+    const start = new THREE.Vector3(
+      (Math.random() - 0.5) * 1400,
+      300 + Math.random() * 300,
+      -200 - Math.random() * 500
+    );
+    const dir = new THREE.Vector3(-(0.5 + Math.random()), -(0.8 + Math.random() * 0.6), 0).normalize();
+    const geo = new THREE.BufferGeometry().setFromPoints([start, start.clone().addScaledVector(dir, 90)]);
+    const mat = new THREE.LineBasicMaterial({ color: 0xbfe6ff, transparent: true, opacity: 0.9 });
+    const line = new THREE.Line(geo, mat);
+    scene.add(line);
+    meteors.push({ line, vel: dir.multiplyScalar(9 + Math.random() * 7), life: 1 });
+  }
+
+  /* ---------- 交互：鼠标视差 + 滚动镜头 ---------- */
+  let mx = 0, my = 0, scrollT = 0;
+  addEventListener('mousemove', (e) => {
+    mx = (e.clientX / innerWidth - 0.5) * 2;
+    my = (e.clientY / innerHeight - 0.5) * 2;
+  }, { passive: true });
+  addEventListener('scroll', () => {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    scrollT = max > 0 ? scrollY / max : 0;
+  }, { passive: true });
+  addEventListener('resize', () => {
+    camera.aspect = innerWidth / innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+  });
+
+  const clock = new THREE.Clock();
+  let meteorTimer = 0;
+
+  function tick() {
+    const dt = Math.min(clock.getDelta(), 0.05);
+    const t = clock.elapsedTime;
+
+    starsFar.rotation.y = t * 0.005;
+    starsMid.rotation.y = t * 0.012;
+    starsMid.rotation.x = Math.sin(t * 0.05) * 0.02;
+    starsNear.rotation.y = t * 0.022;
+
+    nebulas.forEach((n, i) => {
+      n.position.x += Math.sin(t * 0.08 + i * 2) * 0.06;
+      n.position.y += Math.cos(t * 0.06 + i * 1.4) * 0.04;
+    });
+
+    // 滚动驱动：镜头沿 z 轴穿行 + 缓慢滚转
+    const targetZ = 420 - scrollT * 360;
+    camera.position.z += (targetZ - camera.position.z) * 0.06;
+    camera.position.x += (mx * 36 - camera.position.x) * 0.04;
+    camera.position.y += (-my * 26 - scrollT * 50 - camera.position.y) * 0.04;
+    camera.rotation.z = scrollT * 0.12;
+    camera.lookAt(0, -scrollT * 60, camera.position.z - 400);
+
+    // 流星生灭
+    meteorTimer -= dt;
+    if (meteorTimer <= 0 && meteors.length < 3) {
+      spawnMeteor();
+      meteorTimer = 2.5 + Math.random() * 4;
+    }
+    for (let i = meteors.length - 1; i >= 0; i--) {
+      const m = meteors[i];
+      m.life -= dt * 0.55;
+      m.line.position.addScaledVector(m.vel, dt * 60 * 0.16);
+      (m.line.material as THREE.LineBasicMaterial).opacity = Math.max(m.life, 0) * 0.9;
+      if (m.life <= 0) {
+        scene.remove(m.line);
+        m.line.geometry.dispose();
+        (m.line.material as THREE.Material).dispose();
+        meteors.splice(i, 1);
+      }
+    }
+
+    renderer.render(scene, camera);
+    requestAnimationFrame(tick);
+  }
+
+  if (prefersReduced) {
+    renderer.render(scene, camera);
+  } else {
+    tick();
+  }
+</script>

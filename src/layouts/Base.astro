@@ -1,0 +1,127 @@
+---
+import Cosmos from '../components/Cosmos.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+const {
+  title = '纪鸣飞 · 星辰大海 — AI 产品架构师 / 企业 AI 化转型专家',
+  description = '4 年+ AI 产品经验，AI Native 产品架构师。从制造业数字化转型到千人电商硅基员工计划，再到大厂出海内容 AI 中台 TripFlow——FDE 式全栈交付，用可运行的产物代替纯 PRD 推动落地。',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#030412" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>" />
+  </head>
+  <body>
+    <div id="voyage-progress"></div>
+    <Cosmos />
+
+    <nav class="nav">
+      <div class="nav-inner">
+        <a href="#top" class="nav-logo">纪鸣飞<span> ✦</span></a>
+        <div class="nav-links">
+          <a href="#voyage">航程</a>
+          <a href="#flagship">旗舰</a>
+          <a href="#works">星图集</a>
+          <a href="#logbook">航行日志</a>
+          <a href="#method">方法论</a>
+          <a href="#signal">信号塔</a>
+          <a href="#contact">泊港</a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="universe">
+      <slot />
+    </main>
+
+    <footer class="footer universe" id="contact">
+      <div class="wrap footer-inner">
+        <div>
+          <div class="f-name">纪鸣飞 <span style="color:var(--star)">/</span> Mingfei Ji</div>
+          <div class="f-meta">
+            AI PRODUCT ARCHITECT · FORWARD DEPLOYED ENGINEER<br />
+            上海 · 1966315939@qq.com
+          </div>
+        </div>
+        <div class="f-links">
+          <a href="https://mingfeiji.github.io/tripflow-ops-playbook/" target="_blank" rel="noopener">TripFlow 运营手册 ↗</a>
+          <a href="https://mingfeiji.github.io/tripflow-38-intents/" target="_blank" rel="noopener">38 意图全景图 ↗</a>
+          <a href="https://mingfeiji.github.io/tripflow-experience-map/" target="_blank" rel="noopener">用户体验地图 ↗</a>
+        </div>
+        <div class="f-meta" style="text-align:right">
+          「人人都是产品经理」专栏作者<br />
+          飞书开发者大会受邀嘉宾<br />
+          Building in public · 2026 ✦
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // 滚动入场
+      const io = new IntersectionObserver(
+        (entries) => entries.forEach((e) => e.isIntersecting && e.target.classList.add('in')),
+        { threshold: 0.08 }
+      );
+      document.querySelectorAll('.reveal, .reveal-l, [data-stagger]').forEach((el) => io.observe(el));
+
+      // 航程进度条
+      const bar = document.getElementById('voyage-progress');
+      addEventListener('scroll', () => {
+        const max = document.documentElement.scrollHeight - innerHeight;
+        if (bar && max > 0) bar.style.width = `${(scrollY / max) * 100}%`;
+      }, { passive: true });
+
+      // 卡片鼠标光晕 + 3D 倾斜
+      document.querySelectorAll<HTMLElement>('.card').forEach((card) => {
+        card.addEventListener('mousemove', (e) => {
+          const r = card.getBoundingClientRect();
+          const x = e.clientX - r.left, y = e.clientY - r.top;
+          card.style.setProperty('--mx', `${x}px`);
+          card.style.setProperty('--my', `${y}px`);
+          const rx = ((y / r.height) - 0.5) * -5;
+          const ry = ((x / r.width) - 0.5) * 5;
+          card.style.transform = `translateY(-6px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+        });
+        card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+      });
+
+      // 仪表盘数字滚动
+      const counters = document.querySelectorAll<HTMLElement>('[data-count]');
+      const cio = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target as HTMLElement;
+          cio.unobserve(el);
+          const target = parseFloat(el.dataset.count || '0');
+          const dur = 1400;
+          const t0 = performance.now();
+          const fmt = (v: number) => (Number.isInteger(target) ? Math.round(v).toString() : v.toFixed(1));
+          const step = (now: number) => {
+            const p = Math.min((now - t0) / dur, 1);
+            el.textContent = fmt(target * (1 - Math.pow(1 - p, 3)));
+            if (p < 1) requestAnimationFrame(step);
+          };
+          requestAnimationFrame(step);
+        });
+      }, { threshold: 0.4 });
+      counters.forEach((el) => cio.observe(el));
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  @import '../styles/global.css';
+</style>
