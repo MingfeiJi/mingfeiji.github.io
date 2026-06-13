@@ -311,6 +311,26 @@ const courses = [
     </div>
   </section>
 
+  <!-- ════════════ CH.02·5 · 案例聚光灯 ════════════ -->
+  <section class="chapter" id="spotlight">
+    <div class="wrap">
+      <div class="chapter-head reveal">
+        <div class="ch-no"><em>02 ✦</em> CASE SPOTLIGHT</div>
+        <h2>案例聚光灯 · 看 Agent 如何"思考"一条消息</h2>
+        <div class="ch-sub">
+          不止罗列能力——下面是一个真实生产 Agent（C 端出海社交产品，已脱敏）的运行逻辑：
+          <strong style="color:#fff">点任意一条用户消息</strong>，看它如何被 16 路意图分类 → 路由 → 三路 RAG 召回 → 生成人设回复 → 写回记忆。158 节点 / 184 连线的工程复杂度，直接看得见。
+        </div>
+      </div>
+      <div class="spotlight-frame reveal">
+        <iframe src="/prototypes/chat-agent-arch.html" title="拟人化闲聊 Agent · 架构与逻辑追踪（脱敏）" loading="lazy"></iframe>
+      </div>
+      <div style="margin-top:16px;text-align:center" class="reveal">
+        <a class="btn primary" href="/prototypes/chat-agent-arch.html" target="_blank" rel="noopener">全屏探索完整架构与交互追踪 ↗</a>
+      </div>
+    </div>
+  </section>
+
   <!-- ════════════ CH.03 · 星图集（作品）════════════ -->
   <section class="chapter" id="works">
     <div class="wrap">
@@ -724,4 +744,14 @@ const courses = [
   }
   .cs-cell p { font-size: 14.5px; color: var(--ink2); line-height: 1.75; margin: 0; }
   @media (max-width: 720px) { .cs-grid { grid-template-columns: 1fr; gap: 14px; } }
+
+  /* 案例聚光灯 · 内嵌可视化 */
+  .spotlight-frame {
+    margin-top: 30px; border: 1px solid var(--line); border-radius: 16px;
+    overflow: hidden; background: #070b16;
+    box-shadow: 0 24px 70px rgba(0,0,0,.45), inset 0 0 0 1px rgba(125,211,252,.05);
+    height: 660px;
+  }
+  .spotlight-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+  @media (max-width: 640px) { .spotlight-frame { height: 580px; } }
 </style>
