@@ -172,10 +172,16 @@ const courses = [
     <h1>纪鸣飞</h1>
     <div class="sub">AI 产品架构师 · 企业 AI 化转型专家</div>
     <p class="lede">
-      完整走过<strong>「制造业数字化转型 → 千人电商企业级 AI 转型 → 大厂出海内容 AI 中台」</strong>三段递进式攻坚。
-      信奉「业务目标 × 场景 = 价值」，用<strong>可运行的产物</strong>——20+ 高保真可交互原型、可复现的部署手册——代替纯
-      PRD 推动落地。
+      我做的事，是把大模型<strong>真正落进企业生产线</strong>——不是 PPT 和概念验证，是能交付、能移交、能自己长大的系统。
+      完整走过<strong>制造业数字化 → 千人电商 AI 转型 → 大厂出海 AI 中台</strong>三段攻坚，每段都留下可量化的结果和可复用的方法论。
     </p>
+    <div class="hero-stats">
+      <span><b>¥百万级</b>客服年化降本</span>
+      <span><b>68%→84%</b>客户满意度</span>
+      <span><b>65%→87%</b>生图采纳率</span>
+      <span><b>+60%</b>核心流程效率</span>
+    </div>
+    <div class="hero-stats-note">以上为<strong>已兑现</strong>结果 · 出海 AI 中台目标全年再省 ¥500 万 / 2.8 万工时</div>
     <div class="hero-cta">
       <a class="btn primary" href="#flagship">旗舰项目 · 内容增长 AI 中台</a>
       <a class="btn" href="#works">作品 · 可点开验证</a>
@@ -660,3 +666,31 @@ const courses = [
     </div>
   </section>
 </Base>
+
+<style>
+  /* —— v2 页面级 scoped 样式（不影响原首页 global.css）—— */
+  .hero-stats {
+    display: flex; flex-wrap: wrap; gap: 10px 28px;
+    margin: 26px 0 10px;
+  }
+  .hero-stats span {
+    display: inline-flex; align-items: baseline; gap: 7px;
+    font-size: 13.5px; color: var(--ink2);
+    font-family: var(--mono);
+  }
+  .hero-stats span b {
+    font-size: 19px; color: var(--star); font-weight: 600;
+    letter-spacing: .01em;
+  }
+  .hero-stats span:not(:last-child)::after {
+    content: ""; /* 分隔靠 gap，留空保持简洁 */
+  }
+  .hero-stats-note {
+    font-family: var(--mono); font-size: 12px;
+    color: var(--ink3); margin-bottom: 30px;
+  }
+  @media (max-width: 640px) {
+    .hero-stats { gap: 8px 18px; }
+    .hero-stats span b { font-size: 17px; }
+  }
+</style>
