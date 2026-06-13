@@ -323,13 +323,17 @@ const courses = [
       </div>
 
       <div class="case-grid" data-stagger>
-        <a class="case-card flagship" href="/prototypes/tripflow-arch.html" target="_blank" rel="noopener">
-          <div class="cc-top"><span class="cc-tag">旗舰 · 头部 OTA</span><span class="cc-arrow">看完整架构 ↗</span></div>
+        <div class="case-card flagship">
+          <div class="cc-top"><span class="cc-tag">旗舰 · 头部 OTA</span><span class="cc-arrow dim">两个深挖视角 ↓</span></div>
           <h3>出海内容增长 AI 中台</h3>
-          <div class="cc-role">0-1 主导 · AI 产品经理｜组织内容生产全流程，逐节点嵌入 AI 原子能力（LobeHub + Dify + MCP/Skills 落地）</div>
+          <div class="cc-role">0-1 主导 · AI 产品经理｜组织内容生产全流程，逐节点嵌入 AI 原子能力（基于 LobeHub 落地多 Agent + Skill + MCP + 知识库打通）</div>
           <div class="cc-metrics"><span>灵感 / 资产库 / 创作 / 审核 / 剪辑 全链路 × AI 节点</span><span>单周素材 500 / 发布 990 / 播放 100 万+ · 目标年省 ¥500 万</span><span class="hl">升级为 BG 级转型立项标杆</span></div>
           <div class="cc-mgmt">强项：AI 需求调研 → 落地方案 → 推动｜统筹 3 UI + 5+ 开发 · CIO 双周/英文汇报</div>
-        </a>
+          <div class="cc-facets">
+            <a href="/prototypes/tripflow-arch.html" target="_blank" rel="noopener">业务流程 × AI 架构 ↗</a>
+            <a href="/prototypes/tripflow-product-form.html" target="_blank" rel="noopener">产品形态 × OOUX ↗</a>
+          </div>
+        </div>
 
         <a class="case-card" href="/prototypes/chat-agent-arch.html" target="_blank" rel="noopener">
           <div class="cc-top"><span class="cc-tag">C 端 · 出海社交</span><span class="cc-arrow">看完整架构 ↗</span></div>
@@ -813,5 +817,13 @@ const courses = [
   .cc-metrics span { font-family: var(--mono); font-size: 12.5px; color: var(--ink2); }
   .cc-metrics span.hl { color: #fff; font-weight: 600; }
   .cc-mgmt { font-size: 12px; color: var(--ink3); border-top: 1px solid var(--line); padding-top: 10px; }
+  .cc-facets { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+  .cc-facets a {
+    flex: 1; min-width: 200px; text-align: center; text-decoration: none;
+    font-family: var(--mono); font-size: 13px; color: #fff;
+    border: 1px solid rgba(251,191,36,.4); background: rgba(251,191,36,.07);
+    border-radius: 9px; padding: 10px 12px; transition: .2s;
+  }
+  .cc-facets a:hover { background: rgba(251,191,36,.16); border-color: var(--flare); transform: translateY(-2px); }
   .lab-line { font-family: var(--mono); font-size: 11px; color: var(--star); letter-spacing: .14em; text-transform: uppercase; margin: 8px 0 4px; }
 </style>

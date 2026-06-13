@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>内容增长营销中台 · 产品形态详解（脱敏）</title>
+<style>
+  :root{
+    --bg:#070b16; --panel:rgba(125,211,252,.05); --line:rgba(125,211,252,.16);
+    --ink:#e8ecff; --ink2:#9aa6cf; --ink3:#5d6890;
+    --star:#7dd3fc; --nebula:#a78bfa; --flare:#fbbf24; --green:#34d399; --rose:#fb7185;
+    --mono:"JetBrains Mono","SF Mono","Menlo",monospace; --serif:"Noto Serif SC","Songti SC",serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:radial-gradient(1100px 560px at 82% -12%, rgba(52,211,153,.10), transparent 60%),radial-gradient(820px 460px at 6% 112%, rgba(125,211,252,.09), transparent 55%),var(--bg);color:var(--ink);font-family:var(--mono);min-height:100vh;padding:40px 24px 76px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .stars{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .stars i{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;animation:tw 4s infinite}
+  @keyframes tw{0%,100%{opacity:.04}50%{opacity:.5}}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto}
+  .back{display:inline-block;margin-bottom:18px;font-size:12px;color:var(--star);text-decoration:none}
+  .kick{font-size:11.5px;letter-spacing:.22em;color:var(--green);text-transform:uppercase}
+  h1{font-family:var(--serif);font-size:29px;font-weight:600;margin:9px 0 8px}
+  .sub{color:var(--ink2);font-size:13px;max-width:880px}.sub b{color:var(--ink)}
+
+  .essence{margin-top:22px;border:1px solid rgba(52,211,153,.26);background:rgba(52,211,153,.05);border-radius:12px;padding:16px 18px}
+  .essence .jt{font-size:12px;color:var(--green);letter-spacing:.12em;margin-bottom:8px}
+  .essence p{font-size:13.5px;color:var(--ink);line-height:1.85}
+  .essence p b{color:#fff}
+  .loop{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px;font-size:12.5px}
+  .loop span{border:1px solid rgba(52,211,153,.3);background:rgba(52,211,153,.06);border-radius:8px;padding:5px 12px;color:#a8f0d2}
+  .loop em{color:var(--star);font-style:normal}
+
+  .lab{font-size:11px;color:var(--star);letter-spacing:.16em;margin:38px 0 14px;text-transform:uppercase}
+  .lab small{color:var(--ink3);letter-spacing:0;text-transform:none;margin-left:8px}
+
+  /* 形态演进 before/after */
+  .eq{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .eq .col{padding:0}
+  .eq .ch{padding:11px 16px;font-size:12px;font-weight:600;letter-spacing:.04em}
+  .eq .before .ch{background:rgba(251,113,133,.08);color:#ffb8c2}
+  .eq .after .ch{background:rgba(52,211,153,.09);color:#a8f0d2}
+  .eq .row{padding:10px 16px;border-top:1px dashed rgba(125,211,252,.1);font-size:12.5px;min-height:62px}
+  .eq .before .row{color:var(--ink3)} .eq .after .row{color:var(--ink)}
+  .eq .row .d{font-size:10.5px;color:var(--star);letter-spacing:.08em;margin-bottom:3px}
+  .eq .after{border-left:1px solid var(--line)}
+  @media(max-width:680px){.eq{grid-template-columns:1fr}.eq .after{border-left:0}}
+  .three{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+  .three div{flex:1;min-width:160px;border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--panel)}
+  .three b{color:#fff;font-size:13px}.three p{font-size:11.5px;color:var(--ink3);margin-top:4px}
+
+  /* 主旅程 */
+  .journey{display:flex;align-items:stretch;gap:0;flex-wrap:wrap}
+  .jn{flex:1;min-width:120px;border:1px solid var(--line);border-radius:11px;padding:13px;background:var(--panel);text-align:center}
+  .jn h4{font-size:13.5px;color:#fff}.jn p{font-size:11px;color:var(--ink3);margin-top:5px}
+  .ja{display:flex;align-items:center;color:var(--green);opacity:.5;padding:0 4px;font-size:13px}
+  @media(max-width:740px){.ja{display:none}.jn{min-width:45%}}
+
+  /* OOUX 对象模型 */
+  .ooux{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  @media(max-width:780px){.ooux{grid-template-columns:1fr}}
+  .obox{border:1px solid var(--line);border-radius:12px;padding:15px 16px;background:var(--panel)}
+  .obox h3{font-size:13.5px;color:#fff;margin-bottom:4px}
+  .obox .ot{font-size:10.5px;color:var(--ink3);margin-bottom:11px}
+  .obj{margin:7px 0;font-size:12px}
+  .obj b{color:var(--nebula)} .obj span{color:var(--ink3)}
+
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+  @media(max-width:780px){.cols{grid-template-columns:1fr}}
+  .card{border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:var(--panel)}
+  .card h3{font-size:14px;color:#fff;margin-bottom:10px}
+  .card.dec{border-left:2px solid var(--flare)}
+  .card ul{list-style:none;font-size:12.5px;color:var(--ink2);line-height:1.95}
+  .card li{padding-left:15px;position:relative}.card li::before{content:"▸";position:absolute;left:0;color:var(--star)}
+  .card li b{color:#fff}
+
+  .note{margin-top:30px;font-size:11.5px;color:var(--ink3);border-left:2px solid var(--line);padding-left:14px;line-height:1.85}
+  .note b{color:var(--ink2)}
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+<div class="wrap">
+  <a class="back" href="/v2#cases">← 返回项目档案</a>
+  <div class="kick">FLAGSHIP CASE · 产品形态 × OOUX（脱敏）</div>
+  <h1>内容增长营销中台 · 产品形态详解</h1>
+  <p class="sub">同一旗舰项目的<b>产品形态视角</b>（与「业务流程 × AI 架构」互补）。把灵感、资产库、创作、剪辑、审核、复盘 + 副驾作为<b>一个平台</b>统一拆解：先按对象拆、不按页面拆，结构化回答"它到底该长成几个独立工具、一个巨型后台，还是别的"。</p>
+
+  <div class="essence">
+    <div class="jt">产品本质判断</div>
+    <p>用户带着<b>一个内容意图</b>进入，平台用<b>「发现 → 沉淀 → 创作 → 成片」</b>这条人机协作流水线，把<b>全网爆款 / 素材 / 想法</b>转成<b>可发布的图文 / 视频</b>，并通过<b>表现回流</b>沉淀成「爆款配方」——越用越聪明。</p>
+    <div class="loop"><span>发现</span><em>→</em><span>沉淀</span><em>→</em><span>创作</span><em>→</em><span>成片</span><em>→</em><span>复盘</span><em>↺ 反哺发现</em></div>
+  </div>
+
+  <div class="lab">▸ 形态演进：从「抓取工具」到「灵感工作台 + 助手」 <small>核心诊断：缺判断不缺数据</small></div>
+  <div class="eq">
+    <div class="col before">
+      <div class="ch">✗ 现在（工具形态）</div>
+      <div class="row"><div class="d">浏览单元</div>原始内容列表，逐条点开自己判断</div>
+      <div class="row"><div class="d">找内容</div>切 Tab（爆款/博主/榜单/单链）</div>
+      <div class="row"><div class="d">看为什么火</div>跳出去看评论区，体验割裂</div>
+      <div class="row"><div class="d">国内/国际</div>混在一起，国内看到一堆外网</div>
+      <div class="row"><div class="d">触达</div>用户主动来翻</div>
+      <div class="row"><div class="d">用完之后</div>看完就完了</div>
+    </div>
+    <div class="col after">
+      <div class="ch">✓ 目标（工作台 + 助手）</div>
+      <div class="row"><div class="d">浏览单元</div><b>洞察卡片</b>：缩略图 + 为什么火 + 评论情绪 + 业务相关性标签 + 一键改编</div>
+      <div class="row"><div class="d">找内容</div><b>对话式提问</b>："找几条适合火车业务的近 7 天爆款"</div>
+      <div class="row"><div class="d">看为什么火</div><b>卡片内嵌评论抽屉 + 情绪聚合</b>，不离开页面</div>
+      <div class="row"><div class="d">国内/国际</div><b>按业务线 + 国内/国际分流</b>的信息流</div>
+      <div class="row"><div class="d">触达</div><b>每日/每周报告主动推送</b>（飞书）</div>
+      <div class="row"><div class="d">用完之后</div><b>一键仿写/改编 → 衔接生成模块</b></div>
+    </div>
+  </div>
+  <div class="three">
+    <div><b>看得懂</b><p>洞察卡片流（规律 + 归因）</p></div>
+    <div><b>找得到</b><p>对话式 + 业务分流</p></div>
+    <div><b>用得上</b><p>一键接生成，灵感落到产出</p></div>
+  </div>
+
+  <div class="lab">▸ 主旅程动线 <small>一级导航按旅程，不按技术模块</small></div>
+  <div class="journey">
+    <div class="jn"><h4>找灵感</h4><p>发现爆款 + 看懂为什么火</p></div>
+    <div class="ja">→</div>
+    <div class="jn"><h4>攒素材</h4><p>切片入库 · 采集 · 裂变沉淀</p></div>
+    <div class="ja">→</div>
+    <div class="jn"><h4>创作</h4><p>召回拼接 · 批量生成成稿</p></div>
+    <div class="ja">→</div>
+    <div class="jn"><h4>成片</h4><p>出片 · AI 初筛 · 人终审</p></div>
+    <div class="ja">→</div>
+    <div class="jn"><h4>复盘</h4><p>表现回流 · 标爆款配方反哺</p></div>
+  </div>
+
+  <div class="lab">▸ 核心对象模型（OOUX）<small>先按对象拆、不按页面拆——稳定的产品骨架</small></div>
+  <div class="ooux">
+    <div class="obox">
+      <h3>内容对象</h3><div class="ot">平台的真源与流转物</div>
+      <div class="obj"><b>素材资产</b> <span>唯一真源 · 类型/标签/向量/血缘/表现/权限</span></div>
+      <div class="obj"><b>灵感 / 爆款</b> <span>爆款 + AI 洞察 · 为什么火/拉片脚本</span></div>
+      <div class="obj"><b>片段</b> <span>切出的精彩片段 · 钩子/卖点</span></div>
+      <div class="obj"><b>变体</b> <span>裂变/改写 · 母素材/差异度</span></div>
+      <div class="obj"><b>选题 · 脚本</b> <span>可生产方向 · 文案/分镜</span></div>
+      <div class="obj"><b>草稿 · 成片</b> <span>生产中 → 最终作品 · 血缘/表现</span></div>
+      <div class="obj"><b>模板</b> <span>剪辑/图文模板</span></div>
+    </div>
+    <div class="obox">
+      <h3>任务对象</h3><div class="ot">异步，统一进任务中心</div>
+      <div class="obj"><b>采集任务</b> <span>检索/爬取/账号抓取/爆款监控</span></div>
+      <div class="obj"><b>加工任务</b> <span>切片/打标/向量化/提取要素</span></div>
+      <div class="obj"><b>生成任务</b> <span>批量/单条内容生成 · 含成本</span></div>
+      <div class="obj"><b>审核任务</b> <span>视频/图文/脚本 + 事实核查</span></div>
+    </div>
+    <div class="obox">
+      <h3>组织与集合对象</h3><div class="ot">用户自组织</div>
+      <div class="obj"><b>项目</b> <span>素材归属与协作空间 · 权限/配额</span></div>
+      <div class="obj"><b>创作篮</b> <span>灵感/资产 → 创作 的桥（全局）</span></div>
+      <div class="obj"><b>爆款配方</b> <span>表现好的素材/模板/脚本组合 · 可复刻</span></div>
+      <div class="obj"><b>账号 / 博主</b> <span>竞品/合作监测 · 历史快照</span></div>
+    </div>
+  </div>
+
+  <div class="lab">▸ 信息架构与形态决策</div>
+  <div class="cols">
+    <div class="card">
+      <h3>信息架构原则</h3>
+      <ul>
+        <li><b>一级导航旅程式：</b>找灵感 · 攒素材 · 创作 · 成片 · 复盘（+ 项目 / 任务中心 / 设置）</li>
+        <li><b>搜索一等公民：</b>关键词 · 语义 · 描述片段 · 以图/视频搜（全局意图框）</li>
+        <li><b>筛选 Facets：</b>类型/来源/表现/业务线/时间/状态 多维同时缩小，<b>不做文件夹树</b></li>
+        <li><b>语义标签</b>跨类型召回；集合 = 项目/收藏/创作篮/爆款配方/批次</li>
+      </ul>
+    </div>
+    <div class="card dec">
+      <h3>整体形态决策</h3>
+      <ul>
+        <li>结论：<b>一个平台</b>，按旅程的「工作台视图」+ 全局副驾 Dock / 创作篮 / 任务中心 / 搜索——而非几个割裂工具，也非一个巨型后台</li>
+        <li><b>AI 能力"选中即用"</b>，作为上下文动作不开新 Tab——丝滑的核心</li>
+        <li>三原则约束人机协作边界：<b>可解释 / 可干预 / 可回退</b></li>
+        <li>前端↔编排做成<b>可配置契约</b>：加功能 = 清单登记 + Dify 搭流程，前端基本不动</li>
+        <li>按角色定默认落地：编导/策划落灵感工作台 + 创作台、剪辑落剪辑台、运营看复盘</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>脱敏说明：</b>公司 / 品牌 / 业务线名称以行业 + 体量匿名化；对象模型、信息架构与形态决策取自项目真实的产品形态决策文档（OOUX 全平台拆解），未夸大。<br>
+    <b>能力主张：</b>能把一个多模块复杂业务，用 OOUX + 旅程式 IA 收敛成"一个平台、一套对象、按旅程的工作台"——这是产品架构与形态的结构化梳理能力。
+  </div>
+</div>
+<script>
+  const s=document.getElementById('stars');
+  for(let i=0;i<60;i++){const e=document.createElement('i');e.style.left=Math.random()*100+'%';e.style.top=Math.random()*100+'%';e.style.animationDelay=(Math.random()*4)+'s';s.appendChild(e);}
+</script>
+</body>
+</html>
