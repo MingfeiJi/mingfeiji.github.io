@@ -311,22 +311,58 @@ const courses = [
     </div>
   </section>
 
-  <!-- ════════════ CH.02·5 · 案例聚光灯 ════════════ -->
-  <section class="chapter" id="spotlight">
+  <!-- ════════════ CH.02·5 · 项目档案 ════════════ -->
+  <section class="chapter" id="cases">
     <div class="wrap">
       <div class="chapter-head reveal">
-        <div class="ch-no"><em>02 ✦</em> CASE SPOTLIGHT</div>
-        <h2>案例聚光灯 · 看 Agent 如何"思考"一条消息</h2>
+        <div class="ch-no"><em>02 ✦</em> CASE FILES</div>
+        <h2>代表作 · 项目档案</h2>
         <div class="ch-sub">
-          不止罗列能力——下面是一个真实生产 Agent（C 端出海社交产品，已脱敏）的运行逻辑：
-          <strong style="color:#fff">点任意一条用户消息</strong>，看它如何被 16 路意图分类 → 路由 → 三路 RAG 召回 → 生成人设回复 → 写回记忆。158 节点 / 184 连线的工程复杂度，直接看得见。
+          每个项目都点得开完整架构图——<strong style="color:#fff">复杂度、业务/商业价值、我的管理角色</strong>都摆在台面上。这是我在面试里直接对着讲完整经历的可视化底稿。
         </div>
       </div>
+
+      <div class="case-grid" data-stagger>
+        <a class="case-card flagship" href="/prototypes/tripflow-arch.html" target="_blank" rel="noopener">
+          <div class="cc-top"><span class="cc-tag">旗舰 · 头部 OTA</span><span class="cc-arrow">看完整架构 ↗</span></div>
+          <h3>出海内容增长 AI 中台</h3>
+          <div class="cc-role">0-1 主导 · AI 产品经理｜五层 Multi-Agent · 6 业务域 SubAgent · 38 意图×47 旅程</div>
+          <div class="cc-metrics"><span>单周素材 500 / 发布 990 / 播放 100 万+</span><span>目标年省 ¥500 万 / 13 FTE</span><span class="hl">升级为 BG 级转型立项标杆</span></div>
+          <div class="cc-mgmt">管理：统筹 3 UI + 5+ 开发 · 带教 3 实习 + 1 正岗 · CIO 双周 / 英文汇报</div>
+        </a>
+
+        <a class="case-card" href="/prototypes/chat-agent-arch.html" target="_blank" rel="noopener">
+          <div class="cc-top"><span class="cc-tag">C 端 · 出海社交</span><span class="cc-arrow">看完整架构 ↗</span></div>
+          <h3>拟人化闲聊 Agent</h3>
+          <div class="cc-role">0-1 · 全项目工程复杂度最高的多轮对话 Agent</div>
+          <div class="cc-metrics"><span>158 节点 / 184 连线 · 16 路意图 · 三路 RAG · 防注入</span><span class="hl">关键环节付费转化 +30%</span></div>
+          <div class="cc-mgmt">含交互追踪：点消息看它如何"思考"</div>
+        </a>
+
+        <a class="case-card" href="/prototypes/cs-agent-arch.html" target="_blank" rel="noopener">
+          <div class="cc-top"><span class="cc-tag">B 端 · 千人电商</span><span class="cc-arrow">看完整架构 ↗</span></div>
+          <h3>智能客服「小 V」</h3>
+          <div class="cc-role">产品 / 项目负责人 · RAG + SFT · AI 优先人工兜底</div>
+          <div class="cc-metrics"><span>自动化 80% 重复问题 · 30 类意图</span><span class="hl">优化 13 人 / 年省超百万 · 满意度 68%→84%</span></div>
+          <div class="cc-mgmt">管理：横向带跨部门团队 · 集团 CIO 双周汇报</div>
+        </a>
+
+        <div class="case-card static">
+          <div class="cc-top"><span class="cc-tag">B 端 · 战略项目集</span><span class="cc-arrow dim">两次集团战略奖</span></div>
+          <h3>「硅基员工」AIGC + 数字化转型</h3>
+          <div class="cc-role">AI 产品专家 / PMO 主管 · ComfyUI + Lora 微调（10 万+ 数据）· ERP 业财融合</div>
+          <div class="cc-metrics"><span>生图采纳率 65%→87% · 效率 +30%</span><span class="hl">ERP 整体效率 +60% · 核算准确率 +25% / 流程拉通 +40%</span></div>
+          <div class="cc-mgmt">管理：带 20+ 人跨职能团队 · 公司年度优秀内训师（TOP 2/15）</div>
+        </div>
+      </div>
+
+      <div class="lab-line reveal">▸ 首页直接体验 · 看 Agent 如何"思考"一条消息</div>
       <div class="spotlight-frame reveal">
         <iframe src="/prototypes/chat-agent-arch.html" title="拟人化闲聊 Agent · 架构与逻辑追踪（脱敏）" loading="lazy"></iframe>
       </div>
       <div style="margin-top:16px;text-align:center" class="reveal">
-        <a class="btn primary" href="/prototypes/chat-agent-arch.html" target="_blank" rel="noopener">全屏探索完整架构与交互追踪 ↗</a>
+        <a class="btn primary" href="/prototypes/tripflow-arch.html" target="_blank" rel="noopener">进旗舰中台 · 五层架构 ↗</a>
+        <a class="btn" href="/prototypes/chat-agent-arch.html" target="_blank" rel="noopener">全屏交互追踪 ↗</a>
       </div>
     </div>
   </section>
@@ -754,4 +790,28 @@ const courses = [
   }
   .spotlight-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
   @media (max-width: 640px) { .spotlight-frame { height: 580px; } }
+
+  /* 项目档案卡片 */
+  .case-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 40px; }
+  @media (max-width: 760px) { .case-grid { grid-template-columns: 1fr; } }
+  .case-card {
+    display: block; border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px;
+    background: rgba(125,211,252,.045); color: inherit; text-decoration: none; transition: .25s;
+  }
+  a.case-card:hover { border-color: var(--star); background: rgba(125,211,252,.09); transform: translateY(-3px); box-shadow: 0 14px 40px rgba(125,211,252,.12); }
+  .case-card.flagship { grid-column: 1 / -1; border-color: rgba(251,191,36,.3); background: rgba(251,191,36,.045); }
+  a.case-card.flagship:hover { border-color: var(--flare); box-shadow: 0 14px 44px rgba(251,191,36,.16); }
+  .case-card.static { cursor: default; }
+  .cc-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .cc-tag { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; color: var(--star); border: 1px solid var(--line); border-radius: 20px; padding: 3px 11px; }
+  .case-card.flagship .cc-tag { color: var(--flare); border-color: rgba(251,191,36,.35); }
+  .cc-arrow { font-family: var(--mono); font-size: 12px; color: var(--flare); white-space: nowrap; }
+  .cc-arrow.dim { color: var(--ink3); }
+  .case-card h3 { font-family: var(--serif); font-size: 20px; color: #fff; margin-bottom: 8px; }
+  .cc-role { font-size: 13px; color: var(--ink2); margin-bottom: 12px; line-height: 1.6; }
+  .cc-metrics { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+  .cc-metrics span { font-family: var(--mono); font-size: 12.5px; color: var(--ink2); }
+  .cc-metrics span.hl { color: #fff; font-weight: 600; }
+  .cc-mgmt { font-size: 12px; color: var(--ink3); border-top: 1px solid var(--line); padding-top: 10px; }
+  .lab-line { font-family: var(--mono); font-size: 11px; color: var(--star); letter-spacing: .14em; text-transform: uppercase; margin: 8px 0 4px; }
 </style>
