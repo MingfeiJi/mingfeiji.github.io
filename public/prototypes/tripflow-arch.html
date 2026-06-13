@@ -3,186 +3,190 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>出海内容增长 AI 中台 · 五层架构深挖（脱敏）</title>
+<title>内容增长营销中台 · 业务流程 × AI 原子能力（脱敏）</title>
 <style>
   :root{
     --bg:#070b16; --panel:rgba(125,211,252,.05); --line:rgba(125,211,252,.16);
     --ink:#e8ecff; --ink2:#9aa6cf; --ink3:#5d6890;
     --star:#7dd3fc; --nebula:#a78bfa; --flare:#fbbf24; --green:#34d399; --rose:#fb7185;
-    --mono:"JetBrains Mono","SF Mono","Menlo",monospace;
-    --serif:"Noto Serif SC","Songti SC",serif;
+    --mono:"JetBrains Mono","SF Mono","Menlo",monospace; --serif:"Noto Serif SC","Songti SC",serif;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{
-    background:
-      radial-gradient(1100px 560px at 82% -12%, rgba(167,139,250,.12), transparent 60%),
-      radial-gradient(820px 460px at 6% 112%, rgba(125,211,252,.09), transparent 55%),
-      var(--bg);
-    color:var(--ink); font-family:var(--mono); min-height:100vh;
-    padding:40px 24px 76px; line-height:1.6; -webkit-font-smoothing:antialiased;
-  }
+  body{background:radial-gradient(1100px 560px at 82% -12%, rgba(167,139,250,.12), transparent 60%),radial-gradient(820px 460px at 6% 112%, rgba(125,211,252,.09), transparent 55%),var(--bg);color:var(--ink);font-family:var(--mono);min-height:100vh;padding:40px 24px 76px;line-height:1.6;-webkit-font-smoothing:antialiased}
   .stars{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
   .stars i{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;animation:tw 4s infinite}
   @keyframes tw{0%,100%{opacity:.04}50%{opacity:.5}}
-  .wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto}
+  .back{display:inline-block;margin-bottom:18px;font-size:12px;color:var(--star);text-decoration:none}
+  .kick{font-size:11.5px;letter-spacing:.22em;color:var(--star);text-transform:uppercase}
+  h1{font-family:var(--serif);font-size:29px;font-weight:600;margin:9px 0 8px}
+  .sub{color:var(--ink2);font-size:13px;max-width:880px}.sub b{color:var(--ink)}
 
-  header{margin-bottom:8px}
-  .kick{font-size:11.5px;letter-spacing:.24em;color:var(--star);text-transform:uppercase}
-  h1{font-family:var(--serif);font-size:30px;font-weight:600;margin:9px 0 8px}
-  .sub{color:var(--ink2);font-size:13px;max-width:820px}.sub b{color:var(--ink)}
-  .tagline{margin-top:12px;font-size:13px;color:var(--flare)}
+  .judge{margin-top:22px;border:1px solid rgba(251,191,36,.28);background:rgba(251,191,36,.05);border-radius:12px;padding:16px 18px}
+  .judge .jt{font-size:12px;color:var(--flare);letter-spacing:.12em;margin-bottom:8px}
+  .judge p{font-size:13.5px;color:var(--ink);line-height:1.8}
+  .judge p b{color:#fff}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;font-size:12.5px}
+  .split div{border:1px solid var(--line);border-radius:9px;padding:10px 13px;color:var(--ink2)}
+  .split div b{color:var(--star)}
+  @media(max-width:680px){.split{grid-template-columns:1fr}}
 
-  .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:9px;margin:24px 0 6px}
-  .metric{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 13px}
-  .metric b{display:block;font-size:21px;color:var(--star);font-weight:600;line-height:1.15}
-  .metric span{font-size:11px;color:var(--ink3)}
-  .metric.goal b{color:var(--ink2)}
-  .mnote{font-size:11.5px;color:var(--ink3);margin-bottom:6px}
-
-  .lab{font-size:11px;color:var(--star);letter-spacing:.16em;margin:36px 0 14px;text-transform:uppercase}
+  .lab{font-size:11px;color:var(--star);letter-spacing:.16em;margin:38px 0 14px;text-transform:uppercase}
   .lab small{color:var(--ink3);letter-spacing:0;text-transform:none;margin-left:8px}
 
-  /* 五层栈 */
-  .stack{display:flex;flex-direction:column;gap:10px}
-  .layer{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:var(--panel);
-         display:grid;grid-template-columns:128px 1fr;gap:16px;align-items:center;transition:.2s}
-  .layer:hover{border-color:var(--star);background:rgba(125,211,252,.08)}
-  .layer .ltitle{font-size:14px;font-weight:600;color:#fff}
-  .layer .ltitle small{display:block;font-size:10.5px;color:var(--star);margin-top:3px;letter-spacing:.1em}
-  .layer .ldesc{font-size:12.5px;color:var(--ink2)}
-  .layer .nodes{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
-  .chip{font-size:11px;border-radius:7px;padding:3px 9px;border:1px solid}
-  .c-star{background:rgba(125,211,252,.08);border-color:rgba(125,211,252,.3);color:#cdeeff}
-  .c-neb{background:rgba(167,139,250,.08);border-color:rgba(167,139,250,.3);color:#d8c9ff}
-  .c-flare{background:rgba(251,191,36,.07);border-color:rgba(251,191,36,.3);color:#ffe3a3}
-  .c-green{background:rgba(52,211,153,.07);border-color:rgba(52,211,153,.3);color:#a8f0d2}
-  .flowdown{text-align:center;color:var(--star);opacity:.45;font-size:12px;margin:-4px 0}
+  /* 业务流程主视图 */
+  .stage{border:1px solid var(--line);border-radius:13px;background:var(--panel);margin-bottom:0;overflow:hidden}
+  .stage .shead{display:flex;align-items:center;gap:12px;padding:14px 18px;background:rgba(125,211,252,.04)}
+  .snum{flex:none;width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;background:rgba(125,211,252,.12);color:var(--star);border:1px solid rgba(125,211,252,.3)}
+  .stage h3{font-size:15px;color:#fff}
+  .stage h3 small{color:var(--ink3);font-weight:400;font-size:12px;margin-left:8px}
+  .sbody{padding:6px 18px 16px 60px}
+  .srow{display:grid;grid-template-columns:80px 1fr;gap:12px;padding:8px 0;border-top:1px dashed rgba(125,211,252,.08)}
+  .srow:first-child{border-top:0}
+  .srow .rk{font-size:11.5px;color:var(--ink3);padding-top:3px}
+  .srow .rk.ai{color:var(--nebula)}
+  .srow .rk.form{color:var(--green)}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-size:11.5px;border-radius:7px;padding:3px 9px;border:1px solid}
+  .c-base{background:rgba(125,211,252,.06);border-color:var(--line);color:var(--ink2)}
+  .c-ai{background:rgba(167,139,250,.09);border-color:rgba(167,139,250,.3);color:#d8c9ff}
+  .c-form{background:rgba(52,211,153,.07);border-color:rgba(52,211,153,.3);color:#a8f0d2}
+  .flowdown{text-align:center;color:var(--star);opacity:.4;font-size:13px;margin:7px 0}
 
   .cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
-  @media(max-width:780px){.cols{grid-template-columns:1fr}.layer{grid-template-columns:1fr;gap:8px}}
+  @media(max-width:780px){.cols{grid-template-columns:1fr}.srow{grid-template-columns:1fr;gap:5px}}
   .card{border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:var(--panel)}
   .card h3{font-size:14px;color:#fff;margin-bottom:10px}
-  .card.biz{border-left:2px solid var(--green)}
-  .card.mgmt{border-left:2px solid var(--flare)}
+  .card.role{border-left:2px solid var(--star)} .card.mgmt{border-left:2px solid var(--flare)}
   .card ul{list-style:none;font-size:12.5px;color:var(--ink2);line-height:1.95}
-  .card li{padding-left:15px;position:relative}
-  .card li::before{content:"▸";position:absolute;left:0;color:var(--star)}
+  .card li{padding-left:15px;position:relative}.card li::before{content:"▸";position:absolute;left:0;color:var(--star)}
   .card li b{color:#fff}
+
+  /* 落地技术栈 */
+  .tech{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:6px 18px 14px}
+  .tline{display:grid;grid-template-columns:150px 1fr;gap:14px;padding:11px 0;border-top:1px dashed rgba(125,211,252,.1);align-items:center}
+  .tline:first-child{border-top:0}
+  .tline .tl{font-size:12.5px;color:#fff;font-weight:600}
+  .tline .tl small{display:block;color:var(--ink3);font-weight:400;font-size:10.5px;margin-top:2px}
+  .tline .td{font-size:12px;color:var(--ink2)}
+  .owner{font-size:10px;border-radius:5px;padding:1px 6px;margin-left:6px}
+  .owner.dev{background:rgba(125,211,252,.12);color:var(--star)}
+  .owner.pm{background:rgba(167,139,250,.14);color:#d8c9ff}
+  @media(max-width:680px){.tline{grid-template-columns:1fr;gap:4px}}
 
   .note{margin-top:30px;font-size:11.5px;color:var(--ink3);border-left:2px solid var(--line);padding-left:14px;line-height:1.85}
   .note b{color:var(--ink2)}
-  .back{display:inline-block;margin-bottom:18px;font-size:12px;color:var(--star);text-decoration:none}
 </style>
 </head>
 <body>
 <div class="stars" id="stars"></div>
 <div class="wrap">
   <a class="back" href="/v2#cases">← 返回项目档案</a>
-  <header>
-    <div class="kick">FLAGSHIP CASE · Five-Layer Multi-Agent 中台（脱敏）</div>
-    <h1>出海内容增长 AI 中台 · 五层架构</h1>
-    <p class="sub">头部 OTA 火车票 BG · AI 产品经理 · <b>0-1 主导，迭代至 V5/V6 与 8 版原型</b>。把 70–80 人内容团队"选题→脚本→素材→剪辑→合规→发布→复盘"7 步中 6 步纯人工的链路，改造为多 Agent 协同的营销中台。</p>
-    <div class="tagline">★ 组织影响力：从单团队提效项目，升级为推动火车票事业群（BG）级 AI 化转型立项的标杆案例。</div>
-  </header>
+  <div class="kick">FLAGSHIP CASE · 业务流程 × AI 原子能力（脱敏）</div>
+  <h1>内容增长营销中台 · 业务流程详解</h1>
+  <p class="sub">头部 OTA 出海出行业务线 · AI 产品经理 · 0-1 主导。<b>本质不是炫技的多 Agent 编排，而是：把 70–80 人内容团队的生产流程组织起来，在每个关键节点嵌入 AI 原子能力</b>。我的核心价值在于内容增长业务里的 <b>AI 需求调研 → 落地方案 → 推动落地</b>。</p>
 
-  <div class="mnote">已实测（MVP 阶段）——</div>
-  <div class="metrics">
-    <div class="metric"><b>500 条</b><span>单周生成素材</span></div>
-    <div class="metric"><b>40%</b><span>素材采纳率</span></div>
-    <div class="metric"><b>990 条</b><span>单周发布短视频</span></div>
-    <div class="metric"><b>100 万+</b><span>单周累计播放</span></div>
-    <div class="metric goal"><b>¥500 万</b><span>目标 · 全年节省</span></div>
-    <div class="metric goal"><b>≈13 FTE</b><span>目标 · 2.8 万工时</span></div>
-  </div>
-
-  <div class="lab">▸ 五层 Multi-Agent 架构 <small>从用户入口到数据底座，逐层下钻</small></div>
-  <div class="stack">
-    <div class="layer">
-      <div class="ltitle">① 入口层<small>ENTRY</small></div>
-      <div>
-        <div class="ldesc">多端入口接入；MVP 阶段以 LobeHub 零迁移承载 Agentic 编排，快速验证。</div>
-        <div class="nodes"><span class="chip c-star">多端入口</span><span class="chip c-star">LobeHub 零迁移</span></div>
-      </div>
-    </div>
-    <div class="flowdown">▼</div>
-    <div class="layer">
-      <div class="ltitle">② 前端 / 产品形态<small>EXPERIENCE</small></div>
-      <div>
-        <div class="ldesc">回答"AI 中台产品到底长什么样"：定义统一交互范式，并以三原则约束人机协作边界。</div>
-        <div class="nodes"><span class="chip c-star">旅程导航</span><span class="chip c-star">任务中心 · 输入-处理-输出全程可视 + Token 成本</span><span class="chip c-star">副驾 Dock</span><span class="chip c-star">上下文抽屉</span><span class="chip c-flare">可解释 / 可干预 / 可回退</span></div>
-      </div>
-    </div>
-    <div class="flowdown">▼</div>
-    <div class="layer">
-      <div class="ltitle">③ 主 Agent<small>ORCHESTRATION</small></div>
-      <div>
-        <div class="ldesc">意图识别与编排中枢：6 阶段意图识别 Pipeline + 组合意图机制 + 会话对象栈（Entity Stack）做多轮上下文管理。</div>
-        <div class="nodes"><span class="chip c-star">6 阶段意图 Pipeline</span><span class="chip c-star">组合意图</span><span class="chip c-star">Entity Stack</span><span class="chip c-flare">38 意图 × 47 旅程语义层</span></div>
-      </div>
-    </div>
-    <div class="flowdown">▼</div>
-    <div class="layer">
-      <div class="ltitle">④ 6 业务域 SubAgent<small>DOMAIN AGENTS</small></div>
-      <div>
-        <div class="ldesc">每个 SubAgent 抽象为统一三件套——"Skill（PE + 业务规则）+ MCP/Tool + 知识库"，通过 Skill 调 MCP 接入企业知识库形成调用闭环。</div>
-        <div class="nodes"><span class="chip c-neb">选题</span><span class="chip c-neb">脚本本地化 / 去 AI 痕迹</span><span class="chip c-neb">素材 · 配音 / 数字人</span><span class="chip c-neb">合规审核</span><span class="chip c-neb">多平台发布</span><span class="chip c-neb">复盘归因</span></div>
-      </div>
-    </div>
-    <div class="flowdown">▼</div>
-    <div class="layer">
-      <div class="ltitle">⑤ Skill + MCP + 数据<small>FOUNDATION</small></div>
-      <div>
-        <div class="ldesc">MCP 薄包装策略——70% 复用既有接口、30% 新建，总 Tool 数控制在 20 以内覆盖全业务域。检索用"结构化字段先筛 90% + pgvector 语义召回"混合策略，推动 MySQL → PostgreSQL 平滑演进。</div>
-        <div class="nodes"><span class="chip c-green">MCP 薄包装 · &lt;20 Tool</span><span class="chip c-green">混合检索 BM25 + pgvector</span><span class="chip c-green">MySQL → PostgreSQL</span><span class="chip c-green">raw → wiki 编译管线（V2）</span></div>
-      </div>
+  <div class="judge">
+    <div class="jt">核心判断（需求调研的产物）</div>
+    <p>把一线《AI 使用反馈》归类后，根因高度一致：<b>问题不在"缺数据"，在"缺判断"</b>——工具在用 AI 搬运内容，但用户的时间仍花在"自己判断有没有用、为什么火"上。所以方向不是再多接数据源，而是<b>把价值从「采集」上移到「判断与产出」</b>。</p>
+    <div class="split">
+      <div><b>分工边界 ·</b> 开发管「数据进出 + 确定性计算」，Dify 管「一切文本理解与生成」。</div>
+      <div><b>产品自闭环 ·</b> AI 工作流的搭建 / 提示词调优 / 效果迭代由我独立完成，<b style="color:#fff">不占开发排期</b>。</div>
     </div>
   </div>
 
-  <div class="lab">▸ 两根支柱：合规护城河 + 防作弊指标</div>
+  <div class="lab">▸ 端到端业务流程 × 嵌入的 AI 原子能力 <small>每一步：业务做什么 / 哪里用 AI 怎么做 / 产品形态</small></div>
+
+  <div class="stage">
+    <div class="shead"><div class="snum">1</div><h3>灵感 / 选题<small>输入 · 找选题、找规律</small></h3></div>
+    <div class="sbody">
+      <div class="srow"><div class="rk">业务</div><div class="chips"><span class="chip c-base">爆款榜单（关键词/平台维度）</span><span class="chip c-base">博主跟踪</span><span class="chip c-base">单链分析</span><span class="chip c-base">国内外信息流分流</span></div></div>
+      <div class="srow"><div class="rk ai">AI 节点</div><div class="chips"><span class="chip c-ai">爆款归因「为什么火」</span><span class="chip c-ai">评论情绪聚合</span><span class="chip c-ai">业务关联打标（火车/酒店/机票/出行）</span><span class="chip c-ai">选题&卖点提炼</span><span class="chip c-ai">国内/国际打法自动判断</span><span class="chip c-ai">一键仿写脚本草稿</span></div></div>
+      <div class="srow"><div class="rk form">产品形态</div><div class="chips"><span class="chip c-form">洞察卡片流（不是原始列表）</span><span class="chip c-form">对话式提问检索</span><span class="chip c-form">飞书日报/周报主动推送</span><span class="chip c-form">「看过不看」去重</span></div></div>
+    </div>
+  </div>
+  <div class="flowdown">▼</div>
+
+  <div class="stage">
+    <div class="shead"><div class="snum">2</div><h3>资产库<small>素材中台 · 连接「采集 → 加工 → 存储 → 创作」</small></h3></div>
+    <div class="sbody">
+      <div class="srow"><div class="rk">业务</div><div class="chips"><span class="chip c-base">关键词全网搜索 / 链接爬取切片</span><span class="chip c-base">按账号批量抓取</span><span class="chip c-base">本地批量上传</span><span class="chip c-base">爆款监控订阅自动入库</span></div></div>
+      <div class="srow"><div class="rk ai">AI 节点</div><div class="chips"><span class="chip c-ai">智能切片 / 自动分镜</span><span class="chip c-ai">要素提取 + 向量化</span><span class="chip c-ai">AI 识别打标签</span><span class="chip c-ai">同质化 / 去重校验（simhash + 向量相似）</span><span class="chip c-ai">素材裂变（AI 批量改 / 一生多）</span><span class="chip c-ai">提取 BGM / 字幕 / 分镜</span><span class="chip c-ai">语义 + 以图搜图检索</span></div></div>
+      <div class="srow"><div class="rk form">产品形态</div><div class="chips"><span class="chip c-form">瀑布流网格 + 选中即用 AI 动作栏</span><span class="chip c-form">素材详情页 · 血缘衍生树</span><span class="chip c-form">表现数据贴卡（使用×N / 爆款角标）</span><span class="chip c-form">库↔创作双向打通</span></div></div>
+    </div>
+  </div>
+  <div class="flowdown">▼</div>
+
+  <div class="stage">
+    <div class="shead"><div class="snum">3</div><h3>内容创作 / 生成<small>出脚本、图文、视频</small></h3></div>
+    <div class="sbody">
+      <div class="srow"><div class="rk">业务</div><div class="chips"><span class="chip c-base">写脚本</span><span class="chip c-base">图文批量生成</span><span class="chip c-base">按选题/素材成批产出</span></div></div>
+      <div class="srow"><div class="rk ai">AI 节点</div><div class="chips"><span class="chip c-ai">AI 生成 / 仿写改编脚本（本地化）</span><span class="chip c-ai">文生图 / 图生视频</span><span class="chip c-ai">图文批量生成</span><span class="chip c-ai">Trip yoyo Skill</span><span class="chip c-ai">动态提示词 + 产线知识库语义召回</span></div></div>
+      <div class="srow"><div class="rk form">产品形态</div><div class="chips"><span class="chip c-form">从灵感/素材「去创作」直达批量创作流</span></div></div>
+    </div>
+  </div>
+  <div class="flowdown">▼</div>
+
+  <div class="stage">
+    <div class="shead"><div class="snum">4</div><h3>审核<small>合规把关 · 出海平台封号是最大隐性成本</small></h3></div>
+    <div class="sbody">
+      <div class="srow"><div class="rk">业务</div><div class="chips"><span class="chip c-base">脚本审核</span><span class="chip c-base">图文审核</span><span class="chip c-base">视频审核</span></div></div>
+      <div class="srow"><div class="rk ai">AI 节点</div><div class="chips"><span class="chip c-ai">多模态审核（文本/图像/视频）</span><span class="chip c-ai">事实核查 + 合规规则</span><span class="chip c-ai">音/视频转 SRT</span><span class="chip c-ai">5000+ 评测集做源头把控 + 终筛</span></div></div>
+    </div>
+  </div>
+  <div class="flowdown">▼</div>
+
+  <div class="stage">
+    <div class="shead"><div class="snum">5</div><h3>剪辑 / 成片<small>拼接出片</small></h3></div>
+    <div class="sbody">
+      <div class="srow"><div class="rk">业务</div><div class="chips"><span class="chip c-base">拼接混剪</span><span class="chip c-base">模板套用</span><span class="chip c-base">批量产出</span></div></div>
+      <div class="srow"><div class="rk ai">AI 节点</div><div class="chips"><span class="chip c-ai">SRT + 脚本召回素材自动拼接（Maix）</span><span class="chip c-ai">智能剪辑 / 自动分镜</span><span class="chip c-ai">剪辑模板一键套用</span></div></div>
+    </div>
+  </div>
+  <div class="flowdown">▼</div>
+
+  <div class="stage">
+    <div class="shead"><div class="snum">6</div><h3>产出 → 复盘 / 反馈闭环<small>发布（暂不做）· 数据回流驱动下一轮</small></h3></div>
+    <div class="sbody">
+      <div class="srow"><div class="rk ai">AI 节点</div><div class="chips"><span class="chip c-ai">爆款归因（标记产出爆款的「爆款配方」）</span><span class="chip c-ai">智能推荐高潜素材 / 可复刻组合</span><span class="chip c-ai">提示复用（X 条匹配未充分使用）</span></div></div>
+      <div class="srow"><div class="rk form">指标</div><div class="chips"><span class="chip c-form">双轨指标（结果轨 + 过程轨）</span><span class="chip c-form">23 项埋点 Schema · AARRR 映射</span><span class="chip c-form">防作弊比值机制</span></div></div>
+    </div>
+  </div>
+
+  <div class="lab">▸ 真实落地：数据 → AI → 应用 全链路 <small>以灵感引擎模块为例</small></div>
+  <div class="tech">
+    <div class="tline"><div class="tl">L1 采集层<small>TikHub / 平台接口</small><span class="owner dev">开发 · 硬逻辑</span></div><div class="td">接口调度、翻页游标、限频重试、CDN 下载转码——AI 不直接碰原始 API 响应。</div></div>
+    <div class="tline"><div class="tl">L2 存储层<span class="owner dev">开发</span></div><div class="td">爆款内容表 + 评论/账号快照/词库/选题池/报告表；结构化字段落库。</div></div>
+    <div class="tline"><div class="tl">L3 计算收敛层<span class="owner dev">开发 · 硬逻辑</span></div><div class="td">两层过滤 + simhash 去重；分平台互动率公式、时间衰减、热度分、关联度三路融合；精选引擎（订阅×阈值×多样性 → 今日灵感 Top12）。</div></div>
+    <div class="tline"><div class="tl">L4 AI 层<small>Dify Workflow API</small><span class="owner pm">产品自闭环</span></div><div class="td">~10 个原子工作流：入池打标 / 爆款归因 / 可挂载性评分 / 仿写脚本 / 节点状态 / 全局洞察 / 博主摘要 / 周报 / 扩词 / 链接拆解串联；Dify 知识库做语义召回。<b style="color:#fff">输出全部为 JSON 回写库，提示词可热更、不影响系统稳定。</b></div></div>
+    <div class="tline"><div class="tl">L5 应用层<span class="owner dev">前端</span></div><div class="td">今日灵感 / 热点雷达 / 选题池 / 竞品监控 / 报告中心 / 关键词库；前端只读库不读 Dify。</div></div>
+    <div class="tline"><div class="tl">编排与设想</div><div class="td">落地承载 = <b style="color:#fff">LobeHub（零迁移）+ Dify + MCP/Skills</b>；主 Agent 6 阶段意图识别、组合意图、会话对象栈（Entity Stack）、6 业务域 SubAgent 为<b style="color:#fff">架构设想</b>，指导演进方向。</div></div>
+  </div>
+
+  <div class="lab">▸ 我的角色：需求调研 → 落地方案 → 推动 + 团队管理</div>
   <div class="cols">
-    <div class="card">
-      <h3>多模态合规审核体系</h3>
+    <div class="card role">
+      <h3>从诊断到落地的全链路推动</h3>
       <ul>
-        <li>基于 <b>Gemini 2.5 Flash/Pro</b> 设计"源头把控 + 终筛"的文本 / 图像 / 视频审核</li>
-        <li>建设 <b>5000+ 条评测集</b>，显著降低海外平台违规封号风险</li>
-        <li>对靠账号矩阵分发的业务，这条直接保住分发能力（最先落地的 P0）</li>
-      </ul>
-    </div>
-    <div class="card">
-      <h3>双轨指标 + 三受众看板</h3>
-      <ul>
-        <li>结果轨 + 过程轨；三受众分层看板（<b>BG 高层 / 直属 / 平级</b>）</li>
-        <li>4 项可审计指标（AI 渗透率 / 节省工时 / 自动化覆盖率 / 业务真实暴露率）+ <b>防作弊比值机制</b></li>
-        <li>AARRR 映射至 AI 工具语境，落地 <b>23 项埋点 Schema</b>；月度经营复盘做全链路漏斗归因</li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="lab">▸ 不只是产品，是组织转型 + 团队管理</div>
-  <div class="cols">
-    <div class="card mgmt">
-      <h3>转型即组织设计（关键判断）</h3>
-      <ul>
-        <li>3 小时/人多层级深访 +"需求四象限 / 伪需求过滤"，从 7 环节锁定 <b>2 个 P0</b>、毙掉<b>「全 AI 一键出片」「自动养号」2 个伪需求</b>，避免千万级研发错配</li>
-        <li>核心判断：本质是"运营侧 AI 化转型"而非单一产品</li>
-        <li>建<b>四层转型组织</b>（指委会 / 运营合伙人 / 域专家 / 种子用户）+ <b>业务蓝图签字机制</b></li>
-        <li><b>飞轮分工</b>：业务变化（Skill + 数据）归运营、技术稳定（代码）归工程——把一次性项目改造成可持续机制</li>
+        <li><b>需求调研：</b>3 小时/人多层级深访 +「需求四象限 / 伪需求过滤」，从 7 环节锁定 2 个 P0、毙掉「全 AI 一键出片」「自动养号」2 个伪需求；诊断出"缺判断不缺数据"</li>
+        <li><b>落地方案：</b>三层重构（数据接入 / AI 洞察 / 产出应用）、数据→AI→应用全链路设计、分部门实现拆解、Prompt 规范与上线预估</li>
+        <li><b>推动：</b>定分工边界让产品 AI 工作流不占开发排期；四层转型组织 + 蓝图签字 +「业务归运营、技术归工程」飞轮分工，把一次性项目改造成可持续机制</li>
       </ul>
     </div>
     <div class="card mgmt">
-      <h3>团队带教与汇报</h3>
+      <h3>团队管理与成果</h3>
       <ul>
-        <li>统筹 <b>3 名 UI + 5 名以上开发</b>的跨职能协作</li>
-        <li>带教 <b>3 名实习生 + 1 名正岗产品</b>，以"人人用 Agent"方式提升交付效率</li>
-        <li>驻场业务一线做场景调研，同时向直属 / 集团 CIO 双周汇报、向亚洲区总经理英文汇报</li>
-        <li>输出《Agent 实施手册》《MCP / Skill 规范》等<b>可移交工程资产</b></li>
+        <li>统筹 <b>3 UI + 5 名以上开发</b>；带教 <b>3 实习生 + 1 正岗产品</b>，"人人用 Agent"</li>
+        <li>驻场一线调研，向直属 / 集团 CIO 双周、向亚洲区总经理英文汇报</li>
+        <li><b>已实测（MVP）：</b>单周生成素材 500 条（采纳 40%）/ 发布 990 条 / 播放 100 万+；<b>目标</b>全年省 ¥500 万 / 2.8 万工时 ≈ 13 FTE</li>
+        <li><b>组织影响力：</b>从单团队提效项目，升级为推动事业群（BG）级 AI 化转型立项的标杆案例</li>
       </ul>
     </div>
   </div>
 
   <div class="note">
-    <b>脱敏说明：</b>公司、品牌、业务线名称与内部数据集均以行业 + 体量方式匿名化呈现；架构为真实工作流的结构化抽象，所有指标取自项目实际，"已实测"与"目标"严格区分、未做夸大。<br>
-    <b>能力主张：</b>从需求诊断 / 组织设计，到五层 Multi-Agent 架构、混合检索、多模态合规、双轨指标，再到团队带教与可移交资产——单人主导 0-1 落地并推动 BG 级转型。
+    <b>脱敏说明：</b>公司、品牌、业务线名称均以行业 + 体量匿名化；流程与 AI 节点取自项目真实需求与落地文档，"已实测"与"目标"严格区分、未夸大。<br>
+    <b>能力主张：</b>在内容增长业务里把流程组织清楚、在对的节点嵌入对的 AI 能力，用产品自闭环的 Dify 工作流独立落地并持续迭代——这是 AI 需求调研、落地方案与推动能力的完整体现。
   </div>
 </div>
 <script>
