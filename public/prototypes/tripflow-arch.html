@@ -84,7 +84,7 @@
   <a class="back" href="/v2#cases">← 返回项目档案</a>
   <div class="kick">FLAGSHIP CASE · 业务流程 × AI 原子能力（脱敏）</div>
   <h1>内容增长营销中台 · 业务流程详解</h1>
-  <p class="sub">头部 OTA 出海出行业务线 · AI 产品经理 · 0-1 主导。<b>本质不是炫技的多 Agent 编排，而是：把 70–80 人内容团队的生产流程组织起来，在每个关键节点嵌入 AI 原子能力</b>。我的核心价值在于内容增长业务里的 <b>AI 需求调研 → 落地方案 → 推动落地</b>。</p>
+  <p class="sub">头部 OTA 出海出行业务线 · AI 产品经理 · 0-1 主导。<b>重点不在编排多复杂，而在把 70–80 人内容团队的生产流程组织清楚、在每个关键节点嵌入对的 AI 能力</b>；并基于 LobeHub 落地多 Agent + Skill + MCP + 知识库打通。我的核心价值在于内容增长业务里的 <b>AI 需求调研 → 落地方案 → 推动落地</b>。</p>
 
   <div class="judge">
     <div class="jt">核心判断（需求调研的产物）</div>
@@ -160,7 +160,28 @@
     <div class="tline"><div class="tl">L3 计算收敛层<span class="owner dev">开发 · 硬逻辑</span></div><div class="td">两层过滤 + simhash 去重；分平台互动率公式、时间衰减、热度分、关联度三路融合；精选引擎（订阅×阈值×多样性 → 今日灵感 Top12）。</div></div>
     <div class="tline"><div class="tl">L4 AI 层<small>Dify Workflow API</small><span class="owner pm">产品自闭环</span></div><div class="td">~10 个原子工作流：入池打标 / 爆款归因 / 可挂载性评分 / 仿写脚本 / 节点状态 / 全局洞察 / 博主摘要 / 周报 / 扩词 / 链接拆解串联；Dify 知识库做语义召回。<b style="color:#fff">输出全部为 JSON 回写库，提示词可热更、不影响系统稳定。</b></div></div>
     <div class="tline"><div class="tl">L5 应用层<span class="owner dev">前端</span></div><div class="td">今日灵感 / 热点雷达 / 选题池 / 竞品监控 / 报告中心 / 关键词库；前端只读库不读 Dify。</div></div>
-    <div class="tline"><div class="tl">编排与设想</div><div class="td">落地承载 = <b style="color:#fff">LobeHub（零迁移）+ Dify + MCP/Skills</b>；主 Agent 6 阶段意图识别、组合意图、会话对象栈（Entity Stack）、6 业务域 SubAgent 为<b style="color:#fff">架构设想</b>，指导演进方向。</div></div>
+    <div class="tline"><div class="tl">编排落地<small>LobeHub</small><span class="owner pm">已落地</span></div><div class="td">基于 <b style="color:#fff">LobeHub 零迁移</b>落地多 Agent 编排（详见下方）；与 Dify 分工——LobeHub 承编排与多 Agent 协作，Dify 承数据侧批量 AI 处理。</div></div>
+  </div>
+
+  <div class="lab">▸ 基于 LobeHub 落地的多 Agent <small>Skill + MCP + 知识库打通，已嵌入业务产生效用</small></div>
+  <div class="cols">
+    <div class="card role">
+      <h3>落地了什么（不止设想）</h3>
+      <ul>
+        <li>以 <b>LobeHub 零迁移</b>承载 Agentic 编排：主 Agent 做意图识别与分发，下挂业务域 SubAgent 协作</li>
+        <li>每个 Agent 统一封装为 <b>Skill（PE + 业务规则）</b>；Skill 调 <b>MCP / Tool</b> 接入企业知识库，形成"识别 → 调用 → 语义召回 → 回复"的<b>调用闭环</b></li>
+        <li>MCP 薄包装：70% 复用既有接口、30% 新建，总 Tool 数 <b>&lt; 20</b> 覆盖全业务域</li>
+        <li>知识库挂载产线知识（卖点 / 功能点 / FAQ）做语义召回</li>
+      </ul>
+    </div>
+    <div class="card mgmt">
+      <h3>有效的业务效用</h3>
+      <ul>
+        <li>多 Agent + Skill 把<b>灵感、创作、审核</b>等环节真正接进生产流程，不是孤立 demo</li>
+        <li>Skill / MCP / 知识库打通后，<b>产品侧可独立增删 Agent、热更提示词</b>，不占开发排期 → 迭代周期以天计</li>
+        <li>完整五层 Multi-Agent（6 阶段意图 Pipeline + 组合意图 + Entity Stack + 6 业务域）作为指导演进的架构蓝图，在 LobeHub 上分阶段坐实</li>
+      </ul>
+    </div>
   </div>
 
   <div class="lab">▸ 我的角色：需求调研 → 落地方案 → 推动 + 团队管理</div>
