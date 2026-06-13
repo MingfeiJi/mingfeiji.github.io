@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>拟人化闲聊 Agent · 运行时架构（脱敏）</title>
+<style>
+  :root{
+    --bg:#070b16; --panel:rgba(125,211,252,.045); --line:rgba(125,211,252,.18);
+    --ink:#e8ecff; --ink2:#9aa6cf; --ink3:#5d6890;
+    --star:#7dd3fc; --nebula:#a78bfa; --flare:#fbbf24; --green:#34d399;
+    --mono:"JetBrains Mono","SF Mono","Menlo",monospace;
+    --serif:"Noto Serif SC","Songti SC",serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(167,139,250,.10), transparent 60%),
+      radial-gradient(900px 500px at 10% 110%, rgba(125,211,252,.08), transparent 55%),
+      var(--bg);
+    color:var(--ink); font-family:var(--mono);
+    min-height:100vh; padding:42px 26px 80px; line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .stars{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .stars i{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;opacity:.0;animation:tw 4s infinite}
+  @keyframes tw{0%,100%{opacity:.05}50%{opacity:.55}}
+  .wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto}
+
+  header{margin-bottom:30px}
+  .kick{font-size:12px;letter-spacing:.22em;color:var(--star);text-transform:uppercase}
+  h1{font-family:var(--serif);font-size:30px;font-weight:600;margin:10px 0 8px;letter-spacing:.01em}
+  .sub{color:var(--ink2);font-size:13.5px;max-width:780px}
+  .sub b{color:var(--ink)}
+
+  /* 指标条 */
+  .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:10px;margin:26px 0 36px}
+  .metric{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:13px 14px}
+  .metric b{display:block;font-size:22px;color:var(--star);font-weight:600;line-height:1.1}
+  .metric span{font-size:11.5px;color:var(--ink3)}
+
+  /* 流程 */
+  .flow{display:flex;flex-direction:column;align-items:center;gap:0}
+  .stage{
+    width:100%;max-width:640px;background:var(--panel);border:1px solid var(--line);
+    border-radius:12px;padding:15px 18px;cursor:pointer;transition:.25s;position:relative;
+  }
+  .stage:hover{border-color:var(--star);background:rgba(125,211,252,.09);transform:translateY(-2px);box-shadow:0 10px 36px rgba(125,211,252,.10)}
+  .stage .st-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .stage h3{font-size:15px;font-weight:600;color:var(--ink)}
+  .stage .tag{font-size:10.5px;color:var(--ink3);font-family:var(--mono);border:1px solid var(--line);border-radius:20px;padding:2px 9px;white-space:nowrap}
+  .stage .detail{font-size:12.5px;color:var(--ink2);margin-top:8px;display:none}
+  .stage.open .detail{display:block;animation:fade .3s}
+  @keyframes fade{from{opacity:0;transform:translateY(-4px)}to{opacity:1}}
+  .conn{width:2px;height:26px;background:linear-gradient(var(--line),var(--star));position:relative}
+  .conn::after{content:"▼";position:absolute;bottom:-4px;left:-5px;color:var(--star);font-size:10px;opacity:.7}
+
+  /* 并行三路 RAG */
+  .rag-fan{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:100%;max-width:640px}
+  .rag{background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.25);border-radius:11px;padding:13px;text-align:center}
+  .rag .r-h{font-size:13px;color:var(--nebula);font-weight:600}
+  .rag .r-d{font-size:11px;color:var(--ink3);margin-top:5px}
+
+  /* 旁支 */
+  .branches{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;width:100%;max-width:640px;margin-top:2px}
+  .branch{font-size:11.5px;color:var(--ink2);border:1px dashed var(--line);border-radius:20px;padding:5px 12px;background:rgba(251,191,36,.04)}
+  .branch b{color:var(--flare);font-weight:500}
+
+  .legend{margin-top:40px;display:flex;flex-wrap:wrap;gap:14px;font-size:11.5px;color:var(--ink3)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:9px;height:9px;border-radius:3px}
+
+  .note{margin-top:34px;font-size:12px;color:var(--ink3);border-left:2px solid var(--line);padding-left:14px;line-height:1.8}
+  .note b{color:var(--ink2)}
+  .lab{font-size:11px;color:var(--star);letter-spacing:.16em;margin:30px 0 12px;text-transform:uppercase}
+  @media(max-width:560px){.rag-fan{grid-template-columns:1fr}h1{font-size:24px}}
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+<div class="wrap">
+  <header>
+    <div class="kick">CASE · Runtime Architecture（脱敏）</div>
+    <h1>拟人化闲聊 Agent · 运行时架构</h1>
+    <p class="sub">某 C 端出海社交产品 · AI 情感陪伴与社交破冰（0-1 主导）。<b>全项目工程复杂度最高的多轮对话 Agent</b>：16 路意图识别、三路并行知识召回、人设一致的长程对话与记忆锚点。下图是其运行时编排的<b>忠实抽象</b>——品牌、人设与提示词原文均已隐去，仅呈现工程结构。</p>
+  </header>
+
+  <div class="metrics">
+    <div class="metric"><b>158</b><span>编排节点</span></div>
+    <div class="metric"><b>184</b><span>连线 / 路径</span></div>
+    <div class="metric"><b>16 路</b><span>意图识别</span></div>
+    <div class="metric"><b>20</b><span>LLM 调用</span></div>
+    <div class="metric"><b>34</b><span>知识库召回</span></div>
+    <div class="metric"><b>12</b><span>路由判断</span></div>
+    <div class="metric"><b>18</b><span>记忆写回</span></div>
+    <div class="metric"><b>11</b><span>会话变量</span></div>
+  </div>
+
+  <div class="lab">▸ 运行时编排管线（点击每一层展开工程细节）</div>
+  <div class="flow" id="flow">
+
+    <div class="stage" data-detail="支持文本与图片两种入口；图片走多模态识别工具，先判断"是否需要处理图片"再进入主链路。">
+      <div class="st-top"><h3>① 用户消息入口</h3><span class="tag">start · tool</span></div>
+      <div class="detail"></div>
+    </div>
+    <div class="conn"></div>
+
+    <div class="stage" data-detail="判断是否为被动回复场景、获取当前时间作为上下文；为后续意图判断和人设回复提供环境变量。">
+      <div class="st-top"><h3>② 预处理与上下文装配</h3><span class="tag">if-else · tool</span></div>
+      <div class="detail"></div>
+    </div>
+    <div class="conn"></div>
+
+    <div class="stage" data-detail="核心分类器：把用户输入归入约 16 路意图（破冰 / 情感支持 / 闲聊 / 送礼物 / 发图 / 品牌相关 / 兜底 等）。配「意图继承判断」处理多轮上下文——上一轮意图在本轮延续时不重新分类，保证对话连贯。">
+      <div class="st-top"><h3>③ 意图识别 Agent · 16 路</h3><span class="tag">llm · 多轮继承</span></div>
+      <div class="detail"></div>
+    </div>
+    <div class="conn"></div>
+
+    <div class="stage" data-detail="主路由 5 分支 + 「是否需要二次路由」再分流 + 「特殊处理判断」。把不同意图导向不同的召回与生成策略，而非一套提示词硬扛所有场景。">
+      <div class="st-top"><h3>④ 路由分发 · 主路由 + 二次路由</h3><span class="tag">if-else ×12</span></div>
+      <div class="detail"></div>
+    </div>
+    <div class="conn"></div>
+
+    <div class="branches">
+      <div class="branch"><b>送礼物</b> 专属召回</div>
+      <div class="branch"><b>发图片</b> 图库匹配</div>
+      <div class="branch"><b>走模版</b> 快路径</div>
+      <div class="branch"><b>兜底</b> 追问引导</div>
+      <div class="branch"><b>被动回复</b> 场景</div>
+    </div>
+    <div class="conn"></div>
+
+    <div class="lab" style="margin-top:6px">三路并行知识召回（每个分支各一套）</div>
+    <div class="rag-fan">
+      <div class="rag"><div class="r-h">人设 Prompt 库</div><div class="r-d">按场景召回对应人格提示词</div></div>
+      <div class="rag"><div class="r-h">故事库</div><div class="r-d">召回人设背景故事保证一致性</div></div>
+      <div class="rag"><div class="r-h">Case 库</div><div class="r-d">召回相似对话样例 + 年龄筛选</div></div>
+    </div>
+    <div class="conn"></div>
+
+    <div class="stage" data-detail="融合三路召回结果生成人设一致的回复；输入处加「防提示词注入」设计，抵御用户侧诱导改写人格 / 越权指令。按场景做混合模型选型（高质量场景用强模型、高并发用轻量模型、长文本用成本友好模型）。">
+      <div class="st-top"><h3>⑤ LLM 生成 · 人设一致 + 防注入</h3><span class="tag">llm · 模型选型</span></div>
+      <div class="detail"></div>
+    </div>
+    <div class="conn"></div>
+
+    <div class="stage" data-detail="把本轮提炼的记忆点（关键事实、情感锚点、场景切换）写回 11 个会话变量，共 18 处写入；下一轮按需召回，实现长程记忆与"被记住"的体验。">
+      <div class="st-top"><h3>⑥ 记忆锚点写回</h3><span class="tag">assigner ×18</span></div>
+      <div class="detail"></div>
+    </div>
+    <div class="conn"></div>
+
+    <div class="stage" data-detail="13 个变量聚合器收口多分支结果，按"主动回复 / 被动回复 / 追问 / 提问"等 14 个出口产出最终消息——保证无论走哪条分支都有确定、可控的回复。">
+      <div class="st-top"><h3>⑦ 回复聚合与多出口</h3><span class="tag">aggregator ×13 · answer ×14</span></div>
+      <div class="detail"></div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span><i class="dot" style="background:var(--star)"></i>主链路 / LLM / 路由</span>
+    <span><i class="dot" style="background:var(--nebula)"></i>知识召回（RAG）</span>
+    <span><i class="dot" style="background:var(--flare)"></i>意图旁支</span>
+    <span><i class="dot" style="background:var(--green)"></i>记忆 / 聚合</span>
+  </div>
+
+  <div class="note">
+    <b>脱敏说明：</b>本图为真实生产工作流（158 节点 / 184 连线）的<b>结构化抽象</b>。产品名、人设设定、知识库数据集 ID 与提示词原文一律不予展示；所有指标取自工作流本身的节点与连线统计，未做任何夸大。<br>
+    <b>能力主张：</b>意图路由 · 三路 RAG 人设一致 · 长程记忆锚点 · 防提示词注入 · 多模态入口 · 混合模型选型——单人完成产品设计与 Agent 编排落地。
+  </div>
+</div>
+
+<script>
+  // 星点
+  const s=document.getElementById('stars');
+  for(let i=0;i<70;i++){const e=document.createElement('i');e.style.left=Math.random()*100+'%';e.style.top=Math.random()*100+'%';e.style.animationDelay=(Math.random()*4)+'s';s.appendChild(e);}
+  // 点击展开 + 填充 detail
+  document.querySelectorAll('.stage').forEach(st=>{
+    const d=st.getAttribute('data-detail'); if(d) st.querySelector('.detail').textContent=d;
+    st.addEventListener('click',()=>st.classList.toggle('open'));
+  });
+</script>
+</body>
+</html>

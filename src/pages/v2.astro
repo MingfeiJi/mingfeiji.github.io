@@ -45,6 +45,7 @@ const works = [
 ];
 
 const protos = [
+  { ver: 'ARCH', name: '拟人化闲聊 Agent · 架构可视化', note: 'C 端 · 16 路意图 / 三路 RAG / 防注入', slug: 'chat-agent-arch' },
   { ver: 'v6', name: '内容工作台 · 可交互原型', note: '6-08 · 全流程可点击', slug: 'workbench-v6' },
   { ver: 'NEW', name: '灵感引擎 · 高保真 v1', note: '6-09 · 最新迭代', slug: 'inspiration-engine' },
   { ver: 'v8', name: '内容工作台 · 信息架构地图', note: '6-08 · IA 总图', slug: 'workbench-v8' },
@@ -383,7 +384,7 @@ const courses = [
           <p class="t-desc">主导从 0 到 1 构建 AI 情感陪伴与社交破冰产品，攻克海外陌生人社交赛道留存难题。</p>
           <ul>
             <li><strong>原子 Agent 产品矩阵：</strong>AI 串门信息提取 + 宠物分身匹配 + 小剧场破冰 + 闪聊/闲聊 + 记忆锚点；「闲聊引导 Agent」将关键环节<strong>付费转化率提升 30%</strong></li>
-            <li><strong>全项目工程复杂度最高的多轮对话 Agent：</strong>16 路意图识别与路由 + 动态提示词 + RAG 人设召回 + 记忆锚点机制，做到深度且人设一致的长程对话，并在输入处加<strong>防提示词注入</strong>设计；按场景做 GPT-4o / 4.1 / Grok 混合模型选型</li>
+            <li><strong>全项目工程复杂度最高的多轮对话 Agent：</strong>16 路意图识别与路由 + 动态提示词 + RAG 人设召回 + 记忆锚点机制，做到深度且人设一致的长程对话，并在输入处加<strong>防提示词注入</strong>设计；按场景做 GPT-4o / 4.1 / Grok 混合模型选型。<a href="/prototypes/chat-agent-arch.html" target="_blank" rel="noopener" style="color:var(--star)">看架构可视化 ↗</a>（158 节点 / 184 连线，已脱敏）</li>
             <li><strong>AIGC 内容运营平台：</strong>Dify + ComfyUI 自动化工作流，冷启动资料生产效率<strong>提升 300%</strong>、月省约 ¥5 万；Word/Excel 生成 Agent 把内容产能 10 篇/天 → <strong>40+ 篇/天</strong>（可用率 85%）</li>
             <li><strong>四维指标体系：</strong>商业价值 / 用户行为 / AI 能力交付 / 性能；Docker 部署 Dify / Langfuse / ComfyUI，定时脚本监控 API 用量与成本</li>
           </ul>
