@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>「硅基员工」AIGC + 数字化转型 · 详解（脱敏）</title>
+<style>
+  :root{
+    --bg:#070b16; --panel:rgba(125,211,252,.05); --line:rgba(125,211,252,.16);
+    --ink:#e8ecff; --ink2:#9aa6cf; --ink3:#5d6890;
+    --star:#7dd3fc; --nebula:#a78bfa; --flare:#fbbf24; --green:#34d399;
+    --mono:"JetBrains Mono","SF Mono","Menlo",monospace; --serif:"Noto Serif SC","Songti SC",serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:radial-gradient(1100px 560px at 82% -12%, rgba(251,191,36,.08), transparent 60%),radial-gradient(820px 460px at 6% 112%, rgba(125,211,252,.09), transparent 55%),var(--bg);color:var(--ink);font-family:var(--mono);min-height:100vh;padding:40px 24px 76px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .stars{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .stars i{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;animation:tw 4s infinite}
+  @keyframes tw{0%,100%{opacity:.04}50%{opacity:.5}}
+  .wrap{position:relative;z-index:1;max-width:1060px;margin:0 auto}
+  .back{display:inline-block;margin-bottom:18px;font-size:12px;color:var(--star);text-decoration:none}
+  .kick{font-size:11.5px;letter-spacing:.22em;color:var(--flare);text-transform:uppercase}
+  h1{font-family:var(--serif);font-size:28px;font-weight:600;margin:9px 0 8px}
+  .sub{color:var(--ink2);font-size:13px;max-width:860px}.sub b{color:var(--ink)}
+  .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:9px;margin:22px 0 6px}
+  .metric{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 13px}
+  .metric b{display:block;font-size:20px;color:var(--flare);font-weight:600;line-height:1.15}
+  .metric span{font-size:11px;color:var(--ink3)}
+  .lab{font-size:11px;color:var(--star);letter-spacing:.16em;margin:34px 0 13px;text-transform:uppercase}
+  .lab small{color:var(--ink3);letter-spacing:0;text-transform:none;margin-left:8px}
+  .block{border:1px solid var(--line);border-radius:13px;background:var(--panel);padding:18px 20px;margin-bottom:14px}
+  .block .bh{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  .block h3{font-size:16px;color:#fff;font-family:var(--serif)}
+  .block .role{font-size:11.5px;color:var(--ink3)}
+  .block ul{list-style:none;font-size:12.5px;color:var(--ink2);line-height:2}
+  .block li{padding-left:16px;position:relative}.block li::before{content:"▸";position:absolute;left:0;color:var(--star)}
+  .block li b{color:#fff}
+  .pipe{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 12px}
+  .pn{font-size:11px;border:1px solid rgba(167,139,250,.28);background:rgba(167,139,250,.07);color:#d8c9ff;border-radius:7px;padding:3px 9px}
+  .pa{color:var(--star);opacity:.5;align-self:center}
+  .mgmt{border-left:2px solid var(--flare)}
+  .note{margin-top:28px;font-size:11.5px;color:var(--ink3);border-left:2px solid var(--line);padding-left:14px;line-height:1.85}
+  .note b{color:var(--ink2)}
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+<div class="wrap">
+  <a class="back" href="/v2#cases">← 返回项目档案</a>
+  <div class="kick">CASE · 「硅基员工」战略项目集（脱敏）</div>
+  <h1>「硅基员工」AIGC + 数字化转型</h1>
+  <p class="sub">千人级跨境电商（家居品类）· 企业级 AI 降本增效战略项目集，<b>百万级年度降本，两次获集团战略奖</b>。从制造业 ERP / 业财融合的数字化底盘，到 AIGC 生图平台 + Lora 微调的 AI 落地——这是我"把组织数字化"和"把 AI 用进业务"两种能力的同源出处。</p>
+
+  <div class="metrics">
+    <div class="metric"><b>65%→87%</b><span>生图采纳率</span></div>
+    <div class="metric"><b>+30%</b><span>核心品类效率</span></div>
+    <div class="metric"><b>+60%</b><span>ERP 整体效率</span></div>
+    <div class="metric"><b>+25% / +40%</b><span>核算准确率 / 流程拉通</span></div>
+    <div class="metric"><b>×2</b><span>集团战略奖</span></div>
+  </div>
+
+  <div class="lab">▸ 模块一：AIGC 生图平台 + Lora 微调 <small>AI 产品专家</small></div>
+  <div class="block">
+    <div class="bh"><h3>把"家居高级感"变成可训练的数据指标</h3><span class="role">0-1 搭建 · 应用层 Dify + 能力层 ComfyUI</span></div>
+    <div class="pipe"><span class="pn">竞品/技术选型（MJ/SD/ComfyUI）</span><span class="pa">→</span><span class="pn">模糊需求解构为数据指标 + 多维标注规则</span><span class="pa">→</span><span class="pn">10 万+ 训练数据 · Lora 微调</span><span class="pa">→</span><span class="pn">图文标注 Agent 工作流</span></div>
+    <ul>
+      <li>把"家居高级感 / 北欧风 / 材质细节"这类模糊需求<b>解构为可执行的数据分类方法论与多维标注规则</b>，指导团队处理 10 万+ 训练数据做 Lora 微调</li>
+      <li><b>生图采纳率 65% → 87%</b>、核心品类生产效率 +30%，节省百万运营成本</li>
+      <li>搭基于大模型的<b>图文标注 Agent 工作流</b>：图像风格/细节自动转结构化语义描述，标注效率 +40%；内嵌提示词模板降低设计师门槛，工具使用率 +35%</li>
+    </ul>
+  </div>
+
+  <div class="lab">▸ 模块二：ERP 二次上线 + 业财融合 <small>项目主管 · 直接下属 3 人</small></div>
+  <div class="block">
+    <div class="bh"><h3>数字化转型的底盘：流程重构 + 组织变革</h3><span class="role">制造业工厂 · 跨 5+ 业务部门</span></div>
+    <ul>
+      <li>主导工厂与信息公司的 ERP 升级，对接内部 PMO 与采购/生产/财务/销售，及外部供应商、行业顾问团队</li>
+      <li><b>调研优化 50+ 业务流程</b>，处理与审核上线<b>百万条核心业务数据</b>，推动组织架构变革、成立数据管理部门</li>
+      <li>最终<b>财务核算准确率 +25%、流程卡点拉通率 +40%</b>，整体效率 +60%，获集团战略奖</li>
+    </ul>
+  </div>
+
+  <div class="lab">▸ 管理底盘：PMO 体系 + 信息安全</div>
+  <div class="block mgmt">
+    <div class="bh"><h3>从 0 到 1 的项目管理与跨部门统筹</h3><span class="role">PMO 主管 / 公司级协调人</span></div>
+    <ul>
+      <li><b>PMO 体系 0-1：</b>带管培生 PMO 管控组，按 PMP 准则建公司级项目管理运作体系与考核标准，统筹蓝图 / PMO 审核 / UAT / 培训 SOP / 上线全周期；获评<b>公司年度优秀内训师（评分 TOP 2/15）</b></li>
+      <li><b>信息安全项目集：</b>统筹账号/设备/结构化与非结构化数据的安全体系定义、实施与量化分析，<b>组织 16 个部门协作</b>完成数据清洗并获管理层审批</li>
+      <li>作为公司级协调人向亚洲区总经理、各部门经理与 <b>Global 信息安全官（CIO Team Lead）英文汇报</b>，横向管理 20+ 人跨部门团队</li>
+    </ul>
+  </div>
+
+  <div class="note">
+    <b>脱敏说明：</b>公司/品牌以行业 + 体量匿名化；指标取自项目实际、未夸大。<br>
+    <b>能力主张：</b>同一段经历里既有 AIGC 生图 + Lora 的 AI 工程落地，也有 ERP / 业财融合的组织级数字化转型与 PMO/信息安全统筹——"把 AI 用进业务"与"把组织数字化"两种能力同源、互为支撑。
+  </div>
+</div>
+<script>
+  const s=document.getElementById('stars');
+  for(let i=0;i<58;i++){const e=document.createElement('i');e.style.left=Math.random()*100+'%';e.style.top=Math.random()*100+'%';e.style.animationDelay=(Math.random()*4)+'s';s.appendChild(e);}
+</script>
+</body>
+</html>
