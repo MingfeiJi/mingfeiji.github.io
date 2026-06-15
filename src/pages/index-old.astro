@@ -1,5 +1,5 @@
 ---
-import Base from '../layouts/BaseV2.astro';
+import Base from '../layouts/Base.astro';
 import KnowledgeGraph from '../components/KnowledgeGraph.astro';
 import { getCollection } from 'astro:content';
 import graphData from '../data/graph.json';
@@ -45,7 +45,6 @@ const works = [
 ];
 
 const protos = [
-  { ver: 'ARCH', name: '拟人化闲聊 Agent · 架构可视化', note: 'C 端 · 16 路意图 / 三路 RAG / 防注入', slug: 'chat-agent-arch' },
   { ver: 'v6', name: '内容工作台 · 可交互原型', note: '6-08 · 全流程可点击', slug: 'workbench-v6' },
   { ver: 'NEW', name: '灵感引擎 · 高保真 v1', note: '6-09 · 最新迭代', slug: 'inspiration-engine' },
   { ver: 'v8', name: '内容工作台 · 信息架构地图', note: '6-08 · IA 总图', slug: 'workbench-v8' },
@@ -156,6 +155,43 @@ const geekGear = [
   { icon: '🧪', name: 'Vibe Coding 原型术', status: 'DAILY DRIVER', desc: '单文件 HTML 高保真：20+ 可交互原型 + 看板 + 蓝图，"业务看得见、研发抄得走、老板拍得了板"。' },
 ];
 
+// Hacker News AI 信号 · 抓取于 2026-06-11
+const hnSignals = [
+  { pts: '1113', title: 'HTML-first 建站让用户一夜翻倍——单文件哲学的胜利', url: 'https://mohkohn.co.uk/writing/html-first/' },
+  { pts: '416', title: '安全研究员 vs Anthropic Fable 护栏之争', url: 'https://techcrunch.com/2026/06/10/cybersecurity-researchers-arent-happy-about-the-guardrails-on-anthropics-fable/' },
+  { pts: '398', title: 'Anthropic 为 Fable / Mythos 引入 30 天数据保留', url: 'https://support.claude.com/en/articles/15425996-data-retention-practices-for-mythos' },
+  { pts: '371', title: 'AI Agent 在 Fedora 社区"跑飞"事件——Agent 权限边界大讨论', url: 'https://lwn.net/SubscriberLink/1077035/c7e7c14fbd60fae9/' },
+  { pts: '450', title: 'PgDog 获融资：Postgres 分片代理（pgvector 玩家必关注）', url: 'https://pgdog.dev/blog/our-funding-announcement' },
+  { pts: '212', title: 'Apache Burr：构建可靠 AI Agent 的状态机框架', url: 'https://burr.apache.org/' },
+  { pts: '120', title: 'HelixDB：建在对象存储上的图数据库——知识图谱新基建', url: 'https://github.com/HelixDB/helix-db' },
+];
+
+// 装备索引 · 查工具翻 Awesome，查 SOTA 上 Papers with Code
+const gearIndex = [
+  { name: 'awesome-ai-agents', url: 'https://github.com/e2b-dev/awesome-ai-agents' },
+  { name: 'awesome-llm-apps', url: 'https://github.com/Shubhamsaboo/awesome-llm-apps' },
+  { name: 'awesome-mcp-servers', url: 'https://github.com/punkpeye/awesome-mcp-servers' },
+  { name: 'awesome-claude-code', url: 'https://github.com/hesreallyhim/awesome-claude-code' },
+  { name: 'Papers with Code · SOTA', url: 'https://paperswithcode.com/sota' },
+  { name: 'HuggingFace Trending', url: 'https://huggingface.co/models?sort=trending' },
+];
+
+// GitHub Trending (weekly) · 抓取于 2026-06-11 · 跑 scripts/update-trending 可刷新
+const geekTrending = [
+  { repo: 'affaan-m/ECC', stars: '213k', desc: 'Agent harness 性能优化系统：Skills、instincts、memory、security 一体' },
+  { repo: 'NousResearch/hermes-agent', stars: '190k', desc: 'The agent that grows with you——会成长的个人 Agent' },
+  { repo: 'microsoft/markitdown', stars: '151k', desc: '万物 → Markdown，LLM 数据入口的事实标准' },
+  { repo: 'Leonxlnx/taste-skill', stars: '41k', desc: '给 AI 注入品味，拒绝 generic slop——Skill 工程的审美层' },
+  { repo: 'mvanhorn/last30days-skill', stars: '39k', desc: '跨 Reddit/X/YouTube/HN 的全网调研 Agent Skill' },
+  { repo: 'CopilotKit/CopilotKit', stars: '35k', desc: 'Agent & 生成式 UI 的前端栈——人机协作界面范式' },
+  { repo: 'lfnovo/open-notebook', stars: '29k', desc: '开源版 NotebookLM——知识库问答的开放实现' },
+  { repo: 'Panniantong/Agent-Reach', stars: '26k', desc: '给 Agent 装上看互联网的眼睛：读取与搜索全网社媒' },
+  { repo: 'chopratejas/headroom', stars: '22k', desc: '工具输出/RAG 块进 LLM 前压缩 60-95% token——上下文工程' },
+  { repo: 'EveryInc/compound-engineering-plugin', stars: '21k', desc: 'Compound Engineering：让每次 AI 协作沉淀为复利' },
+  { repo: 'phuryn/pm-skills', stars: '16k', desc: 'PM Skills 市场：100+ 产品经理 agentic skills——AI PM 的弹药库' },
+  { repo: 'revfactory/harness', stars: '7k', desc: '元 Skill：自动设计领域专属 Agent 团队' },
+];
+
 const courses = [
   'AI 产研工作流',
   '模型训练原理',
@@ -173,97 +209,50 @@ const courses = [
     <h1>纪鸣飞</h1>
     <div class="sub">AI 产品架构师 · 企业 AI 化转型专家</div>
     <p class="lede">
-      我做的事，是把大模型<strong>真正落进企业生产线</strong>——不是 PPT 和概念验证，是能交付、能移交、能自己长大的系统。
-      完整走过<strong>制造业数字化 → 千人电商 AI 转型 → 大厂出海 AI 中台</strong>三段攻坚，每段都留下可量化的结果和可复用的方法论。
+      完整走过<strong>「制造业数字化转型 → 千人电商企业级 AI 转型 → 大厂出海内容 AI 中台」</strong>三段递进式攻坚。
+      信奉「业务目标 × 场景 = 价值」，用<strong>可运行的产物</strong>——20+ 高保真可交互原型、可复现的部署手册——代替纯
+      PRD 推动落地。
     </p>
-    <div class="hero-stats">
-      <span><b>¥百万级</b>客服年化降本</span>
-      <span><b>68%→84%</b>客户满意度</span>
-      <span><b>65%→87%</b>生图采纳率</span>
-      <span><b>+60%</b>核心流程效率</span>
-    </div>
-    <div class="hero-stats-note">以上为<strong>已兑现</strong>结果 · 出海 AI 中台目标全年再省 ¥500 万 / 2.8 万工时</div>
     <div class="hero-cta">
-      <a class="btn primary" href="#flagship">旗舰项目 · 内容增长 AI 中台</a>
-      <a class="btn" href="#works">作品 · 可点开验证</a>
+      <a class="btn primary" href="#flagship">⚑ 看旗舰 · 内容增长 AI 中台</a>
+      <a class="btn" href="#works">星图集 · 可点开验证</a>
     </div>
-    <div class="hero-scroll">SCROLL<br />▼</div>
+    <div class="hero-scroll">SCROLL · 开始航行<br />▼</div>
   </header>
 
   <!-- ════════════ CH.00 · 航程仪表盘 ════════════ -->
   <section class="chapter" id="voyage">
     <div class="wrap">
       <div class="chapter-head reveal">
-        <div class="ch-no"><em>00</em> KEY OUTCOMES</div>
-        <h2>关键成果</h2>
-        <div class="ch-sub">三段递进式攻坚里<strong style="color:#fff">已兑现</strong>的硬成果——每一项都能在下方对应项目里验证来源（目标值已标注）。</div>
+        <div class="ch-no"><em>CHAPTER 00</em> VOYAGE DASHBOARD</div>
+        <h2>航程仪表盘</h2>
+        <div class="ch-sub">4 年 AI 产品航行的关键读数——每一项都可在下方章节中验证来源。</div>
       </div>
 
       <div class="dashboard reveal">
         <div class="dial"><div class="num"><span data-count="4">0</span><span>年+</span></div><div class="lab">AI 产品经验</div></div>
         <div class="dial"><div class="num"><span data-count="3">0</span><span>段</span></div><div class="lab">递进式转型攻坚</div></div>
         <div class="dial"><div class="num"><span data-count="20">0</span><span>+</span></div><div class="lab">高保真可交互原型</div></div>
-        <div class="dial"><div class="num">¥<span data-count="500">0</span><span>万</span></div><div class="lab">旗舰中台 · 目标年省</div></div>
-        <div class="dial"><div class="num"><span data-count="2">0</span><span>次</span></div><div class="lab">集团级战略奖（已获）</div></div>
+        <div class="dial"><div class="num">¥<span data-count="500">0</span><span>万</span></div><div class="lab">中台目标年节省</div></div>
+        <div class="dial"><div class="num"><span data-count="2">0</span><span>次</span></div><div class="lab">集团级战略奖项</div></div>
       </div>
 
-      <div class="km-matrix reveal">
-        <div class="km-row">
-          <div class="km-cat">降本增效<small>已落地</small></div>
-          <div class="km-stats">
-            <span><b>降本 13 人</b>客服自动化 80% 重复问题 · 年省百万</span>
-            <span><b>月省 ¥5 万</b>C 端 AIGC 内容平台</span>
-            <span><b>省百万</b>AIGC 生图替代外采</span>
-            <span><b>+60%</b>ERP / 业财融合整体效率</span>
-          </div>
-        </div>
-        <div class="km-row">
-          <div class="km-cat">AI 效果提升<small>可量化</small></div>
-          <div class="km-stats">
-            <span><b>68% → 84%</b>客户满意度（智能客服）</span>
-            <span><b>65% → 87%</b>生图采纳率（Lora 微调）</span>
-            <span><b>+30%</b>关键环节付费转化（C 端）</span>
-            <span><b>+40%</b>标注效率（图文标注 Agent）</span>
-            <span><b>+25% / +40%</b>核算准确率 / 流程拉通</span>
-          </div>
-        </div>
-        <div class="km-row">
-          <div class="km-cat">规模与产出<small>跑起来了</small></div>
-          <div class="km-stats">
-            <span><b>100 万+</b>旗舰中台单周播放（MVP）</span>
-            <span><b>500 / 990</b>单周生成素材 / 发布短视频</span>
-            <span><b>10 → 40+ 篇/天</b>内容产能（生成 Agent）</span>
-            <span><b>20+</b>高保真可交互原型</span>
-            <span><b>830 篇 / 170 万字</b>个人知识库</span>
-          </div>
-        </div>
-        <div class="km-row">
-          <div class="km-cat">外部认可<small>有背书</small></div>
-          <div class="km-stats">
-            <span><b>×2</b>集团级战略奖</span>
-            <span><b>TOP 2/15</b>公司年度优秀内训师</span>
-            <span><b>BG 级标杆</b>推动事业群 AI 化转型立项</span>
-            <span><b>专栏作者 · 大会嘉宾</b>「人人都是产品经理」· 飞书开发者大会</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="galaxies" style="margin-top:56px" data-stagger>
+      <div class="galaxies" style="margin-top:64px" data-stagger>
         <div class="card galaxy">
           <div class="g-orbit">🏭</div>
-          <div class="g-era">2022 — 2023 · 第一阶段</div>
+          <div class="g-era">2022 — 2023 · 第一星系</div>
           <h3>制造业数字化转型</h3>
           <p>ERP / 业财融合，PMO 主管带 20+ 人团队重构 50+ 核心流程，整体效率 +60%，获集团战略奖。变革管理方法论在这里炼成。</p>
         </div>
         <div class="card galaxy">
           <div class="g-orbit">🤖</div>
-          <div class="g-era">2023 — 2025 · 第二阶段</div>
+          <div class="g-era">2023 — 2025 · 第二星系</div>
           <h3>千人电商 AI 转型</h3>
           <p>「硅基员工」计划：智能客服 + AIGC 内容平台 + Lora 微调，年化降本百万级，客户满意度 68% → 84%。</p>
         </div>
         <div class="card galaxy">
           <div class="g-orbit">🚀</div>
-          <div class="g-era">2025 — 至今 · 第三阶段</div>
+          <div class="g-era">2025 — 至今 · 第三星系</div>
           <h3>大厂出海 AI 中台</h3>
           <p>出海内容增长 AI 中台：0-1 主导多 Agent 营销系统，服务 70-80 人运营团队，目标年节省 ¥500 万 / 2.8 万工时。</p>
         </div>
@@ -287,15 +276,15 @@ const courses = [
   <section class="chapter" id="flagship">
     <div class="wrap">
       <div class="chapter-head reveal">
-        <div class="ch-no"><em>02</em> FLAGSHIP</div>
+        <div class="ch-no"><em>CHAPTER 02</em> FLAGSHIP</div>
         <h2>旗舰 · 出海内容增长 AI 中台</h2>
-        <div class="ch-sub">头部 OTA 火车票 BG · 0-1 主导 · 从单团队提效项目，升级为推动 BG 级 AI 化转型立项的标杆案例</div>
+        <div class="ch-sub">头部 OTA 出海业务线 · 0-1 主导 · 持续迭代至 V5/V6 与 8 版原型</div>
       </div>
 
       <blockquote class="flagship-quote reveal">
         服务 70–80 人内容运营团队、日产出海短视频 100+ 条。将「选题 → 脚本 → 素材 → 剪辑 → 合规 → 发布 → 复盘」
         7 步中 6 步纯人工的链路，改造为多 Agent 协同的营销 AI 中台。
-        <footer><span style="color:var(--star)">已实测 · MVP 阶段</span>：单周硬指标见下　·　<span style="color:var(--ink3)">在途目标 · 全年</span>：节省 ¥500 万 / 2.8 万工时 ≈ 13 FTE</footer>
+        <footer>目标全年节省 ¥500 万 / 2.8 万工时 ≈ 13 FTE</footer>
       </blockquote>
 
       <div class="dashboard reveal">
@@ -308,107 +297,35 @@ const courses = [
 
       <div class="grid-3" style="margin-top:36px" data-stagger>
         <div class="card">
-          <h3>业务流程 × AI 原子能力</h3>
-          <p>把内容生产全流程（灵感→资产库→创作→审核→剪辑）组织起来，在每个节点嵌入对的 AI 能力。基于 <strong>LobeHub 落地多 Agent + Skill + MCP + 知识库打通</strong>并产生业务效用；Dify 承数据侧批量 AI。完整五层 Multi-Agent 为演进蓝图。</p>
-          <div class="t-chips"><span class="chip">LobeHub 零迁移</span><span class="chip">Dify 产品自闭环</span><span class="chip">MCP 薄包装</span></div>
+          <h3>⚙️ 五层 Multi-Agent 架构</h3>
+          <p>入口 → 前端 → 主 Agent → 6 业务域 SubAgent → Skill+MCP+数据。主 Agent 落地 6 阶段意图识别 Pipeline、组合意图机制与会话对象栈（Entity Stack）。</p>
+          <div class="t-chips"><span class="chip">LobeHub 零迁移</span><span class="chip">Dify</span><span class="chip">MCP 薄包装</span></div>
         </div>
         <div class="card">
-          <h3>混合检索知识库工程</h3>
+          <h3>📡 混合检索知识库工程</h3>
           <p>"结构化字段先筛掉 90% + pgvector 语义召回"，MySQL → PostgreSQL 平滑演进；V2 规划 Karpathy 风格 raw/→wiki/ 编译管线，BM25 优先 + 向量辅助。</p>
           <div class="t-chips"><span class="chip violet">pgvector</span><span class="chip violet">RAG</span><span class="chip violet">BM25</span></div>
         </div>
         <div class="card">
-          <h3>多模态合规审核体系</h3>
+          <h3>🛡 多模态合规审核体系</h3>
           <p>基于 Gemini 2.5 Flash/Pro 设计"源头把控 + 终筛"的文本/图像/视频审核体系，建设 5000+ 条评测集，显著降低海外平台违规封号风险。</p>
           <div class="t-chips"><span class="chip gold">Gemini 2.5</span><span class="chip gold">评测集 5000+</span><span class="chip gold">Seedance</span></div>
         </div>
         <div class="card">
-          <h3>组织 AI 化转型设计</h3>
+          <h3>🧭 组织 AI 化转型设计</h3>
           <p>诊断"被当产品做、实则是组织转型"的定位错位 → 四层转型组织 + 业务蓝图签字机制 + "业务变化归运营、技术稳定归工程"飞轮分工。</p>
           <div class="t-chips"><span class="chip green">变革管理</span><span class="chip green">蓝图签字</span></div>
         </div>
         <div class="card">
-          <h3>产品形态收敛</h3>
+          <h3>🎛 产品形态收敛</h3>
           <p>「旅程导航 + 任务中心（输入-处理-输出全程可视 + Token 成本）+ 副驾 Dock + 上下文抽屉」交互范式——回答"AI 中台产品到底长什么样"。</p>
           <div class="t-chips"><span class="chip">38 意图</span><span class="chip">47 旅程</span><span class="chip">三原则</span></div>
         </div>
         <div class="card">
-          <h3>AI-native 团队带教</h3>
+          <h3>👥 AI-native 团队带教</h3>
           <p>统筹 3 名 UI + 5 名以上开发，带教 3 实习生 + 1 正岗产品。"人人用 Agent / 人人 Vibe Coding"，产出持续超出人力配置。</p>
           <div class="t-chips"><span class="chip violet">日站会</span><span class="chip violet">反馈分诊</span></div>
         </div>
-      </div>
-
-      <div class="cs-grid reveal">
-        <div class="cs-cell">
-          <div class="cs-label">约束条件</div>
-          <p>海外多平台合规红线（违规即封号、直接损失）· 70 人团队既有纯人工习惯难撼动 · 改造期不能停产。不是"从零搭"，是"边飞边换引擎"。</p>
-        </div>
-        <div class="cs-cell">
-          <div class="cs-label">权衡与复盘</div>
-          <p>进场第一件事不是上工具，是用<strong>「伪需求过滤器」毙掉「全 AI 一键出片」「自动养号」</strong>两个看似性感的需求——毙对伪需求比做对需求更值钱。也不是所有环节都该交给 AI：合规终审、创意定调仍由人把关，<strong>AI 做重活、人做判断</strong>。</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ════════════ CH.02·5 · 项目档案 ════════════ -->
-  <section class="chapter" id="cases">
-    <div class="wrap">
-      <div class="chapter-head reveal">
-        <div class="ch-no"><em>02 ✦</em> CASE FILES</div>
-        <h2>代表作 · 项目档案</h2>
-        <div class="ch-sub">
-          每个项目都点得开完整架构图——<strong style="color:#fff">复杂度、业务/商业价值、我的管理角色</strong>都摆在台面上。这是我在面试里直接对着讲完整经历的可视化底稿。
-        </div>
-      </div>
-
-      <div class="case-grid" data-stagger>
-        <div class="case-card flagship">
-          <div class="cc-top"><span class="cc-tag">旗舰 · 头部 OTA</span><span class="cc-arrow dim">两个深挖视角 ↓</span></div>
-          <h3>出海内容增长 AI 中台</h3>
-          <div class="cc-role">0-1 主导 · AI 产品经理｜组织内容生产全流程，逐节点嵌入 AI 原子能力（基于 LobeHub 落地多 Agent + Skill + MCP + 知识库打通）</div>
-          <div class="cc-metrics"><span>灵感 / 资产库 / 创作 / 审核 / 剪辑 全链路 × AI 节点</span><span>单周素材 500 / 发布 990 / 播放 100 万+ · 目标年省 ¥500 万</span><span class="hl">升级为 BG 级转型立项标杆</span></div>
-          <div class="cc-mgmt">强项：AI 需求调研 → 落地方案 → 推动｜统筹 3 UI + 5+ 开发 · CIO 双周/英文汇报</div>
-          <div class="cc-facets">
-            <a href="/prototypes/tripflow-arch.html" target="_blank" rel="noopener">业务流程 × AI 架构 ↗</a>
-            <a href="/prototypes/tripflow-product-form.html" target="_blank" rel="noopener">产品形态 × OOUX ↗</a>
-            <a href="/prototypes/tripflow-asset-library.html" target="_blank" rel="noopener">资产库 × 素材中台 ↗</a>
-          </div>
-        </div>
-
-        <a class="case-card" href="/prototypes/chat-agent-arch.html" target="_blank" rel="noopener">
-          <div class="cc-top"><span class="cc-tag">C 端 · 出海社交</span><span class="cc-arrow">看完整架构 ↗</span></div>
-          <h3>拟人化闲聊 Agent</h3>
-          <div class="cc-role">0-1 · 全项目工程复杂度最高的多轮对话 Agent</div>
-          <div class="cc-metrics"><span>158 节点 / 184 连线 · 16 路意图 · 三路 RAG · 防注入</span><span class="hl">关键环节付费转化 +30%</span></div>
-          <div class="cc-mgmt">含交互追踪：点消息看它如何"思考"</div>
-        </a>
-
-        <a class="case-card" href="/prototypes/cs-agent-arch.html" target="_blank" rel="noopener">
-          <div class="cc-top"><span class="cc-tag">B 端 · 千人电商</span><span class="cc-arrow">看完整架构 ↗</span></div>
-          <h3>智能客服「小 V」</h3>
-          <div class="cc-role">产品 / 项目负责人 · RAG + SFT · AI 优先人工兜底</div>
-          <div class="cc-metrics"><span>自动化 80% 重复问题 · 30 类意图</span><span class="hl">优化 13 人 / 年省超百万 · 满意度 68%→84%</span></div>
-          <div class="cc-mgmt">管理：横向带跨部门团队 · 集团 CIO 双周汇报</div>
-        </a>
-
-        <a class="case-card" href="/prototypes/silicon-staff-arch.html" target="_blank" rel="noopener">
-          <div class="cc-top"><span class="cc-tag">B 端 · 战略项目集</span><span class="cc-arrow">看完整架构 ↗</span></div>
-          <h3>「硅基员工」AIGC + 数字化转型</h3>
-          <div class="cc-role">AI 产品专家 / PMO 主管 · ComfyUI + Lora 微调（10 万+ 数据）· ERP 业财融合</div>
-          <div class="cc-metrics"><span>生图采纳率 65%→87% · 效率 +30%</span><span class="hl">ERP 整体效率 +60% · 核算准确率 +25% / 流程拉通 +40% · 两次集团战略奖</span></div>
-          <div class="cc-mgmt">管理：带 20+ 人跨职能团队 · 公司年度优秀内训师（TOP 2/15）</div>
-        </a>
-      </div>
-
-      <div class="lab-line reveal">▸ 首页直接体验 · 看 Agent 如何"思考"一条消息</div>
-      <div class="spotlight-frame reveal">
-        <iframe src="/prototypes/chat-agent-arch.html" title="拟人化闲聊 Agent · 架构与逻辑追踪（脱敏）" loading="lazy"></iframe>
-      </div>
-      <div style="margin-top:16px;text-align:center" class="reveal">
-        <a class="btn primary" href="/prototypes/tripflow-arch.html" target="_blank" rel="noopener">进旗舰中台 · 五层架构 ↗</a>
-        <a class="btn" href="/prototypes/chat-agent-arch.html" target="_blank" rel="noopener">全屏交互追踪 ↗</a>
       </div>
     </div>
   </section>
@@ -417,8 +334,8 @@ const courses = [
   <section class="chapter" id="works">
     <div class="wrap">
       <div class="chapter-head reveal">
-        <div class="ch-no"><em>03</em> WORKS</div>
-        <h2>作品 · 可直接点开验证</h2>
+        <div class="ch-no"><em>CHAPTER 03</em> STAR ATLAS</div>
+        <h2>星图集 · 可直接点开验证</h2>
         <div class="ch-sub">不是"据说做过"，是公开部署、点开即看的可运行产物。</div>
       </div>
 
@@ -434,7 +351,7 @@ const courses = [
       </div>
 
       <h3 style="font-family:var(--serif);font-size:21px;margin:60px 0 20px;color:#fff">
-        原型集 <span style="font-family:var(--mono);font-size:12px;color:var(--ink3);font-weight:400">2026.06 · v1 → v8 · Claude Code 亲手交付</span>
+        原型银河带 <span style="font-family:var(--mono);font-size:12px;color:var(--ink3);font-weight:400">2026.06 · v1 → v8 · Claude Code 亲手交付</span>
       </h3>
       <div class="proto-strip reveal">
         {protos.map((p) => (
@@ -458,9 +375,9 @@ const courses = [
   <section class="chapter" id="logbook">
     <div class="wrap">
       <div class="chapter-head reveal">
-        <div class="ch-no"><em>04</em> EXPERIENCE</div>
-        <h2>履历 · 三段递进式攻坚</h2>
-        <div class="ch-sub">每一段都比上一段更难。技术在换代，方法论一以贯之。</div>
+        <div class="ch-no"><em>CHAPTER 04</em> CAPTAIN'S LOGBOOK</div>
+        <h2>航行日志 · 三段递进式攻坚</h2>
+        <div class="ch-sub">每一段都比上一段更深的水域。技术在换代，方法论一以贯之。</div>
       </div>
 
       <div class="timeline">
@@ -468,7 +385,7 @@ const courses = [
           <div class="t-date">2025.10 — 至今 ✦ 现在位置</div>
           <h3>头部 OTA 大厂 · AI Lab</h3>
           <div class="t-role">AI 产品经理（产品架构与转型主导）· 出海内容增长 AI 中台</div>
-          <p class="t-desc">0-1 主导多 Agent 营销中台；MVP 验证单位效率后，作为成功案例推动火车票事业群（BG）级 AI 化转型立项启动（详见旗舰章节）。</p>
+          <p class="t-desc">0-1 主导多 Agent 营销中台（详见旗舰章节）。</p>
           <ul>
             <li><strong>组织设计：</strong>多层级 3 小时深度访谈 → 用"需求四象限 + 伪需求过滤"从 7 个环节锁定 2 个 P0 刚需，毙掉 2 个伪需求</li>
             <li><strong>工程资产：</strong>《Agent 实施手册 V2》《MCP / Skill 规范》可移交；23 项埋点 Schema + AARRR 映射 + 三受众分层看板</li>
@@ -485,13 +402,12 @@ const courses = [
           <div class="t-role">AI 产品经理 · AI 恋爱助手（C 端出海）</div>
           <p class="t-desc">主导从 0 到 1 构建 AI 情感陪伴与社交破冰产品，攻克海外陌生人社交赛道留存难题。</p>
           <ul>
-            <li><strong>原子 Agent 产品矩阵：</strong>AI 串门信息提取 + 宠物分身匹配 + 小剧场破冰 + 闪聊/闲聊 + 记忆锚点；「闲聊引导 Agent」将关键环节<strong>付费转化率提升 30%</strong></li>
-            <li><strong>全项目工程复杂度最高的多轮对话 Agent：</strong>16 路意图识别与路由 + 动态提示词 + RAG 人设召回 + 记忆锚点机制，做到深度且人设一致的长程对话，并在输入处加<strong>防提示词注入</strong>设计；按场景做 GPT-4o / 4.1 / Grok 混合模型选型。<a href="/prototypes/chat-agent-arch.html" target="_blank" rel="noopener" style="color:var(--star)">看架构可视化 ↗</a>（158 节点 / 184 连线，已脱敏）</li>
-            <li><strong>AIGC 内容运营平台：</strong>Dify + ComfyUI 自动化工作流，冷启动资料生产效率<strong>提升 300%</strong>、月省约 ¥5 万；Word/Excel 生成 Agent 把内容产能 10 篇/天 → <strong>40+ 篇/天</strong>（可用率 85%）</li>
-            <li><strong>四维指标体系：</strong>商业价值 / 用户行为 / AI 能力交付 / 性能；Docker 部署 Dify / Langfuse / ComfyUI，定时脚本监控 API 用量与成本</li>
+            <li><strong>原子 Agent 产品矩阵：</strong>AI 串门信息提取 + AI 宠物分身匹配 + 小剧场破冰 + 闪聊/闲聊 + 记忆锚点；「闲聊引导 Agent」将关键环节<strong>付费转化率提升 30%</strong></li>
+            <li><strong>AIGC 内容运营平台：</strong>Dify + ComfyUI 自动化工作流，冷启动资料生产效率<strong>提升 300%</strong>，月均节省内容成本约 ¥50,000</li>
+            <li><strong>四维指标体系：</strong>商业价值层 / 用户行为层 / AI 能力交付层 / 性能层；新功能上线周期缩短 30%</li>
           </ul>
           <div class="t-chips">
-            <span class="chip violet">16 路意图</span><span class="chip violet">防注入</span><span class="chip violet">Dify</span><span class="chip violet">ComfyUI</span><span class="chip violet">模型选型</span>
+            <span class="chip violet">Dify</span><span class="chip violet">ComfyUI</span><span class="chip violet">AARRR</span><span class="chip violet">AB Test</span>
           </div>
         </div>
 
@@ -517,9 +433,9 @@ const courses = [
   <section class="chapter" id="method">
     <div class="wrap">
       <div class="chapter-head reveal">
-        <div class="ch-no"><em>05</em> METHODOLOGY</div>
-        <h2>方法论</h2>
-        <div class="ch-sub">命名权属于实践者——这九条都是先在真实项目里跑通、才配命名的。每一条都能在作品与写作里找到出处。</div>
+        <div class="ch-no"><em>CHAPTER 05</em> CONSTELLATIONS</div>
+        <h2>方法论星座</h2>
+        <div class="ch-sub">命名权属于实践者——这九颗星都是先在真实项目里活下来，才配有名字的。每一条都能在原型工坊和信号塔里找到出处。</div>
       </div>
       <div class="grid-3" data-stagger>
         {methods.map((m) => (
@@ -537,8 +453,8 @@ const courses = [
   <section class="chapter" id="knowledge">
     <div class="wrap">
       <div class="chapter-head reveal">
-        <div class="ch-no"><em>06</em> KNOWLEDGE BASE</div>
-        <h2>个人知识体系</h2>
+        <div class="ch-no"><em>CHAPTER 06</em> KNOWLEDGE GALAXY</div>
+        <h2>知识星系 · 个人知识体系</h2>
         <div class="ch-sub">
           一座 17 GB 的 Obsidian 知识库 + Claude Code Agent 流水线——「raw 进、Writing 出、Knowledge 沉淀、Software 复用、Meta 治理」。
           AI 不只是我做的产品，也是我的生产方式本身。
@@ -565,7 +481,7 @@ const courses = [
 
       <div style="margin-top:48px" class="reveal">
         <h3 style="font-family:var(--serif);font-size:21px;color:#fff;margin-bottom:8px">
-          知识网络 · 实时图谱
+          🕸 知识网络 · 实时图谱
         </h3>
         <p style="font-size:14px;color:var(--ink2);margin-bottom:18px">
           {graphNodeCount} 个节点 · {graphLinkCount} 条关联——AI 概念、投资概念、哲学思辨、方法论文章互相链接成网。
@@ -573,19 +489,10 @@ const courses = [
         </p>
         <KnowledgeGraph height="62vh" />
         <div style="margin-top:18px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
-          <a class="btn" href="/graph/">全屏探索知识图谱 ↗</a>
+          <a class="btn" href="/graph/">🔭 全屏探索知识图谱</a>
+          <a class="btn" href="/library/">📚 藏书阁 · 809 篇外部收藏目录</a>
         </div>
       </div>
-
-      <a class="card reveal" href="/library/" style="display:block;color:inherit;margin-top:34px;border-left:3px solid var(--star)">
-        <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px">
-          <h3 style="margin:0">藏书阁 · 系统化知识收藏 <span style="font-family:var(--mono);font-size:12px;color:var(--flare)">↗ 进入目录</span></h3>
-          <div class="t-chips" style="margin:0">
-            <span class="chip">830 篇</span><span class="chip">170 万字</span><span class="chip">8 大主题</span>
-          </div>
-        </div>
-        <p style="margin-top:10px">不是收藏夹堆料——从汤质·看理想的语言哲学/符号学 582 篇、经济系统观察、《金字塔原理》《黑客与画家》精读，到王川思维模型、Yjango 学习观，再到我<strong>自研并讲授的 AI 产品课程资产</strong>。每一条都精读拆解过——这是判断力与方法论的底料，也是知识图谱的来源。</p>
-      </a>
 
       <a class="card reveal" href="/files/philosophical-dialogues.pdf" target="_blank" rel="noopener" style="display:block;color:inherit;margin-top:34px;border-left:3px solid var(--nebula)">
         <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px">
@@ -598,7 +505,7 @@ const courses = [
       </a>
 
       <div class="pipeline reveal">
-        <div class="pipe-title">端到端内容生产流水线（Agent 驱动 · 每周自动运转）</div>
+        <div class="pipe-title">⚡ 端到端内容生产流水线（Agent 驱动 · 每周自动运转）</div>
         <div class="pipe-flow">
           <span class="pipe-node">录音 / 热点<br /><em>Plaud · BuilderPulse</em></span>
           <span class="pipe-arrow">→</span>
@@ -618,9 +525,9 @@ const courses = [
   <section class="chapter">
     <div class="wrap">
       <div class="chapter-head reveal">
-        <div class="ch-no"><em>07</em> TECH STACK</div>
-        <h2>技术栈</h2>
-        <div class="ch-sub">Claude Code / Cursor 是日常生产工具，不是谈资。</div>
+        <div class="ch-no"><em>CHAPTER 07</em> ENGINE ROOM</div>
+        <h2>轮机舱 · 技能矩阵</h2>
+        <div class="ch-sub">Claude Code / Cursor 是日常生产工具而非谈资。</div>
       </div>
       <div class="reveal">
         {skills.map((s) => (
@@ -640,10 +547,10 @@ const courses = [
   <section class="chapter" id="geek">
     <div class="wrap">
       <div class="chapter-head reveal">
-        <div class="ch-no"><em>08</em> CAPABILITIES</div>
-        <h2>工程能力 · 全部在真实工作流里跑着</h2>
+        <div class="ch-no"><em>CHAPTER 08</em> GEEK RADAR</div>
+        <h2>极客雷达 · 前沿装备库</h2>
         <div class="ch-sub">
-          不追概念。以下 15 项能力<strong style="color:#fff">每一项都有可验证的产物</strong>——
+          不追概念。以下 15 项能力全部<strong style="color:#fff">在真实工作流里跑着</strong>，每一项都有可验证的产物——
           包括你正在看的这个网站本身。
         </div>
       </div>
@@ -652,7 +559,7 @@ const courses = [
         {geekGear.map((g) => (
           <div class="card method-card">
             <div style="display:flex;justify-content:space-between;align-items:baseline">
-              <h3 style="margin:0">{g.name}</h3>
+              <h3 style="margin:0">{g.icon} {g.name}</h3>
               <span class="geek-status">{g.status}</span>
             </div>
             <p style="margin-top:10px">{g.desc}</p>
@@ -660,6 +567,42 @@ const courses = [
         ))}
       </div>
 
+      <div style="margin-top:48px" class="reveal">
+        <h3 style="font-family:var(--serif);font-size:21px;color:#fff;margin-bottom:6px">📡 雷达扫描 · GitHub Trending 实时追踪</h3>
+        <p style="font-size:13.5px;color:var(--ink3);font-family:var(--mono);margin-bottom:18px">WEEKLY TRENDING · CAPTURED 2026-06-11 · AGENT ECOSYSTEM</p>
+        <div class="trend-grid">
+          {geekTrending.map((t) => (
+            <a class="trend-row" href={`https://github.com/${t.repo}`} target="_blank" rel="noopener">
+              <span class="tr-repo">{t.repo}</span>
+              <span class="tr-stars">⭐ {t.stars}</span>
+              <span class="tr-desc">{t.desc}</span>
+            </a>
+          ))}
+        </div>
+
+        <h3 style="font-family:var(--serif);font-size:21px;color:#fff;margin:44px 0 6px">🛰 Hacker News · 本日 AI 信号</h3>
+        <p style="font-size:13.5px;color:var(--ink3);font-family:var(--mono);margin-bottom:18px">FRONT PAGE SIGNALS · CAPTURED 2026-06-11</p>
+        <div class="trend-grid">
+          {hnSignals.map((h) => (
+            <a class="trend-row" href={h.url} target="_blank" rel="noopener">
+              <span class="tr-stars">▲ {h.pts}</span>
+              <span class="tr-desc" style="grid-column:2/-1;color:var(--ink)">{h.title}</span>
+            </a>
+          ))}
+        </div>
+
+        <div style="margin-top:40px">
+          <span style="font-family:var(--mono);font-size:12px;color:var(--ink3);letter-spacing:.15em">装备索引 · 查工具翻 AWESOME，查 SOTA 上 PAPERS WITH CODE →</span>
+          <div class="t-chips" style="margin-top:14px">
+            {gearIndex.map((g) => (
+              <a class="chip green" href={g.url} target="_blank" rel="noopener">{g.name} ↗</a>
+            ))}
+          </div>
+          <p style="font-size:13px;color:var(--ink3);margin-top:16px;font-style:italic">
+            信息输入也是工程：每周扫 Trending、每日刷 HN、按需翻 Awesome、对照 SOTA——雷达常开，不靠二手转述。
+          </p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -667,12 +610,11 @@ const courses = [
   <section class="chapter" id="signal">
     <div class="wrap">
       <div class="chapter-head reveal">
-        <div class="ch-no"><em>09</em> WRITING</div>
-        <h2>公开写作 · Building in Public</h2>
+        <div class="ch-no"><em>CHAPTER 09</em> SIGNAL TOWER</div>
+        <h2>信号塔 · Building in Public</h2>
         <div class="ch-sub">
-          「人人都是产品经理」专栏作者 · 飞书开发者大会受邀嘉宾 · 公司年度优秀内训师（培训评分 TOP 2/15）。
-          {allArticles.length} 篇 / 约 {Math.round(totalArticleWords / 10000)} 万字方法论全文公开在本站，每一篇都可点开读全文——
-          <strong style="color:#fff">能力不藏着掖着、公开交出去</strong>：带教实习生与正岗产品「人人用 Agent」、把方法论做成可复用 Skill 和作品集，给别人撑伞之前自己先淋过雨。
+          「人人都是产品经理」专栏作者 · 飞书开发者大会受邀嘉宾。
+          {allArticles.length} 篇 / 约 {Math.round(totalArticleWords / 10000)} 万字方法论全文已发布在本站——每一篇都可以点进去读。
         </div>
       </div>
 
@@ -697,76 +639,7 @@ const courses = [
     </div>
   </section>
 
-  <!-- ════════════ CH.10 · 驻场交付（杀手锏）════════════ -->
-  <section class="chapter" id="engagement">
-    <div class="wrap">
-      <div class="chapter-head reveal">
-        <div class="ch-no"><em>10</em> ENGAGEMENT</div>
-        <h2>如果我驻场你的团队 · 90 天交付什么</h2>
-        <div class="ch-sub">
-          上面是"做过什么"，这里是"能为你做什么"。同一套方法论，三段转型都靠它活下来——
-          下面是我交付给客户组织的标准节奏与可移交资产，不是 PPT，是会留在你公司里继续运转的东西。
-        </div>
-      </div>
-
-      <div class="timeline">
-        <div class="t-item reveal-l">
-          <div class="t-date">0 — 30 天 ✦ 诊断与立项</div>
-          <h3>先毙伪需求，再定方向</h3>
-          <p class="t-desc">不急着上工具——先把"该不该做"想清楚，这一步省下的是千万级研发资源。</p>
-          <ul>
-            <li>多层级深度访谈（业务一线 + 中层 + 一把手），用「需求四象限 + 伪需求过滤器」从全链路锁定 2–3 个 P0 刚需</li>
-            <li>找到一把手、设计责权利，产出业务蓝图并完成<strong>签字确认</strong>——签字那一刻组织才真正开始转型</li>
-            <li>交付：《现状诊断与转型蓝图》《P0 场景价值评估》</li>
-          </ul>
-        </div>
-        <div class="t-item reveal-l">
-          <div class="t-date">30 — 60 天 ✦ MVP 与验证</div>
-          <h3>用可运行产物代替 PRD</h3>
-          <p class="t-desc">两周一个可交互原型，业务看得见、研发抄得走、老板拍得了板。</p>
-          <ul>
-            <li>单一业务域 SubAgent 端到端跑通（意图识别 → Skill/MCP → 交付物），高保真原型 + IA 总图</li>
-            <li>同步埋下<strong>双轨指标体系</strong>（业务价值 + AI 能力交付）与 badcase 评测集，防"上线即失真"</li>
-            <li>交付：可点开原型、埋点 Schema、首版评测集与 AARRR 映射</li>
-          </ul>
-        </div>
-        <div class="t-item reveal-l">
-          <div class="t-date">60 — 90 天 ✦ 飞轮与移交</div>
-          <h3>交付会结束，飞轮不会</h3>
-          <p class="t-desc">一次性交付是转型最大的失败形态。目标是项目组撤了、系统还在自己长大。</p>
-          <ul>
-            <li>建立<strong>「业务变化归运营、技术稳定归工程」</strong>飞轮分工矩阵，配四层转型组织</li>
-            <li>沉淀可移交工程资产 + 培训"人人用 Agent / 人人 Vibe Coding"，把能力留在团队里</li>
-            <li>交付：《Agent 实施手册 V2》《MCP / Skill 规范》、转型组织设计、运营自维护手册</li>
-          </ul>
-        </div>
-      </div>
-
-      <h3 style="font-family:var(--serif);font-size:21px;margin:48px 0 18px;color:#fff">可移交资产清单 · 留在你公司里的东西</h3>
-      <div class="t-chips reveal">
-        <span class="chip">现状诊断与转型蓝图</span>
-        <span class="chip">业务蓝图签字机制</span>
-        <span class="chip">高保真可交互原型 + IA 图</span>
-        <span class="chip violet">Agent 实施手册 V2</span>
-        <span class="chip violet">MCP / Skill 工程规范</span>
-        <span class="chip violet">埋点 Schema + AARRR 映射</span>
-        <span class="chip gold">双轨指标 + badcase 评测集</span>
-        <span class="chip gold">四层转型组织设计</span>
-        <span class="chip green">运营自维护手册</span>
-        <span class="chip green">AI-native 团队带教</span>
-      </div>
-      <p style="font-size:13.5px;color:var(--ink3);margin-top:18px;font-style:italic">
-        每一项都在前面的真实项目里产出过——三段转型、技术换了三代，这套交付节奏没变。
-      </p>
-
-      <div style="margin-top:40px;display:flex;gap:14px;align-items:center;flex-wrap:wrap" class="reveal">
-        <a class="btn primary" href="https://github.com/MingfeiJi" target="_blank" rel="noopener">聊聊你的 AI 转型 →</a>
-        <span style="font-size:13px;color:var(--ink3)">可先从一次 1 小时的现状诊断开始，判断你的场景值不值得做。</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- ════════════ CH.11 · 终章碑文 ════════════ -->
+  <!-- ════════════ CH.08 · 终章碑文 ════════════ -->
   <section class="chapter">
     <div class="wrap reveal">
       <p class="epigraph">
@@ -774,109 +647,11 @@ const courses = [
         用可运行的产物说话，<br />
         把每一次落地都变成下一段航程的燃料。
       </p>
-      <div class="epigraph-src">—— 联系方式在下方 ——</div>
+      <div class="epigraph-src">—— 泊港在下方 · 随时可以建立通讯 ——</div>
       <div style="display:flex;justify-content:center;gap:16px;margin-top:44px;flex-wrap:wrap">
-        <a class="btn primary" href="https://github.com/MingfeiJi" target="_blank" rel="noopener">GitHub 联系我</a>
+        <a class="btn primary" href="https://github.com/MingfeiJi" target="_blank" rel="noopener">✦ GitHub 建立通讯</a>
         <a class="btn" href="https://mingfeiji.github.io/tripflow-ops-playbook/" target="_blank" rel="noopener">先看作品 ↗</a>
       </div>
     </div>
   </section>
 </Base>
-
-<style>
-  /* —— v2 页面级 scoped 样式（不影响原首页 global.css）—— */
-  .hero-stats {
-    display: flex; flex-wrap: wrap; gap: 10px 28px;
-    margin: 26px 0 10px;
-  }
-  .hero-stats span {
-    display: inline-flex; align-items: baseline; gap: 7px;
-    font-size: 13.5px; color: var(--ink2);
-    font-family: var(--mono);
-  }
-  .hero-stats span b {
-    font-size: 19px; color: var(--star); font-weight: 600;
-    letter-spacing: .01em;
-  }
-  .hero-stats span:not(:last-child)::after {
-    content: ""; /* 分隔靠 gap，留空保持简洁 */
-  }
-  .hero-stats-note {
-    font-family: var(--mono); font-size: 12px;
-    color: var(--ink3); margin-bottom: 30px;
-  }
-  @media (max-width: 640px) {
-    .hero-stats { gap: 8px 18px; }
-    .hero-stats span b { font-size: 17px; }
-  }
-
-  /* Case Study 约束/权衡双栏 */
-  .cs-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 18px;
-    margin-top: 28px;
-  }
-  .cs-cell {
-    border-left: 2px solid rgba(125, 211, 252, .35);
-    padding: 2px 0 2px 16px;
-  }
-  .cs-label {
-    font-family: var(--mono); font-size: 11.5px;
-    letter-spacing: .18em; color: var(--star);
-    text-transform: uppercase; margin-bottom: 8px;
-  }
-  .cs-cell p { font-size: 14.5px; color: var(--ink2); line-height: 1.75; margin: 0; }
-  @media (max-width: 720px) { .cs-grid { grid-template-columns: 1fr; gap: 14px; } }
-
-  /* 案例聚光灯 · 内嵌可视化 */
-  .spotlight-frame {
-    margin-top: 30px; border: 1px solid var(--line); border-radius: 16px;
-    overflow: hidden; background: #070b16;
-    box-shadow: 0 24px 70px rgba(0,0,0,.45), inset 0 0 0 1px rgba(125,211,252,.05);
-    height: 660px;
-  }
-  .spotlight-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
-  @media (max-width: 640px) { .spotlight-frame { height: 580px; } }
-
-  /* 项目档案卡片 */
-  .case-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 40px; }
-  @media (max-width: 760px) { .case-grid { grid-template-columns: 1fr; } }
-  .case-card {
-    display: block; border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px;
-    background: rgba(125,211,252,.045); color: inherit; text-decoration: none; transition: .25s;
-  }
-  a.case-card:hover { border-color: var(--star); background: rgba(125,211,252,.09); transform: translateY(-3px); box-shadow: 0 14px 40px rgba(125,211,252,.12); }
-  .case-card.flagship { grid-column: 1 / -1; border-color: rgba(251,191,36,.3); background: rgba(251,191,36,.045); }
-  a.case-card.flagship:hover { border-color: var(--flare); box-shadow: 0 14px 44px rgba(251,191,36,.16); }
-  .case-card.static { cursor: default; }
-  .cc-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; }
-  .cc-tag { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; color: var(--star); border: 1px solid var(--line); border-radius: 20px; padding: 3px 11px; }
-  .case-card.flagship .cc-tag { color: var(--flare); border-color: rgba(251,191,36,.35); }
-  .cc-arrow { font-family: var(--mono); font-size: 12px; color: var(--flare); white-space: nowrap; }
-  .cc-arrow.dim { color: var(--ink3); }
-  .case-card h3 { font-family: var(--serif); font-size: 20px; color: #fff; margin-bottom: 8px; }
-  .cc-role { font-size: 13px; color: var(--ink2); margin-bottom: 12px; line-height: 1.6; }
-  .cc-metrics { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
-  .cc-metrics span { font-family: var(--mono); font-size: 12.5px; color: var(--ink2); }
-  .cc-metrics span.hl { color: #fff; font-weight: 600; }
-  .cc-mgmt { font-size: 12px; color: var(--ink3); border-top: 1px solid var(--line); padding-top: 10px; }
-  .cc-facets { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
-  .cc-facets a {
-    flex: 1; min-width: 200px; text-align: center; text-decoration: none;
-    font-family: var(--mono); font-size: 13px; color: #fff;
-    border: 1px solid rgba(251,191,36,.4); background: rgba(251,191,36,.07);
-    border-radius: 9px; padding: 10px 12px; transition: .2s;
-  }
-  .cc-facets a:hover { background: rgba(251,191,36,.16); border-color: var(--flare); transform: translateY(-2px); }
-  .lab-line { font-family: var(--mono); font-size: 11px; color: var(--star); letter-spacing: .14em; text-transform: uppercase; margin: 8px 0 4px; }
-
-  /* 已兑现硬成果矩阵 */
-  .km-matrix { margin-top: 38px; border: 1px solid var(--line); border-radius: 14px; background: rgba(125,211,252,.03); overflow: hidden; }
-  .km-row { display: grid; grid-template-columns: 132px 1fr; gap: 16px; padding: 16px 20px; border-top: 1px solid var(--line); }
-  .km-row:first-child { border-top: 0; }
-  .km-cat { font-family: var(--mono); font-size: 13px; color: #fff; font-weight: 600; padding-top: 3px; }
-  .km-cat small { display: block; font-size: 10.5px; color: var(--star); font-weight: 400; margin-top: 3px; letter-spacing: .04em; }
-  .km-stats { display: flex; flex-wrap: wrap; gap: 8px; }
-  .km-stats span { display: inline-flex; flex-direction: column; gap: 2px; border: 1px solid var(--line); border-radius: 9px; padding: 8px 12px; background: rgba(125,211,252,.04); font-size: 11.5px; color: var(--ink3); line-height: 1.35; }
-  .km-stats span b { font-family: var(--mono); font-size: 15px; color: var(--star); font-weight: 600; letter-spacing: .01em; }
-  @media (max-width: 680px) { .km-row { grid-template-columns: 1fr; gap: 9px; } .km-stats span b { font-size: 14px; } }
-</style>
