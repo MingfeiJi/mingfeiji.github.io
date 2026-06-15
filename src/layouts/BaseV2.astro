@@ -1,0 +1,172 @@
+---
+import 'lxgw-wenkai-webfont/lxgwwenkai-regular.css';
+import 'lxgw-wenkai-webfont/lxgwwenkai-bold.css';
+import '@fontsource/noto-serif-sc/500.css';
+import '@fontsource/noto-serif-sc/700.css';
+import '@fontsource/noto-serif-sc/900.css';
+import '@fontsource/jetbrains-mono/400.css';
+import '@fontsource/jetbrains-mono/700.css';
+import Cosmos from '../components/Cosmos.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+const {
+  title = '纪鸣飞 · AI 产品架构师 / 企业 AI 化转型专家 · FDE',
+  description = '5 年产品与数字化、4 年专注 AI 落地。制造业数字化 → 千人电商 AI 转型 → 大厂出海内容增长 AI 中台，用可运行的产物推动落地。',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#030412" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>" />
+    <script is:inline>
+      (function () {
+        var t = localStorage.getItem('mfj-theme') || 'cosmos';
+        document.documentElement.setAttribute('data-theme', t);
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="voyage-progress"></div>
+    <Cosmos />
+
+    <nav class="nav">
+      <div class="nav-inner">
+        <a href="#top" class="nav-logo">纪鸣飞<span> ✦</span></a>
+        <div class="nav-links">
+          <a href="#voyage">关键成果</a>
+          <a href="#flagship">旗舰</a>
+          <a href="#cases">项目档案</a>
+          <a href="#works">作品</a>
+          <a href="#logbook">履历</a>
+          <a href="#method">方法论</a>
+          <a href="#knowledge">知识体系</a>
+          <a href="#engagement">驻场交付</a>
+          <a href="/prototypes/">原型</a>
+          <a href="/library/">藏书阁</a>
+          <a href="/articles/">写作</a>
+          <a href="#contact">联系</a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="universe">
+      <slot />
+    </main>
+
+    <footer class="footer universe" id="contact">
+      <div class="wrap footer-inner">
+        <div>
+          <div class="f-name">纪鸣飞 <span style="color:var(--star)">/</span> Mingfei Ji</div>
+          <div class="f-meta">
+            AI PRODUCT ARCHITECT · FORWARD DEPLOYED ENGINEER<br />
+            上海 · github.com/MingfeiJi
+          </div>
+        </div>
+        <div class="f-links">
+          <a href="https://mingfeiji.github.io/tripflow-ops-playbook/" target="_blank" rel="noopener">中台运营手册 ↗</a>
+          <a href="https://mingfeiji.github.io/tripflow-38-intents/" target="_blank" rel="noopener">38 意图全景图 ↗</a>
+          <a href="https://mingfeiji.github.io/tripflow-experience-map/" target="_blank" rel="noopener">用户体验地图 ↗</a>
+        </div>
+        <div class="f-meta" style="text-align:right">
+          「人人都是产品经理」专栏作者<br />
+          飞书开发者大会受邀嘉宾<br />
+          Building in public · 2026 ✦
+        </div>
+      </div>
+    </footer>
+
+    <button class="theme-fab" id="theme-fab" title="切换主题" aria-label="切换主题">🎨</button>
+    <div class="theme-panel" id="theme-panel">
+      <div class="tp-title">THEME · 选一种你喜欢的</div>
+      <button class="theme-opt" data-t="cosmos"><span class="sw"><i style="background:#030412"></i><i style="background:#7dd3fc"></i><i style="background:#a78bfa"></i></span>🌌 星辰大海</button>
+      <button class="theme-opt" data-t="paper"><span class="sw"><i style="background:#F5F2EA"></i><i style="background:#172441"></i><i style="background:#DD512B"></i></span>📜 宣纸编辑部</button>
+      <button class="theme-opt" data-t="klein"><span class="sw"><i style="background:#002FA7"></i><i style="background:#fff"></i><i style="background:#ffe14d"></i></span>🔵 克莱因蓝</button>
+      <button class="theme-opt" data-t="terminal"><span class="sw"><i style="background:#030806"></i><i style="background:#34ff88"></i><i style="background:#ffe14d"></i></span>🟢 终端绿磷</button>
+      <button class="theme-opt" data-t="snow"><span class="sw"><i style="background:#FAFAF8"></i><i style="background:#18181b"></i><i style="background:#1d4ed8"></i></span>⬜️ 月白极简</button>
+    </div>
+
+    <script>
+      const fab = document.getElementById('theme-fab')!;
+      const panel = document.getElementById('theme-panel')!;
+      const themeOpts = panel.querySelectorAll<HTMLButtonElement>('.theme-opt');
+      function markActive() {
+        const cur = document.documentElement.getAttribute('data-theme') || 'cosmos';
+        themeOpts.forEach((o) => o.classList.toggle('active', o.dataset.t === cur));
+      }
+      markActive();
+      fab.addEventListener('click', (e) => { e.stopPropagation(); panel.classList.toggle('open'); });
+      document.addEventListener('click', (e) => {
+        if (!panel.contains(e.target as Node)) panel.classList.remove('open');
+      });
+      themeOpts.forEach((o) =>
+        o.addEventListener('click', () => {
+          const t = o.dataset.t!;
+          document.documentElement.setAttribute('data-theme', t);
+          localStorage.setItem('mfj-theme', t);
+          markActive();
+        })
+      );
+
+      const io = new IntersectionObserver(
+        (entries) => entries.forEach((e) => e.isIntersecting && e.target.classList.add('in')),
+        { threshold: 0.08 }
+      );
+      document.querySelectorAll('.reveal, .reveal-l, [data-stagger]').forEach((el) => io.observe(el));
+
+      const bar = document.getElementById('voyage-progress');
+      addEventListener('scroll', () => {
+        const max = document.documentElement.scrollHeight - innerHeight;
+        if (bar && max > 0) bar.style.width = `${(scrollY / max) * 100}%`;
+      }, { passive: true });
+
+      document.querySelectorAll<HTMLElement>('.card').forEach((card) => {
+        card.addEventListener('mousemove', (e) => {
+          const r = card.getBoundingClientRect();
+          const x = e.clientX - r.left, y = e.clientY - r.top;
+          card.style.setProperty('--mx', `${x}px`);
+          card.style.setProperty('--my', `${y}px`);
+          const rx = ((y / r.height) - 0.5) * -5;
+          const ry = ((x / r.width) - 0.5) * 5;
+          card.style.transform = `translateY(-6px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+        });
+        card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+      });
+
+      const counters = document.querySelectorAll<HTMLElement>('[data-count]');
+      const cio = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target as HTMLElement;
+          cio.unobserve(el);
+          const target = parseFloat(el.dataset.count || '0');
+          const dur = 1400;
+          const t0 = performance.now();
+          const fmt = (v: number) => (Number.isInteger(target) ? Math.round(v).toString() : v.toFixed(1));
+          const step = (now: number) => {
+            const p = Math.min((now - t0) / dur, 1);
+            el.textContent = fmt(target * (1 - Math.pow(1 - p, 3)));
+            if (p < 1) requestAnimationFrame(step);
+          };
+          requestAnimationFrame(step);
+        });
+      }, { threshold: 0.4 });
+      counters.forEach((el) => cio.observe(el));
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  @import '../styles/global.css';
+</style>
