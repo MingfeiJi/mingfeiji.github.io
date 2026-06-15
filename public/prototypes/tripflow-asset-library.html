@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>资产库 · 素材中台详解（脱敏）</title>
+<style>
+  :root{
+    --bg:#070b16; --panel:rgba(125,211,252,.05); --line:rgba(125,211,252,.16);
+    --ink:#e8ecff; --ink2:#9aa6cf; --ink3:#5d6890;
+    --star:#7dd3fc; --nebula:#a78bfa; --flare:#fbbf24; --green:#34d399; --rose:#fb7185;
+    --mono:"JetBrains Mono","SF Mono","Menlo",monospace; --serif:"Noto Serif SC","Songti SC",serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:radial-gradient(1100px 560px at 82% -12%, rgba(167,139,250,.11), transparent 60%),radial-gradient(820px 460px at 6% 112%, rgba(125,211,252,.09), transparent 55%),var(--bg);color:var(--ink);font-family:var(--mono);min-height:100vh;padding:40px 24px 76px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .stars{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .stars i{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;animation:tw 4s infinite}
+  @keyframes tw{0%,100%{opacity:.04}50%{opacity:.5}}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto}
+  .back{display:inline-block;margin-bottom:18px;font-size:12px;color:var(--star);text-decoration:none}
+  .kick{font-size:11.5px;letter-spacing:.22em;color:var(--nebula);text-transform:uppercase}
+  h1{font-family:var(--serif);font-size:29px;font-weight:600;margin:9px 0 8px}
+  .sub{color:var(--ink2);font-size:13px;max-width:880px}.sub b{color:var(--ink)}
+  .essence{margin-top:20px;border:1px solid rgba(167,139,250,.26);background:rgba(167,139,250,.05);border-radius:12px;padding:15px 18px}
+  .essence p{font-size:13.5px;color:var(--ink);line-height:1.8}.essence p b{color:#fff}
+  .loop{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:11px;font-size:12.5px}
+  .loop span{border:1px solid rgba(167,139,250,.3);background:rgba(167,139,250,.07);border-radius:8px;padding:5px 12px;color:#d8c9ff}
+  .loop em{color:var(--star);font-style:normal}
+  .lab{font-size:11px;color:var(--star);letter-spacing:.16em;margin:36px 0 14px;text-transform:uppercase}
+  .lab small{color:var(--ink3);letter-spacing:0;text-transform:none;margin-left:8px}
+
+  .domains{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+  @media(max-width:860px){.domains{grid-template-columns:1fr 1fr}}
+  @media(max-width:520px){.domains{grid-template-columns:1fr}}
+  .dom{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:15px 15px;margin:0 5px;position:relative}
+  .dom .dn{font-size:13.5px;color:#fff;font-weight:600}.dom .dn small{display:block;font-size:10.5px;color:var(--nebula);margin-top:3px}
+  .dom ul{list-style:none;margin-top:10px;font-size:11.5px;color:var(--ink2);line-height:1.85}
+  .dom li{padding-left:13px;position:relative}.dom li::before{content:"·";position:absolute;left:2px;color:var(--star)}
+  .dom li b{color:#cdeeff;font-weight:500}
+  .domflow{display:flex;justify-content:center;gap:6px;margin:14px 0;color:var(--star);opacity:.5;font-size:12px}
+
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+  @media(max-width:780px){.cols{grid-template-columns:1fr}}
+  .card{border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:var(--panel)}
+  .card h3{font-size:14px;color:#fff;margin-bottom:10px}
+  .card ul{list-style:none;font-size:12.5px;color:var(--ink2);line-height:1.95}
+  .card li{padding-left:15px;position:relative}.card li::before{content:"▸";position:absolute;left:0;color:var(--star)}
+  .card li b{color:#fff}
+  .card.form{border-left:2px solid var(--green)} .card.dedup{border-left:2px solid var(--flare)}
+
+  .model{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:6px 18px 12px}
+  .mrow{display:grid;grid-template-columns:120px 1fr;gap:12px;padding:9px 0;border-top:1px dashed rgba(125,211,252,.1);font-size:12px}
+  .mrow:first-child{border-top:0}.mrow .mk{color:var(--nebula)}.mrow .mv{color:var(--ink2)}
+  @media(max-width:600px){.mrow{grid-template-columns:1fr;gap:3px}}
+  .note{margin-top:30px;font-size:11.5px;color:var(--ink3);border-left:2px solid var(--line);padding-left:14px;line-height:1.85}
+  .note b{color:var(--ink2)}
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+<div class="wrap">
+  <a class="back" href="/v2#cases">← 返回项目档案</a>
+  <div class="kick">FLAGSHIP CASE · 素材中台 / 资产库（脱敏）</div>
+  <h1>资产库 · 素材中台详解</h1>
+  <p class="sub">旗舰中台的<b>素材底座视角</b>（业务流程 / 产品形态之外的第三个深挖面）。定位：连接「采集 → 加工 → 存储 → 创作」的素材中台——<b>目标不是"存得多"，而是"用得快、用得对、用出爆款"</b>。</p>
+
+  <div class="essence">
+    <p>一句话：一个<b>视觉优先、AI 选中即用</b>的素材库，把全网爆款素材高效沉淀为「可复用、可裂变、可直接喂进批量创作」的资产。</p>
+    <div class="loop"><span>采</span><em>→</em><span>治</span><em>→</em><span>存</span><em>→</em><span>用</span><em>→</em><span>反馈</span><em>↺ 爆款数据回流反哺采集与推荐</em></div>
+  </div>
+
+  <div class="lab">▸ 四个能力域 <small>采集 → 加工 → 存储 → 激活（连接创作）</small></div>
+  <div class="domains">
+    <div class="dom"><div class="dn">采集域<small>把素材弄进来</small></div>
+      <ul>
+        <li><b>关键词全网检索</b>（按平台/类型/热度，预览后入库）</li>
+        <li><b>链接爬取</b>（单条/批量/按账号，自动下载处理）</li>
+        <li>本地批量上传，自动识别类型打标</li>
+        <li>AI 生成即入库（文生图/图生视频）</li>
+        <li><b>爆款监控</b>：订阅赛道持续抓取自动入库</li>
+      </ul>
+    </div>
+    <div class="dom"><div class="dn">加工域<small>把素材变得好用</small></div>
+      <ul>
+        <li><b>智能切片/自动分镜</b>（按脚本/按关键词定向切片）</li>
+        <li>要素提取（BGM/字体/字幕/分镜）</li>
+        <li><b>自动向量化</b>（入库即生成 embedding）</li>
+        <li><b>裂变/改写</b>：批量产出差异化变体</li>
+        <li>AI 识别内容自动打标 + 同质化校验</li>
+      </ul>
+    </div>
+    <div class="dom"><div class="dn">存储域<small>管得清、找得到</small></div>
+      <ul>
+        <li>组织：分类/标签/收藏/项目</li>
+        <li><b>检索</b>：关键词 + 语义 + 自然语言描述片段 + 以图/视频搜</li>
+        <li>筛选：类型/来源/标签/<b>表现（只看爆款）</b></li>
+        <li><b>血缘版本</b>：详情页可视化衍生树</li>
+      </ul>
+    </div>
+    <div class="dom"><div class="dn">激活域<small>连接到创作</small></div>
+      <ul>
+        <li><b>去创作</b>：选中原始素材直达批量创作流</li>
+        <li><b>AI 召回拼接</b>：脚本/关键词 → 召回匹配素材组草稿</li>
+        <li><b>SRT + 脚本直出</b>：字幕+脚本+素材自动剪成片</li>
+        <li>模板套用，批量产出</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="lab">▸ 统一数据模型 <small>一张表抽象「素材资产」——图/视频/文本/脚本/BGM/SRT/模板天然互通、可跨类型组合召回</small></div>
+  <div class="model">
+    <div class="mrow"><div class="mk">基础</div><div class="mv">类型 · 来源（爬取/上传/AI生成）· 时长尺寸 · 入库时间</div></div>
+    <div class="mrow"><div class="mk">标签</div><div class="mv">AI 自动标签 + 业务标签（行业/场景/情绪）+ 手动标签 → 语义标签跨类型召回</div></div>
+    <div class="mrow"><div class="mk">向量</div><div class="mv">embedding——支撑语义检索与 AI 召回拼接</div></div>
+    <div class="mrow"><div class="mk">血缘</div><div class="mv">来源链接 + 衍生关系（谁裂变/改写自谁）→ 衍生树</div></div>
+    <div class="mrow"><div class="mk">表现</div><div class="mv">使用次数 · 关联作品 · 是否爆款 · 爆款率</div></div>
+    <div class="mrow"><div class="mk">相似度指纹</div><div class="mv">用于库内去重与同质化校验（不做对外合规判定）</div></div>
+  </div>
+
+  <div class="lab">▸ 两个产品要点</div>
+  <div class="cols">
+    <div class="card dedup">
+      <h3>去重 / 同质化校验</h3>
+      <ul>
+        <li><b>入库去重：</b>相同/近重复素材入库时提示合并（simhash + 向量相似）</li>
+        <li><b>裂变差异度校验：</b>裂变产出与母素材、与同批变体做相似度比对，过高则提示"差异不足，建议再改"</li>
+        <li><b>推荐去重：</b>AI 召回时对结果做多样性约束，避免推荐高度雷同</li>
+        <li><b>阈值可配：</b>相似度阈值开放给管理员，不同赛道松紧不同</li>
+      </ul>
+    </div>
+    <div class="card form">
+      <h3>产品形态 / 交互</h3>
+      <ul>
+        <li><b>视觉优先瀑布流网格</b>（文本类可切列表）</li>
+        <li><b>AI 能力"选中即用"</b>——上下文动作不开新 Tab，丝滑核心</li>
+        <li>素材详情页：大图预览 + 元数据 + <b>血缘树</b> + 一键去创作</li>
+        <li>表现数据贴卡（使用×N / 爆款角标）· 库↔创作双向打通</li>
+        <li>「看过不看」：看过的视频次日不重复展示</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>脱敏说明：</b>公司/品牌/业务线名称以行业 + 体量匿名化；数据模型与能力域取自项目真实 PRD，未夸大。<br>
+    <b>能力主张：</b>把"素材"当作平台的唯一真源来设计——统一数据模型 + 向量化 + 血缘 + 去重 + 选中即用，让素材"用得快、用得对、用出爆款"。这是数据资产层的产品架构能力。
+  </div>
+</div>
+<script>
+  const s=document.getElementById('stars');
+  for(let i=0;i<60;i++){const e=document.createElement('i');e.style.left=Math.random()*100+'%';e.style.top=Math.random()*100+'%';e.style.animationDelay=(Math.random()*4)+'s';s.appendChild(e);}
+</script>
+</body>
+</html>
