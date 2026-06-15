@@ -196,7 +196,7 @@ const courses = [
       <div class="chapter-head reveal">
         <div class="ch-no"><em>00</em> KEY OUTCOMES</div>
         <h2>关键成果</h2>
-        <div class="ch-sub">4 年 AI 产品落地的核心读数——每一项都可在下方章节验证来源。</div>
+        <div class="ch-sub">三段递进式攻坚里<strong style="color:#fff">已兑现</strong>的硬成果——每一项都能在下方对应项目里验证来源（目标值已标注）。</div>
       </div>
 
       <div class="dashboard reveal">
@@ -207,7 +207,48 @@ const courses = [
         <div class="dial"><div class="num"><span data-count="2">0</span><span>次</span></div><div class="lab">集团级战略奖（已获）</div></div>
       </div>
 
-      <div class="galaxies" style="margin-top:64px" data-stagger>
+      <div class="km-matrix reveal">
+        <div class="km-row">
+          <div class="km-cat">降本增效<small>已落地</small></div>
+          <div class="km-stats">
+            <span><b>降本 13 人</b>客服自动化 80% 重复问题 · 年省百万</span>
+            <span><b>月省 ¥5 万</b>C 端 AIGC 内容平台</span>
+            <span><b>省百万</b>AIGC 生图替代外采</span>
+            <span><b>+60%</b>ERP / 业财融合整体效率</span>
+          </div>
+        </div>
+        <div class="km-row">
+          <div class="km-cat">AI 效果提升<small>可量化</small></div>
+          <div class="km-stats">
+            <span><b>68% → 84%</b>客户满意度（智能客服）</span>
+            <span><b>65% → 87%</b>生图采纳率（Lora 微调）</span>
+            <span><b>+30%</b>关键环节付费转化（C 端）</span>
+            <span><b>+40%</b>标注效率（图文标注 Agent）</span>
+            <span><b>+25% / +40%</b>核算准确率 / 流程拉通</span>
+          </div>
+        </div>
+        <div class="km-row">
+          <div class="km-cat">规模与产出<small>跑起来了</small></div>
+          <div class="km-stats">
+            <span><b>100 万+</b>旗舰中台单周播放（MVP）</span>
+            <span><b>500 / 990</b>单周生成素材 / 发布短视频</span>
+            <span><b>10 → 40+ 篇/天</b>内容产能（生成 Agent）</span>
+            <span><b>20+</b>高保真可交互原型</span>
+            <span><b>830 篇 / 170 万字</b>个人知识库</span>
+          </div>
+        </div>
+        <div class="km-row">
+          <div class="km-cat">外部认可<small>有背书</small></div>
+          <div class="km-stats">
+            <span><b>×2</b>集团级战略奖</span>
+            <span><b>TOP 2/15</b>公司年度优秀内训师</span>
+            <span><b>BG 级标杆</b>推动事业群 AI 化转型立项</span>
+            <span><b>专栏作者 · 大会嘉宾</b>「人人都是产品经理」· 飞书开发者大会</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="galaxies" style="margin-top:56px" data-stagger>
         <div class="card galaxy">
           <div class="g-orbit">🏭</div>
           <div class="g-era">2022 — 2023 · 第一阶段</div>
@@ -827,4 +868,15 @@ const courses = [
   }
   .cc-facets a:hover { background: rgba(251,191,36,.16); border-color: var(--flare); transform: translateY(-2px); }
   .lab-line { font-family: var(--mono); font-size: 11px; color: var(--star); letter-spacing: .14em; text-transform: uppercase; margin: 8px 0 4px; }
+
+  /* 已兑现硬成果矩阵 */
+  .km-matrix { margin-top: 38px; border: 1px solid var(--line); border-radius: 14px; background: rgba(125,211,252,.03); overflow: hidden; }
+  .km-row { display: grid; grid-template-columns: 132px 1fr; gap: 16px; padding: 16px 20px; border-top: 1px solid var(--line); }
+  .km-row:first-child { border-top: 0; }
+  .km-cat { font-family: var(--mono); font-size: 13px; color: #fff; font-weight: 600; padding-top: 3px; }
+  .km-cat small { display: block; font-size: 10.5px; color: var(--star); font-weight: 400; margin-top: 3px; letter-spacing: .04em; }
+  .km-stats { display: flex; flex-wrap: wrap; gap: 8px; }
+  .km-stats span { display: inline-flex; flex-direction: column; gap: 2px; border: 1px solid var(--line); border-radius: 9px; padding: 8px 12px; background: rgba(125,211,252,.04); font-size: 11.5px; color: var(--ink3); line-height: 1.35; }
+  .km-stats span b { font-family: var(--mono); font-size: 15px; color: var(--star); font-weight: 600; letter-spacing: .01em; }
+  @media (max-width: 680px) { .km-row { grid-template-columns: 1fr; gap: 9px; } .km-stats span b { font-size: 14px; } }
 </style>
