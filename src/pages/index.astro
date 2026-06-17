@@ -109,6 +109,57 @@ const methods = [
   },
 ];
 
+const cognitionPoints = [
+  {
+    tag: '商业基本式',
+    title: '需求决定收入，差异化决定利润',
+    desc: '判断 C 端 AI 产品能否自我造血，不先问模型多强，而是问需求是否足够持续、差异化来自效果/获客/场景/生态中的哪一项，长期壁垒是否还能继续产生长期利润。',
+    chips: ['16 路意图', '三路 RAG', '防提示词注入', '付费转化 +30%'],
+    caseLabel: '拟人化闲聊 Agent',
+    caseUrl: '/prototypes/chat-agent-arch.html',
+  },
+  {
+    tag: '模型竞合',
+    title: '纯工具层会越来越薄',
+    desc: '每一次工具调用都在为模型积累可内化的训练样本。Skills、harness、context、MCP 都可能被模型公司吸收，产品公司要往内容生态、创作者网络、新媒介形态和用户侧生成关系里找新的着力点。',
+    chips: ['毙「全 AI 一键出片」', '毙「自动养号」', '灵感→资产→创作→审核→剪辑→复盘', '单周播放 100 万+'],
+    caseLabel: '出海内容增长 AI 中台',
+    caseUrl: '/prototypes/tripflow-arch.html',
+  },
+  {
+    tag: 'AI 原生组织',
+    title: '链式协作会被球形协作替代',
+    desc: '传统链路是产品、设计、前端、后端、测试逐段交付；AI-native 团队更像球形贡献：每个人直接往项目里提交可运行产物，中间层靠清晰文档衔接，日级版本迭代成为默认节奏。',
+    chips: ['20+ 高保真原型', '整站 Agent 构建', 'Vibe Coding 课', 'Skill Workshop'],
+    caseLabel: '原型工坊',
+    caseUrl: '/prototypes/',
+  },
+  {
+    tag: '个体闭环',
+    title: '一个人要能闭环到最深处',
+    desc: '产品不只是写 PRD，而是能用 Vibe Coding 输出可运行产品结构，能更新 creation system harness，能设计 evaluator 验证效果。一个人做十个人的事，不是工作十倍时间，而是把 loop 自动化、评测化、资产化。',
+    chips: ['评测驱动', 'badcase 闭环', '30 类意图', '满意度 68%→84%', '5000+ 评测集'],
+    caseLabel: '智能客服小 V',
+    caseUrl: '/prototypes/cs-agent-arch.html',
+  },
+  {
+    tag: '转型约束',
+    title: 'AI 改造必须由 owner 躬身入局',
+    desc: '第三方改造企业天然有结构性问题：工具和流程都需要持续迭代，如果迭代依赖外部团队，本身就违背 AI loop 的效率逻辑。真正有效的 AI 转型，是业务 owner 把责任、指标和系统一起扛起来。',
+    chips: ['业务蓝图签字', '飞轮分工矩阵', '业务变化归运营', '90 天移交'],
+    caseLabel: '90 天驻场交付',
+    caseUrl: '#engagement',
+  },
+  {
+    tag: '组织判断',
+    title: '未来中层会被压缩，两层结构足够快',
+    desc: 'AI-native 团队不需要一层层转译，也不需要慢的一环。最高效的结构是目标层直接连接闭环个体：少量聪明人围绕可衡量指标、可运行产物和清晰接口高速协作。',
+    chips: ['3 UI + 5+ 开发', '3 实习 + 1 正岗', '人人用 Agent', '人人 Vibe Coding'],
+    caseLabel: 'AI-native 团队带教',
+    caseUrl: '#flagship',
+  },
+];
+
 const skills = [
   {
     cat: 'AGENT / LLM',
@@ -185,6 +236,7 @@ const courses = [
     <div class="hero-stats-note">以上为<strong>已兑现</strong>结果 · 出海 AI 中台目标全年再省 ¥500 万 / 2.8 万工时</div>
     <div class="hero-cta">
       <a class="btn primary" href="#flagship">旗舰项目 · 内容增长 AI 中台</a>
+      <a class="btn" href="#cognition">商业与 AI 认知</a>
       <a class="btn" href="#works">作品 · 可点开验证</a>
     </div>
     <div class="hero-scroll">SCROLL<br />▼</div>
@@ -355,7 +407,67 @@ const courses = [
     </div>
   </section>
 
-  <!-- ════════════ CH.02·5 · 项目档案 ════════════ -->
+  <!-- ════════════ CH.02·5 · 商业与 AI 认知 ════════════ -->
+  <section class="chapter" id="cognition">
+    <div class="wrap">
+      <div class="chapter-head reveal">
+        <div class="ch-no"><em>02 ✦</em> COGNITION</div>
+        <h2>商业与 AI 认知</h2>
+        <div class="ch-sub">
+          AI 时代的产品判断，不是"会不会用模型"，而是能不能把<strong style="color:#fff">需求、差异化、组织效率、AI loop 和长期壁垒</strong>放在同一张图里判断。
+          下面是我吸收进自己方法论的几条核心判断。
+        </div>
+      </div>
+
+      <blockquote class="cognition-quote reveal">
+        AI 产品公司的核心问题，不是把工具做得更像工具，而是重新定义自己和模型公司的竞合关系：
+        <strong>模型会吞掉通用能力，产品要长出场景、内容、关系、数据飞轮和商业自我造血。</strong>
+      </blockquote>
+
+      <div class="cognition-grid" data-stagger>
+        {cognitionPoints.map((p, i) => (
+          <a class="card cognition-card" href={p.caseUrl} target={p.caseUrl.startsWith('#') ? undefined : '_blank'} rel="noopener">
+            <div class="cog-top">
+              <span class="cog-idx">{String(i + 1).padStart(2, '0')}</span>
+              <span class="cog-tag">{p.tag}</span>
+            </div>
+            <h3>{p.title}</h3>
+            <p>{p.desc}</p>
+            <div class="cog-chips">{p.chips.map((c) => <span>{c}</span>)}</div>
+            <div class="cog-link">绑定案例 · {p.caseLabel} ↗</div>
+          </a>
+        ))}
+      </div>
+
+      <div class="cognition-flow reveal">
+        <div class="cf-title">我用来判断 C 端 AI 产品是否成立的链路</div>
+        <div class="cf-track">
+          <span>需求强度<br /><em>用户愿不愿意持续付费</em></span>
+          <b>→</b>
+          <span>差异化<br /><em>效果 / 获客 / 场景 / 生态</em></span>
+          <b>→</b>
+          <span>成本结构<br /><em>token cost + marketing cost</em></span>
+          <b>→</b>
+          <span>反馈飞轮<br /><em>user feedback → data → model/product</em></span>
+          <b>→</b>
+          <span>长期壁垒<br /><em>内容生态与生成关系</em></span>
+        </div>
+      </div>
+
+      <div class="cs-grid reveal" style="margin-top:28px">
+        <div class="cs-cell">
+          <div class="cs-label">角色升级</div>
+          <p>从"企业 AI 改造顾问"转向"躬身入局的 value creator"：不只诊断别人怎么转型，也要自己闭环产品、用户反馈、商业化与自动化 loop。</p>
+        </div>
+        <div class="cs-cell">
+          <div class="cs-label">能力锚点</div>
+          <p>我的差异化不在单点 prompt 或工具熟练度，而在能把商业判断、可运行原型、Agent harness、evaluator、组织协作接口串成一个自我增长系统。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ CH.03 · 项目档案 ════════════ -->
   <section class="chapter" id="cases">
     <div class="wrap">
       <div class="chapter-head reveal">
@@ -373,6 +485,7 @@ const courses = [
           <div class="cc-role">0-1 主导 · AI 产品经理｜组织内容生产全流程，逐节点嵌入 AI 原子能力（基于 LobeHub 落地多 Agent + Skill + MCP + 知识库打通）</div>
           <div class="cc-metrics"><span>灵感 / 资产库 / 创作 / 审核 / 剪辑 全链路 × AI 节点</span><span>单周素材 500 / 发布 990 / 播放 100 万+ · 目标年省 ¥500 万</span><span class="hl">升级为 BG 级转型立项标杆</span></div>
           <div class="cc-mgmt">强项：AI 需求调研 → 落地方案 → 推动｜统筹 3 UI + 5+ 开发 · CIO 双周/英文汇报</div>
+          <div class="cc-cognition">对应认知 · 工具层会变薄，所以往内容生态 / 资产库 / 反馈飞轮里做厚</div>
           <div class="cc-facets">
             <a href="/prototypes/tripflow-arch.html" target="_blank" rel="noopener">业务流程 × AI 架构 ↗</a>
             <a href="/prototypes/tripflow-product-form.html" target="_blank" rel="noopener">产品形态 × OOUX ↗</a>
@@ -386,6 +499,7 @@ const courses = [
           <div class="cc-role">0-1 · 全项目工程复杂度最高的多轮对话 Agent</div>
           <div class="cc-metrics"><span>158 节点 / 184 连线 · 16 路意图 · 三路 RAG · 防注入</span><span class="hl">关键环节付费转化 +30%</span></div>
           <div class="cc-mgmt">含交互追踪：点消息看它如何"思考"</div>
+          <div class="cc-cognition">对应认知 · 需求决定收入、差异化决定利润——价值不在会聊天，在场景/记忆/人设/付费节点</div>
         </a>
 
         <a class="case-card" href="/prototypes/cs-agent-arch.html" target="_blank" rel="noopener">
@@ -394,6 +508,7 @@ const courses = [
           <div class="cc-role">产品 / 项目负责人 · RAG + SFT · AI 优先人工兜底</div>
           <div class="cc-metrics"><span>自动化 80% 重复问题 · 30 类意图</span><span class="hl">优化 13 人 / 年省超百万 · 满意度 68%→84%</span></div>
           <div class="cc-mgmt">管理：横向带跨部门团队 · 集团 CIO 双周汇报</div>
+          <div class="cc-cognition">对应认知 · 企业 AI 系统必须可评测、可兜底、可交付 ROI</div>
         </a>
 
         <a class="case-card" href="/prototypes/silicon-staff-arch.html" target="_blank" rel="noopener">
@@ -402,6 +517,7 @@ const courses = [
           <div class="cc-role">AI 产品专家 / PMO 主管 · ComfyUI + Lora 微调（10 万+ 数据）· ERP 业财融合</div>
           <div class="cc-metrics"><span>生图采纳率 65%→87% · 效率 +30%</span><span class="hl">ERP 整体效率 +60% · 核算准确率 +25% / 流程拉通 +40% · 两次集团战略奖</span></div>
           <div class="cc-mgmt">管理：带 20+ 人跨职能团队 · 公司年度优秀内训师（TOP 2/15）</div>
+          <div class="cc-cognition">对应认知 · AI 改造必须 owner 闭环，组织机制比工具本身更重要</div>
         </a>
       </div>
 
@@ -815,6 +931,121 @@ const courses = [
     .hero-stats span b { font-size: 17px; }
   }
 
+  /* 商业与 AI 认知 */
+  .cognition-quote {
+    margin: 0 0 34px;
+    padding: 30px 34px;
+    border: 1px solid rgba(251, 191, 36, .28);
+    border-radius: 16px;
+    background:
+      radial-gradient(700px 260px at 85% 10%, rgba(251, 191, 36, .13), transparent 62%),
+      linear-gradient(140deg, rgba(251, 191, 36, .07), rgba(125, 211, 252, .055));
+    font-family: var(--serif);
+    font-size: clamp(17px, 2.3vw, 22px);
+    font-weight: 700;
+    line-height: 1.85;
+    color: #fff;
+  }
+  .cognition-quote strong { color: var(--flare); }
+  .cognition-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  @media (min-width: 820px) {
+    .cognition-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  .cognition-card {
+    min-height: 260px;
+    border-color: rgba(251, 191, 36, .18);
+    background:
+      radial-gradient(420px 170px at 70% 0%, rgba(251, 191, 36, .06), transparent 68%),
+      linear-gradient(160deg, rgba(19, 28, 66, .55), rgba(7, 11, 31, .42));
+  }
+  .cog-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .cog-idx {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink3);
+    letter-spacing: .18em;
+  }
+  .cog-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--flare);
+    border: 1px solid rgba(251, 191, 36, .34);
+    border-radius: 999px;
+    padding: 3px 10px;
+    background: rgba(251, 191, 36, .07);
+    white-space: nowrap;
+  }
+  .cognition-card { display: flex; flex-direction: column; text-decoration: none; color: inherit; }
+  .cognition-card h3 { font-size: 18px; }
+  .cognition-card p { font-size: 13.5px; line-height: 1.75; flex: 1; }
+  .cog-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+  .cog-chips span { font-family: var(--mono); font-size: 11px; color: var(--ink2); border: 1px solid var(--line); border-radius: 6px; padding: 3px 8px; background: rgba(125, 211, 252, .05); }
+  .cog-link { margin-top: 13px; font-family: var(--mono); font-size: 12px; color: var(--star); }
+  a.cognition-card:hover .cog-link { color: var(--flare); }
+  .cognition-flow {
+    margin-top: 30px;
+    padding: 26px 28px;
+    border: 1px solid rgba(52, 211, 153, .22);
+    border-radius: 16px;
+    background: linear-gradient(140deg, rgba(52, 211, 153, .07), rgba(125, 211, 252, .05));
+  }
+  .cf-title {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 18px;
+  }
+  .cf-track {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .cf-track span {
+    flex: 1 1 150px;
+    min-width: 140px;
+    padding: 13px 12px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: rgba(7, 11, 31, .68);
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.55;
+    text-align: center;
+  }
+  .cf-track span em {
+    display: block;
+    margin-top: 4px;
+    font-family: var(--mono);
+    font-style: normal;
+    font-size: 10.5px;
+    font-weight: 400;
+    color: var(--aurora);
+  }
+  .cf-track b {
+    align-self: center;
+    color: var(--aurora);
+    font-family: var(--mono);
+    text-shadow: 0 0 12px rgba(52, 211, 153, .55);
+  }
+  @media (max-width: 760px) {
+    .cognition-quote { padding: 24px 22px; }
+    .cf-track { flex-direction: column; }
+    .cf-track b { transform: rotate(90deg); align-self: center; }
+  }
+
   /* Case Study 约束/权衡双栏 */
   .cs-grid {
     display: grid; grid-template-columns: 1fr 1fr; gap: 18px;
@@ -864,6 +1095,7 @@ const courses = [
   .cc-metrics span { font-family: var(--mono); font-size: 12.5px; color: var(--ink2); }
   .cc-metrics span.hl { color: #fff; font-weight: 600; }
   .cc-mgmt { font-size: 12px; color: var(--ink3); border-top: 1px solid var(--line); padding-top: 10px; }
+  .cc-cognition { font-size: 12px; color: var(--flare); margin-top: 8px; line-height: 1.55; }
   .cc-facets { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
   .cc-facets a {
     flex: 1; min-width: 200px; text-align: center; text-decoration: none;
