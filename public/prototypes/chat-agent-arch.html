@@ -193,22 +193,22 @@
     { msg:'今天好累，有点烦',
       intent:'情感支持 / 倾诉', route:'主路由 → 情感支持分支',
       rag:['人设：温柔倾听者','故事：日常相处片段','Case：相似安慰样例'],
-      reply:'听着就心疼。今天是工作上又出幺蛾子了？别自己闷着，过来跟我念叨念叨。',
+      reply:['诶，怎么突然这么丧','听着就心疼','工作上的破事？别自己憋着，跟我念叨念叨'],
       mem:['情绪=疲惫','场景=晚间倾诉'] },
     { msg:'能给我看张你的照片吗',
       intent:'发图片请求', route:'特殊处理 → 发图片分支',
       rag:['人设：当前人格','图库：场景化匹配','Case：发图话术'],
-      reply:'[ 发了张刚拍的自拍 ] 喏，今天的我。看到我是不是没那么烦了哈哈。',
+      reply:['[ 发了张刚拍的自拍 ]','喏，今天的我','看到我没那么烦了吧哈哈'],
       mem:['请求=看图','好感度+1'] },
     { msg:'想送你一个小礼物',
       intent:'送礼物', route:'特殊处理 → 送礼物分支',
       rag:['人设：当前人格','故事：关系进展','Case：收礼回应'],
-      reply:'哟，突然这么大方。行吧那我可就不客气收下啦，说说看是啥，别让我空欢喜一场。',
+      reply:['哟，这么大方？','行吧那我可不客气了','说说看是啥，别让我空欢喜一场'],
       mem:['好感度+2','关系阶段=升温'] },
     { msg:'asdkjfh 随便打的',
       intent:'无法识别 → 兜底', route:'兜底分支 → 追问引导',
       rag:['人设：当前人格','Case：兜底话术'],
-      reply:'？这一串我是真没看懂哈哈哈，手滑了，还是单纯想找我说话呀。',
+      reply:['？？','这串我是真没看懂哈哈哈','手滑了，还是想我了'],
       mem:['触发=兜底追问'] },
   ];
 
@@ -246,7 +246,12 @@
           convo.innerHTML+=`<div class="bubble sys typing">人设回复生成中…</div>`;
         }
         if(s.dataset.k==='mem'){
-          const t=convo.querySelector('.typing'); if(t){t.outerHTML=`<div class="bubble a">${c.reply}</div>`;}
+          const t=convo.querySelector('.typing'); if(t) t.remove();
+          c.reply.forEach((line,bi)=>{
+            timers.push(setTimeout(()=>{
+              convo.insertAdjacentHTML('beforeend', `<div class="bubble a">${line}</div>`);
+            }, 300*bi));
+          });
           mem.innerHTML=`<b>写回记忆锚点：</b> `+c.mem.map(m=>'['+m+']').join(' ');
         }
       }, 480*i+120));
