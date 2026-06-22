@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>capability field</title>
+<style>
+  html,body{margin:0;height:100%;background:transparent;overflow:hidden}
+  canvas{display:block;width:100vw;height:100vh}
+</style>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.module.js" } }
+</script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script type="module">
+import * as THREE from 'three';
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 1.6));
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(46, innerWidth/innerHeight, 0.1, 100);
+camera.position.set(0, 0, 9.4);
+const root = new THREE.Group();
+const mobile = innerWidth < 760;
+root.position.set(mobile ? 0 : 2.2, 0, 0);
+scene.add(root);
+
+const COUNT = mobile ? 4200 : 9000;
+const pos = new Float32Array(COUNT*3), sz = new Float32Array(COUNT);
+const gA = Math.PI*(3-Math.sqrt(5));
+for (let i=0;i<COUNT;i++){
+  const y = 1-(i/(COUNT-1))*2, r=Math.sqrt(1-y*y), th=gA*i, rad=3.1+(Math.random()-0.5)*0.7;
+  pos[i*3]=Math.cos(th)*r*rad; pos[i*3+1]=y*rad; pos[i*3+2]=Math.sin(th)*r*rad;
+  sz[i]=Math.random()*1.6+0.4;
+}
+const geo = new THREE.BufferGeometry();
+geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+geo.setAttribute('aSize', new THREE.BufferAttribute(sz,1));
+
+const tc = document.createElement('canvas'); tc.width=tc.height=64;
+const tx = tc.getContext('2d');
+const grd = tx.createRadialGradient(32,32,0,32,32,32);
+grd.addColorStop(0,'rgba(255,255,255,1)'); grd.addColorStop(0.4,'rgba(180,225,255,0.7)'); grd.addColorStop(1,'rgba(120,200,255,0)');
+tx.fillStyle=grd; tx.fillRect(0,0,64,64);
+const sprite = new THREE.CanvasTexture(tc);
+
+const mat = new THREE.ShaderMaterial({
+  uniforms:{ uTex:{value:sprite}, uA:{value:new THREE.Color('#7dd3fc')}, uB:{value:new THREE.Color('#a78bfa')}, uPx:{value:Math.min(devicePixelRatio,1.6)} },
+  transparent:true, depthWrite:false, blending:THREE.AdditiveBlending,
+  vertexShader:`attribute float aSize; varying vec3 vPos; uniform float uPx;
+    void main(){ vPos=normalize(position); vec4 mv=modelViewMatrix*vec4(position,1.0);
+    gl_PointSize=aSize*uPx*(125.0/-mv.z); gl_Position=projectionMatrix*mv; }`,
+  fragmentShader:`uniform sampler2D uTex; uniform vec3 uA; uniform vec3 uB; varying vec3 vPos;
+    void main(){ float t=smoothstep(-1.0,1.0,vPos.x+vPos.y); vec3 col=mix(uB,uA,t);
+    float a=texture2D(uTex,gl_PointCoord).a; gl_FragColor=vec4(col,a*0.42); }`
+});
+const points = new THREE.Points(geo, mat);
+points.rotation.set(-0.15,0,0.08);
+root.add(points);
+
+const ring = new THREE.Mesh(new THREE.RingGeometry(4.3,4.32,128),
+  new THREE.MeshBasicMaterial({color:0x7dd3fc,transparent:true,opacity:0.08,side:THREE.DoubleSide}));
+ring.rotation.x=Math.PI*0.46; root.add(ring);
+
+let px=0,py=0,tx2=0,ty2=0;
+addEventListener('message',(e)=>{ if(e.data&&e.data.t==='pointer'){px=e.data.x;py=e.data.y;} });
+addEventListener('mousemove',(e)=>{ px=(e.clientX/innerWidth-0.5); py=(e.clientY/innerHeight-0.5); });
+
+function resize(){ renderer.setSize(innerWidth,innerHeight,false); camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); }
+resize(); addEventListener('resize',resize);
+
+const clock = new THREE.Clock();
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+(function loop(){
+  requestAnimationFrame(loop);
+  const dt = clock.getDelta();
+  if(!reduce) points.rotation.y += dt*0.06;
+  tx2 += (px*0.5 - tx2)*0.05; ty2 += (-py*0.35 - ty2)*0.05;
+  points.rotation.x = -0.15 + ty2; points.rotation.z = 0.08 + tx2*0.3;
+  ring.rotation.z += dt*0.04;
+  renderer.render(scene,camera);
+})();
+</script>
+</body>
+</html>

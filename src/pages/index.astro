@@ -756,8 +756,14 @@ const courses = [
 
 
   <!-- ════════════ CH.08 · 极客雷达 ════════════ -->
-  <section class="chapter" id="geek">
-    <div class="wrap">
+  <section class="chapter geek-chapter" id="geek">
+    <div class="geek-particles" aria-hidden="true">
+      <iframe src="/geek-sphere.html" title="" loading="lazy" scrolling="no" tabindex="-1"></iframe>
+      <span class="gp-corner c-tl"></span><span class="gp-corner c-tr"></span>
+      <span class="gp-corner c-bl"></span><span class="gp-corner c-br"></span>
+      <span class="gp-tag">CAPABILITY FIELD · LIVE</span>
+    </div>
+    <div class="wrap" style="position:relative;z-index:1">
       <div class="chapter-head reveal">
         <div class="ch-no"><em>08</em> CAPABILITIES</div>
         <h2>工程能力 · 全部在真实工作流里跑着</h2>
@@ -1133,6 +1139,24 @@ const courses = [
   .lab-portal p { font-size: 13.5px; color: var(--ink2); line-height: 1.7; }
   .lp-cta { display: inline-block; margin-top: 14px; font-family: var(--mono); font-size: 13px; color: var(--star); }
   .lab-portal:hover .lp-cta { color: #fff; }
+
+  /* 工程能力区粒子背景容器（iframe 嵌入独立粒子球页）*/
+  .geek-chapter { position: relative; }
+  .geek-particles {
+    position: absolute; top: -30px; left: 0; right: 0; height: 660px;
+    z-index: 0; pointer-events: none; overflow: hidden;
+    -webkit-mask-image: linear-gradient(180deg, #000 62%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 62%, transparent 100%);
+  }
+  .geek-particles iframe { width: 100%; height: 100%; border: 0; display: block; background: transparent; }
+  .geek-particles .gp-corner { position: absolute; width: 20px; height: 20px; border: 1px solid rgba(125,211,252,.3); }
+  .geek-particles .gp-corner.c-tl { top: 44px; left: 14px; border-right: 0; border-bottom: 0; }
+  .geek-particles .gp-corner.c-tr { top: 44px; right: 14px; border-left: 0; border-bottom: 0; }
+  .geek-particles .gp-corner.c-bl { bottom: 14px; left: 14px; border-right: 0; border-top: 0; }
+  .geek-particles .gp-corner.c-br { bottom: 14px; right: 14px; border-left: 0; border-top: 0; }
+  .geek-particles .gp-tag { position: absolute; top: 46px; right: 42px; font-family: var(--mono); font-size: 10px; letter-spacing: .16em; color: rgba(125,211,252,.45); }
+  /* 卡片在粒子上方要更实一点，保证可读性 */
+  .geek-chapter .method-card { background: rgba(7, 11, 31, .66); backdrop-filter: blur(3px); }
   .cc-facets { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
   .cc-facets a {
     flex: 1; min-width: 200px; text-align: center; text-decoration: none;
