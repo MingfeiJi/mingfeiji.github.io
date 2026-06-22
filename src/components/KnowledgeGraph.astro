@@ -7,6 +7,14 @@ const { height = '72vh' } = Astro.props;
 
 <div class="kg-shell" style={`height:${height}`}>
   <canvas id="kg-canvas"></canvas>
+  <div class="kg-hud" aria-hidden="true">
+    <span class="kg-corner c-tl"></span>
+    <span class="kg-corner c-tr"></span>
+    <span class="kg-corner c-bl"></span>
+    <span class="kg-corner c-br"></span>
+    <span class="kg-scan"></span>
+    <span class="kg-coord">KNOWLEDGE GRAPH · LIVE</span>
+  </div>
   <div class="kg-legend">
     <span><i style="background:#fbbf24"></i>投资概念</span>
     <span><i style="background:#7dd3fc"></i>AI 概念</span>
@@ -81,9 +89,12 @@ const { height = '72vh' } = Astro.props;
       const [x1, y1] = toScreen(s.x!, s.y!);
       const [x2, y2] = toScreen(t.x!, t.y!);
       const active = hovered && (s === hovered || t === hovered);
-      ctx.strokeStyle = active ? 'rgba(125,211,252,.65)' : 'rgba(125,211,252,.13)';
+      ctx.strokeStyle = active ? 'rgba(125,211,252,.7)' : 'rgba(125,211,252,.12)';
+      ctx.shadowColor = active ? 'rgba(125,211,252,.9)' : 'transparent';
+      ctx.shadowBlur = active ? 6 : 0;
       ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
     }
+    ctx.shadowBlur = 0;
 
     // 节点
     for (const n of nodes) {
@@ -191,6 +202,26 @@ const { height = '72vh' } = Astro.props;
     overflow: hidden;
   }
   #kg-canvas { position: absolute; inset: 0; cursor: grab; touch-action: none; }
+
+  /* —— HUD 叠层（向 WebGL 实验室质感靠拢，克制不抢图谱）—— */
+  .kg-hud { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+  .kg-corner { position: absolute; width: 22px; height: 22px; border: 1px solid rgba(125, 211, 252, .35); }
+  .kg-corner.c-tl { top: 12px; left: 12px; border-right: 0; border-bottom: 0; }
+  .kg-corner.c-tr { top: 12px; right: 12px; border-left: 0; border-bottom: 0; }
+  .kg-corner.c-bl { bottom: 12px; left: 12px; border-right: 0; border-top: 0; }
+  .kg-corner.c-br { bottom: 12px; right: 12px; border-left: 0; border-top: 0; }
+  .kg-coord {
+    position: absolute; top: 14px; right: 44px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: .16em;
+    color: rgba(125, 211, 252, .5);
+  }
+  .kg-scan {
+    position: absolute; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(125, 211, 252, .5), transparent);
+    opacity: .35; animation: kg-scan 7s linear infinite;
+  }
+  @keyframes kg-scan { 0% { top: 4%; } 50% { top: 96%; } 100% { top: 4%; } }
+  @media (prefers-reduced-motion: reduce) { .kg-scan { animation: none; opacity: .12; } }
   .kg-legend {
     position: absolute; top: 16px; left: 18px;
     display: flex; flex-wrap: wrap; gap: 12px;
