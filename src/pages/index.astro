@@ -779,6 +779,16 @@ const courses = [
         ))}
       </div>
 
+      <a class="lab-portal reveal" href="/lab/">
+        <div class="lp-glow" aria-hidden="true"></div>
+        <div class="lp-body">
+          <div class="lp-kick">WEBGL · INTERACTIVE LAB</div>
+          <h3>进实验室 · WebGL 粒子舞台</h3>
+          <p>用 Three.js 粒子球 + GSAP 场景叙事承载我的 AI 产品代表作——滚动驱动、可交互。这一页本身就是"工程能力在真实工作流里跑着"的证据。</p>
+          <span class="lp-cta">沉浸式探索 ↗</span>
+        </div>
+      </a>
+
     </div>
   </section>
 
@@ -1096,6 +1106,33 @@ const courses = [
   .cc-metrics span.hl { color: #fff; font-weight: 600; }
   .cc-mgmt { font-size: 12px; color: var(--ink3); border-top: 1px solid var(--line); padding-top: 10px; }
   .cc-cognition { font-size: 12px; color: var(--flare); margin-top: 8px; line-height: 1.55; }
+
+  /* 实验室入口横幅 */
+  .lab-portal {
+    display: block; position: relative; margin-top: 30px; padding: 30px 32px;
+    border: 1px solid rgba(125, 211, 252, .28); border-radius: 16px; overflow: hidden;
+    text-decoration: none; color: inherit;
+    background:
+      radial-gradient(620px 240px at 82% -10%, rgba(52, 211, 153, .14), transparent 64%),
+      radial-gradient(520px 220px at 8% 120%, rgba(125, 211, 252, .12), transparent 60%),
+      linear-gradient(150deg, rgba(19, 28, 66, .5), rgba(7, 11, 31, .55));
+    transition: .3s;
+  }
+  .lab-portal:hover { border-color: var(--star); transform: translateY(-3px); box-shadow: 0 18px 54px rgba(125, 211, 252, .16); }
+  .lab-portal .lp-glow {
+    position: absolute; inset: 0; pointer-events: none; opacity: .5;
+    background-image:
+      radial-gradient(circle at 70% 30%, rgba(255,255,255,.5) 0 1px, transparent 1.6px),
+      radial-gradient(circle at 88% 64%, rgba(125,211,252,.5) 0 1px, transparent 1.6px),
+      radial-gradient(circle at 60% 80%, rgba(52,211,153,.4) 0 1px, transparent 1.6px);
+    background-size: 180px 180px, 240px 240px, 200px 200px;
+  }
+  .lab-portal .lp-body { position: relative; max-width: 680px; }
+  .lp-kick { font-family: var(--mono); font-size: 11px; letter-spacing: .22em; color: var(--aurora, #34d399); }
+  .lab-portal h3 { font-family: var(--serif); font-size: 22px; color: #fff; margin: 10px 0 8px; }
+  .lab-portal p { font-size: 13.5px; color: var(--ink2); line-height: 1.7; }
+  .lp-cta { display: inline-block; margin-top: 14px; font-family: var(--mono); font-size: 13px; color: var(--star); }
+  .lab-portal:hover .lp-cta { color: #fff; }
   .cc-facets { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
   .cc-facets a {
     flex: 1; min-width: 200px; text-align: center; text-decoration: none;
