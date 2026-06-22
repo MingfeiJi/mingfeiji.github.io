@@ -585,28 +585,25 @@ html[data-theme="klein"] .btn.primary { background: #fff; color: #002FA7; box-sh
 html[data-theme="klein"] .chip { color: #fff; border-color: rgba(255,255,255,.4); background: rgba(255,255,255,.08); }
 html[data-theme="klein"] .hero h1 { font-style: italic; }
 
-/* ───── 🟢 终端绿磷 ───── */
-html[data-theme="terminal"] {
-  --space-0: #030806; --space-1: #07120c; --space-2: #0a1a10; --space-3: #0c1f14;
-  --ink: #c2f5d3; --ink2: #7dd3a0; --ink3: #3f7a58;
-  --star: #34ff88; --nebula: #34ff88; --flare: #ffe14d; --aurora: #34ff88; --rose: #ff6b6b;
-  --line: rgba(52, 255, 136, .18); --line2: rgba(52, 255, 136, .3);
+/* ───── 🛰 全息粒子 · HUD ───── */
+html[data-theme="hud"] {
+  --space-0: #04060f; --space-1: #070b1a; --space-2: #0a1124; --space-3: #0d162e;
+  --ink: #e6f3ff; --ink2: #9db4d6; --ink3: #56678c;
+  --star: #7dd3fc; --nebula: #a78bfa; --flare: #38e8d0; --aurora: #34d399; --rose: #fb7185;
+  --line: rgba(125, 211, 252, .18); --line2: rgba(125, 211, 252, .34);
   --serif: "JetBrains Mono", "LXGW WenKai", monospace;
-  --glow-star: 0 0 20px rgba(52, 255, 136, .35);
+  --glow-star: 0 0 22px rgba(125, 211, 252, .4);
 }
-html[data-theme="terminal"] body {
-  background-image: repeating-linear-gradient(0deg, transparent 0 2px, rgba(52, 255, 136, .015) 2px 4px);
+html[data-theme="hud"] :is(.hero h1, .chapter-head h2, .epigraph) {
+  background: linear-gradient(120deg, var(--star), var(--nebula));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; filter: none;
+  text-shadow: 0 0 30px rgba(125, 211, 252, .28);
 }
-html[data-theme="terminal"] :is(.hero h1, .chapter-head h2, .epigraph) {
-  background: none; -webkit-text-fill-color: var(--star); filter: none;
-  text-shadow: 0 0 24px rgba(52, 255, 136, .4);
+html[data-theme="hud"] :is(.card, .proto-item, .lib-series, .archive-box, .kg-shell, .flagship-quote, .pipeline, .dial) {
+  background: rgba(10, 17, 36, .72);
 }
-html[data-theme="terminal"] .hero h1::after { content: '_'; animation: blink 1.1s steps(1) infinite; }
-@keyframes blink { 50% { opacity: 0; } }
-html[data-theme="terminal"] :is(.card, .proto-item, .lib-series, .archive-box, .kg-shell, .flagship-quote, .pipeline, .dial) {
-  background: rgba(7, 18, 12, .75);
-}
-html[data-theme="terminal"] .card h3 { color: var(--star); }
+html[data-theme="hud"] .card h3 { color: var(--star); }
 
 /* ───── 🎨 主题切换器 ───── */
 .theme-fab {
@@ -720,33 +717,49 @@ html[data-theme="klein"] .chapter-head .ch-no em { color: #ffe14d; }
 html[data-theme="klein"] .btn { border-radius: 2px; }
 html[data-theme="klein"] .dial .num { color: #ffe14d; text-shadow: none; }
 
-/* ───── 🟢 终端绿磷 · CRT 暗角 + 流动扫描带 + 提示符 ───── */
-html[data-theme="terminal"] body::before {
+/* ───── 🛰 全息粒子 · HUD · 扫描线 + 网格 + 坐标十字 + 卡片角框 ───── */
+html[data-theme="hud"] body::before {
   content: ''; position: fixed; inset: 0; z-index: 2; pointer-events: none;
-  background: radial-gradient(ellipse 120% 90% at 50% 45%, transparent 60%, rgba(0, 0, 0, .5) 100%);
+  background:
+    radial-gradient(ellipse 130% 95% at 50% 45%, transparent 62%, rgba(2, 4, 12, .55) 100%),
+    linear-gradient(rgba(125, 211, 252, .03) 1px, transparent 1px) 0 0 / 100% 46px,
+    linear-gradient(90deg, rgba(125, 211, 252, .03) 1px, transparent 1px) 0 0 / 46px 100%;
 }
-html[data-theme="terminal"] body::after {
-  content: ''; position: fixed; left: 0; right: 0; height: 140px; z-index: 2; pointer-events: none;
-  background: linear-gradient(180deg, transparent, rgba(52, 255, 136, .035), transparent);
-  animation: crt-sweep 7s linear infinite;
+html[data-theme="hud"] body::after {
+  content: ''; position: fixed; left: 0; right: 0; height: 1px; z-index: 2; pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(125, 211, 252, .55), transparent);
+  box-shadow: 0 0 10px rgba(125, 211, 252, .4);
+  animation: hud-scan 7.5s linear infinite;
 }
-@keyframes crt-sweep { from { top: -150px; } to { top: 100vh; } }
-html[data-theme="terminal"] .hero .kicker::before { content: '$ whoami — '; }
-html[data-theme="terminal"] .chapter-head .ch-no::before {
-  content: '>'; width: auto; height: auto; background: none;
-  color: var(--star); font-weight: 700; font-size: 15px;
+@keyframes hud-scan { from { top: -2px; } to { top: 100vh; } }
+@media (prefers-reduced-motion: reduce) { html[data-theme="hud"] body::after { animation: none; opacity: .25; } }
+html[data-theme="hud"] .hero .kicker::before { content: '◰ '; color: var(--star); }
+html[data-theme="hud"] .chapter-head .ch-no::before {
+  content: '✛'; width: auto; height: auto; background: none;
+  color: var(--star); font-weight: 700; font-size: 14px; margin-right: 4px;
 }
-html[data-theme="terminal"] :is(.card, .proto-item, .dial, .lib-series, .archive-box, .btn, .chip) { border-radius: 0; }
-html[data-theme="terminal"] .card { border: 1px solid rgba(52, 255, 136, .25); }
-html[data-theme="terminal"] .card:hover {
+html[data-theme="hud"] :is(.card, .proto-item, .dial, .lib-series, .archive-box, .btn) { border-radius: 8px; }
+html[data-theme="hud"] .card {
+  border: 1px solid rgba(125, 211, 252, .2); position: relative;
+}
+/* 卡片四角 HUD 角标 */
+html[data-theme="hud"] .card::after {
+  content: ''; position: absolute; top: 7px; left: 7px; width: 11px; height: 11px;
+  border-top: 1px solid rgba(125, 211, 252, .5); border-left: 1px solid rgba(125, 211, 252, .5);
+  pointer-events: none; transition: .25s;
+}
+html[data-theme="hud"] .card:hover {
   border-color: var(--star);
-  box-shadow: 0 0 0 1px var(--star), 0 0 36px rgba(52, 255, 136, .25);
-  transform: none;
+  box-shadow: 0 0 0 1px rgba(125, 211, 252, .5), 0 14px 44px rgba(125, 211, 252, .16);
 }
-html[data-theme="terminal"] .card h3::before { content: '▸ '; color: var(--star); }
-html[data-theme="terminal"] .nav-logo::before { content: '~/'; font-family: var(--mono); color: var(--ink3); font-size: 14px; }
-html[data-theme="terminal"] .dial .num { color: var(--star); text-shadow: 0 0 18px rgba(52, 255, 136, .5); }
-html[data-theme="terminal"] #voyage-progress { background: var(--star); box-shadow: 0 0 12px var(--star); }
+html[data-theme="hud"] .card:hover::after { top: 5px; left: 5px; border-color: var(--star); }
+html[data-theme="hud"] .card h3::before { content: '▸ '; color: var(--star); }
+html[data-theme="hud"] .nav-logo::before { content: '◈ '; font-family: var(--mono); color: var(--star); font-size: 13px; }
+html[data-theme="hud"] .dial .num { color: var(--star); text-shadow: 0 0 18px rgba(125, 211, 252, .55); }
+html[data-theme="hud"] #voyage-progress { background: linear-gradient(90deg, var(--star), var(--nebula)); box-shadow: 0 0 12px var(--star); }
+/* 章节小标编号用青蓝 */
+html[data-theme="hud"] .ch-no { color: var(--star); }
+html[data-theme="hud"] .chip { border-color: rgba(125, 211, 252, .3); }
 
 /* ───── ⬜️ 月白极简 · 细网格 + 发丝线 + 克制阴影 ───── */
 html[data-theme="snow"] body::before {
