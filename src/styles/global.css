@@ -604,6 +604,14 @@ html[data-theme="hud"] :is(.card, .proto-item, .lib-series, .archive-box, .kg-sh
   background: rgba(10, 17, 36, .72);
 }
 html[data-theme="hud"] .card h3 { color: var(--star); }
+/* 全息粒子背景层 */
+#hud-field { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0; transition: opacity 1.2s ease;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,.35) 30%, #000 60%);
+  mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,.35) 30%, #000 60%); }
+#hud-field iframe { width: 100%; height: 100%; border: 0; background: transparent; }
+html[data-theme="hud"] #hud-field { opacity: 1; }
+/* HUD 主题下把原星空压暗，让粒子场成为主角 */
+html[data-theme="hud"] #cosmos { opacity: .4; transition: opacity 1s; }
 
 /* ───── 🎨 主题切换器 ───── */
 .theme-fab {

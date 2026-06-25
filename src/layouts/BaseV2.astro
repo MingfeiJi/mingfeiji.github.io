@@ -40,6 +40,7 @@ const {
   <body>
     <div id="voyage-progress"></div>
     <Cosmos />
+    <div id="hud-field" aria-hidden="true"></div>
 
     <nav class="nav">
       <div class="nav-inner">
@@ -102,9 +103,32 @@ const {
       const fab = document.getElementById('theme-fab')!;
       const panel = document.getElementById('theme-panel')!;
       const themeOpts = panel.querySelectorAll<HTMLButtonElement>('.theme-opt');
+      // 全息粒子主题：按需注入粒子场 iframe（只有该主题才加载这个重特效）
+      const hudHost = document.getElementById('hud-field')!;
+      function syncHudField() {
+        const isHud = document.documentElement.getAttribute('data-theme') === 'hud';
+        const has = hudHost.querySelector('iframe');
+        if (isHud && !has) {
+          const f = document.createElement('iframe');
+          f.src = '/hud-field.html';
+          f.setAttribute('tabindex', '-1');
+          f.setAttribute('scrolling', 'no');
+          f.setAttribute('aria-hidden', 'true');
+          hudHost.appendChild(f);
+        } else if (!isHud && has) {
+          hudHost.innerHTML = '';
+        }
+      }
+      // 把整页鼠标坐标转发给粒子场 iframe（它在背景层收不到鼠标）
+      addEventListener('pointermove', (e) => {
+        const f = hudHost.querySelector('iframe');
+        if (f && f.contentWindow) f.contentWindow.postMessage({ t: 'pointer', x: e.clientX / innerWidth - 0.5, y: e.clientY / innerHeight - 0.5 }, '*');
+      }, { passive: true });
+
       function markActive() {
         const cur = document.documentElement.getAttribute('data-theme') || 'cosmos';
         themeOpts.forEach((o) => o.classList.toggle('active', o.dataset.t === cur));
+        syncHudField();
       }
       markActive();
       fab.addEventListener('click', (e) => { e.stopPropagation(); panel.classList.toggle('open'); });
