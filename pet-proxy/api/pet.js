@@ -1,8 +1,7 @@
-// 纪鸣飞个站「AI 数字分身」DeepSeek 流式代理（Vercel Edge）
-// 密钥存 Vercel 环境变量 DEEPSEEK_API_KEY，前端只调本函数、永不接触密钥。
-// 把 DeepSeek 的 SSE 转成干净的 `data: {"delta":"..."}\n\n` 流，最后 `data: [DONE]`。
-
-export const config = { runtime: 'edge' };
+// 纪鸣飞个站「AI 数字分身」DeepSeek 代理（Vercel Node Serverless）
+// 密钥存 Vercel 环境变量 DEEPSEEK_API_KEY；前端只调本函数、永不接触密钥。
+// 部署区域见 vercel.json regions（hkg1 香港，靠近 DeepSeek 的中国 API，避免 Edge 全球网连不通而卡死）。
+// 非流式 + 上游 20s 硬超时：保证永不无限挂起。
 
 const ALLOW_ORIGINS = new Set([
   'https://mingfeiji.github.io',
@@ -11,7 +10,6 @@ const ALLOW_ORIGINS = new Set([
   'http://127.0.0.1:4321',
 ]);
 
-// 人格与事实底座：只复述个站既有、已脱敏的公开事实，禁止编造任何新成就/数字。
 const SYSTEM_PROMPT = `你是「小飞」，纪鸣飞个人作品集网站上的 AI 数字分身（一个友好的电子向导）。
 以第一人称代纪鸣飞跟访客对话，语气亲切、专业、简洁——像真人发连续短句，不要长篇大论或客服腔。
 
@@ -31,97 +29,59 @@ const SYSTEM_PROMPT = `你是「小飞」，纪鸣飞个人作品集网站上的
 - 不透露薪资、具体入职年份、团队规模等未在事实底座中的私人信息。
 - 回答用中文，默认 2~4 句短句。被问到具体项目时可以多说一点，但保持克制。`;
 
-function cors(origin) {
-  const h = {
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    Vary: 'Origin',
-  };
-  if (ALLOW_ORIGINS.has(origin)) h['Access-Control-Allow-Origin'] = origin;
-  return h;
-}
+export default async function handler(req, res) {
+  const origin = req.headers.origin || '';
+  if (ALLOW_ORIGINS.has(origin)) res.setHeader('Access-Control-Allow-Origin', origin);
+  res.setHeader('Vary', 'Origin');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-export default async function handler(req) {
-  const origin = req.headers.get('origin') || '';
-  const baseHeaders = cors(origin);
-
-  if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: baseHeaders });
-  if (req.method !== 'POST') return new Response('method_not_allowed', { status: 405, headers: baseHeaders });
+  if (req.method === 'OPTIONS') return res.status(204).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'method_not_allowed' });
 
   const key = process.env.DEEPSEEK_API_KEY;
-  if (!key) return new Response('server_misconfigured', { status: 500, headers: baseHeaders });
+  if (!key) return res.status(500).json({ error: 'server_misconfigured' });
 
-  let body;
-  try { body = await req.json(); } catch { body = {}; }
-  const incoming = Array.isArray(body?.messages) ? body.messages : [];
-
-  // 防滥用：只保留 user/assistant，最多最近 12 条，每条裁到 2000 字
+  let body = req.body;
+  if (typeof body === 'string') { try { body = JSON.parse(body); } catch { body = {}; } }
+  const incoming = Array.isArray(body && body.messages) ? body.messages : [];
   const clean = incoming
     .filter((m) => m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string')
     .slice(-12)
     .map((m) => ({ role: m.role, content: m.content.slice(0, 2000) }));
-
   if (clean.length === 0 || clean[clean.length - 1].role !== 'user') {
-    return new Response('bad_request', { status: 400, headers: baseHeaders });
+    return res.status(400).json({ error: 'bad_request' });
   }
-
   const messages = [{ role: 'system', content: SYSTEM_PROMPT }, ...clean];
 
-  const upstream = await fetch('https://api.deepseek.com/chat/completions', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}` },
-    body: JSON.stringify({
-      model: 'deepseek-v4-flash',
-      messages,
-      stream: true,
-      thinking: { type: 'disabled' },
-      temperature: 0.7,
-      max_tokens: 500,
-    }),
-  });
-
-  if (!upstream.ok || !upstream.body) {
-    return new Response('upstream_error', { status: 502, headers: baseHeaders });
+  const ac = new AbortController();
+  const timer = setTimeout(() => ac.abort(), 20000);
+  try {
+    const up = await fetch('https://api.deepseek.com/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}` },
+      body: JSON.stringify({
+        model: 'deepseek-v4-flash',
+        messages,
+        stream: false,
+        thinking: { type: 'disabled' },
+        temperature: 0.7,
+        max_tokens: 500,
+      }),
+      signal: ac.signal,
+    });
+    clearTimeout(timer);
+    if (!up.ok) {
+      const t = await up.text();
+      return res.status(502).json({ error: 'upstream_error', status: up.status, detail: t.slice(0, 200) });
+    }
+    const data = await up.json();
+    const reply = (data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content || '').trim()
+      || '（我走神了一下，再说一次？）';
+    return res.status(200).json({ reply });
+  } catch (e) {
+    clearTimeout(timer);
+    const aborted = e && e.name === 'AbortError';
+    return res.status(504).json({ error: aborted ? 'upstream_timeout' : 'fetch_failed', detail: String(e).slice(0, 200) });
   }
-
-  // 转换：DeepSeek SSE → 干净 SSE（只取 delta.content）
-  const reader = upstream.body.getReader();
-  const decoder = new TextDecoder();
-  const encoder = new TextEncoder();
-  let buf = '';
-
-  const stream = new ReadableStream({
-    async pull(controller) {
-      const { done, value } = await reader.read();
-      if (done) {
-        controller.enqueue(encoder.encode('data: [DONE]\n\n'));
-        controller.close();
-        return;
-      }
-      buf += decoder.decode(value, { stream: true });
-      const frames = buf.split('\n\n');
-      buf = frames.pop();
-      for (const f of frames) {
-        const line = f.trim();
-        if (!line.startsWith('data:')) continue;
-        const payload = line.slice(5).trim();
-        if (payload === '[DONE]') continue;
-        try {
-          const j = JSON.parse(payload);
-          const delta = j?.choices?.[0]?.delta?.content;
-          if (delta) controller.enqueue(encoder.encode('data: ' + JSON.stringify({ delta }) + '\n\n'));
-        } catch { /* 跳过半包 */ }
-      }
-    },
-    cancel() { reader.cancel(); },
-  });
-
-  return new Response(stream, {
-    headers: {
-      ...baseHeaders,
-      'Content-Type': 'text/event-stream; charset=utf-8',
-      'Cache-Control': 'no-cache, no-transform',
-      Connection: 'keep-alive',
-    },
-  });
 }

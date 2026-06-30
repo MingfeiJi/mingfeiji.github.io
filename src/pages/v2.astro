@@ -1093,39 +1093,20 @@ const courses = [
           botSay(lines, function () { history.push({ role: 'assistant', content: lines.join(' ') }); busy = false; });
           return;
         }
-        // 真·AI：流式逐字渲染
-        var t = typing(), bubble = null, acc = '';
-        function feed(text) {
-          if (!bubble) { t.remove(); bubble = addBubble('bot', ''); }
-          acc += text; bubble.textContent = acc; scrollDown();
-        }
-        function finish() {
-          t.remove();
-          if (!bubble) { acc = '（我走神了一下，再说一次？）'; addBubble('bot', acc); }
-          history.push({ role: 'assistant', content: acc }); busy = false;
-        }
+        // 真·AI：非流式（后端返回 {reply}），按短句拆成多气泡，更像真人
+        var t = typing();
         fetch(endpoint, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ messages: history.slice(-12) }),
         }).then(function (resp) {
-          if (!resp.ok || !resp.body) throw new Error('bad');
-          var reader = resp.body.getReader(), dec = new TextDecoder(), sbuf = '';
-          (function pump() {
-            return reader.read().then(function (r) {
-              if (r.done) return finish();
-              sbuf += dec.decode(r.value, { stream: true });
-              var frames = sbuf.split('\n\n'); sbuf = frames.pop();
-              frames.forEach(function (f) {
-                var line = f.trim(); if (line.indexOf('data:') !== 0) return;
-                var p = line.slice(5).trim();
-                if (p === '[DONE]') return;
-                try { var j = JSON.parse(p); if (j.delta) feed(j.delta); } catch (e) {}
-              });
-              return pump();
-            });
-          })();
+          return resp.json().catch(function () { return {}; });
+        }).then(function (d) {
+          t.remove();
+          var reply = (d && d.reply) ? String(d.reply) : '（我走神了一下，再说一次？）';
+          var parts = reply.split(/\n+/).filter(Boolean);
+          botSay(parts.length ? parts : [reply], function () { history.push({ role: 'assistant', content: reply }); busy = false; });
         }).catch(function () {
-          t.remove(); if (!bubble) addBubble('bot', '网络有点闹脾气，稍后再试～'); busy = false;
+          t.remove(); addBubble('bot', '网络有点闹脾气，稍后再试～'); busy = false;
         });
       }
 
