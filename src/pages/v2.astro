@@ -222,6 +222,8 @@ const courses = [
 ---
 
 <Base>
+  <a href="#top" class="skip-link">跳到主要内容</a>
+  <div class="v2-scope">
   <!-- 右栏章节导航（scroll-spy）-->
   <nav class="rail" aria-label="章节导航">
     <a class="rail-item" href="#voyage" data-spy="voyage"><i></i><b>01</b><span>成果</span></a>
@@ -967,6 +969,7 @@ const courses = [
       </div>
     </div>
   </section>
+  </div><!-- /v2-scope -->
 
   <script is:inline>
     (function () {
@@ -1556,4 +1559,17 @@ const courses = [
   .dial .num { font-size: var(--fs-stat); }
   .t-item h3 { font-size: var(--fs-h3); }
   .card h3 { font-size: var(--fs-h4); }
+
+  /* ── R3 可访问性（作用域限 v2；--ink3 提到 WCAG AA ≥4.5）── */
+  .v2-scope { --ink3: #7e88b3; }
+  .v2-scope :focus-visible {
+    outline: 2px solid var(--star); outline-offset: 2px; border-radius: 5px;
+  }
+  .skip-link {
+    position: fixed; top: 10px; left: 10px; z-index: 200; transform: translateY(-160%);
+    background: var(--star); color: #04060f; font-family: var(--mono); font-size: 13px; font-weight: 700;
+    padding: 9px 15px; border-radius: 9px; text-decoration: none; transition: transform .2s;
+    box-shadow: 0 8px 24px rgba(0,0,0,.4);
+  }
+  .skip-link:focus { transform: none; outline: none; }
 </style>
