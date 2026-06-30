@@ -226,6 +226,7 @@ const courses = [
   <div class="v2-scope">
   <!-- 右栏章节导航（scroll-spy）-->
   <nav class="rail" aria-label="章节导航">
+    <span class="rail-track" aria-hidden="true"><span class="rail-fill" id="rail-fill"></span></span>
     <a class="rail-item" href="#voyage" data-spy="voyage"><i></i><b>01</b><span>成果</span></a>
     <a class="rail-item" href="#flagship" data-spy="flagship"><i></i><b>02</b><span>旗舰</span></a>
     <a class="rail-item" href="#cognition" data-spy="cognition"><i></i><b>03</b><span>认知</span></a>
@@ -976,6 +977,7 @@ const courses = [
       var rail = document.querySelector('.rail');
       if (!rail) return;
       var items = Array.prototype.slice.call(rail.querySelectorAll('.rail-item'));
+      var fill = rail.querySelector('.rail-fill');
       var map = {};
       items.forEach(function (a) { map[a.getAttribute('data-spy')] = a; });
       var ids = items.map(function (a) { return a.getAttribute('data-spy'); });
@@ -1000,6 +1002,8 @@ const courses = [
         if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) best = ids[ids.length - 1];
         setActive(best);
         rail.classList.toggle('show', scrollY > innerHeight * 0.6);
+        var max = document.documentElement.scrollHeight - innerHeight;
+        if (fill && max > 0) fill.style.height = Math.max(0, Math.min(100, (scrollY / max) * 100)) + '%';
       }
       // 平滑跳转 + 尊重 reduced-motion
       var smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1463,6 +1467,11 @@ const courses = [
     display: flex; flex-direction: column; gap: 2px; padding: 6px 4px;
     opacity: 0; pointer-events: none; transition: opacity .6s ease; }
   .rail.show { opacity: 1; pointer-events: auto; }
+  .rail-track { position: absolute; right: -7px; top: 7px; bottom: 7px; width: 2px;
+    background: var(--line); border-radius: 2px; overflow: hidden; }
+  .rail-fill { position: absolute; top: 0; left: 0; width: 100%; height: 0;
+    background: linear-gradient(180deg, var(--star), var(--nebula));
+    box-shadow: 0 0 6px var(--star); }
   .rail-item { position: relative; display: flex; align-items: center; justify-content: flex-end;
     gap: 10px; height: 26px; padding-right: 2px; text-decoration: none; cursor: pointer; }
   .rail-item i { width: 22px; height: 1.5px; border-radius: 2px; background: var(--ink3);
