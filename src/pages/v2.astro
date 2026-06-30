@@ -1549,4 +1549,11 @@ const courses = [
   .pet-panel.below.right { transform-origin: right top; }
   @media (max-width: 560px) { .pet-hi { display: none; } }
   @media (prefers-reduced-motion: reduce) { .pet-fab { animation: none; } .pet-panel { animation: none; } }
+
+  /* ── R2 字阶统一（v2 沙盒内验证；桌面≈原值，移动端流式收敛）── */
+  .hero h1 { font-size: var(--fs-display); }
+  .chapter-head h2 { font-size: var(--fs-h2); }
+  .dial .num { font-size: var(--fs-stat); }
+  .t-item h3 { font-size: var(--fs-h3); }
+  .card h3 { font-size: var(--fs-h4); }
 </style>

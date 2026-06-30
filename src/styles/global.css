@@ -23,6 +23,12 @@
   --body-font: "LXGW WenKai", "PingFang SC", sans-serif;
   --mono: "JetBrains Mono", "SF Mono", "Menlo", monospace;
   --maxw: 1120px;
+  /* 字阶（流式 token；桌面上限≈原值→桌面观感不变，移动端自动收敛）*/
+  --fs-display: clamp(52px, 10vw, 110px);
+  --fs-h2: clamp(30px, 5vw, 46px);
+  --fs-h3: clamp(20px, 2.6vw, 23px);
+  --fs-h4: clamp(16.5px, 2vw, 19px);
+  --fs-stat: clamp(27px, 6vw, 38px);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
