@@ -983,7 +983,11 @@ const courses = [
       function setActive(id) {
         if (id === current) return;
         current = id;
-        items.forEach(function (a) { a.classList.toggle('active', a.getAttribute('data-spy') === id); });
+        items.forEach(function (a) {
+          var on = a.getAttribute('data-spy') === id;
+          a.classList.toggle('active', on);
+          if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+        });
       }
       // 阅读线判定：取"顶部已越过视口 1/3 线"的最后一个章节，对高矮章节都稳
       function onScroll() {
@@ -1572,4 +1576,14 @@ const courses = [
     box-shadow: 0 8px 24px rgba(0,0,0,.4);
   }
   .skip-link:focus { transform: none; outline: none; }
+
+  /* ── R4 动效降级（reveal 已在全局用 no-preference 守住；这里补 v2 自有动效）── */
+  @media (prefers-reduced-motion: reduce) {
+    .v2-scope .rail-item i,
+    .v2-scope .rail-item b,
+    .v2-scope .rail-item span,
+    .v2-scope .rail { transition: none !important; }
+    .v2-scope .pet-fab { animation: none !important; }
+    .v2-scope .pet-panel { animation: none !important; }
+  }
 </style>
