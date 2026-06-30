@@ -239,17 +239,19 @@ const courses = [
 
   <!-- AI 数字分身宠物 -->
   <div class="pet" id="pet" data-endpoint={petEndpoint}>
-    <button class="pet-fab" id="pet-fab" aria-label="和鸣飞的 AI 分身聊聊" aria-expanded="false">
+    <button class="pet-fab" id="pet-fab" aria-label="和鸣飞的 AI 分身聊聊（可拖动换位置）" title="点我聊天 · 拖我换位置" aria-expanded="false">
       <img src="/pet/mascot.png" alt="" width="56" height="56" draggable="false" />
       <span class="pet-dot" aria-hidden="true"></span>
     </button>
     <div class="pet-hi" id="pet-hi" role="status">嗨，我是鸣飞的 AI 分身「小飞」，问我点啥？</div>
+    <button class="pet-reopen" id="pet-reopen" aria-label="重新显示小飞" title="叫回小飞">🤖</button>
 
     <section class="pet-panel" id="pet-panel" role="dialog" aria-label="AI 分身对话" aria-modal="false" hidden>
       <header class="pet-head">
         <img src="/pet/mascot.png" alt="" width="30" height="30" />
         <div class="pet-id"><b>小飞</b><i id="pet-mode">· 数字分身</i></div>
-        <button class="pet-x" id="pet-x" aria-label="关闭">✕</button>
+        <button class="pet-hide" id="pet-hide" aria-label="隐藏小飞" title="隐藏小飞">隐藏</button>
+        <button class="pet-x" id="pet-x" aria-label="关闭对话">✕</button>
       </header>
       <div class="pet-log" id="pet-log" aria-live="polite"></div>
       <div class="pet-sugs" id="pet-sugs">
@@ -1080,23 +1082,51 @@ const courses = [
           botSay(lines, function () { history.push({ role: 'assistant', content: lines.join(' ') }); busy = false; });
           return;
         }
-        var t = typing();
+        // 真·AI：流式逐字渲染
+        var t = typing(), bubble = null, acc = '';
+        function feed(text) {
+          if (!bubble) { t.remove(); bubble = addBubble('bot', ''); }
+          acc += text; bubble.textContent = acc; scrollDown();
+        }
+        function finish() {
+          t.remove();
+          if (!bubble) { acc = '（我走神了一下，再说一次？）'; addBubble('bot', acc); }
+          history.push({ role: 'assistant', content: acc }); busy = false;
+        }
         fetch(endpoint, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ messages: history.slice(-12) }),
-        }).then(function (r) { return r.json(); }).then(function (d) {
-          t.remove();
-          var reply = (d && d.reply) ? String(d.reply) : '（我走神了一下，再说一次？）';
-          var parts = reply.split(/\n+/).filter(Boolean);
-          botSay(parts.length ? parts : [reply], function () { history.push({ role: 'assistant', content: reply }); busy = false; });
+        }).then(function (resp) {
+          if (!resp.ok || !resp.body) throw new Error('bad');
+          var reader = resp.body.getReader(), dec = new TextDecoder(), sbuf = '';
+          (function pump() {
+            return reader.read().then(function (r) {
+              if (r.done) return finish();
+              sbuf += dec.decode(r.value, { stream: true });
+              var frames = sbuf.split('\n\n'); sbuf = frames.pop();
+              frames.forEach(function (f) {
+                var line = f.trim(); if (line.indexOf('data:') !== 0) return;
+                var p = line.slice(5).trim();
+                if (p === '[DONE]') return;
+                try { var j = JSON.parse(p); if (j.delta) feed(j.delta); } catch (e) {}
+              });
+              return pump();
+            });
+          })();
         }).catch(function () {
-          t.remove(); addBubble('bot', '网络有点闹脾气，稍后再试～'); busy = false;
+          t.remove(); if (!bubble) addBubble('bot', '网络有点闹脾气，稍后再试～'); busy = false;
         });
       }
 
+      function placePanel() {
+        var r = root.getBoundingClientRect();
+        panel.classList.toggle('below', r.top < innerHeight / 2);
+        panel.classList.toggle('right', r.left > innerWidth / 2);
+      }
       function open(skipGreet) {
         if (!opened) {
           opened = true;
+          placePanel();
           panel.hidden = false; fab.setAttribute('aria-expanded', 'true'); hi.classList.remove('show');
           if (!skipGreet && log.childElementCount === 0)
             botSay(['嗨，我是鸣飞的 AI 数字分身「小飞」👋', '想了解他的项目、能力，还是怎么联系？']);
@@ -1105,9 +1135,51 @@ const courses = [
       }
       function close() { opened = false; panel.hidden = true; fab.setAttribute('aria-expanded', 'false'); }
 
-      fab.addEventListener('click', function () { opened ? close() : open(false); });
+      // ── 拖拽换位置（记忆到 localStorage）──
+      var POSKEY = 'mfj-pet-pos';
+      function applyPos(x, y) {
+        var w = root.offsetWidth || 64, h = root.offsetHeight || 64;
+        x = Math.max(8, Math.min(innerWidth - w - 8, x));
+        y = Math.max(8, Math.min(innerHeight - h - 8, y));
+        root.style.left = x + 'px'; root.style.top = y + 'px';
+        root.style.right = 'auto'; root.style.bottom = 'auto';
+      }
+      try { var sp = JSON.parse(localStorage.getItem(POSKEY) || 'null'); if (sp) applyPos(sp.x, sp.y); } catch (e) {}
+      addEventListener('resize', function () { var r = root.getBoundingClientRect(); if (root.style.left) applyPos(r.left, r.top); });
+
+      var dragging = false, moved = false, sx = 0, sy = 0, ox = 0, oy = 0;
+      fab.addEventListener('pointerdown', function (e) {
+        dragging = true; moved = false; sx = e.clientX; sy = e.clientY;
+        var r = root.getBoundingClientRect(); ox = r.left; oy = r.top;
+        try { fab.setPointerCapture(e.pointerId); } catch (er) {}
+      });
+      fab.addEventListener('pointermove', function (e) {
+        if (!dragging) return;
+        var dx = e.clientX - sx, dy = e.clientY - sy;
+        if (!moved && Math.abs(dx) + Math.abs(dy) > 5) { moved = true; fab.classList.add('grabbing'); if (opened) close(); hi.classList.remove('show'); }
+        if (moved) applyPos(ox + dx, oy + dy);
+      });
+      fab.addEventListener('pointerup', function (e) {
+        if (!dragging) return; dragging = false; fab.classList.remove('grabbing');
+        try { fab.releasePointerCapture(e.pointerId); } catch (er) {}
+        if (moved) { var r = root.getBoundingClientRect(); localStorage.setItem(POSKEY, JSON.stringify({ x: r.left, y: r.top })); }
+      });
+      fab.addEventListener('click', function () { if (moved) { moved = false; return; } opened ? close() : open(false); });
+
+      // ── 隐藏 / 叫回 ──
+      var HIDEKEY = 'mfj-pet-hidden';
+      function tuck() { close(); root.classList.add('tucked'); try { localStorage.setItem(HIDEKEY, '1'); } catch (e) {} }
+      function untuck() { root.classList.remove('tucked'); try { localStorage.removeItem(HIDEKEY); } catch (e) {} }
+      try { if (localStorage.getItem(HIDEKEY) === '1') root.classList.add('tucked'); } catch (e) {}
+      document.getElementById('pet-hide').addEventListener('click', tuck);
+      document.getElementById('pet-reopen').addEventListener('click', untuck);
+
       document.getElementById('pet-x').addEventListener('click', close);
       document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && opened) { close(); fab.focus(); } });
+      // 点面板外关闭
+      document.addEventListener('pointerdown', function (e) {
+        if (opened && !panel.contains(e.target) && !fab.contains(e.target)) close();
+      });
       form.addEventListener('submit', function (e) { e.preventDefault(); open(true); send(input.value.trim()); });
       sugs.addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) { open(true); send(b.dataset.q); } });
 
@@ -1460,6 +1532,21 @@ const courses = [
     font-size: 16px; font-weight: 700; cursor: pointer; transition: transform .15s; }
   .pet-input button:hover { transform: translateY(-1px); }
   .pet-input button:disabled { opacity: .4; cursor: not-allowed; }
-  @media (max-width: 560px) { .pet { left: 14px; bottom: 14px; } .pet-hi { display: none; } }
+  .pet-fab { cursor: grab; touch-action: none; }
+  .pet-fab.grabbing { cursor: grabbing; animation: none; }
+  .pet-hide { border: none; background: transparent; color: var(--ink3); cursor: pointer; font-size: 10.5px;
+    font-family: var(--mono); padding: 4px 7px; border-radius: 6px; letter-spacing: .04em; }
+  .pet-hide:hover { color: var(--ink); background: rgba(255,255,255,.06); }
+  .pet-reopen { display: none; width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--line);
+    background: rgba(20,26,48,.82); cursor: pointer; font-size: 19px; opacity: .55; backdrop-filter: blur(6px);
+    transition: opacity .2s, transform .2s; box-shadow: 0 6px 20px rgba(0,0,0,.3); }
+  .pet-reopen:hover { opacity: 1; transform: scale(1.08); }
+  .pet.tucked .pet-fab, .pet.tucked .pet-hi, .pet.tucked .pet-panel { display: none !important; }
+  .pet.tucked .pet-reopen { display: flex; align-items: center; justify-content: center; }
+  /* 面板靠边自动翻转 */
+  .pet-panel.below { bottom: auto; top: 78px; transform-origin: left top; }
+  .pet-panel.right { left: auto; right: 0; transform-origin: right bottom; }
+  .pet-panel.below.right { transform-origin: right top; }
+  @media (max-width: 560px) { .pet-hi { display: none; } }
   @media (prefers-reduced-motion: reduce) { .pet-fab { animation: none; } .pet-panel { animation: none; } }
 </style>
