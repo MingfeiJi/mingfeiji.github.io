@@ -232,13 +232,14 @@ const courses = [
     <a class="rail-item" href="#flagship" data-spy="flagship"><i></i><b>02</b><span>旗舰</span></a>
     <a class="rail-item" href="#cognition" data-spy="cognition"><i></i><b>03</b><span>认知</span></a>
     <a class="rail-item" href="#cases" data-spy="cases"><i></i><b>04</b><span>档案</span></a>
-    <a class="rail-item" href="#works" data-spy="works"><i></i><b>05</b><span>作品</span></a>
-    <a class="rail-item" href="#logbook" data-spy="logbook"><i></i><b>06</b><span>履历</span></a>
-    <a class="rail-item" href="#method" data-spy="method"><i></i><b>07</b><span>方法</span></a>
-    <a class="rail-item" href="#knowledge" data-spy="knowledge"><i></i><b>08</b><span>知识</span></a>
-    <a class="rail-item" href="#geek" data-spy="geek"><i></i><b>09</b><span>能力</span></a>
-    <a class="rail-item" href="#signal" data-spy="signal"><i></i><b>10</b><span>写作</span></a>
-    <a class="rail-item" href="#engagement" data-spy="engagement"><i></i><b>11</b><span>驻场</span></a>
+    <a class="rail-item" href="#products" data-spy="products"><i></i><b>05</b><span>产品</span></a>
+    <a class="rail-item" href="#works" data-spy="works"><i></i><b>06</b><span>作品</span></a>
+    <a class="rail-item" href="#logbook" data-spy="logbook"><i></i><b>07</b><span>履历</span></a>
+    <a class="rail-item" href="#method" data-spy="method"><i></i><b>08</b><span>方法</span></a>
+    <a class="rail-item" href="#knowledge" data-spy="knowledge"><i></i><b>09</b><span>知识</span></a>
+    <a class="rail-item" href="#geek" data-spy="geek"><i></i><b>10</b><span>能力</span></a>
+    <a class="rail-item" href="#signal" data-spy="signal"><i></i><b>11</b><span>写作</span></a>
+    <a class="rail-item" href="#engagement" data-spy="engagement"><i></i><b>12</b><span>驻场</span></a>
   </nav>
 
   <!-- AI 数字分身宠物 -->
@@ -581,6 +582,33 @@ const courses = [
       <div style="margin-top:16px;text-align:center" class="reveal">
         <a class="btn primary" href="/prototypes/tripflow-arch.html" target="_blank" rel="noopener">进旗舰中台 · 五层架构 ↗</a>
         <a class="btn" href="/prototypes/chat-agent-arch.html" target="_blank" rel="noopener">全屏交互追踪 ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ 产品 · Products ════════════ -->
+  <section class="chapter" id="products">
+    <div class="wrap">
+      <div class="chapter-head reveal">
+        <div class="ch-no"><em>◇</em> PRODUCTS · 能跑的产物</div>
+        <h2>亲手做的 AI 产品 · 点开即玩</h2>
+        <div class="ch-sub">
+          不止讲方法——<strong style="color:#fff">想清业务 → 自己做出能跑的产物</strong>。下面两个都是真·DeepSeek 驱动、当场能用的小产品，一 B 端一 C 端，从产品设计到全栈落地一人闭环。
+        </div>
+      </div>
+      <div class="products-grid" data-stagger>
+        <a class="product-card" href="/products/orchestrator.html" target="_blank" rel="noopener">
+          <div class="pc-head"><span class="pc-tag b">B 端 · 方法论工具</span><span class="pc-live">● LIVE</span></div>
+          <h3>业务流程 × AI 原子能力编排器</h3>
+          <p>描述你的业务流程，AI 帮你拆节点、指出该在哪些环节嵌入 AI 原子能力，并给出落地建议与预期收益。把我在中台里的方法论做成了人人可试的工具。</p>
+          <div class="pc-foot"><span>DeepSeek 驱动 · 结构化输出</span><span class="pc-go">打开产品 ↗</span></div>
+        </a>
+        <a class="product-card" href="/products/companion.html" target="_blank" rel="noopener">
+          <div class="pc-head"><span class="pc-tag c">C 端 · 情感陪伴</span><span class="pc-live">● LIVE</span></div>
+          <h3>奶糖 · AI 情感陪伴小猫 🐱</h3>
+          <p>一只会共情、会安慰、偶尔「喵～」的 AI 小猫，累了随时来聊两句。C 端的另一面——不谈 ROI，只谈体验与陪伴的温度。</p>
+          <div class="pc-foot"><span>DeepSeek 驱动 · 拟人短句</span><span class="pc-go">打开产品 ↗</span></div>
+        </a>
       </div>
     </div>
   </section>
@@ -1567,6 +1595,29 @@ const courses = [
     box-shadow: 0 8px 24px rgba(0,0,0,.4);
   }
   .skip-link:focus { transform: none; outline: none; }
+
+  /* ── 产品·Products 卡片 ── */
+  .products-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 760px) { .products-grid { grid-template-columns: 1fr; } }
+  .product-card { display: block; text-decoration: none; border: 1px solid var(--line); border-radius: 16px;
+    padding: 24px 24px 20px; background: rgba(7,11,31,.6); position: relative; overflow: hidden;
+    transition: transform .3s cubic-bezier(.2,.8,.2,1), border-color .3s, box-shadow .3s; }
+  .product-card::before { content: ''; position: absolute; inset: 0; border-radius: 16px; pointer-events: none;
+    background: radial-gradient(420px circle at var(--mx,50%) var(--my,0%), rgba(125,211,252,.08), transparent 60%);
+    opacity: 0; transition: opacity .3s; }
+  .product-card:hover { transform: translateY(-5px); border-color: var(--star); box-shadow: 0 18px 44px rgba(0,0,0,.42); }
+  .product-card:hover::before { opacity: 1; }
+  .product-card:focus-visible { outline: 2px solid var(--star); outline-offset: 3px; }
+  .pc-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+  .pc-tag { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; padding: 4px 11px; border-radius: 999px; border: 1px solid var(--line); }
+  .pc-tag.b { color: var(--star); border-color: rgba(125,211,252,.32); }
+  .pc-tag.c { color: var(--rose); border-color: rgba(251,113,133,.32); }
+  .pc-live { font-family: var(--mono); font-size: 10px; color: var(--aurora); letter-spacing: .12em; }
+  .product-card h3 { font-size: var(--fs-h3, 21px); color: #fff; margin-bottom: 10px; letter-spacing: .01em; }
+  .product-card p { font-size: 13.5px; color: var(--ink2); line-height: 1.72; }
+  .pc-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 18px;
+    font-family: var(--mono); font-size: 11px; color: var(--ink3); }
+  .pc-go { color: var(--star); font-weight: 600; }
 
   /* ── R4 动效降级（reveal 已在全局用 no-preference 守住；这里补 v2 自有动效）── */
   @media (prefers-reduced-motion: reduce) {

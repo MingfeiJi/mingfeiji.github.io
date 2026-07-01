@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>奶糖 · 你的 AI 情感陪伴小猫</title>
+<meta name="description" content="奶糖是一只温暖治愈的 AI 情感陪伴小猫，随时陪你聊聊天。" />
+<style>
+  :root {
+    --bg: #04060f;
+    --bg2: #070b1a;
+    --panel: rgba(12, 18, 36, 0.72);
+    --line: rgba(125, 211, 252, 0.16);
+    --star: #7dd3fc;
+    --violet: #a78bfa;
+    --warm: #ffd6a5;
+    --pink: #ffb3c6;
+    --ink: #eaf1ff;
+    --muted: #93a3c4;
+    --me: linear-gradient(135deg, #7dd3fc, #a78bfa);
+    --bot: rgba(255, 214, 165, 0.10);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    height: 100%;
+  }
+
+  body {
+    background:
+      radial-gradient(1200px 700px at 78% -8%, rgba(167, 139, 250, 0.16), transparent 60%),
+      radial-gradient(900px 600px at 12% 108%, rgba(125, 211, 252, 0.12), transparent 60%),
+      radial-gradient(700px 500px at 50% 40%, rgba(255, 179, 198, 0.06), transparent 60%),
+      linear-gradient(180deg, var(--bg), var(--bg2));
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+      "Hiragino Sans GB", "Microsoft YaHei", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+  }
+
+  /* soft twinkling stars layer */
+  .stars {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+      radial-gradient(1.4px 1.4px at 20% 30%, rgba(255, 255, 255, 0.6), transparent),
+      radial-gradient(1.2px 1.2px at 70% 20%, rgba(125, 211, 252, 0.7), transparent),
+      radial-gradient(1.6px 1.6px at 40% 70%, rgba(167, 139, 250, 0.6), transparent),
+      radial-gradient(1.2px 1.2px at 85% 60%, rgba(255, 214, 165, 0.55), transparent),
+      radial-gradient(1.3px 1.3px at 55% 45%, rgba(255, 255, 255, 0.45), transparent),
+      radial-gradient(1.1px 1.1px at 10% 85%, rgba(125, 211, 252, 0.5), transparent);
+    animation: twinkle 6s ease-in-out infinite alternate;
+  }
+  @keyframes twinkle {
+    from { opacity: 0.55; }
+    to { opacity: 0.9; }
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 16px clamp(12px, 4vw, 22px) 0;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  /* ---- top bar ---- */
+  .topbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-top: env(safe-area-inset-top, 0);
+  }
+  .back {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    padding: 7px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: rgba(125, 211, 252, 0.05);
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+  }
+  .back:hover, .back:focus-visible {
+    color: var(--star);
+    border-color: rgba(125, 211, 252, 0.45);
+    background: rgba(125, 211, 252, 0.10);
+    outline: none;
+  }
+
+  /* ---- hero / avatar ---- */
+  .hero {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 4px 16px;
+  }
+  .avatar {
+    flex: 0 0 auto;
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    position: relative;
+    background:
+      radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.35), transparent 55%),
+      linear-gradient(150deg, #ffd6a5, #ffb3c6 55%, #a78bfa);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.14) inset,
+      0 8px 26px rgba(167, 139, 250, 0.35),
+      0 0 40px rgba(255, 179, 198, 0.25);
+    font-size: 34px;
+    line-height: 1;
+    animation: bob 3.6s ease-in-out infinite;
+  }
+  .avatar::after {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 1px dashed rgba(255, 214, 165, 0.35);
+    animation: spin 14s linear infinite;
+  }
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  .who { min-width: 0; }
+  .who h1 {
+    margin: 0;
+    font-size: 22px;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .who h1 .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #74e39b;
+    box-shadow: 0 0 10px #74e39b;
+    display: inline-block;
+    transform: translateY(-1px);
+  }
+  .who p {
+    margin: 5px 0 0;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* ---- chat log ---- */
+  .log {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 8px 2px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+  .log::-webkit-scrollbar { width: 6px; }
+  .log::-webkit-scrollbar-thumb {
+    background: rgba(125, 211, 252, 0.22);
+    border-radius: 6px;
+  }
+
+  .msg {
+    max-width: 80%;
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-size: 15px;
+    line-height: 1.5;
+    word-break: break-word;
+    white-space: pre-wrap;
+    animation: pop 0.28s ease both;
+  }
+  @keyframes pop {
+    from { opacity: 0; transform: translateY(6px) scale(0.98); }
+    to { opacity: 1; transform: none; }
+  }
+  .msg.bot {
+    align-self: flex-start;
+    background: var(--bot);
+    border: 1px solid rgba(255, 214, 165, 0.22);
+    border-bottom-left-radius: 5px;
+    color: #fbeede;
+  }
+  .msg.me {
+    align-self: flex-end;
+    background: var(--me);
+    color: #06121f;
+    font-weight: 500;
+    border-bottom-right-radius: 5px;
+    box-shadow: 0 6px 18px rgba(125, 211, 252, 0.25);
+  }
+
+  /* typing indicator */
+  .typing {
+    align-self: flex-start;
+    display: inline-flex;
+    gap: 5px;
+    padding: 12px 15px;
+    background: var(--bot);
+    border: 1px solid rgba(255, 214, 165, 0.22);
+    border-radius: 16px;
+    border-bottom-left-radius: 5px;
+  }
+  .typing span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--warm);
+    opacity: 0.55;
+    animation: blink 1s infinite;
+  }
+  .typing span:nth-child(2) { animation-delay: 0.18s; }
+  .typing span:nth-child(3) { animation-delay: 0.36s; }
+  @keyframes blink {
+    0%, 60%, 100% { opacity: 0.35; transform: translateY(0); }
+    30% { opacity: 1; transform: translateY(-3px); }
+  }
+
+  /* ---- composer ---- */
+  .composer {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    padding: 12px 0 calc(14px + env(safe-area-inset-bottom, 0));
+    background: linear-gradient(180deg, transparent, var(--bg) 45%);
+  }
+  .field {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 4px 6px 4px 14px;
+    backdrop-filter: blur(10px);
+  }
+  .field:focus-within {
+    border-color: rgba(167, 139, 250, 0.5);
+    box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.12);
+  }
+  #input {
+    flex: 1 1 auto;
+    resize: none;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    font-size: 15px;
+    line-height: 1.4;
+    max-height: 120px;
+    padding: 8px 0;
+  }
+  #input::placeholder { color: var(--muted); }
+
+  #send {
+    flex: 0 0 auto;
+    width: 42px;
+    height: 42px;
+    border: 0;
+    border-radius: 50%;
+    cursor: pointer;
+    background: var(--me);
+    color: #06121f;
+    display: grid;
+    place-items: center;
+    transition: transform 0.15s, opacity 0.15s, box-shadow 0.2s;
+    box-shadow: 0 6px 18px rgba(167, 139, 250, 0.35);
+  }
+  #send:hover:not(:disabled) { transform: translateY(-1px) scale(1.04); }
+  #send:active:not(:disabled) { transform: scale(0.96); }
+  #send:disabled { opacity: 0.45; cursor: not-allowed; }
+  #send svg { width: 20px; height: 20px; }
+
+  .hint {
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    opacity: 0.7;
+    padding-bottom: calc(6px + env(safe-area-inset-bottom, 0));
+  }
+
+  @media (max-width: 480px) {
+    .who h1 { font-size: 20px; }
+    .avatar { width: 60px; height: 60px; font-size: 30px; }
+    .msg { max-width: 86%; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stars, .avatar, .avatar::after, .msg, .typing span { animation: none !important; }
+    .log { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+  <div class="stars" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <header class="topbar">
+      <a class="back" href="/" aria-label="返回主站">← 回主站</a>
+    </header>
+
+    <section class="hero">
+      <div class="avatar" aria-hidden="true">🐱</div>
+      <div class="who">
+        <h1>奶糖 <span class="dot" title="在线" aria-hidden="true"></span></h1>
+        <p>你的 AI 情感陪伴小猫 · 随时想聊就来找我</p>
+      </div>
+    </section>
+
+    <main class="log" id="log" role="log" aria-live="polite" aria-label="与奶糖的对话"></main>
+
+    <form class="composer" id="composer" autocomplete="off">
+      <div class="field">
+        <textarea id="input" rows="1" aria-label="给奶糖发消息"
+          placeholder="跟奶糖说点什么吧～"></textarea>
+      </div>
+      <button id="send" type="submit" aria-label="发送消息">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 12l16-8-6 8 6 8-16-8z" fill="currentColor"/>
+        </svg>
+      </button>
+    </form>
+    <p class="hint">奶糖是 AI 陪伴角色，聊天内容仅供陪伴参考</p>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      var ENDPOINT = "https://mingfeiji-github-io.vercel.app/api/companion";
+      var GREETING = [
+        "喵～你来啦，我是奶糖 🐱",
+        "今天过得怎么样呀？开心的、累的、乱七八糟的都可以跟我说说。",
+        "我一直都在这儿陪着你哦。"
+      ];
+
+      var log = document.getElementById("log");
+      var input = document.getElementById("input");
+      var sendBtn = document.getElementById("send");
+      var form = document.getElementById("composer");
+
+      var history = [];   // {role, content} 供后端多轮
+      var busy = false;
+
+      function scrollDown() { log.scrollTop = log.scrollHeight; }
+
+      function addBubble(role, text) {
+        var d = document.createElement("div");
+        d.className = "msg " + (role === "me" ? "me" : "bot");
+        d.textContent = text;
+        log.appendChild(d);
+        scrollDown();
+        return d;
+      }
+
+      function typingIndicator() {
+        var w = document.createElement("div");
+        w.className = "typing";
+        w.setAttribute("aria-label", "奶糖正在打字");
+        w.innerHTML = "<span></span><span></span><span></span>";
+        log.appendChild(w);
+        scrollDown();
+        return w;
+      }
+
+      // 串行队列：一次只播一段气泡，多条按顺序吐出，更像真人
+      var queue = [], playing = false;
+      function botSay(lines, done) {
+        queue.push({ lines: lines, done: done });
+        pump();
+      }
+      function pump() {
+        if (playing) return;
+        var job = queue.shift();
+        if (!job) return;
+        playing = true;
+        var i = 0;
+        (function next() {
+          if (i >= job.lines.length) {
+            playing = false;
+            if (job.done) job.done();
+            pump();
+            return;
+          }
+          var t = typingIndicator();
+          var lineLen = job.lines[i].length;
+          setTimeout(function () {
+            t.remove();
+            addBubble("bot", job.lines[i]);
+            i++;
+            setTimeout(next, 240);
+          }, 360 + Math.min(lineLen * 14, 680));
+        })();
+      }
+
+      function setBusy(v) {
+        busy = v;
+        sendBtn.disabled = v;
+        input.disabled = v;
+        if (!v) input.focus();
+      }
+
+      function splitReply(reply) {
+        // 按换行拆成多条短气泡；过滤空行
+        var parts = String(reply).split(/\n+/).map(function (s) {
+          return s.trim();
+        }).filter(Boolean);
+        return parts.length ? parts : [String(reply)];
+      }
+
+      function send(text) {
+        if (busy) return;
+        var q = (text || "").trim();
+        if (!q) return;
+
+        setBusy(true);
+        input.value = "";
+        autoGrow();
+        addBubble("me", q);
+        history.push({ role: "user", content: q });
+
+        var t = typingIndicator();
+
+        fetch(ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ messages: history.slice(-12) })
+        }).then(function (resp) {
+          return resp.json().catch(function () { return {}; });
+        }).then(function (data) {
+          t.remove();
+          var reply = (data && data.reply)
+            ? String(data.reply)
+            : "（我刚刚走神了一下下，能再说一遍嘛？）";
+          var parts = splitReply(reply);
+          botSay(parts, function () {
+            history.push({ role: "assistant", content: reply });
+            setBusy(false);
+          });
+        }).catch(function () {
+          t.remove();
+          addBubble("bot", "呜…网络好像打了个盹儿，稍等一下再跟我说好嘛？");
+          setBusy(false);
+        });
+      }
+
+      // textarea 自适应高度
+      function autoGrow() {
+        input.style.height = "auto";
+        input.style.height = Math.min(input.scrollHeight, 120) + "px";
+      }
+      input.addEventListener("input", autoGrow);
+
+      // Enter 发送，Shift+Enter 换行
+      input.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          send(input.value);
+        }
+      });
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        send(input.value);
+      });
+
+      // 开场问候
+      botSay(GREETING);
+      input.focus();
+    })();
+  </script>
+</body>
+</html>

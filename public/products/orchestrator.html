@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>业务流程 × AI 原子能力编排器 · 纪鸣飞</title>
+<meta name="description" content="描述你的业务流程，AI 帮你找到该在哪嵌入 AI，并输出结构化落地方案。" />
+<style>
+  :root{
+    --bg:#04060f;
+    --bg2:#070b1f;
+    --panel:rgba(12,18,38,.72);
+    --panel-border:rgba(125,211,252,.14);
+    --ink:#e8eefc;
+    --ink-dim:#9fb0d0;
+    --ink-faint:#6b7ca3;
+    --cyan:#7dd3fc;
+    --violet:#a78bfa;
+    --line:rgba(255,255,255,.08);
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:
+      radial-gradient(1200px 700px at 12% -8%, rgba(125,211,252,.10), transparent 60%),
+      radial-gradient(1000px 680px at 100% 0%, rgba(167,139,250,.12), transparent 58%),
+      linear-gradient(180deg,var(--bg2) 0%, var(--bg) 55%);
+    background-attachment:fixed;
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+    line-height:1.6;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--cyan);text-decoration:none}
+  a:hover{color:#bae6fd}
+  .wrap{max-width:920px;margin:0 auto;padding:28px 20px 96px}
+
+  .topbar{
+    display:flex;justify-content:flex-end;align-items:center;
+    margin-bottom:26px;
+  }
+  .back{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:13px;color:var(--ink-dim);
+    padding:8px 14px;border:1px solid var(--line);border-radius:999px;
+    background:rgba(255,255,255,.02);
+    transition:border-color .2s,color .2s;
+  }
+  .back:hover{border-color:var(--panel-border);color:var(--cyan)}
+
+  header.hero{margin-bottom:30px}
+  .kicker{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-faint);margin-bottom:14px;
+  }
+  .kicker .dot{width:6px;height:6px;border-radius:50%;
+    background:linear-gradient(135deg,var(--cyan),var(--violet));
+    box-shadow:0 0 12px rgba(125,211,252,.7)}
+  h1.title{
+    font-size:clamp(26px,4.4vw,40px);line-height:1.18;margin:0 0 12px;
+    font-weight:700;letter-spacing:-.01em;
+  }
+  h1.title .grad{
+    background:linear-gradient(100deg,var(--cyan),var(--violet));
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;color:transparent;
+  }
+  .subtitle{font-size:clamp(14px,2vw,17px);color:var(--ink-dim);max-width:640px;margin:0}
+
+  .card{
+    background:var(--panel);
+    border:1px solid var(--panel-border);
+    border-radius:var(--radius);
+    padding:22px;
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+  }
+
+  .field-label{font-size:13px;color:var(--ink-dim);margin-bottom:10px;display:block}
+
+  .chips{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:16px}
+  .chip{
+    font-size:12.5px;color:var(--ink-dim);cursor:pointer;
+    padding:7px 13px;border-radius:999px;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.02);
+    transition:all .18s ease;
+  }
+  .chip:hover,.chip:focus-visible{
+    border-color:var(--panel-border);color:var(--cyan);
+    background:rgba(125,211,252,.06);outline:none;
+    transform:translateY(-1px);
+  }
+
+  textarea#biz{
+    width:100%;min-height:132px;resize:vertical;
+    background:rgba(4,7,18,.6);
+    border:1px solid var(--line);
+    border-radius:12px;
+    color:var(--ink);
+    font-family:inherit;font-size:15px;line-height:1.65;
+    padding:14px 16px;
+    transition:border-color .2s,box-shadow .2s;
+  }
+  textarea#biz::placeholder{color:var(--ink-faint)}
+  textarea#biz:focus{
+    outline:none;border-color:rgba(125,211,252,.5);
+    box-shadow:0 0 0 3px rgba(125,211,252,.12);
+  }
+
+  .actions{display:flex;align-items:center;gap:14px;margin-top:16px;flex-wrap:wrap}
+  button#go{
+    appearance:none;border:none;cursor:pointer;
+    font-family:inherit;font-size:15px;font-weight:600;
+    color:#04101f;
+    padding:12px 26px;border-radius:11px;
+    background:linear-gradient(100deg,var(--cyan),var(--violet));
+    box-shadow:0 6px 22px rgba(125,211,252,.18);
+    transition:transform .15s ease,box-shadow .2s,opacity .2s;
+  }
+  button#go:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 10px 28px rgba(167,139,250,.28)}
+  button#go:active:not(:disabled){transform:translateY(0)}
+  button#go:disabled{cursor:not-allowed;opacity:.55}
+  .hint{font-size:12.5px;color:var(--ink-faint)}
+
+  /* loading */
+  .loading{
+    display:none;align-items:center;gap:12px;
+    margin-top:22px;color:var(--ink-dim);font-size:14px;
+  }
+  .loading.on{display:flex}
+  .spinner{
+    width:20px;height:20px;border-radius:50%;
+    border:2.5px solid rgba(125,211,252,.2);
+    border-top-color:var(--cyan);
+    animation:spin .8s linear infinite;
+    flex:none;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  .skeleton{margin-top:20px;display:none}
+  .skeleton.on{display:block}
+  .sk-line{
+    height:12px;border-radius:6px;margin:11px 0;
+    background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(125,211,252,.09) 37%,rgba(255,255,255,.04) 63%);
+    background-size:400% 100%;
+    animation:shimmer 1.4s ease-in-out infinite;
+  }
+  @keyframes shimmer{0%{background-position:100% 0}100%{background-position:0 0}}
+
+  /* error */
+  .error{
+    display:none;margin-top:20px;padding:14px 16px;
+    border:1px solid rgba(248,113,113,.35);
+    background:rgba(248,113,113,.08);
+    border-radius:12px;color:#fca5a5;font-size:14px;
+  }
+  .error.on{display:block}
+  .error button{
+    margin-left:10px;background:none;border:1px solid rgba(248,113,113,.4);
+    color:#fca5a5;padding:3px 12px;border-radius:8px;cursor:pointer;font-family:inherit;font-size:13px;
+  }
+
+  /* result */
+  #result{margin-top:26px;display:none}
+  #result.on{display:block}
+  .result-head{
+    display:flex;align-items:center;gap:10px;
+    font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink-faint);margin-bottom:14px;
+  }
+  .result-head::after{content:"";flex:1;height:1px;background:var(--line)}
+
+  /* markdown typography */
+  .md{color:var(--ink);font-size:15.5px;line-height:1.78}
+  .md > *:first-child{margin-top:0}
+  .md > *:last-child{margin-bottom:0}
+  .md h1,.md h2,.md h3,.md h4{line-height:1.35;font-weight:700;margin:1.5em 0 .6em}
+  .md h1{font-size:1.5em}
+  .md h2{font-size:1.32em;padding-bottom:.3em;border-bottom:1px solid var(--line)}
+  .md h3{font-size:1.14em;color:#cfe6ff}
+  .md h3::before{content:"";display:inline-block;width:7px;height:7px;border-radius:2px;
+    margin-right:9px;vertical-align:middle;
+    background:linear-gradient(135deg,var(--cyan),var(--violet));
+    box-shadow:0 0 8px rgba(125,211,252,.5)}
+  .md h4{font-size:1.02em;color:var(--ink-dim)}
+  .md p{margin:.7em 0}
+  .md strong{color:#fff;font-weight:700}
+  .md em{color:var(--cyan);font-style:normal}
+  .md a{border-bottom:1px solid rgba(125,211,252,.4)}
+  .md ul,.md ol{margin:.7em 0;padding-left:1.4em}
+  .md li{margin:.42em 0}
+  .md ul li::marker{color:var(--cyan)}
+  .md ol li::marker{color:var(--violet);font-weight:600}
+  .md li > ul,.md li > ol{margin:.35em 0}
+  .md hr{border:none;height:1px;margin:1.6em 0;
+    background:linear-gradient(90deg,transparent,var(--line) 20%,var(--line) 80%,transparent)}
+  .md blockquote{
+    margin:1em 0;padding:.5em 1em;
+    border-left:3px solid var(--violet);
+    background:rgba(167,139,250,.06);
+    border-radius:0 8px 8px 0;color:var(--ink-dim)}
+  .md code{
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:.88em;padding:.15em .45em;border-radius:6px;
+    background:rgba(125,211,252,.12);color:#bae6fd}
+  .md pre{
+    margin:1em 0;padding:14px 16px;overflow-x:auto;
+    background:rgba(4,7,18,.7);border:1px solid var(--line);
+    border-radius:10px}
+  .md pre code{background:none;padding:0;color:#d6e4ff;font-size:.86em}
+  .md table{border-collapse:collapse;width:100%;margin:1em 0;font-size:.94em}
+  .md th,.md td{border:1px solid var(--line);padding:8px 12px;text-align:left}
+  .md th{background:rgba(125,211,252,.08);color:#cfe6ff;font-weight:600}
+
+  footer{margin-top:40px;text-align:center;font-size:12.5px;color:var(--ink-faint)}
+
+  @media (max-width:560px){
+    .wrap{padding:20px 15px 80px}
+    .card{padding:16px}
+    button#go{width:100%;text-align:center}
+    .actions{gap:10px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}
+    .spinner{animation:none;border-top-color:var(--cyan)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a class="back" href="/" aria-label="返回主站">← 回主站</a>
+  </div>
+
+  <header class="hero">
+    <span class="kicker"><span class="dot"></span>AI Product · 落地编排</span>
+    <h1 class="title">业务流程 <span class="grad">× AI 原子能力编排器</span></h1>
+    <p class="subtitle">描述你的业务流程 / 场景，AI 帮你拆解节点、找到该在哪嵌入 AI 原子能力，并输出可落地的结构化方案。</p>
+  </header>
+
+  <section class="card" aria-labelledby="input-label">
+    <label class="field-label" id="input-label" for="biz">描述你的业务流程 / 场景</label>
+
+    <div class="chips" role="group" aria-label="预置示例场景">
+      <button type="button" class="chip" data-fill="跨境电商客服，重复咨询很多（物流进度、退换货、尺码），人力顶不住，响应慢导致差评。">跨境电商客服重复咨询多</button>
+      <button type="button" class="chip" data-fill="内容团队从选题、找素材、写初稿到审校发布链路很长，节奏慢、产量上不去，质量还不稳定。">内容团队选题到成稿链路长</button>
+      <button type="button" class="chip" data-fill="制造业产线质检目前靠人工目检，效率低、漏检率高、标准不统一，想引入 AI 但不知道从哪切。">制造业质检靠人工目检</button>
+    </div>
+
+    <textarea id="biz" aria-label="业务流程描述输入框"
+      placeholder="例如：我们是一家做 SaaS 的公司，销售线索从官网表单进来，SDR 手动跟进、打标、排期，转化率低、跟进不及时……"></textarea>
+
+    <div class="actions">
+      <button id="go" type="button" aria-label="提交业务流程，让 AI 拆解">拆解流程 · 生成方案</button>
+      <span class="hint">AI 会拆节点 → 定位 AI 嵌入点 → 输出落地方案（约需 5–8 秒）</span>
+    </div>
+
+    <div class="loading" id="loading" aria-live="polite">
+      <span class="spinner" aria-hidden="true"></span>
+      <span>AI 正在拆解流程…</span>
+    </div>
+
+    <div class="skeleton" id="skeleton" aria-hidden="true">
+      <div class="sk-line" style="width:42%"></div>
+      <div class="sk-line" style="width:88%"></div>
+      <div class="sk-line" style="width:80%"></div>
+      <div class="sk-line" style="width:60%"></div>
+      <div class="sk-line" style="width:74%"></div>
+    </div>
+
+    <div class="error" id="error" role="alert">
+      <span id="error-msg">出了点问题。</span>
+      <button type="button" id="retry">重试</button>
+    </div>
+  </section>
+
+  <section id="result" aria-live="polite" aria-labelledby="result-head">
+    <div class="result-head" id="result-head">落地方案</div>
+    <div class="card"><div class="md" id="md"></div></div>
+  </section>
+
+  <footer>纪鸣飞 · 业务流程 × AI 原子能力编排器 &nbsp;|&nbsp; <a href="/">回主站</a></footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+(function(){
+  var API = "https://mingfeiji-github-io.vercel.app/api/orchestrator";
+
+  var biz = document.getElementById('biz');
+  var go = document.getElementById('go');
+  var loading = document.getElementById('loading');
+  var skeleton = document.getElementById('skeleton');
+  var errBox = document.getElementById('error');
+  var errMsg = document.getElementById('error-msg');
+  var retry = document.getElementById('retry');
+  var result = document.getElementById('result');
+  var md = document.getElementById('md');
+  var chips = document.querySelectorAll('.chip');
+
+  var lastInput = "";
+
+  // marked config: no raw HTML injection from model output
+  if (window.marked && marked.setOptions) {
+    marked.setOptions({ gfm:true, breaks:false });
+  }
+
+  function esc(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  function setBusy(on){
+    go.disabled = on;
+    loading.classList.toggle('on', on);
+    skeleton.classList.toggle('on', on);
+    if (on){
+      go.textContent = 'AI 正在拆解…';
+    } else {
+      go.textContent = '拆解流程 · 生成方案';
+    }
+  }
+
+  function showError(msg){
+    errMsg.textContent = msg || '请求失败，请稍后重试。';
+    errBox.classList.add('on');
+  }
+  function hideError(){ errBox.classList.remove('on'); }
+
+  function renderMarkdown(text){
+    var html;
+    try {
+      // marked v5+ returns string; older may too. Handle both.
+      html = window.marked ? (marked.parse ? marked.parse(text) : marked(text)) : esc(text);
+    } catch(e){
+      html = '<p>' + esc(text) + '</p>';
+    }
+    md.innerHTML = html;
+    result.classList.add('on');
+    result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function submit(){
+    var val = biz.value.trim();
+    hideError();
+    if (!val){
+      biz.focus();
+      showError('请先描述你的业务流程 / 场景。');
+      return;
+    }
+    lastInput = val;
+    result.classList.remove('on');
+    md.innerHTML = '';
+    setBusy(true);
+
+    fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: [{ role:'user', content: val }] })
+    })
+    .then(function(res){
+      if (!res.ok) throw new Error('服务返回 ' + res.status);
+      return res.json();
+    })
+    .then(function(data){
+      var reply = data && data.reply;
+      if (!reply || !String(reply).trim()){
+        throw new Error('empty');
+      }
+      renderMarkdown(String(reply));
+    })
+    .catch(function(err){
+      var m = '请求失败，请稍后重试。';
+      if (err && err.message === 'empty') m = 'AI 没有返回内容，请换个描述再试一次。';
+      else if (err && /Failed to fetch|NetworkError|load failed/i.test(err.message)) m = '网络连接失败，请检查网络后重试。';
+      else if (err && err.message) m = err.message.indexOf('服务返回') === 0 ? (err.message + '，请稍后重试。') : m;
+      showError(m);
+    })
+    .finally(function(){
+      setBusy(false);
+    });
+  }
+
+  go.addEventListener('click', submit);
+  retry.addEventListener('click', function(){ hideError(); submit(); });
+
+  // Cmd/Ctrl + Enter to submit
+  biz.addEventListener('keydown', function(e){
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter'){ submit(); }
+  });
+
+  chips.forEach(function(chip){
+    chip.addEventListener('click', function(){
+      biz.value = chip.getAttribute('data-fill') || '';
+      hideError();
+      biz.focus();
+      submit();
+    });
+  });
+})();
+</script>
+</body>
+</html>
