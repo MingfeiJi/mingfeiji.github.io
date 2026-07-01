@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>paper ink</title>
+<style>
+  /* 透明背景：父页面「宣纸编辑部」主题自带浅纸底 #F5F2EA，本层只叠深墨/朱砂 */
+  html,body{margin:0;height:100%;background:transparent;overflow:hidden}
+  canvas{display:block;width:100vw;height:100vh}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+/* ============================================================================
+   「宣纸编辑部」背景特效 —— 纯 Canvas2D 实现（水墨质感用 2D radial 羽化最自然）
+   浅底深墨美学：所有元素都是深墨/朱砂的极低透明度，正常混合（非 additive），
+   绝不发光、绝不糊字。运动极缓，密集区偏画面边缘，中间大量留白给正文。
+
+   —— 主控微调区：所有可调参数集中在下面 CONFIG，均带注释 ——
+   ============================================================================ */
+
+const CONFIG = {
+  // —— 配色（宣纸编辑部）——
+  paperInk:   '#172441',   // 深蓝墨（水墨晕染、墨点、界栏主色）
+  cinnabar:   '#DD512B',   // 朱砂（印章 / 极少量点缀）
+
+  // —— 水墨晕染团（几团缓慢漂移的深墨，radial 羽化）——
+  blobCount:      6,       // 晕染团数量（越多越"满"，建议 4~7）
+  blobMinR:       180,     // 团最小半径(px，会按屏幕缩放)
+  blobMaxR:       420,     // 团最大半径(px)
+  blobOpacity:    0.06,    // 单团核心不透明度（关键！0.04~0.08，太高会糊正文）
+  blobDrift:      0.10,    // 漂移速度系数（越大漂得越快，建议 0.06~0.16）
+  blobEdgeBias:   0.62,    // 生成位置向画面边缘偏置的强度（0=纯随机, 1=贴边）
+
+  // —— 竖排界栏 / 纸纹（极淡的竖线，像宣纸信笺界栏）——
+  showRules:      true,
+  ruleOpacity:    0.022,   // 竖线不透明度（极淡，建议 0.015~0.03）
+  ruleGap:        68,      // 竖线间距(px)
+
+  // —— 飘落墨点 / 笔触碎屑 ——
+  fleckCount:     26,      // 墨点数量（建议 18~34）
+  fleckOpacity:   0.16,    // 墨点最大不透明度（小点可略高，建议 0.10~0.22）
+  fleckFall:      0.18,    // 下落/漂移速度系数
+
+  // —— 朱砂印章质感光斑（一枚，极淡）——
+  showSeal:       true,
+  sealOpacity:    0.05,    // 印章不透明度（极淡，建议 0.035~0.07）
+  sealSize:       0.10,    // 印章尺寸占屏幕短边比例（0.08~0.14）
+
+  // —— 光标视差（轻微）——
+  parallaxBlob:   16,      // 晕染团随光标位移幅度(px，轻微)
+  parallaxFleck:  8,       // 墨点视差幅度(px)
+  parallaxSeal:   6,       // 印章视差幅度(px)
+  parallaxEase:   0.05,    // 视差缓动（越小越慢）
+};
+
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const PX = Math.min(window.devicePixelRatio || 1, 1.6);   // 像素比封顶，与参考一致
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+let W = 0, H = 0, MIN = 0;   // CSS 像素尺寸 + 短边
+const mobile = () => innerWidth < 760;
+
+/* ---------- 工具 ---------- */
+function rand(a, b){ return a + Math.random() * (b - a); }
+// 十六进制 -> rgba 字符串
+function rgba(hex, a){
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${a})`;
+}
+// 边缘偏置采样：让坐标更靠近画面边缘（留出中间给正文）
+function edgeBiased(size, bias){
+  let v = Math.random();
+  // 把均匀分布往两端推
+  v = v < 0.5 ? Math.pow(v * 2, 1 + bias * 2) / 2
+              : 1 - Math.pow((1 - v) * 2, 1 + bias * 2) / 2;
+  return v * size;
+}
+
+/* ---------- 元素数据 ---------- */
+let blobs = [], flecks = [], seal = null;
+
+function buildScene(){
+  const scaleR = Math.max(0.55, MIN / 900);   // 半径按屏幕缩放
+
+  // 水墨晕染团
+  blobs = [];
+  const bc = mobile() ? Math.max(3, CONFIG.blobCount - 2) : CONFIG.blobCount;
+  for(let i = 0; i < bc; i++){
+    blobs.push({
+      x: edgeBiased(W, CONFIG.blobEdgeBias),
+      y: edgeBiased(H, CONFIG.blobEdgeBias),
+      r: rand(CONFIG.blobMinR, CONFIG.blobMaxR) * scaleR,
+      // 每团独立的极缓漂移相位/方向
+      ph: rand(0, Math.PI * 2),
+      spd: rand(0.5, 1.2),
+      ax: rand(0.6, 1.4) * (Math.random() < 0.5 ? -1 : 1),
+      ay: rand(0.5, 1.2) * (Math.random() < 0.5 ? -1 : 1),
+      op: CONFIG.blobOpacity * rand(0.7, 1.15),
+      depth: rand(0.4, 1),   // 视差深度（远团动得少）
+    });
+  }
+
+  // 飘落墨点 / 笔触碎屑
+  flecks = [];
+  const fc = mobile() ? Math.round(CONFIG.fleckCount * 0.6) : CONFIG.fleckCount;
+  for(let i = 0; i < fc; i++){
+    const brush = Math.random() < 0.35;   // 一部分是细长"笔触碎屑"
+    flecks.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: brush ? rand(0.6, 1.4) : rand(1.2, 3.2),
+      len: brush ? rand(6, 22) : 0,       // 笔触长度（0=圆点）
+      rot: rand(0, Math.PI),
+      vy: rand(0.15, 0.5),                // 下落基速
+      vx: rand(-0.12, 0.12),
+      op: CONFIG.fleckOpacity * rand(0.45, 1),
+      depth: rand(0.5, 1),
+    });
+  }
+
+  // 朱砂印章（放在偏下角，留白友好）
+  seal = {
+    x: W * (mobile() ? 0.80 : 0.86),
+    y: H * 0.82,
+    r: MIN * CONFIG.sealSize,
+    depth: 0.9,
+  };
+}
+
+/* ---------- 尺寸 ---------- */
+function resize(){
+  W = innerWidth; H = innerHeight; MIN = Math.min(W, H);
+  canvas.width = Math.round(W * PX);
+  canvas.height = Math.round(H * PX);
+  ctx.setTransform(PX, 0, 0, PX, 0, 0);   // 之后按 CSS 像素坐标绘制
+  buildScene();
+}
+
+/* ---------- 光标视差（接收父页面 postMessage + 自身 mousemove）---------- */
+let px = 0, py = 0, tx = 0, ty = 0;   // px/py: 目标 (-0.5~0.5)；tx/ty: 缓动后
+addEventListener('message', (e) => {
+  if(e.data && e.data.t === 'pointer'){ px = e.data.x; py = e.data.y; }
+});
+addEventListener('mousemove', (e) => {
+  px = e.clientX / innerWidth - 0.5;
+  py = e.clientY / innerHeight - 0.5;
+});
+
+/* ---------- 绘制 ---------- */
+function drawRules(){
+  if(!CONFIG.showRules) return;
+  ctx.save();
+  ctx.strokeStyle = rgba(CONFIG.paperInk, CONFIG.ruleOpacity);
+  ctx.lineWidth = 1;
+  for(let x = CONFIG.ruleGap * 0.5; x < W; x += CONFIG.ruleGap){
+    ctx.beginPath();
+    ctx.moveTo(Math.round(x) + 0.5, 0);
+    ctx.lineTo(Math.round(x) + 0.5, H);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function drawBlob(b, t){
+  // 极缓漂移 + 轻微光标视差
+  const dx = reduce ? 0 : Math.sin(t * 0.05 * b.spd * CONFIG.blobDrift * 4 + b.ph) * 26 * b.ax;
+  const dy = reduce ? 0 : Math.cos(t * 0.04 * b.spd * CONFIG.blobDrift * 4 + b.ph) * 22 * b.ay;
+  const ox = tx * CONFIG.parallaxBlob * b.depth;
+  const oy = ty * CONFIG.parallaxBlob * b.depth;
+  const cx = b.x + dx + ox, cy = b.y + dy + oy;
+
+  const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, b.r);
+  // 正常混合（非 additive），浅底上不发光：核心深墨 -> 完全透明
+  g.addColorStop(0,   rgba(CONFIG.paperInk, b.op));
+  g.addColorStop(0.45, rgba(CONFIG.paperInk, b.op * 0.45));
+  g.addColorStop(1,   rgba(CONFIG.paperInk, 0));
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.arc(cx, cy, b.r, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function drawFleck(f){
+  const ox = tx * CONFIG.parallaxFleck * f.depth;
+  const oy = ty * CONFIG.parallaxFleck * f.depth;
+  const x = f.x + ox, y = f.y + oy;
+  ctx.save();
+  ctx.fillStyle = rgba(CONFIG.paperInk, f.op);
+  ctx.strokeStyle = rgba(CONFIG.paperInk, f.op);
+  if(f.len > 0){
+    // 笔触碎屑：细短线
+    ctx.translate(x, y);
+    ctx.rotate(f.rot);
+    ctx.lineWidth = f.r;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(-f.len / 2, 0);
+    ctx.lineTo(f.len / 2, 0);
+    ctx.stroke();
+  } else {
+    // 墨点：略带羽化的小圆
+    const g = ctx.createRadialGradient(x, y, 0, x, y, f.r * 1.8);
+    g.addColorStop(0, rgba(CONFIG.paperInk, f.op));
+    g.addColorStop(1, rgba(CONFIG.paperInk, 0));
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(x, y, f.r * 1.8, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+function drawSeal(){
+  if(!CONFIG.showSeal || !seal) return;
+  const ox = tx * CONFIG.parallaxSeal * seal.depth;
+  const oy = ty * CONFIG.parallaxSeal * seal.depth;
+  const x = seal.x + ox, y = seal.y + oy, r = seal.r;
+  ctx.save();
+  // 朱砂光斑：柔和 radial（像盖章后洇开的朱砂气韵，不是硬边方章）
+  const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+  g.addColorStop(0,   rgba(CONFIG.cinnabar, CONFIG.sealOpacity));
+  g.addColorStop(0.6, rgba(CONFIG.cinnabar, CONFIG.sealOpacity * 0.4));
+  g.addColorStop(1,   rgba(CONFIG.cinnabar, 0));
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.fill();
+  // 极淡的方形印框轮廓，暗示印章形制
+  ctx.strokeStyle = rgba(CONFIG.cinnabar, CONFIG.sealOpacity * 0.9);
+  ctx.lineWidth = Math.max(1.5, r * 0.05);
+  const s = r * 0.9;
+  ctx.strokeRect(x - s / 2, y - s / 2, s, s);
+  ctx.restore();
+}
+
+/* ---------- 主循环（不加 document.hidden 判断，与参考一致）---------- */
+let last = performance.now();
+function loop(now){
+  requestAnimationFrame(loop);
+  const dt = Math.min((now - last) / 1000, 0.05); last = now;
+  const t = now / 1000;
+
+  // 光标视差缓动
+  tx += (px - tx) * CONFIG.parallaxEase;
+  ty += (py - ty) * CONFIG.parallaxEase;
+
+  // 墨点缓慢飘落（reduce 时静止）
+  if(!reduce){
+    for(const f of flecks){
+      f.y += f.vy * CONFIG.fleckFall * 60 * dt;
+      f.x += f.vx * CONFIG.fleckFall * 60 * dt;
+      if(f.y - 40 > H){ f.y = -20; f.x = Math.random() * W; }   // 循环回顶
+      if(f.x < -40) f.x = W + 20; else if(f.x > W + 40) f.x = -20;
+    }
+  }
+
+  ctx.clearRect(0, 0, W, H);   // 透明清屏，露出父页面纸底
+  drawRules();
+  for(const b of blobs) drawBlob(b, t);
+  for(const f of flecks) drawFleck(f);
+  drawSeal();
+}
+
+resize();
+addEventListener('resize', resize);
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>snow fx</title>
+<style>
+  /* 透明背景：父页面「月白极简」主题自带近白纸底 #FAFAF8，本层只叠极淡浮尘/柔光。
+     绝不给自身画底色，全靠父页面近白底衬托。 */
+  html,body{margin:0;height:100%;background:transparent;overflow:hidden}
+  canvas{display:block;width:100vw;height:100vh}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+/* ============================================================================
+   「月白极简」背景特效 —— 纯 Canvas2D（浅底极简，不需要 WebGL）
+
+   美学红线：极白极简、几乎看不见却有气质，宁可太淡不可太重。
+   要的是呼吸感与留白，不是热闹。三种元素都极度克制：
+     ① 浮尘微粒 —— 浅灰、opacity 0.03~0.06、正常混合不发光、缓慢飘移；
+     ② 柔光渐变 —— 一道极缓移动的近白→更白微妙明暗呼吸；
+     ③ 冷色呼吸点 —— 稀疏的极淡蓝色小点偶尔漂过（唯一冷色）。
+   运动极慢极柔，中间大量留白，绝不糊字。光标视差极轻微。
+
+   —— 主控微调区：所有可调参数集中在下面 CONFIG，均带注释 ——
+   ============================================================================ */
+
+const CONFIG = {
+  // —— 配色（月白极简）——
+  dust:    '#18181b',   // 浮尘用墨字色的极低透明度（浅底上呈现为极淡灰）
+  glow:    '#ffffff',   // 柔光高光色（比父页面近白底更白一点点，制造明暗呼吸）
+  accent:  '#1d4ed8',   // 克制蓝，唯一冷色呼吸点
+
+  // —— ① 浮尘微粒（极淡浅灰，缓慢飘移）——
+  dustCount:    54,     // 浮尘数量（越多越"实"，宁少勿多，建议 40~70）
+  dustMinR:     0.6,    // 微粒最小半径(px)
+  dustMaxR:     2.0,    // 微粒最大半径(px，仍是极小点)
+  dustOpacity:  0.05,   // 微粒最大不透明度（关键！0.03~0.06，太高会显脏）
+  dustDrift:    0.08,   // 漂移速度系数（极慢，建议 0.05~0.12）
+
+  // —— ② 极缓柔光渐变（近白→更白的明暗呼吸，两团缓慢游走）——
+  showGlow:     true,
+  glowCount:    2,      // 柔光团数量（1~2，宁精勿多）
+  glowMinR:     0.55,   // 团最小半径（占屏幕短边比例）
+  glowMaxR:     0.85,   // 团最大半径（占屏幕短边比例，很大很柔）
+  glowOpacity:  0.035,  // 柔光核心不透明度（极关键！0.02~0.05，几乎看不见的提亮）
+  glowDrift:    0.05,   // 柔光游走速度系数（比浮尘还慢，建议 0.03~0.07）
+
+  // —— ③ 稀疏冷色呼吸点（极淡蓝，偶尔漂过）——
+  showAccent:   true,
+  accentCount:  5,      // 蓝点数量（稀疏！建议 3~7，多了就不"偶尔"了）
+  accentMinR:   1.0,    // 蓝点最小半径(px)
+  accentMaxR:   2.6,    // 蓝点最大半径(px)
+  accentOpacity:0.08,   // 蓝点最大不透明度（唯一允许略"看得见"的冷色，0.05~0.10）
+  accentDrift:  0.06,   // 蓝点漂移速度系数
+  accentPulse:  0.5,    // 蓝点透明度呼吸幅度（0=恒定, 1=强烈明灭）
+
+  // —— 光标视差（极轻微）——
+  parallaxDust:   6,    // 浮尘随光标位移幅度(px，轻微)
+  parallaxGlow:   14,   // 柔光团随光标位移幅度(px)
+  parallaxAccent: 8,    // 蓝点视差幅度(px)
+  parallaxEase:   0.04, // 视差缓动（越小越慢越柔）
+};
+
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const PX = Math.min(window.devicePixelRatio || 1, 1.6);   // 像素比封顶，与参考一致
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+let W = 0, H = 0, MIN = 0;   // CSS 像素尺寸 + 短边
+const mobile = () => innerWidth < 760;
+
+/* ---------- 工具 ---------- */
+function rand(a, b){ return a + Math.random() * (b - a); }
+// 十六进制 -> rgba 字符串
+function rgba(hex, a){
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${a})`;
+}
+
+/* ---------- 元素数据 ---------- */
+let dust = [], glows = [], accents = [];
+
+function buildScene(){
+  // ① 浮尘微粒：满屏均匀撒，各自独立极缓漂移相位
+  dust = [];
+  const dc = mobile() ? Math.round(CONFIG.dustCount * 0.6) : CONFIG.dustCount;
+  for(let i = 0; i < dc; i++){
+    dust.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: rand(CONFIG.dustMinR, CONFIG.dustMaxR),
+      // 每粒独立的极缓正弦漂移
+      ph: rand(0, Math.PI * 2),
+      spd: rand(0.5, 1.3),
+      ax: rand(0.6, 1.4) * (Math.random() < 0.5 ? -1 : 1),
+      ay: rand(0.5, 1.2) * (Math.random() < 0.5 ? -1 : 1),
+      vy: rand(0.04, 0.16),   // 极缓下沉基速
+      op: CONFIG.dustOpacity * rand(0.5, 1),
+      depth: rand(0.4, 1),    // 视差深度（远尘动得少）
+    });
+  }
+
+  // ② 柔光团：几团很大很柔的近白提亮，超缓游走
+  glows = [];
+  const gc = mobile() ? Math.max(1, CONFIG.glowCount - 1) : CONFIG.glowCount;
+  for(let i = 0; i < gc; i++){
+    glows.push({
+      x: rand(0.2, 0.8) * W,
+      y: rand(0.2, 0.8) * H,
+      r: rand(CONFIG.glowMinR, CONFIG.glowMaxR) * MIN,
+      ph: rand(0, Math.PI * 2),
+      spd: rand(0.6, 1.1),
+      ax: rand(0.7, 1.3) * (Math.random() < 0.5 ? -1 : 1),
+      ay: rand(0.6, 1.2) * (Math.random() < 0.5 ? -1 : 1),
+      op: CONFIG.glowOpacity * rand(0.8, 1.1),
+      depth: rand(0.5, 1),
+    });
+  }
+
+  // ③ 冷色呼吸点：稀疏蓝点，各自独立漂移 + 透明度呼吸
+  accents = [];
+  const ac = mobile() ? Math.max(2, CONFIG.accentCount - 2) : CONFIG.accentCount;
+  for(let i = 0; i < ac; i++){
+    accents.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: rand(CONFIG.accentMinR, CONFIG.accentMaxR),
+      ph: rand(0, Math.PI * 2),   // 漂移相位
+      pph: rand(0, Math.PI * 2),  // 呼吸相位
+      spd: rand(0.5, 1.1),
+      ax: rand(0.5, 1.2) * (Math.random() < 0.5 ? -1 : 1),
+      ay: rand(0.4, 1.0) * (Math.random() < 0.5 ? -1 : 1),
+      vx: rand(-0.05, 0.05),      // 极缓横向漂过
+      op: CONFIG.accentOpacity * rand(0.6, 1),
+      depth: rand(0.5, 1),
+    });
+  }
+}
+
+/* ---------- 尺寸 ---------- */
+function resize(){
+  W = innerWidth; H = innerHeight; MIN = Math.min(W, H);
+  canvas.width = Math.round(W * PX);
+  canvas.height = Math.round(H * PX);
+  ctx.setTransform(PX, 0, 0, PX, 0, 0);   // 之后按 CSS 像素坐标绘制
+  buildScene();
+}
+
+/* ---------- 光标视差（接收父页面 postMessage + 自身 mousemove）---------- */
+let px = 0, py = 0, tx = 0, ty = 0;   // px/py: 目标 (-0.5~0.5)；tx/ty: 缓动后
+addEventListener('message', (e) => {
+  if(e.data && e.data.t === 'pointer'){ px = e.data.x; py = e.data.y; }
+});
+addEventListener('mousemove', (e) => {
+  px = e.clientX / innerWidth - 0.5;
+  py = e.clientY / innerHeight - 0.5;
+});
+
+/* ---------- 绘制 ---------- */
+function drawGlow(g, t){
+  if(!CONFIG.showGlow) return;
+  // 超缓游走 + 轻微光标视差
+  const dx = reduce ? 0 : Math.sin(t * 0.05 * g.spd * CONFIG.glowDrift * 4 + g.ph) * 40 * g.ax;
+  const dy = reduce ? 0 : Math.cos(t * 0.04 * g.spd * CONFIG.glowDrift * 4 + g.ph) * 34 * g.ay;
+  const ox = tx * CONFIG.parallaxGlow * g.depth;
+  const oy = ty * CONFIG.parallaxGlow * g.depth;
+  const cx = g.x + dx + ox, cy = g.y + dy + oy;
+  // 极缓明暗呼吸：核心透明度轻微起伏（近白提亮，正常混合不发光）
+  const breathe = reduce ? 1 : (0.75 + 0.25 * Math.sin(t * 0.25 + g.ph));
+
+  const rg = ctx.createRadialGradient(cx, cy, 0, cx, cy, g.r);
+  rg.addColorStop(0,    rgba(CONFIG.glow, g.op * breathe));
+  rg.addColorStop(0.5,  rgba(CONFIG.glow, g.op * breathe * 0.4));
+  rg.addColorStop(1,    rgba(CONFIG.glow, 0));
+  ctx.fillStyle = rg;
+  ctx.beginPath();
+  ctx.arc(cx, cy, g.r, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function drawDust(d, t){
+  const dx = reduce ? 0 : Math.sin(t * 0.05 * d.spd * CONFIG.dustDrift * 4 + d.ph) * 10 * d.ax;
+  const dy = reduce ? 0 : Math.cos(t * 0.04 * d.spd * CONFIG.dustDrift * 4 + d.ph) * 8 * d.ay;
+  const ox = tx * CONFIG.parallaxDust * d.depth;
+  const oy = ty * CONFIG.parallaxDust * d.depth;
+  const x = d.x + dx + ox, y = d.y + dy + oy;
+  // 极淡浅灰小圆，略带羽化（正常混合，绝不发光）
+  const rg = ctx.createRadialGradient(x, y, 0, x, y, d.r * 1.8);
+  rg.addColorStop(0, rgba(CONFIG.dust, d.op));
+  rg.addColorStop(1, rgba(CONFIG.dust, 0));
+  ctx.fillStyle = rg;
+  ctx.beginPath();
+  ctx.arc(x, y, d.r * 1.8, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function drawAccent(a, t){
+  if(!CONFIG.showAccent) return;
+  const dx = reduce ? 0 : Math.sin(t * 0.05 * a.spd * CONFIG.accentDrift * 4 + a.ph) * 14 * a.ax;
+  const dy = reduce ? 0 : Math.cos(t * 0.04 * a.spd * CONFIG.accentDrift * 4 + a.ph) * 11 * a.ay;
+  const ox = tx * CONFIG.parallaxAccent * a.depth;
+  const oy = ty * CONFIG.parallaxAccent * a.depth;
+  const x = a.x + dx + ox, y = a.y + dy + oy;
+  // 透明度极缓呼吸（"偶尔漂过"的明灭感），下限压很低保证稀疏克制
+  const pulse = reduce ? 0.7 : (1 - CONFIG.accentPulse * 0.5 * (1 - Math.sin(t * 0.3 + a.pph)));
+  const op = a.op * Math.max(0, pulse);
+  // 极淡蓝色小点，略带羽化
+  const rg = ctx.createRadialGradient(x, y, 0, x, y, a.r * 2.2);
+  rg.addColorStop(0, rgba(CONFIG.accent, op));
+  rg.addColorStop(1, rgba(CONFIG.accent, 0));
+  ctx.fillStyle = rg;
+  ctx.beginPath();
+  ctx.arc(x, y, a.r * 2.2, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+/* ---------- 主循环（不加 document.hidden 判断，与参考一致）---------- */
+let last = performance.now();
+function loop(now){
+  requestAnimationFrame(loop);
+  const dt = Math.min((now - last) / 1000, 0.05); last = now;
+  const t = now / 1000;
+
+  // 光标视差缓动
+  tx += (px - tx) * CONFIG.parallaxEase;
+  ty += (py - ty) * CONFIG.parallaxEase;
+
+  // 位置推进：浮尘极缓下沉、蓝点极缓横漂（reduce 时静止）
+  if(!reduce){
+    for(const d of dust){
+      d.y += d.vy * CONFIG.dustDrift * 60 * dt;
+      if(d.y - 20 > H){ d.y = -10; d.x = Math.random() * W; }   // 循环回顶
+    }
+    for(const a of accents){
+      a.x += a.vx * CONFIG.accentDrift * 60 * dt;
+      if(a.x < -30) a.x = W + 20; else if(a.x > W + 30) a.x = -20;
+    }
+  }
+
+  ctx.clearRect(0, 0, W, H);   // 透明清屏，露出父页面近白底
+  for(const g of glows) drawGlow(g, t);   // 柔光在最底层（大面积提亮）
+  for(const d of dust) drawDust(d, t);
+  for(const a of accents) drawAccent(a, t);
+}
+
+resize();
+addEventListener('resize', resize);
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
