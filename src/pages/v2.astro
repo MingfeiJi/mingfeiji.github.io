@@ -224,6 +224,7 @@ const courses = [
 
 <Base>
   <a href="#top" class="skip-link">跳到主要内容</a>
+  <div id="nebula-bg" aria-hidden="true"></div>
   <div class="v2-scope">
   <!-- 右栏章节导航（scroll-spy）-->
   <nav class="rail" aria-label="章节导航">
@@ -1003,6 +1004,31 @@ const courses = [
 
   <script is:inline>
     (function () {
+      var host = document.getElementById('nebula-bg');
+      if (!host) return;
+      function sync() {
+        var on = document.documentElement.getAttribute('data-theme') === 'cosmos';
+        var has = host.querySelector('iframe');
+        if (on && !has) {
+          var f = document.createElement('iframe');
+          f.src = '/cosmos-nebula.html'; f.setAttribute('tabindex', '-1');
+          f.setAttribute('scrolling', 'no'); f.setAttribute('aria-hidden', 'true');
+          // 内联尺寸（动态 iframe 拿不到 Astro scoped 样式，必须内联，否则停在 300×150）
+          f.style.cssText = 'width:100vw;height:100vh;border:0;display:block;';
+          host.appendChild(f);
+        } else if (!on && has) { host.innerHTML = ''; }
+      }
+      new MutationObserver(sync).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+      sync();
+      addEventListener('pointermove', function (e) {
+        var f = host.querySelector('iframe');
+        if (f && f.contentWindow) f.contentWindow.postMessage({ t: 'pointer', x: e.clientX / innerWidth - 0.5, y: e.clientY / innerHeight - 0.5 }, '*');
+      }, { passive: true });
+    })();
+  </script>
+
+  <script is:inline>
+    (function () {
       var rail = document.querySelector('.rail');
       if (!rail) return;
       var items = Array.prototype.slice.call(rail.querySelectorAll('.rail-item'));
@@ -1595,6 +1621,12 @@ const courses = [
     box-shadow: 0 8px 24px rgba(0,0,0,.4);
   }
   .skip-link:focus { transform: none; outline: none; }
+
+  /* ── 升级版星空背景（cosmos 主题下叠加，v2-scoped）── */
+  #nebula-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0;
+    transition: opacity 1.4s ease; }
+  #nebula-bg iframe { width: 100vw; height: 100vh; border: 0; display: block; }
+  html[data-theme="cosmos"] #nebula-bg { opacity: .9; }
 
   /* ── 产品·Products 卡片 ── */
   .products-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
