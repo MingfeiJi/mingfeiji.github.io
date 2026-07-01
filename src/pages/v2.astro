@@ -7,8 +7,9 @@ import graphData from '../data/graph.json';
 const graphNodeCount = (graphData.nodes as any[]).length;
 const graphLinkCount = (graphData.links as any[]).length;
 
-// AI 数字分身宠物：端点由构建环境变量注入；未配置则前端回落"演示人格"
-const petEndpoint = import.meta.env.PUBLIC_PET_ENDPOINT || '';
+// AI 数字分身宠物：真·AI 端点（Vercel 上的 DeepSeek 代理，URL 非机密；密钥只在 Vercel）
+// 环境变量可覆盖；否则用线上代理，未配置则前端回落"演示人格"
+const petEndpoint = import.meta.env.PUBLIC_PET_ENDPOINT || 'https://mingfeiji-github-io.vercel.app/api/pet';
 
 const allArticles = (await getCollection('articles')).sort(
   (a, b) => (b.data.created?.getTime() ?? 0) - (a.data.created?.getTime() ?? 0)
