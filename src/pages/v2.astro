@@ -1835,10 +1835,11 @@ const courses = [
     -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
   }
   @keyframes h1-flow { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
-  /* 副标题：收字距 + 尾部渐隐装饰线，建立视觉锚点（主题色自适应） */
-  .v2-scope .hero .sub { display: flex; align-items: center; gap: 16px; letter-spacing: .14em; }
-  .v2-scope .hero .sub::after { content: ''; flex: 0 0 72px; height: 1px;
+  /* 副标题：收字距 + 尾部渐隐装饰线（主题色自适应；paper 除外——它有自己的朱砂粗笔触 sub::after，别压掉） */
+  :global(html:not([data-theme='paper'])) .v2-scope .hero .sub { display: flex; align-items: center; gap: 16px; letter-spacing: .14em; }
+  :global(html:not([data-theme='paper'])) .v2-scope .hero .sub::after { content: ''; flex: 0 0 72px; height: 1px;
     background: linear-gradient(90deg, color-mix(in srgb, var(--star) 75%, transparent), transparent); }
+  :global(html[data-theme='paper']) .v2-scope .hero .sub { letter-spacing: .14em; }
   /* 正文：CJK 大师级密度——行高 2 上下、字距微开 */
   .v2-scope .hero .lede { line-height: 2.02; letter-spacing: .012em; }
   .v2-scope .chapter-head .ch-sub, .v2-scope .card p, .v2-scope .product-card p,
@@ -1883,6 +1884,28 @@ const courses = [
   .v2-scope .chapter + .chapter::after { content: ''; position: absolute; top: 0; left: 50%;
     transform: translateX(-50%); width: min(920px, 86vw); height: 1px; pointer-events: none;
     background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--star) 20%, transparent) 30%, color-mix(in srgb, var(--nebula) 20%, transparent) 70%, transparent); }
+
+  /* ── R12 主题专项：宣纸纸质感 / 全息 HUD 装饰（v2-scoped）── */
+  /* ④ 宣纸：mono 装饰元素衬线化 + 产品卡对齐纸质卡语言 + 朱砂验证点 */
+  :global(html[data-theme='paper']) .v2-scope :is(.kicker, .ch-no) {
+    font-family: var(--serif); letter-spacing: .24em; }
+  :global(html[data-theme='paper']) .v2-scope .product-card {
+    border-color: #D7CFBF; border-radius: 8px;
+    box-shadow: 0 1px 0 #fff inset, 0 10px 28px rgba(23,36,65,.07); }
+  :global(html[data-theme='paper']) .v2-scope .work-card .w-meta::before {
+    background: var(--flare); box-shadow: none; }
+  /* ⑤ 全息：把 global 里 .card 的 HUD 角标语言延伸到 v2 独有的产品卡 */
+  :global(html[data-theme='hud']) .v2-scope .product-card {
+    border-radius: 8px; border-color: rgba(125,211,252,.2); }
+  :global(html[data-theme='hud']) .v2-scope .product-card::before { border-radius: 8px; }
+  :global(html[data-theme='hud']) .v2-scope .product-card::after {
+    content: ''; position: absolute; top: 7px; left: 7px; width: 11px; height: 11px;
+    border-top: 1px solid rgba(125,211,252,.5); border-left: 1px solid rgba(125,211,252,.5);
+    pointer-events: none; transition: .25s; }
+  :global(html[data-theme='hud']) .v2-scope .product-card:hover {
+    box-shadow: 0 0 0 1px rgba(125,211,252,.5), 0 14px 44px rgba(125,211,252,.16); }
+  :global(html[data-theme='hud']) .v2-scope .product-card:hover::after {
+    top: 5px; left: 5px; border-color: var(--star); }
 
   /* ── R11 主题专项：克莱因金色点睛 / 月白动效收敛（v2-scoped）── */
   /* ② 克莱因蓝：金色 --flare(#ffe14d) 作为唯一强调色点睛 */
