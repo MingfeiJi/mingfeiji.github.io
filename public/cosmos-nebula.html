@@ -17,6 +17,14 @@
 <script type="module">
 import * as THREE from 'three';
 
+// ══ CONFIG · 调参入口 ══════════════════════════════════════
+// 星场:   STAR_N 数量 / TEMP_* 色温比例(冷白/纯白/暖金)
+// 银河带: BAND_N 数量 / BAND_TILT 倾角 / BAND_ALPHA 亮度
+// 流星:   METEOR_N 并发数 / METEOR_WAIT 间隔秒[min,max]
+// 星云:   makeNebula(...) 调用处 / fragment alpha≈0.2 克制不糊字
+// 彗星:   COMET_SIZE / 挂在 ring1 上随环公转
+// ═══════════════════════════════════════════════════════════
+
 const canvas = document.getElementById('c');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 1.6));
@@ -56,13 +64,17 @@ function nebulaTex(){
 const sprite = dotTex();
 const nebSprite = nebulaTex();
 
-// ① 星场 —— 约 2500–4000 个星点，缓慢微闪/漂移
+// ① 星场 —— 星点带真实色温分层：冷白蓝为主、纯白其次、少量暖金
 const STAR_N = mobile ? 2600 : 3600;
+const TEMP_COLD = new THREE.Color('#cfe4ff');   // 62% 冷白蓝
+const TEMP_WHITE = new THREE.Color('#ffffff');  // 30% 纯白
+const TEMP_WARM = new THREE.Color('#ffd9a8');   // 8% 暖金（真实星空的点睛）
 const spread = { x: 150, y: 110, z: 120 };
 const sp = new Float32Array(STAR_N*3);
 const ssize = new Float32Array(STAR_N);
 const sphase = new Float32Array(STAR_N);      // 闪烁相位
 const sbright = new Float32Array(STAR_N);     // 基础亮度
+const scol = new Float32Array(STAR_N*3);      // 每星色温
 // 记录较亮的星，供星座连线使用
 const brightIdx = [];
 for(let i=0;i<STAR_N;i++){
@@ -75,6 +87,9 @@ for(let i=0;i<STAR_N;i++){
   ssize[i] = 0.6 + b*b*3.2;                   // 少量偏大偏亮
   sphase[i] = Math.random()*Math.PI*2;
   sbright[i] = 0.45 + b*0.55;
+  const r = Math.random();
+  const c = r < .62 ? TEMP_COLD : (r < .92 ? TEMP_WHITE : TEMP_WARM);
+  scol[i*3]=c.r; scol[i*3+1]=c.g; scol[i*3+2]=c.b;
   if(b > 0.86) brightIdx.push(i);             // 亮星集合
 }
 const starGeo = new THREE.BufferGeometry();
@@ -82,11 +97,10 @@ starGeo.setAttribute('position', new THREE.BufferAttribute(sp,3));
 starGeo.setAttribute('aSize', new THREE.BufferAttribute(ssize,1));
 starGeo.setAttribute('aPhase', new THREE.BufferAttribute(sphase,1));
 starGeo.setAttribute('aBright', new THREE.BufferAttribute(sbright,1));
+starGeo.setAttribute('aColor', new THREE.BufferAttribute(scol,3));
 const starMat = new THREE.ShaderMaterial({
   uniforms:{
     uTex:{value:sprite},
-    uA:{value:new THREE.Color('#7dd3fc')},
-    uB:{value:new THREE.Color('#a78bfa')},
     uPx:{value:Math.min(devicePixelRatio,1.6)},
     uTime:{value:0},
     uTwinkle:{value: reduce ? 0.0 : 1.0}
@@ -94,10 +108,11 @@ const starMat = new THREE.ShaderMaterial({
   transparent:true, depthWrite:false, blending:THREE.AdditiveBlending,
   vertexShader:`
     attribute float aSize; attribute float aPhase; attribute float aBright;
+    attribute vec3 aColor;
     uniform float uPx; uniform float uTime; uniform float uTwinkle;
-    varying float vB; varying vec3 vP;
+    varying float vB; varying vec3 vC;
     void main(){
-      vP = position;
+      vC = aColor;
       float tw = 1.0 + uTwinkle * 0.5 * sin(uTime*1.4 + aPhase);
       vB = aBright * tw;
       vec4 mv = modelViewMatrix * vec4(position,1.0);
@@ -105,18 +120,55 @@ const starMat = new THREE.ShaderMaterial({
       gl_Position = projectionMatrix * mv;
     }`,
   fragmentShader:`
-    uniform sampler2D uTex; uniform vec3 uA,uB;
-    varying float vB; varying vec3 vP;
+    uniform sampler2D uTex;
+    varying float vB; varying vec3 vC;
     void main(){
-      // 位置决定冷色渐变：偏向 uA(#7dd3fc)，边缘掺一点 uB(#a78bfa)
-      float t = smoothstep(-1.0, 1.0, normalize(vP + 1e-4).x * 0.6 + 0.5);
-      vec3 c = mix(uA, uB, t*0.4);
       float a = texture2D(uTex, gl_PointCoord).a;
-      gl_FragColor = vec4(c, a * vB * 0.7);
+      gl_FragColor = vec4(vC, a * vB * 0.7);
     }`
 });
 const stars = new THREE.Points(starGeo, starMat);
 root.add(stars);
+
+// ⑥ 银河带 —— 斜向淡星带 + 沿带微尘雾，给星空一条"结构主线"
+const bandGroup = new THREE.Group();
+const BAND_TILT = -0.42;                 // 银河倾角（弧度）
+bandGroup.rotation.z = BAND_TILT;
+bandGroup.position.set(-4, -2, -34);
+root.add(bandGroup);
+{
+  const BAND_N = mobile ? 1300 : 2400;
+  const BAND_ALPHA = 0.5;
+  const bp = new Float32Array(BAND_N*3);
+  const gauss = () => (Math.random()+Math.random()+Math.random()-1.5);
+  for(let i=0;i<BAND_N;i++){
+    bp[i*3]   = (Math.random()-.5)*260;    // 沿带方向铺开
+    bp[i*3+1] = gauss()*9;                 // 横截面高斯收窄
+    bp[i*3+2] = (Math.random()-.5)*46 - 8;
+  }
+  const bg = new THREE.BufferGeometry();
+  bg.setAttribute('position', new THREE.BufferAttribute(bp,3));
+  const bm = new THREE.PointsMaterial({
+    map:sprite, size:1.0, sizeAttenuation:true, color:0x9db8e8,
+    transparent:true, opacity:BAND_ALPHA, depthWrite:false, blending:THREE.AdditiveBlending
+  });
+  bandGroup.add(new THREE.Points(bg, bm));
+  // 沿带微尘雾（极淡，只给带一点"体积感"）
+  const DUST_N = 12;
+  const dp = new Float32Array(DUST_N*3);
+  const ds = new Float32Array(DUST_N);
+  for(let i=0;i<DUST_N;i++){
+    dp[i*3]=(Math.random()-.5)*230; dp[i*3+1]=gauss()*7; dp[i*3+2]=-6;
+    ds[i]=26+Math.random()*22;
+  }
+  const dg = new THREE.BufferGeometry();
+  dg.setAttribute('position', new THREE.BufferAttribute(dp,3));
+  const dm = new THREE.PointsMaterial({
+    map:nebSprite, size:34, sizeAttenuation:true, color:0x8b9cf6,
+    transparent:true, opacity:0.05, depthWrite:false, blending:THREE.AdditiveBlending
+  });
+  bandGroup.add(new THREE.Points(dg, dm));
+}
 
 // ④ 星座连线 —— 邻近亮星预计算静态连线，阈值内连线，线极淡
 function buildConstellations(){
@@ -235,6 +287,76 @@ const ring1 = makeRing(46, 46.25, {x:Math.PI*0.46, y:0.2, z:0}, 0x7dd3fc, 0.10);
 const ring2 = makeRing(58, 58.2,  {x:Math.PI*0.52, y:-0.15, z:0.3}, 0xa78bfa, 0.07);
 root.add(ring1); root.add(ring2);
 
+// ⑦ 轨道彗星 —— 挂在 ring1 上随环公转的亮点（内核 + 外层光晕两级）
+const COMET_SIZE = 2.6;
+function cometDot(size, color, opacity){
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute([46.12, 0, 0], 3));
+  return new THREE.Points(g, new THREE.PointsMaterial({
+    map:sprite, size, sizeAttenuation:true, color,
+    transparent:true, opacity, depthWrite:false, blending:THREE.AdditiveBlending
+  }));
+}
+ring1.add(cometDot(COMET_SIZE, 0xdff1ff, 0.95));
+ring1.add(cometDot(COMET_SIZE*2.8, 0x7dd3fc, 0.22));   // 光晕层
+
+// ⑤ 流星 —— 偶发斜划亮线（头部光点 + 加色渐隐尾迹），reduce 时整体关闭
+const METEOR_N = 2;
+const METEOR_WAIT = [4, 11];       // 两次流星的等待区间（秒）
+const meteors = [];
+if(!reduce){
+  for(let i=0;i<METEOR_N;i++){
+    const lg = new THREE.BufferGeometry();
+    lg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(6),3));
+    // 尾端顶点纯黑：加色混合下黑=透明，天然渐隐
+    lg.setAttribute('color', new THREE.BufferAttribute(new Float32Array([1,1,1, 0,0,0]),3));
+    const lm = new THREE.LineBasicMaterial({ vertexColors:true, transparent:true, opacity:0, depthWrite:false, blending:THREE.AdditiveBlending });
+    const line = new THREE.Line(lg, lm);
+    const hg = new THREE.BufferGeometry();
+    hg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(3),3));
+    const hm = new THREE.PointsMaterial({ map:sprite, size:2.4, sizeAttenuation:true, color:0xeaf6ff, transparent:true, opacity:0, depthWrite:false, blending:THREE.AdditiveBlending });
+    const head = new THREE.Points(hg, hm);
+    scene.add(line); scene.add(head);
+    meteors.push({
+      line, head,
+      t: -(METEOR_WAIT[0] + Math.random()*(METEOR_WAIT[1]-METEOR_WAIT[0])) - i*4,
+      life: 0, pos: new THREE.Vector3(), dir: new THREE.Vector3(), speed: 0, len: 0, active: false
+    });
+  }
+}
+function spawnMeteor(m){
+  m.pos.set(-20 + Math.random()*95, 22 + Math.random()*32, -35 + Math.random()*30);
+  m.dir.set(-1, -0.45 - Math.random()*0.25, 0).normalize();
+  m.speed = 55 + Math.random()*30;
+  m.len   = 9 + Math.random()*8;
+  m.life  = 1.2 + Math.random()*0.6;
+  m.t = 0; m.active = true;
+}
+function stepMeteor(m, dt){
+  m.t += dt;
+  if(!m.active){
+    if(m.t >= 0) spawnMeteor(m);
+    return;
+  }
+  if(m.t >= m.life){
+    m.active = false;
+    m.t = -(METEOR_WAIT[0] + Math.random()*(METEOR_WAIT[1]-METEOR_WAIT[0]));
+    m.line.material.opacity = 0; m.head.material.opacity = 0;
+    return;
+  }
+  m.pos.addScaledVector(m.dir, m.speed*dt);
+  const a = Math.sin(Math.PI * (m.t/m.life));      // 平滑进出
+  const lp = m.line.geometry.attributes.position.array;
+  lp[0]=m.pos.x; lp[1]=m.pos.y; lp[2]=m.pos.z;
+  lp[3]=m.pos.x - m.dir.x*m.len; lp[4]=m.pos.y - m.dir.y*m.len; lp[5]=m.pos.z - m.dir.z*m.len;
+  m.line.geometry.attributes.position.needsUpdate = true;
+  const hp = m.head.geometry.attributes.position.array;
+  hp[0]=m.pos.x; hp[1]=m.pos.y; hp[2]=m.pos.z;
+  m.head.geometry.attributes.position.needsUpdate = true;
+  m.line.material.opacity = a * 0.85;
+  m.head.material.opacity = a * 0.95;
+}
+
 // 鼠标视差（接收父页面 postMessage；iframe 背景层收不到直接鼠标事件）
 let px=0, py=0, tx=0, ty=0;
 addEventListener('message',(e)=>{ if(e.data && e.data.t==='pointer'){ px=e.data.x; py=e.data.y; } });
@@ -262,21 +384,25 @@ const clock = new THREE.Clock();
     // 星场极缓慢整体漂移
     stars.rotation.y += dt*0.006;
     constellations.rotation.y = stars.rotation.y;   // 连线跟随星场
-    // 轨道环缓慢旋转
+    bandGroup.rotation.y = stars.rotation.y*0.6;    // 银河带略慢，产生层间视差
+    // 轨道环缓慢旋转（彗星是 ring1 子节点，随之公转）
     ring1.rotation.z += dt*0.03;
     ring2.rotation.z -= dt*0.022;
     // 星云缓慢自转，增强流动感
     neb1.rotation.z += dt*0.004;
     neb2.rotation.z -= dt*0.003;
+    // 流星调度
+    for(const m of meteors) stepMeteor(m, dt);
   } else {
     constellations.rotation.y = stars.rotation.y;
   }
 
-  // 鼠标视差：相机 + 整体轻微移动
+  // 鼠标视差：相机 + 整体轻微移动；相机纵深缓慢呼吸
   tx += (px - tx) * 0.04;
   ty += (py - ty) * 0.04;
   camera.position.x = tx * 8;
   camera.position.y = -ty * 6;
+  camera.position.z = 60 + (reduce ? 0 : Math.sin(t*0.045) * 1.8);
   root.rotation.y = tx * 0.08;
   root.rotation.x = ty * 0.06;
   camera.lookAt(root.position.x*0.3, root.position.y*0.3, 0);
