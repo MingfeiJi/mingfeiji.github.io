@@ -7,6 +7,21 @@ import graphData from '../data/graph.json';
 const graphNodeCount = (graphData.nodes as any[]).length;
 const graphLinkCount = (graphData.links as any[]).length;
 
+// AI 数字分身宠物：真·AI 端点（Vercel 上的 DeepSeek 代理，URL 非机密；密钥只在 Vercel）
+// 环境变量可覆盖；否则用线上代理，未配置则前端回落"演示人格"
+const petEndpoint = import.meta.env.PUBLIC_PET_ENDPOINT || 'https://mingfeiji-github-io.vercel.app/api/pet';
+
+// 知识区线稿图标（24 网格 / 1.6px 圆头描边，与三段攻坚 SVG 同语言）：
+// 输入托盘 / 沉淀层积 / 书写笔 / 代码括号 / 摊开的书 / 齿轮机芯
+const kzIcons = [
+  '<path d="M12 4v8m0 0-3.2-3.2M12 12l3.2-3.2"/><path d="M4 13.5v4A2.5 2.5 0 0 0 6.5 20h11a2.5 2.5 0 0 0 2.5-2.5v-4"/><path d="M4 15h4.6l1.5 2h3.8l1.5-2H20"/>',
+  '<path d="M12 3.5 20 8l-8 4.5L4 8Z"/><path d="m4 12.5 8 4.5 8-4.5"/><path d="m4 17 8 4.5L20 17"/>',
+  '<path d="m4.5 19.5.9-3.6L16.6 4.7a2 2 0 0 1 2.8 2.8L8.2 18.6l-3.7.9Z"/><path d="m14.8 6.5 2.8 2.8"/>',
+  '<path d="M9 6.5 4 12l5 5.5"/><path d="m15 6.5 5 5.5-5 5.5"/>',
+  '<path d="M12 6.8C10.1 5.2 7.6 4.6 4 4.6v13.8c3.6 0 6.1.6 8 2.2 1.9-1.6 4.4-2.2 8-2.2V4.6c-3.6 0-6.1.6-8 2.2Z"/><path d="M12 6.8v13.8"/>',
+  '<circle cx="12" cy="12" r="3.2"/><path d="M12 4.2V7M12 17v2.8M4.2 12H7M17 12h2.8M6.5 6.5l2 2M15.5 15.5l2 2M17.5 6.5l-2 2M8.5 15.5l-2 2"/>',
+];
+
 const allArticles = (await getCollection('articles')).sort(
   (a, b) => (b.data.created?.getTime() ?? 0) - (a.data.created?.getTime() ?? 0)
 );
@@ -181,31 +196,31 @@ const skills = [
 ];
 
 const knowledgeZones = [
-  { icon: '📥', name: 'raw / 输入源', stat: '36 GB', desc: 'Plaud 录音转写 1402 个 · BuilderPulse 中英文头条池 · 切曼课程录音 170 个 · 巴菲特股东信' },
-  { icon: '🧠', name: 'Knowledge / 知识沉淀', stat: '930 MB', desc: '中台项目档案（架构/PRD/调研/实施手册）· 合规审核体系 · 哲学与认知心理学笔记' },
-  { icon: '✍️', name: 'Writing / 内容产出', stat: '2300+ md', desc: '抖音口播稿 280 篇（20 周连续 5 公式覆盖🏆）· 公众号 338 篇 · 小红书 346 篇 · 切曼讲稿 23 节' },
-  { icon: '🛠', name: 'Software / 工具资产', stat: '25+ skills', desc: '写作方法论 skill 库 · 抖音口播 2.0 人设热点公式 · Agent 项目源码 · RAG / workflow 工程' },
-  { icon: '📚', name: 'WIKI / 概念库', stat: '55 概念', desc: 'Vibe Coding · Agent 记忆体系 · 模型选型 · 竞品分析——Karpathy 风格编译产物' },
-  { icon: '⚙️', name: 'Meta / 治理', stat: '8 规则', desc: 'CLAUDE.md 编译规范 · 内容生产规则 · 每日工作流 · 自动备份 launchd 双任务' },
+  { name: 'raw / 输入源', stat: '36 GB', desc: 'Plaud 录音转写 1402 个 · BuilderPulse 中英文头条池 · 切曼课程录音 170 个 · 巴菲特股东信' },
+  { name: 'Knowledge / 知识沉淀', stat: '930 MB', desc: '中台项目档案（架构/PRD/调研/实施手册）· 合规审核体系 · 哲学与认知心理学笔记' },
+  { name: 'Writing / 内容产出', stat: '2300+ md', desc: '抖音口播稿 280 篇（20 周连续 5 公式覆盖）· 公众号 338 篇 · 小红书 346 篇 · 切曼讲稿 23 节' },
+  { name: 'Software / 工具资产', stat: '25+ skills', desc: '写作方法论 skill 库 · 抖音口播 2.0 人设热点公式 · Agent 项目源码 · RAG / workflow 工程' },
+  { name: 'WIKI / 概念库', stat: '55 概念', desc: 'Vibe Coding · Agent 记忆体系 · 模型选型 · 竞品分析——Karpathy 风格编译产物' },
+  { name: 'Meta / 治理', stat: '8 规则', desc: 'CLAUDE.md 编译规范 · 内容生产规则 · 每日工作流 · 自动备份 launchd 双任务' },
 ];
 
 
 const geekGear = [
-  { icon: '🤖', name: 'Agentic Coding', status: 'DAILY DRIVER', desc: 'Claude Code 多 Agent 并行编排 + 后台任务 + Workflow 脚本。本站 156 页（3D 星场 / 知识图谱 / 全文系统）即由 Agent 全程构建。' },
-  { icon: '🌐', name: '浏览器操作 Agent', status: 'IN PRODUCTION', desc: 'Claude in Chrome / browser-use 范式：AI 自己打开页面、截图、验证交互。本站每个版本上线前由 AI 在真实浏览器里自检回归。' },
-  { icon: '🕸', name: 'Multi-Agent Workflow', status: 'DAILY DRIVER', desc: 'fan-out 并行调研 + 对抗验证 + 流水线编排。内容周批次、知识库扫描全部多 Agent 并行跑。' },
-  { icon: '🧩', name: 'MCP 协议工程', status: 'IN PRODUCTION', desc: '薄包装策略：70% 复用既有接口、20 个 Tool 覆盖全业务域；飞书全家桶（Base / 文档 / 事件流 / 妙记）经 CLI 接入 Agent。' },
-  { icon: '⚡️', name: 'Skill 工程化', status: 'SHIPPING', desc: '25+ 写作方法论 skill：抖音口播 2.0 人设热点双引擎、口播四步法、公众号爆款——从"指挥 AI"到"管理 AI"。' },
-  { icon: '📚', name: 'LLM Wiki 知识编译', status: 'SHIPPING', desc: 'Karpathy 风格 raw→wiki 编译管线：双链、实体/概念/来源分型。本站 178 节点知识图谱就是编译产物。' },
-  { icon: '🔍', name: 'RAG 混合检索', status: 'IN PRODUCTION', desc: 'BM25 优先 + pgvector 语义辅助、结构化字段先筛掉 90%；MySQL → PostgreSQL 平滑演进。' },
-  { icon: '🎛', name: 'LLM 应用编排', status: 'IN PRODUCTION', desc: 'Dify / LobeHub 双栈：6 业务域 SubAgent、6 阶段意图识别 Pipeline、组合意图 + 会话对象栈（Entity Stack）。' },
-  { icon: '🎨', name: 'AIGC 视觉工作流', status: 'SHIPPED', desc: 'ComfyUI + Lora 微调（10 万+ 训练数据，生图采纳率 65%→87%）；Seedance / Sora2 / Veo 工业化视频生产。' },
-  { icon: '🛡', name: '多模态审核', status: 'SHIPPED', desc: 'Gemini 2.5 Flash/Pro 文本 / 图像 / 视频三模态"源头把控 + 终筛"，5000+ 条评测集支撑。' },
-  { icon: '📊', name: 'LLM 可观测', status: 'IN PRODUCTION', desc: 'Langfuse 全链路 tracing + 评测集 / badcase 闭环 + Token 成本看板——AI 系统不能是黑盒。' },
-  { icon: '🔁', name: '无人值守自动化', status: 'DAILY DRIVER', desc: 'launchd / cron 定时矩阵：每日内容生产、晨晚双轨备份、IMAP 录音附件拉取——睡觉时系统在干活。' },
-  { icon: '🗣', name: '语音 & 数字人', status: 'SHIPPED', desc: 'Whisper 转写 1402 条录音入库 + TTS 配音 + 数字人口播，录音直达多平台成稿。' },
-  { icon: '📡', name: '信息采集流水线', status: 'DAILY DRIVER', desc: 'BuilderPulse 中英热点池 git 自动拉取 + 邮件附件抓取 + 社媒内容采集归档，输入端全自动。' },
-  { icon: '🧪', name: 'Vibe Coding 原型术', status: 'DAILY DRIVER', desc: '单文件 HTML 高保真：20+ 可交互原型 + 看板 + 蓝图，"业务看得见、研发抄得走、老板拍得了板"。' },
+  { name: 'Agentic Coding', status: 'DAILY DRIVER', desc: 'Claude Code 多 Agent 并行编排 + 后台任务 + Workflow 脚本。本站 156 页（3D 星场 / 知识图谱 / 全文系统）即由 Agent 全程构建。' },
+  { name: '浏览器操作 Agent', status: 'IN PRODUCTION', desc: 'Claude in Chrome / browser-use 范式：AI 自己打开页面、截图、验证交互。本站每个版本上线前由 AI 在真实浏览器里自检回归。' },
+  { name: 'Multi-Agent Workflow', status: 'DAILY DRIVER', desc: 'fan-out 并行调研 + 对抗验证 + 流水线编排。内容周批次、知识库扫描全部多 Agent 并行跑。' },
+  { name: 'MCP 协议工程', status: 'IN PRODUCTION', desc: '薄包装策略：70% 复用既有接口、20 个 Tool 覆盖全业务域；飞书全家桶（Base / 文档 / 事件流 / 妙记）经 CLI 接入 Agent。' },
+  { name: 'Skill 工程化', status: 'SHIPPING', desc: '25+ 写作方法论 skill：抖音口播 2.0 人设热点双引擎、口播四步法、公众号爆款——从"指挥 AI"到"管理 AI"。' },
+  { name: 'LLM Wiki 知识编译', status: 'SHIPPING', desc: 'Karpathy 风格 raw→wiki 编译管线：双链、实体/概念/来源分型。本站 178 节点知识图谱就是编译产物。' },
+  { name: 'RAG 混合检索', status: 'IN PRODUCTION', desc: 'BM25 优先 + pgvector 语义辅助、结构化字段先筛掉 90%；MySQL → PostgreSQL 平滑演进。' },
+  { name: 'LLM 应用编排', status: 'IN PRODUCTION', desc: 'Dify / LobeHub 双栈：6 业务域 SubAgent、6 阶段意图识别 Pipeline、组合意图 + 会话对象栈（Entity Stack）。' },
+  { name: 'AIGC 视觉工作流', status: 'SHIPPED', desc: 'ComfyUI + Lora 微调（10 万+ 训练数据，生图采纳率 65%→87%）；Seedance / Sora2 / Veo 工业化视频生产。' },
+  { name: '多模态审核', status: 'SHIPPED', desc: 'Gemini 2.5 Flash/Pro 文本 / 图像 / 视频三模态"源头把控 + 终筛"，5000+ 条评测集支撑。' },
+  { name: 'LLM 可观测', status: 'IN PRODUCTION', desc: 'Langfuse 全链路 tracing + 评测集 / badcase 闭环 + Token 成本看板——AI 系统不能是黑盒。' },
+  { name: '无人值守自动化', status: 'DAILY DRIVER', desc: 'launchd / cron 定时矩阵：每日内容生产、晨晚双轨备份、IMAP 录音附件拉取——睡觉时系统在干活。' },
+  { name: '语音 & 数字人', status: 'SHIPPED', desc: 'Whisper 转写 1402 条录音入库 + TTS 配音 + 数字人口播，录音直达多平台成稿。' },
+  { name: '信息采集流水线', status: 'DAILY DRIVER', desc: 'BuilderPulse 中英热点池 git 自动拉取 + 邮件附件抓取 + 社媒内容采集归档，输入端全自动。' },
+  { name: 'Vibe Coding 原型术', status: 'DAILY DRIVER', desc: '单文件 HTML 高保真：20+ 可交互原型 + 看板 + 蓝图，"业务看得见、研发抄得走、老板拍得了板"。' },
 ];
 
 const courses = [
@@ -218,7 +233,60 @@ const courses = [
 ];
 ---
 
-<Base>
+<Base
+  title="纪鸣飞 · AI 产品架构师 / FDE — 作品与可玩的 AI 产品"
+  description="AI 产品架构师 / 企业 AI 化转型专家 / FDE。5 年产品、4 年专注 AI 落地：制造业数字化 → 千人电商 AI 化 → 大厂出海内容增长 AI 中台。站内有可直接体验的真·AI 产品：业务流程×AI原子能力编排器、AI 情感陪伴小猫。"
+>
+  <a href="#top" class="skip-link">跳到主要内容</a>
+  <div id="nebula-bg" aria-hidden="true"></div>
+  <div class="v2-scope">
+  <!-- 右栏章节导航（scroll-spy）-->
+  <nav class="rail" aria-label="章节导航">
+    <span class="rail-track" aria-hidden="true"><span class="rail-fill" id="rail-fill"></span></span>
+    <a class="rail-item" href="#voyage" data-spy="voyage"><i></i><b>01</b><span>成果</span></a>
+    <a class="rail-item" href="#flagship" data-spy="flagship"><i></i><b>02</b><span>旗舰</span></a>
+    <a class="rail-item" href="#cognition" data-spy="cognition"><i></i><b>03</b><span>认知</span></a>
+    <a class="rail-item" href="#cases" data-spy="cases"><i></i><b>04</b><span>档案</span></a>
+    <a class="rail-item" href="#products" data-spy="products"><i></i><b>05</b><span>产品</span></a>
+    <a class="rail-item" href="#works" data-spy="works"><i></i><b>06</b><span>作品</span></a>
+    <a class="rail-item" href="#logbook" data-spy="logbook"><i></i><b>07</b><span>履历</span></a>
+    <a class="rail-item" href="#method" data-spy="method"><i></i><b>08</b><span>方法</span></a>
+    <a class="rail-item" href="#knowledge" data-spy="knowledge"><i></i><b>09</b><span>知识</span></a>
+    <a class="rail-item" href="#geek" data-spy="geek"><i></i><b>10</b><span>能力</span></a>
+    <a class="rail-item" href="#signal" data-spy="signal"><i></i><b>11</b><span>写作</span></a>
+    <a class="rail-item" href="#engagement" data-spy="engagement"><i></i><b>12</b><span>驻场</span></a>
+  </nav>
+
+  <!-- AI 数字分身宠物 -->
+  <div class="pet" id="pet" data-endpoint={petEndpoint}>
+    <button class="pet-fab" id="pet-fab" aria-label="和鸣飞的 AI 分身聊聊（可拖动换位置）" title="点我聊天 · 拖我换位置" aria-expanded="false">
+      <img src="/pet/mascot.png" alt="" width="56" height="56" draggable="false" />
+      <span class="pet-dot" aria-hidden="true"></span>
+    </button>
+    <div class="pet-hi" id="pet-hi" role="status">嗨，我是鸣飞的 AI 分身「小飞」，问我点啥？</div>
+    <button class="pet-reopen" id="pet-reopen" aria-label="重新显示小飞" title="叫回小飞"><img src="/pet/mascot.png" alt="" width="26" height="26" draggable="false" /></button>
+
+    <section class="pet-panel" id="pet-panel" role="dialog" aria-label="AI 分身对话" aria-modal="false" hidden>
+      <header class="pet-head">
+        <img src="/pet/mascot.png" alt="" width="30" height="30" />
+        <div class="pet-id"><b>小飞</b><i id="pet-mode">· 数字分身</i></div>
+        <button class="pet-hide" id="pet-hide" aria-label="隐藏小飞" title="隐藏小飞">隐藏</button>
+        <button class="pet-x" id="pet-x" aria-label="关闭对话">✕</button>
+      </header>
+      <div class="pet-log" id="pet-log" aria-live="polite"></div>
+      <div class="pet-sugs" id="pet-sugs">
+        <button data-q="鸣飞做过哪些 AI 项目？">做过哪些 AI 项目？</button>
+        <button data-q="TripFlow 旗舰项目是什么？">TripFlow 是什么？</button>
+        <button data-q="他的核心能力是什么？">核心能力？</button>
+        <button data-q="怎么联系鸣飞？">怎么联系？</button>
+      </div>
+      <form class="pet-input" id="pet-form">
+        <input id="pet-text" type="text" autocomplete="off" placeholder="问问鸣飞的经历、项目、能力…" aria-label="输入消息" />
+        <button type="submit" aria-label="发送">↑</button>
+      </form>
+    </section>
+  </div>
+
   <!-- ════════════ HERO · 启航 ════════════ -->
   <header class="hero wrap" id="top">
     <div class="kicker">AI Product Architect · Forward Deployed Engineer</div>
@@ -243,11 +311,11 @@ const courses = [
     <div class="hero-scroll">SCROLL<br />▼</div>
   </header>
 
-  <!-- ════════════ CH.00 · 航程仪表盘 ════════════ -->
+  <!-- ════════════ CH.01 · 关键成果 ════════════ -->
   <section class="chapter" id="voyage">
     <div class="wrap">
       <div class="chapter-head reveal">
-        <div class="ch-no"><em>00</em> KEY OUTCOMES</div>
+        <div class="ch-no"><em>01</em> KEY OUTCOMES</div>
         <h2>关键成果</h2>
         <div class="ch-sub">三段递进式攻坚里<strong style="color:#fff">已兑现</strong>的硬成果——每一项都能在下方对应项目里验证来源（目标值已标注）。</div>
       </div>
@@ -303,21 +371,52 @@ const courses = [
 
       <div class="galaxies" style="margin-top:56px" data-stagger>
         <div class="card galaxy">
-          <div class="g-orbit">🏭</div>
+          <div class="g-orbit"><!-- 齿轮机芯：制造业×数字化 -->
+            <svg viewBox="0 0 48 48" width="44" height="44" fill="none" aria-hidden="true">
+              <defs><linearGradient id="gi1" x1="0" y1="0" x2="48" y2="48"><stop offset="0" stop-color="#7dd3fc"/><stop offset="1" stop-color="#e0f2fe"/></linearGradient></defs>
+              <g stroke="url(#gi1)" stroke-width="1.6" stroke-linecap="round">
+                <circle cx="24" cy="24" r="13"/>
+                <path d="M24 6v5M24 37v5M6 24h5M37 24h5M11.3 11.3l3.5 3.5M33.2 33.2l3.5 3.5M36.7 11.3l-3.5 3.5M14.8 33.2l-3.5 3.5"/>
+                <circle cx="24" cy="24" r="5"/>
+              </g>
+              <circle cx="24" cy="24" r="1.5" fill="url(#gi1)"/>
+            </svg>
+          </div>
           <div class="g-era">2022 — 2023 · 第一阶段</div>
           <h3>制造业数字化转型</h3>
           <p>ERP / 业财融合，PMO 主管带 20+ 人团队重构 50+ 核心流程，整体效率 +60%、核算准确率 +25%，获集团战略奖。变革管理方法论在这里炼成。</p>
           <a href="/prototypes/silicon-staff-arch.html" target="_blank" rel="noopener" style="font-family:var(--mono);font-size:12px;color:var(--star)">看项目档案 ↗</a>
         </div>
         <div class="card galaxy">
-          <div class="g-orbit">🤖</div>
+          <div class="g-orbit"><!-- AI 芯片：硅基员工 -->
+            <svg viewBox="0 0 48 48" width="44" height="44" fill="none" aria-hidden="true">
+              <defs><linearGradient id="gi2" x1="0" y1="0" x2="48" y2="48"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#e9e2ff"/></linearGradient></defs>
+              <g stroke="url(#gi2)" stroke-width="1.6" stroke-linecap="round">
+                <rect x="14" y="14" width="20" height="20" rx="4"/>
+                <rect x="20.5" y="20.5" width="7" height="7" rx="1.6"/>
+                <path d="M19 14V9M24 14V9M29 14V9M19 39v-5M24 39v-5M29 39v-5M14 19H9M14 24H9M14 29H9M39 19h-5M39 24h-5M39 29h-5"/>
+              </g>
+              <path d="M39 7l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z" fill="#a78bfa" opacity=".9"/>
+            </svg>
+          </div>
           <div class="g-era">2023 — 2025 · 第二阶段</div>
           <h3>千人电商 AI 转型</h3>
           <p>「硅基员工」计划：智能客服（降本 13 人 / 满意度 68%→84%）+ AIGC 内容平台 + Lora 微调（生图采纳 65%→87%），年化降本百万级。</p>
           <a href="/prototypes/cs-agent-arch.html" target="_blank" rel="noopener" style="font-family:var(--mono);font-size:12px;color:var(--star)">看项目档案 ↗</a>
         </div>
         <div class="card galaxy">
-          <div class="g-orbit">🚀</div>
+          <div class="g-orbit"><!-- 轨道地球：出海×中台 -->
+            <svg viewBox="0 0 48 48" width="44" height="44" fill="none" aria-hidden="true">
+              <defs><linearGradient id="gi3" x1="0" y1="0" x2="48" y2="48"><stop offset="0" stop-color="#fbbf24"/><stop offset="1" stop-color="#fde68a"/></linearGradient></defs>
+              <g stroke="url(#gi3)" stroke-width="1.6" stroke-linecap="round">
+                <circle cx="24" cy="24" r="12"/>
+                <ellipse cx="24" cy="24" rx="12" ry="4.8"/>
+                <path d="M24 12c4.4 3 4.4 21 0 24M24 12c-4.4 3-4.4 21 0 24"/>
+                <ellipse cx="24" cy="24" rx="20" ry="7" transform="rotate(-18 24 24)"/>
+              </g>
+              <circle cx="42.6" cy="20.5" r="1.8" fill="#fbbf24"/>
+            </svg>
+          </div>
           <div class="g-era">2025 — 至今 · 第三阶段</div>
           <h3>大厂出海 AI 中台</h3>
           <p>出海内容增长 AI 中台：0-1 主导，组织内容生产全流程并嵌入 AI 原子能力，服务 70-80 人运营团队；MVP 单周播放 100 万+，升级为 BG 级转型立项标杆。</p>
@@ -327,7 +426,7 @@ const courses = [
     </div>
   </section>
 
-  <!-- ════════════ CH.01 · 哲学碑文 ════════════ -->
+  <!-- ════════════ ✦ 哲学碑文（插章） ════════════ -->
   <section class="chapter">
     <div class="wrap reveal">
       <p class="epigraph">
@@ -408,11 +507,11 @@ const courses = [
     </div>
   </section>
 
-  <!-- ════════════ CH.02·5 · 商业与 AI 认知 ════════════ -->
+  <!-- ════════════ CH.03 · 商业与 AI 认知 ════════════ -->
   <section class="chapter" id="cognition">
     <div class="wrap">
       <div class="chapter-head reveal">
-        <div class="ch-no"><em>02 ✦</em> COGNITION</div>
+        <div class="ch-no"><em>03</em> COGNITION</div>
         <h2>商业与 AI 认知</h2>
         <div class="ch-sub">
           AI 时代的产品判断，不是"会不会用模型"，而是能不能把<strong style="color:#fff">需求、差异化、组织效率、AI loop 和长期壁垒</strong>放在同一张图里判断。
@@ -468,11 +567,11 @@ const courses = [
     </div>
   </section>
 
-  <!-- ════════════ CH.03 · 项目档案 ════════════ -->
+  <!-- ════════════ CH.04 · 项目档案 ════════════ -->
   <section class="chapter" id="cases">
     <div class="wrap">
       <div class="chapter-head reveal">
-        <div class="ch-no"><em>02 ✦</em> CASE FILES</div>
+        <div class="ch-no"><em>04</em> CASE FILES</div>
         <h2>代表作 · 项目档案</h2>
         <div class="ch-sub">
           每个项目都点得开完整架构图——<strong style="color:#fff">复杂度、业务/商业价值、我的管理角色</strong>都摆在台面上。这是我在面试里直接对着讲完整经历的可视化底稿。
@@ -533,11 +632,38 @@ const courses = [
     </div>
   </section>
 
-  <!-- ════════════ CH.03 · 星图集（作品）════════════ -->
+  <!-- ════════════ CH.05 · 产品 · Products ════════════ -->
+  <section class="chapter" id="products">
+    <div class="wrap">
+      <div class="chapter-head reveal">
+        <div class="ch-no"><em>05</em> PRODUCTS · 能跑的产物</div>
+        <h2>亲手做的 AI 产品 · 点开即玩</h2>
+        <div class="ch-sub">
+          不止讲方法——<strong style="color:#fff">想清业务 → 自己做出能跑的产物</strong>。下面两个都是真·DeepSeek 驱动、当场能用的小产品，一 B 端一 C 端，从产品设计到全栈落地一人闭环。
+        </div>
+      </div>
+      <div class="products-grid" data-stagger>
+        <a class="product-card" href="/products/orchestrator.html" target="_blank" rel="noopener">
+          <div class="pc-head"><span class="pc-tag b">B 端 · 方法论工具</span><span class="pc-live">● LIVE</span></div>
+          <h3>业务流程 × AI 原子能力编排器</h3>
+          <p>描述你的业务流程，AI 帮你拆节点、指出该在哪些环节嵌入 AI 原子能力，并给出落地建议与预期收益。把我在中台里的方法论做成了人人可试的工具。</p>
+          <div class="pc-foot"><span>DeepSeek 驱动 · 结构化输出</span><span class="pc-go">打开产品 ↗</span></div>
+        </a>
+        <a class="product-card" href="/products/companion.html" target="_blank" rel="noopener">
+          <div class="pc-head"><span class="pc-tag c">C 端 · 情感陪伴</span><span class="pc-live">● LIVE</span></div>
+          <h3>奶糖 · AI 情感陪伴小猫</h3>
+          <p>一只会共情、会安慰、偶尔「喵～」的 AI 小猫，累了随时来聊两句。C 端的另一面——不谈 ROI，只谈体验与陪伴的温度。</p>
+          <div class="pc-foot"><span>DeepSeek 驱动 · 拟人短句</span><span class="pc-go">打开产品 ↗</span></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ CH.06 · 作品·星图集════════════ -->
   <section class="chapter" id="works">
     <div class="wrap">
       <div class="chapter-head reveal">
-        <div class="ch-no"><em>03</em> WORKS</div>
+        <div class="ch-no"><em>06</em> WORKS</div>
         <h2>作品 · 可直接点开验证</h2>
         <div class="ch-sub">不是"据说做过"，是公开部署、点开即看的可运行产物。</div>
       </div>
@@ -559,26 +685,26 @@ const courses = [
       <div class="proto-strip reveal">
         {protos.map((p) => (
           <a class="proto-item" href={`/prototypes/${p.slug}.html`} target="_blank" rel="noopener" style="color:inherit;display:block">
-            <div class="p-ver">{p.ver} ↗</div>
+            <div class="p-ver"><span>{p.ver}</span><span class="p-go" aria-hidden="true">↗</span></div>
             <h4>{p.name}</h4>
             <p>{p.note}</p>
           </a>
         ))}
       </div>
       <p style="font-family:var(--mono);font-size:12px;color:var(--ink3)">
-        ← 横向滑动 · 每一个都可点开直接交互（真实过程文件）· 用可运行产物代替纯 PRD
+        横向滑动 → 每一个都可点开直接交互（真实过程文件）· 用可运行产物代替纯 PRD
       </p>
       <div style="margin-top:22px" class="reveal">
-        <a class="btn primary" href="/prototypes/">🛠 进原型工坊 · 14 个过程文件实时预览</a>
+        <a class="btn primary" href="/prototypes/">进原型工坊 · 14 个过程文件实时预览</a>
       </div>
     </div>
   </section>
 
-  <!-- ════════════ CH.04 · 航行日志（经历）════════════ -->
+  <!-- ════════════ CH.07 · 履历·航行日志════════════ -->
   <section class="chapter" id="logbook">
     <div class="wrap">
       <div class="chapter-head reveal">
-        <div class="ch-no"><em>04</em> EXPERIENCE</div>
+        <div class="ch-no"><em>07</em> EXPERIENCE</div>
         <h2>履历 · 三段递进式攻坚</h2>
         <div class="ch-sub">每一段都比上一段更难。技术在换代，方法论一以贯之。</div>
       </div>
@@ -633,11 +759,11 @@ const courses = [
     </div>
   </section>
 
-  <!-- ════════════ CH.05 · 方法论星座 ════════════ -->
+  <!-- ════════════ CH.08 · 方法论星座 ════════════ -->
   <section class="chapter" id="method">
     <div class="wrap">
       <div class="chapter-head reveal">
-        <div class="ch-no"><em>05</em> METHODOLOGY</div>
+        <div class="ch-no"><em>08</em> METHODOLOGY</div>
         <h2>方法论</h2>
         <div class="ch-sub">命名权属于实践者——这九条都是先在真实项目里跑通、才配命名的。每一条都能在作品与写作里找到出处。</div>
       </div>
@@ -653,11 +779,11 @@ const courses = [
     </div>
   </section>
 
-  <!-- ════════════ CH.06 · 知识星系 ════════════ -->
+  <!-- ════════════ CH.09 · 知识星系 ════════════ -->
   <section class="chapter" id="knowledge">
     <div class="wrap">
       <div class="chapter-head reveal">
-        <div class="ch-no"><em>06</em> KNOWLEDGE BASE</div>
+        <div class="ch-no"><em>09</em> KNOWLEDGE BASE</div>
         <h2>个人知识体系</h2>
         <div class="ch-sub">
           一座 38 GB 的 Obsidian 知识库（7600+ 篇 / 2.2 万文件）+ Claude Code Agent 流水线——「raw 进、Writing 出、Knowledge 沉淀、Software 复用、Meta 治理」。
@@ -674,9 +800,10 @@ const courses = [
       </div>
 
       <div class="grid-3" style="margin-top:34px" data-stagger>
-        {knowledgeZones.map((z) => (
+        <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="kzg" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#7dd3fc"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs></svg>
+        {knowledgeZones.map((z, i) => (
           <div class="card">
-            <h3>{z.icon} {z.name}</h3>
+            <h3 class="kz-h"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="url(#kzg)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={kzIcons[i]} /> {z.name}</h3>
             <div class="kz-stat">{z.stat}</div>
             <p>{z.desc}</p>
           </div>
@@ -709,7 +836,7 @@ const courses = [
 
       <a class="card reveal" href="/files/philosophical-dialogues.pdf" target="_blank" rel="noopener" style="display:block;color:inherit;margin-top:34px;border-left:3px solid var(--nebula)">
         <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px">
-          <h3 style="margin:0">🍷 哲学对话整理 · 55 页 PDF <span style="font-family:var(--mono);font-size:12px;color:var(--flare)">↗ 直接阅读</span></h3>
+          <h3 style="margin:0">哲学对话整理 · 55 页 PDF <span style="font-family:var(--mono);font-size:12px;color:var(--flare)">↗ 直接阅读</span></h3>
           <span class="chip violet">品味出处</span>
         </div>
         <p style="margin-top:10px">与 AI 的 55 页哲学长对话：否定性推演、符号秩序与自我建构、辩证逆转、爱情命题的解构——
@@ -734,11 +861,11 @@ const courses = [
     </div>
   </section>
 
-  <!-- ════════════ CH.07 · 技能矩阵 ════════════ -->
+  <!-- ════════════ ✦ 技术栈（知识附章） ════════════ -->
   <section class="chapter">
     <div class="wrap">
       <div class="chapter-head reveal">
-        <div class="ch-no"><em>07</em> TECH STACK</div>
+        <div class="ch-no"><em>✦</em> TECH STACK</div>
         <h2>技术栈</h2>
         <div class="ch-sub">Claude Code / Cursor 是日常生产工具，不是谈资。</div>
       </div>
@@ -756,7 +883,7 @@ const courses = [
   </section>
 
 
-  <!-- ════════════ CH.08 · 极客雷达 ════════════ -->
+  <!-- ════════════ CH.10 · 能力·极客雷达 ════════════ -->
   <section class="chapter geek-chapter" id="geek">
     <div class="geek-particles" aria-hidden="true">
       <iframe src="/geek-sphere.html" title="" loading="lazy" scrolling="no" tabindex="-1"></iframe>
@@ -766,7 +893,7 @@ const courses = [
     </div>
     <div class="wrap" style="position:relative;z-index:1">
       <div class="chapter-head reveal">
-        <div class="ch-no"><em>08</em> CAPABILITIES</div>
+        <div class="ch-no"><em>10</em> CAPABILITIES</div>
         <h2>工程能力 · 全部在真实工作流里跑着</h2>
         <div class="ch-sub">
           不追概念。以下 15 项能力<strong style="color:#fff">每一项都有可验证的产物</strong>——
@@ -799,11 +926,11 @@ const courses = [
     </div>
   </section>
 
-  <!-- ════════════ CH.09 · 信号塔（写作）════════════ -->
+  <!-- ════════════ CH.11 · 写作·信号塔════════════ -->
   <section class="chapter" id="signal">
     <div class="wrap">
       <div class="chapter-head reveal">
-        <div class="ch-no"><em>09</em> WRITING</div>
+        <div class="ch-no"><em>11</em> WRITING</div>
         <h2>公开写作 · Building in Public</h2>
         <div class="ch-sub">
           「人人都是产品经理」专栏作者 · 飞书开发者大会受邀嘉宾 · 公司年度优秀内训师（培训评分 TOP 2/15）。
@@ -823,7 +950,7 @@ const courses = [
       </div>
 
       <div style="margin-top:36px;text-align:center" class="reveal">
-        <a class="btn primary" href="/articles/">📡 进入信号塔 · 全部 {allArticles.length} 篇文章</a>
+        <a class="btn primary" href="/articles/">进入信号塔 · 全部 {allArticles.length} 篇文章</a>
       </div>
 
       <h3 style="font-family:var(--serif);font-size:21px;margin:56px 0 20px;color:#fff">AI 产品课程体系（6 节）</h3>
@@ -833,11 +960,11 @@ const courses = [
     </div>
   </section>
 
-  <!-- ════════════ CH.10 · 驻场交付（杀手锏）════════════ -->
+  <!-- ════════════ CH.12 · 驻场交付（杀手锏）════════════ -->
   <section class="chapter" id="engagement">
     <div class="wrap">
       <div class="chapter-head reveal">
-        <div class="ch-no"><em>10</em> ENGAGEMENT</div>
+        <div class="ch-no"><em>12</em> ENGAGEMENT</div>
         <h2>如果我驻场你的团队 · 90 天交付什么</h2>
         <div class="ch-sub">
           上面是"做过什么"，这里是"能为你做什么"。同一套方法论，三段转型都靠它活下来——
@@ -903,7 +1030,7 @@ const courses = [
     </div>
   </section>
 
-  <!-- ════════════ CH.11 · 终章碑文 ════════════ -->
+  <!-- ════════════ ✦ 终章碑文 ════════════ -->
   <section class="chapter">
     <div class="wrap reveal">
       <p class="epigraph">
@@ -919,6 +1046,291 @@ const courses = [
       </div>
     </div>
   </section>
+  </div><!-- /v2-scope -->
+
+  <script is:inline>
+    (function () {
+      var host = document.getElementById('nebula-bg');
+      if (!host) return;
+      // 每个主题一套背景特效（独立特效文件，v2-scoped）
+      var FX = {
+        cosmos: '/cosmos-nebula.html', paper: '/paper-ink.html',
+        klein: '/klein-fx.html', snow: '/snow-fx.html', hud: '/hud-field.html'
+      };
+      var curSrc = null;
+      function sync() {
+        // 屏蔽 BaseV2 自带的 #hud-field（它 opacity 卡 0 + 会和本层重复），统一由本层接管
+        var legacy = document.getElementById('hud-field');
+        if (legacy) legacy.style.setProperty('display', 'none', 'important');
+        var src = FX[document.documentElement.getAttribute('data-theme')] || null;
+        if (src === curSrc) return;
+        curSrc = src;
+        host.innerHTML = '';
+        if (src) {
+          var f = document.createElement('iframe');
+          f.src = src; f.setAttribute('tabindex', '-1');
+          f.setAttribute('scrolling', 'no'); f.setAttribute('aria-hidden', 'true');
+          // 内联尺寸（动态 iframe 拿不到 Astro scoped 样式，必须内联，否则停在 300×150）
+          f.style.cssText = 'width:100vw;height:100vh;border:0;display:block;';
+          host.appendChild(f);
+        }
+      }
+      new MutationObserver(sync).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+      sync();
+      // hero 深度视差：内容与星空反向微移，形成前/后景层次（仅精确指针 + 允许动效时）
+      // 平滑交给 CSS transition，事件里直接写目标值，无常驻 rAF
+      var hero = document.querySelector('.hero');
+      var depthOn = hero && matchMedia('(pointer:fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (depthOn) {
+        hero.style.transition = 'transform 1.1s cubic-bezier(.16,.6,.3,1)';
+        hero.style.willChange = 'transform';
+      }
+      addEventListener('pointermove', function (e) {
+        var x = e.clientX / innerWidth - 0.5, y = e.clientY / innerHeight - 0.5;
+        if (depthOn) hero.style.transform = 'translate3d(' + (-x * 10).toFixed(2) + 'px,' + (-y * 8).toFixed(2) + 'px,0)';
+        var f = host.querySelector('iframe');
+        if (f && f.contentWindow) f.contentWindow.postMessage({ t: 'pointer', x: x, y: y }, '*');
+      }, { passive: true });
+    })();
+  </script>
+
+  <script is:inline>
+    (function () {
+      var rail = document.querySelector('.rail');
+      if (!rail) return;
+      var items = Array.prototype.slice.call(rail.querySelectorAll('.rail-item'));
+      var fill = rail.querySelector('.rail-fill');
+      var map = {};
+      items.forEach(function (a) { map[a.getAttribute('data-spy')] = a; });
+      var ids = items.map(function (a) { return a.getAttribute('data-spy'); });
+      var current = null;
+      function setActive(id) {
+        if (id === current) return;
+        current = id;
+        items.forEach(function (a) {
+          var on = a.getAttribute('data-spy') === id;
+          a.classList.toggle('active', on);
+          if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+        });
+      }
+      // 阅读线判定：取"顶部已越过视口 1/3 线"的最后一个章节，对高矮章节都稳
+      function onScroll() {
+        var line = innerHeight * 0.33, best = ids[0];
+        ids.forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el && el.getBoundingClientRect().top <= line) best = id;
+        });
+        // 触底时强制点亮最后一节
+        if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) best = ids[ids.length - 1];
+        setActive(best);
+        rail.classList.toggle('show', scrollY > innerHeight * 0.6);
+        var max = document.documentElement.scrollHeight - innerHeight;
+        if (fill && max > 0) fill.style.height = Math.max(0, Math.min(100, (scrollY / max) * 100)) + '%';
+      }
+      // 平滑跳转 + 尊重 reduced-motion
+      var smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+      items.forEach(function (a) {
+        a.addEventListener('click', function (e) {
+          var id = a.getAttribute('data-spy');
+          var el = document.getElementById(id);
+          if (!el) return;
+          e.preventDefault();
+          el.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
+          history.replaceState(null, '', '#' + id);
+        });
+      });
+      addEventListener('scroll', onScroll, { passive: true });
+      addEventListener('resize', onScroll, { passive: true });
+      onScroll();
+    })();
+  </script>
+
+  <script is:inline>
+    // 产品卡聚光灯：跟随指针写入 --mx/--my（.product-card 不带 .card，全局脚本不覆盖它）
+    (function () {
+      document.querySelectorAll('.product-card').forEach(function (card) {
+        card.addEventListener('mousemove', function (e) {
+          var r = card.getBoundingClientRect();
+          card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+          card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+        }, { passive: true });
+      });
+    })();
+  </script>
+
+  <script is:inline>
+    (function () {
+      var root = document.getElementById('pet');
+      if (!root) return;
+      var endpoint = (root.dataset.endpoint || '').trim();
+      var fab = document.getElementById('pet-fab');
+      var panel = document.getElementById('pet-panel');
+      var hi = document.getElementById('pet-hi');
+      var log = document.getElementById('pet-log');
+      var form = document.getElementById('pet-form');
+      var input = document.getElementById('pet-text');
+      var modeEl = document.getElementById('pet-mode');
+      var sugs = document.getElementById('pet-sugs');
+      var history = [];   // {role, content} 发给后端
+      var busy = false, opened = false, greeted = false;
+      modeEl.textContent = endpoint ? '· 在线 AI' : '· 数字分身';
+
+      // 演示人格：只复述站内既有脱敏事实，连续短句，未知则诚实兜底
+      function demoReply(q) {
+        var t = q.toLowerCase();
+        var has = function () { for (var i = 0; i < arguments.length; i++) if (q.indexOf(arguments[i]) >= 0 || t.indexOf(arguments[i]) >= 0) return true; return false; };
+        if (has('tripflow', '旗舰', '中台'))
+          return ['TripFlow 是我的旗舰。', '核心一句话：把组织的业务流程梳清楚，再在关键节点嵌入 AI 原子能力。', '多 Agent 是基于 LobeHub 落地的——打通了 Skill、MCP、知识库，有真实业务效用；但主线叙事是业务流程编排，不是炫多智能体。'];
+        if (has('项目', 'ai 项目', '做过', '案例', '经历', '做了什么'))
+          return ['我的主线是三段：制造业数字化 → 千人规模电商的 AI 化转型 → 大厂出海业务的内容增长 AI 中台。', '风格是 FDE 式全栈，用「能跑的产物」推动落地，不是只写 PRD。', '想细看哪一段？或者直接看「项目档案」那一节～'];
+        if (has('能力', '技能', '擅长', '强项'))
+          return ['三件事：AI 产品架构、企业 AI 化转型、FDE 式全栈交付。', '简单说——既能想清楚业务和产品形态，也能自己把可运行的东西做出来。'];
+        if (has('知识', 'obsidian', '学习', '体系'))
+          return ['我维护着一套约 38GB 的 Obsidian 知识库，7600+ 篇 markdown。', '页面上「知识体系」那节有可视化图谱，可以点点看。'];
+        if (has('联系', '邮箱', '加微', '怎么找', 'contact', '合作'))
+          return ['邮箱：1966315939@qq.com', 'GitHub：github.com/MingfeiJi', '聊合作、聊 AI 落地都欢迎～'];
+        if (has('网站', '这站', '怎么做', '技术栈', '宠物', '你是谁'))
+          return ['这站是 Astro + Three.js 做的，能切好几种主题。', '我是鸣飞的 AI 数字分身「小飞」。', '接上真·AI 后我能聊更多——现在是演示人格，先答些常见问题。'];
+        if (has('你好', 'hi', 'hello', '在吗', '嗨'))
+          return ['在的～', '想了解鸣飞的项目、能力，还是怎么联系？下面几个按钮可以直接点。'];
+        return ['这个我这版演示人格还答不全🙈', '接上真·AI 模式后我能聊得更细。', '急的话直接邮箱找鸣飞：1966315939@qq.com'];
+      }
+
+      // Astro scoped 样式靠 data-astro-cid-* 属性匹配；JS 动态创建的节点必须补上，否则拿不到任何样式
+      var cidAttr = '';
+      for (var ai = 0; ai < root.attributes.length; ai++)
+        if (root.attributes[ai].name.indexOf('data-astro-cid-') === 0) { cidAttr = root.attributes[ai].name; break; }
+      function el(cls, text) {
+        var d = document.createElement('div'); d.className = cls; d.textContent = text;
+        if (cidAttr) d.setAttribute(cidAttr, '');
+        return d;
+      }
+      function scrollDown() { log.scrollTop = log.scrollHeight; }
+      function addBubble(role, text) { var b = el('pet-msg ' + (role === 'me' ? 'me' : 'bot'), text); log.appendChild(b); scrollDown(); return b; }
+      function typing() {
+        var w = el('pet-typing', '');
+        w.innerHTML = '<span></span><span></span><span></span>';
+        if (cidAttr) for (var si = 0; si < w.children.length; si++) w.children[si].setAttribute(cidAttr, '');
+        log.appendChild(w); scrollDown(); return w;
+      }
+
+      // 串行队列：任何时候只播一段，避免问候与回答交叠
+      var queue = [], playing = false;
+      function botSay(lines, done) { queue.push({ lines: lines, done: done }); pump(); }
+      function pump() {
+        if (playing) return;
+        var job = queue.shift(); if (!job) return;
+        playing = true; var i = 0;
+        (function next() {
+          if (i >= job.lines.length) { playing = false; if (job.done) job.done(); pump(); return; }
+          var t = typing();
+          setTimeout(function () {
+            t.remove(); addBubble('bot', job.lines[i]); i++;
+            setTimeout(next, 260);
+          }, 380 + Math.min(job.lines[i].length * 14, 700));
+        })();
+      }
+
+      function send(q) {
+        if (busy || !q) return;
+        busy = true; input.value = '';
+        addBubble('me', q);
+        history.push({ role: 'user', content: q });
+        if (!endpoint) {
+          var lines = demoReply(q);
+          botSay(lines, function () { history.push({ role: 'assistant', content: lines.join(' ') }); busy = false; });
+          return;
+        }
+        // 真·AI：非流式（后端返回 {reply}），按短句拆成多气泡，更像真人
+        var t = typing();
+        fetch(endpoint, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages: history.slice(-12) }),
+        }).then(function (resp) {
+          return resp.json().catch(function () { return {}; });
+        }).then(function (d) {
+          t.remove();
+          var reply = (d && d.reply) ? String(d.reply) : '（我走神了一下，再说一次？）';
+          var parts = reply.split(/\n+/).filter(Boolean);
+          botSay(parts.length ? parts : [reply], function () { history.push({ role: 'assistant', content: reply }); busy = false; });
+        }).catch(function () {
+          t.remove(); addBubble('bot', '网络有点闹脾气，稍后再试～'); busy = false;
+        });
+      }
+
+      function placePanel() {
+        var r = root.getBoundingClientRect();
+        panel.classList.toggle('below', r.top < innerHeight / 2);
+        panel.classList.toggle('right', r.left > innerWidth / 2);
+      }
+      function open(skipGreet) {
+        if (!opened) {
+          opened = true;
+          placePanel();
+          panel.hidden = false; fab.setAttribute('aria-expanded', 'true'); hi.classList.remove('show');
+          if (!skipGreet && log.childElementCount === 0)
+            botSay(['嗨，我是鸣飞的 AI 数字分身「小飞」👋', '想了解他的项目、能力，还是怎么联系？']);
+          setTimeout(function () { input.focus(); }, 60);
+        }
+      }
+      function close() { opened = false; panel.hidden = true; fab.setAttribute('aria-expanded', 'false'); }
+
+      // ── 拖拽换位置（记忆到 localStorage）──
+      var POSKEY = 'mfj-pet-pos';
+      function applyPos(x, y) {
+        var w = root.offsetWidth || 64, h = root.offsetHeight || 64;
+        x = Math.max(8, Math.min(innerWidth - w - 8, x));
+        y = Math.max(8, Math.min(innerHeight - h - 8, y));
+        root.style.left = x + 'px'; root.style.top = y + 'px';
+        root.style.right = 'auto'; root.style.bottom = 'auto';
+      }
+      try { var sp = JSON.parse(localStorage.getItem(POSKEY) || 'null'); if (sp) applyPos(sp.x, sp.y); } catch (e) {}
+      addEventListener('resize', function () { var r = root.getBoundingClientRect(); if (root.style.left) applyPos(r.left, r.top); });
+
+      var dragging = false, moved = false, sx = 0, sy = 0, ox = 0, oy = 0;
+      fab.addEventListener('pointerdown', function (e) {
+        dragging = true; moved = false; sx = e.clientX; sy = e.clientY;
+        var r = root.getBoundingClientRect(); ox = r.left; oy = r.top;
+        try { fab.setPointerCapture(e.pointerId); } catch (er) {}
+      });
+      fab.addEventListener('pointermove', function (e) {
+        if (!dragging) return;
+        var dx = e.clientX - sx, dy = e.clientY - sy;
+        if (!moved && Math.abs(dx) + Math.abs(dy) > 5) { moved = true; fab.classList.add('grabbing'); if (opened) close(); hi.classList.remove('show'); }
+        if (moved) applyPos(ox + dx, oy + dy);
+      });
+      fab.addEventListener('pointerup', function (e) {
+        if (!dragging) return; dragging = false; fab.classList.remove('grabbing');
+        try { fab.releasePointerCapture(e.pointerId); } catch (er) {}
+        if (moved) { var r = root.getBoundingClientRect(); localStorage.setItem(POSKEY, JSON.stringify({ x: r.left, y: r.top })); }
+      });
+      fab.addEventListener('click', function () { if (moved) { moved = false; return; } opened ? close() : open(false); });
+
+      // ── 隐藏 / 叫回 ──
+      var HIDEKEY = 'mfj-pet-hidden';
+      function tuck() { close(); root.classList.add('tucked'); try { localStorage.setItem(HIDEKEY, '1'); } catch (e) {} }
+      function untuck() { root.classList.remove('tucked'); try { localStorage.removeItem(HIDEKEY); } catch (e) {} }
+      try { if (localStorage.getItem(HIDEKEY) === '1') root.classList.add('tucked'); } catch (e) {}
+      document.getElementById('pet-hide').addEventListener('click', tuck);
+      document.getElementById('pet-reopen').addEventListener('click', untuck);
+
+      document.getElementById('pet-x').addEventListener('click', close);
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && opened) { close(); fab.focus(); } });
+      // 点面板外关闭
+      document.addEventListener('pointerdown', function (e) {
+        if (opened && !panel.contains(e.target) && !fab.contains(e.target)) close();
+      });
+      form.addEventListener('submit', function (e) { e.preventDefault(); open(true); send(input.value.trim()); });
+      sugs.addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) { open(true); send(b.dataset.q); } });
+
+      // 首次问候气泡：滚动一点后冒出来，几秒后自动收起
+      setTimeout(function () {
+        if (greeted || opened) return; greeted = true;
+        hi.classList.add('show');
+        setTimeout(function () { hi.classList.remove('show'); }, 6000);
+      }, 2600);
+    })();
+  </script>
 </Base>
 
 <style>
@@ -1095,9 +1507,9 @@ const courses = [
   @media (max-width: 760px) { .case-grid { grid-template-columns: 1fr; } }
   .case-card {
     display: block; border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px;
-    background: rgba(125,211,252,.045); color: inherit; text-decoration: none; transition: .25s;
+    background: color-mix(in srgb, var(--star) 5%, transparent); color: inherit; text-decoration: none; transition: .25s;
   }
-  a.case-card:hover { border-color: var(--star); background: rgba(125,211,252,.09); transform: translateY(-3px); box-shadow: 0 14px 40px rgba(125,211,252,.12); }
+  a.case-card:hover { border-color: var(--star); background: color-mix(in srgb, var(--star) 9%, transparent); transform: translateY(-3px); box-shadow: 0 14px 40px color-mix(in srgb, var(--star) 12%, transparent); }
   .case-card.flagship { grid-column: 1 / -1; border-color: rgba(251,191,36,.3); background: rgba(251,191,36,.045); }
   a.case-card.flagship:hover { border-color: var(--flare); box-shadow: 0 14px 44px rgba(251,191,36,.16); }
   .case-card.static { cursor: default; }
@@ -1169,13 +1581,376 @@ const courses = [
   .lab-line { font-family: var(--mono); font-size: 11px; color: var(--star); letter-spacing: .14em; text-transform: uppercase; margin: 8px 0 4px; }
 
   /* 已兑现硬成果矩阵 */
-  .km-matrix { margin-top: 38px; border: 1px solid var(--line); border-radius: 14px; background: rgba(125,211,252,.03); overflow: hidden; }
+  .km-matrix { margin-top: 38px; border: 1px solid var(--line); border-radius: 14px; background: color-mix(in srgb, var(--star) 3%, transparent); overflow: hidden; }
   .km-row { display: grid; grid-template-columns: 132px 1fr; gap: 16px; padding: 16px 20px; border-top: 1px solid var(--line); }
   .km-row:first-child { border-top: 0; }
   .km-cat { font-family: var(--mono); font-size: 13px; color: #fff; font-weight: 600; padding-top: 3px; }
   .km-cat small { display: block; font-size: 10.5px; color: var(--star); font-weight: 400; margin-top: 3px; letter-spacing: .04em; }
   .km-stats { display: flex; flex-wrap: wrap; gap: 8px; }
-  .km-stats span { display: inline-flex; flex-direction: column; gap: 2px; border: 1px solid var(--line); border-radius: 9px; padding: 8px 12px; background: rgba(125,211,252,.04); font-size: 11.5px; color: var(--ink3); line-height: 1.35; }
+  .km-stats span { display: inline-flex; flex-direction: column; gap: 2px; border: 1px solid var(--line); border-radius: 9px; padding: 8px 12px; background: color-mix(in srgb, var(--star) 4%, transparent); font-size: 11.5px; color: var(--ink3); line-height: 1.35; }
   .km-stats span b { font-family: var(--mono); font-size: 15px; color: var(--star); font-weight: 600; letter-spacing: .01em; }
   @media (max-width: 680px) { .km-row { grid-template-columns: 1fr; gap: 9px; } .km-stats span b { font-size: 14px; } }
+
+  /* ── 右栏章节导航 scroll-spy ── */
+  .rail { position: fixed; right: 22px; top: 50%; transform: translateY(-50%); z-index: 40;
+    display: flex; flex-direction: column; gap: 2px; padding: 6px 4px;
+    opacity: 0; pointer-events: none; transition: opacity .6s ease; }
+  .rail.show { opacity: 1; pointer-events: auto; }
+  .rail-track { position: absolute; right: -7px; top: 7px; bottom: 7px; width: 2px;
+    background: var(--line); border-radius: 2px; overflow: hidden; }
+  .rail-fill { position: absolute; top: 0; left: 0; width: 100%; height: 0;
+    background: linear-gradient(180deg, var(--star), var(--nebula));
+    box-shadow: 0 0 6px var(--star); }
+  .rail-item { position: relative; display: flex; align-items: center; justify-content: flex-end;
+    gap: 10px; height: 26px; padding-right: 2px; text-decoration: none; cursor: pointer; }
+  .rail-item i { width: 22px; height: 1.5px; border-radius: 2px; background: var(--ink3);
+    opacity: .4; transition: width .28s cubic-bezier(.2,.8,.2,1), opacity .28s, background .28s; }
+  .rail-item b { font-family: var(--mono); font-size: 9.5px; font-weight: 600; letter-spacing: .04em;
+    color: var(--ink3); opacity: 0; transform: translateX(4px); transition: opacity .28s, transform .28s, color .28s;
+    min-width: 15px; text-align: right; }
+  .rail-item span { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--ink2);
+    opacity: 0; transform: translateX(6px); transition: opacity .28s, transform .28s;
+    white-space: nowrap; pointer-events: none; }
+  .rail:hover .rail-item b { opacity: .65; transform: none; }
+  .rail-item:hover i { width: 30px; opacity: .9; }
+  .rail-item:hover span { opacity: 1; transform: none; }
+  .rail-item:hover b { color: var(--star); opacity: 1; }
+  .rail-item.active i { width: 34px; opacity: 1; background: var(--star); box-shadow: 0 0 8px var(--star); }
+  .rail-item.active b { opacity: 1; color: var(--star); }
+  .rail-item:focus-visible { outline: 2px solid var(--star); outline-offset: 3px; border-radius: 4px; }
+  @media (max-width: 980px) { .rail { display: none; } }
+
+  /* ── AI 数字分身宠物（3D 悬浮质感：光晕环 + 地影 + 玻璃面板）── */
+  /* 主题化：面板底/强调/我方气泡文字色由 --pet-* 驱动，随 data-theme 切换 */
+  .pet { position: fixed; left: 22px; bottom: 22px; z-index: 60; font-family: var(--mono);
+    --pet-surface: rgba(13,17,38,.93); --pet-surface2: rgba(9,13,32,.95); --pet-me-ink: #04060f; }
+  :global(html:is([data-theme='paper'], [data-theme='snow'])) .pet {
+    --pet-surface: rgba(255,255,255,.93); --pet-surface2: rgba(250,250,248,.96); --pet-me-ink: #fff; }
+  :global(html[data-theme='klein']) .pet {
+    --pet-surface: rgba(0,32,122,.93); --pet-surface2: rgba(0,26,100,.96); --pet-me-ink: #002FA7; }
+  :global(html[data-theme='hud']) .pet {
+    --pet-surface: rgba(7,11,26,.93); --pet-surface2: rgba(5,8,20,.96); --pet-me-ink: #04060f; }
+  /* 地面投影：与浮动反相缩放，营造真实悬浮高度 */
+  .pet::before { content: ''; position: absolute; left: 10px; bottom: -7px; width: 44px; height: 9px;
+    border-radius: 50%; background: radial-gradient(50% 50% at 50% 50%, rgba(2,6,20,.55), transparent 72%);
+    filter: blur(2px); animation: pet-ground 3.4s ease-in-out infinite; pointer-events: none; }
+  @keyframes pet-ground { 0%,100% { transform: scale(1); opacity: .8; } 50% { transform: scale(.78); opacity: .45; } }
+  .pet.tucked::before { display: none; }
+
+  .pet-fab { position: relative; width: 64px; height: 64px; border-radius: 50%; cursor: grab; touch-action: none;
+    border: none; background: linear-gradient(145deg, #ffffff, #dbeafe); padding: 0; overflow: visible;
+    box-shadow: 0 10px 32px rgba(2,6,24,.45), 0 2px 8px rgba(2,6,24,.3),
+      inset 0 1px 0 rgba(255,255,255,.9), 0 0 0 1px color-mix(in srgb, var(--star) 30%, transparent);
+    transition: transform .3s cubic-bezier(.2,.9,.2,1.2), box-shadow .3s; animation: pet-bob 3.4s ease-in-out infinite; }
+  .pet-fab.grabbing { cursor: grabbing; animation: none; }
+  /* 旋转能量光晕环 */
+  .pet-fab::before { content: ''; position: absolute; inset: -4px; border-radius: 50%; z-index: -1;
+    background: conic-gradient(from 0deg, transparent 0deg 30deg, color-mix(in srgb, var(--star) 90%, transparent) 95deg,
+      color-mix(in srgb, var(--nebula) 75%, transparent) 150deg, transparent 215deg 360deg);
+    filter: blur(5px); opacity: .5; animation: pet-halo 7s linear infinite; transition: opacity .3s; }
+  @keyframes pet-halo { to { transform: rotate(360deg); } }
+  /* 悬停高光扫掠 */
+  .pet-fab::after { content: ''; position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
+    background: linear-gradient(120deg, transparent 32%, rgba(255,255,255,.55) 47%, transparent 62%);
+    background-size: 250% 100%; background-position: 130% 0; opacity: 0; }
+  .pet-fab:hover::after { animation: pet-sheen .9s ease; }
+  @keyframes pet-sheen { 0% { opacity: 0; background-position: 130% 0; } 25% { opacity: 1; }
+    100% { opacity: 0; background-position: -30% 0; } }
+  .pet-fab img { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; display: block; margin: 4px; pointer-events: none; position: relative; }
+  .pet-fab:hover { transform: scale(1.08) translateY(-2px);
+    box-shadow: 0 14px 42px rgba(2,6,24,.5), 0 2px 8px rgba(2,6,24,.3),
+      inset 0 1px 0 rgba(255,255,255,.9), 0 0 24px color-mix(in srgb, var(--star) 36%, transparent); }
+  .pet-fab:hover::before { opacity: .85; }
+  .pet-fab:focus-visible { outline: 2px solid var(--star); outline-offset: 3px; }
+  .pet-dot { position: absolute; top: 4px; right: 4px; width: 11px; height: 11px; border-radius: 50%;
+    background: #34d399; border: 2px solid #fff; box-shadow: 0 0 8px #34d399; }
+  /* 在线状态脉冲波纹 */
+  .pet-dot::after { content: ''; position: absolute; inset: -3px; border-radius: 50%;
+    border: 2px solid rgba(52,211,153,.8); animation: pet-ping 2.6s cubic-bezier(0,.55,.45,1) infinite; }
+  @keyframes pet-ping { 0% { transform: scale(.55); opacity: .9; } 70%,100% { transform: scale(1.9); opacity: 0; } }
+  @keyframes pet-bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+  .pet-hi { position: absolute; left: 78px; bottom: 14px; white-space: nowrap; max-width: 60vw;
+    background: var(--pet-surface); color: var(--ink);
+    border: 1px solid color-mix(in srgb, var(--star) 24%, transparent); backdrop-filter: blur(10px);
+    border-radius: 12px 12px 12px 3px; padding: 8px 13px; font-size: 12.5px; line-height: 1.4;
+    box-shadow: 0 8px 26px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.05);
+    opacity: 0; transform: translateX(-6px) scale(.96);
+    transform-origin: left bottom; transition: opacity .4s, transform .4s; pointer-events: none; }
+  .pet-hi.show { opacity: 1; transform: none; }
+
+  /* 玻璃面板：渐变描边 + 顶部内高光 + 冷光外晕 */
+  .pet-panel { position: absolute; left: 0; bottom: 78px; width: 340px; max-width: calc(100vw - 44px);
+    display: flex; flex-direction: column; max-height: min(560px, 72vh);
+    border: 1px solid transparent; border-radius: 20px; overflow: hidden;
+    background:
+      linear-gradient(var(--pet-surface), var(--pet-surface2)) padding-box,
+      linear-gradient(155deg, color-mix(in srgb, var(--star) 50%, transparent), color-mix(in srgb, var(--ink) 8%, transparent) 32%, color-mix(in srgb, var(--nebula) 42%, transparent)) border-box;
+    backdrop-filter: blur(18px) saturate(1.35); -webkit-backdrop-filter: blur(18px) saturate(1.35);
+    box-shadow: 0 24px 70px rgba(0,0,0,.55), 0 0 44px color-mix(in srgb, var(--star) 9%, transparent), inset 0 1px 0 rgba(255,255,255,.07);
+    transform-origin: left bottom;
+    animation: pet-pop .32s cubic-bezier(.2,.95,.25,1.2); }
+  @keyframes pet-pop { from { opacity: 0; transform: translateY(14px) scale(.94); } to { opacity: 1; transform: none; } }
+  .pet-head { display: flex; align-items: center; gap: 9px; padding: 11px 13px;
+    border-bottom: 1px solid color-mix(in srgb, var(--star) 14%, transparent);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--star) 10%, transparent), transparent); }
+  .pet-head img { border-radius: 50%; background: #fff;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--star) 32%, transparent), 0 0 12px color-mix(in srgb, var(--star) 26%, transparent); }
+  .pet-id { display: flex; flex-direction: column; line-height: 1.2; flex: 1; }
+  .pet-id b { font-size: 13px; color: var(--ink); letter-spacing: .02em; }
+  .pet-id i { font-size: 10px; color: var(--star); font-style: normal; opacity: .85; }
+  .pet-x { border: none; background: transparent; color: var(--ink3); cursor: pointer; font-size: 14px; padding: 4px 6px; border-radius: 6px; }
+  .pet-x:hover { color: var(--ink); background: color-mix(in srgb, var(--ink) 8%, transparent); }
+
+  .pet-log { flex: 1; overflow-y: auto; padding: 13px; display: flex; flex-direction: column; gap: 9px;
+    scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--star) 28%, transparent) transparent; }
+  .pet-log::-webkit-scrollbar { width: 5px; }
+  .pet-log::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--star) 28%, transparent); border-radius: 4px; }
+  .pet-msg { max-width: 86%; padding: 8px 12px; font-size: 12.8px; line-height: 1.6; border-radius: 13px; word-break: break-word;
+    animation: pet-msg-in .3s cubic-bezier(.2,.9,.3,1.15) backwards; }
+  @keyframes pet-msg-in { from { opacity: 0; transform: translateY(8px) scale(.96); } }
+  .pet-msg.bot { align-self: flex-start; color: var(--ink); border-bottom-left-radius: 4px;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--star) 14%, transparent), color-mix(in srgb, var(--star) 7%, transparent));
+    border: 1px solid color-mix(in srgb, var(--star) 18%, transparent); box-shadow: 0 2px 10px rgba(0,0,0,.18); }
+  .pet-msg.me { align-self: flex-end; color: var(--pet-me-ink); font-weight: 500; border-bottom-right-radius: 4px;
+    background: linear-gradient(135deg, var(--star), color-mix(in srgb, var(--star) 55%, var(--nebula)));
+    box-shadow: 0 4px 14px color-mix(in srgb, var(--star) 24%, transparent); }
+  .pet-typing { align-self: flex-start; display: inline-flex; gap: 4px; padding: 10px 13px;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--star) 14%, transparent), color-mix(in srgb, var(--star) 7%, transparent));
+    border: 1px solid color-mix(in srgb, var(--star) 18%, transparent); border-radius: 13px; border-bottom-left-radius: 4px; }
+  .pet-typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--star); opacity: .5; animation: pet-blink 1s infinite; }
+  .pet-typing span:nth-child(2) { animation-delay: .18s; } .pet-typing span:nth-child(3) { animation-delay: .36s; }
+  @keyframes pet-blink { 0%,100% { opacity: .25; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-3px); } }
+
+  .pet-sugs { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 13px 10px; }
+  .pet-sugs button { font-family: var(--mono); font-size: 11px; color: var(--ink2); cursor: pointer;
+    background: color-mix(in srgb, var(--ink) 4%, transparent); border: 1px solid var(--line); border-radius: 999px; padding: 5px 10px;
+    transition: all .2s; }
+  .pet-sugs button:hover { color: var(--star); border-color: color-mix(in srgb, var(--star) 55%, transparent); transform: translateY(-1px);
+    background: color-mix(in srgb, var(--star) 9%, transparent); box-shadow: 0 4px 12px color-mix(in srgb, var(--star) 14%, transparent); }
+  .pet-input { display: flex; gap: 8px; padding: 11px 13px; border-top: 1px solid color-mix(in srgb, var(--star) 14%, transparent); }
+  .pet-input input { flex: 1; background: color-mix(in srgb, var(--ink) 5%, transparent); border: 1px solid var(--line); border-radius: 10px;
+    padding: 9px 12px; color: var(--ink); font-size: 12.5px; font-family: var(--sans, inherit); outline: none;
+    transition: border-color .2s, box-shadow .2s; }
+  .pet-input input:focus { border-color: var(--star); box-shadow: 0 0 0 3px color-mix(in srgb, var(--star) 16%, transparent); }
+  .pet-input button { width: 38px; flex: none; border: none; border-radius: 10px;
+    background: linear-gradient(135deg, var(--star), color-mix(in srgb, var(--star) 40%, var(--nebula))); color: var(--pet-me-ink);
+    font-size: 16px; font-weight: 700; cursor: pointer; transition: transform .15s, box-shadow .2s; }
+  .pet-input button:hover { transform: translateY(-1px); box-shadow: 0 6px 18px color-mix(in srgb, var(--star) 32%, transparent); }
+  .pet-input button:disabled { opacity: .4; cursor: not-allowed; }
+  .pet-hide { border: none; background: transparent; color: var(--ink3); cursor: pointer; font-size: 10.5px;
+    font-family: var(--mono); padding: 4px 7px; border-radius: 6px; letter-spacing: .04em; }
+  .pet-hide:hover { color: var(--ink); background: color-mix(in srgb, var(--ink) 8%, transparent); }
+  .pet-reopen { display: none; width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--line);
+    background: var(--pet-surface); cursor: pointer; font-size: 19px; opacity: .55; backdrop-filter: blur(6px);
+    transition: opacity .2s, transform .2s; box-shadow: 0 6px 20px rgba(0,0,0,.3); }
+  .pet-reopen:hover { opacity: 1; transform: scale(1.08); }
+  .pet.tucked .pet-fab, .pet.tucked .pet-hi, .pet.tucked .pet-panel { display: none !important; }
+  .pet.tucked .pet-reopen { display: flex; align-items: center; justify-content: center; }
+  /* 面板靠边自动翻转 */
+  .pet-panel.below { bottom: auto; top: 78px; transform-origin: left top; }
+  .pet-panel.right { left: auto; right: 0; transform-origin: right bottom; }
+  .pet-panel.below.right { transform-origin: right top; }
+  @media (max-width: 560px) { .pet-hi { display: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .pet-fab, .pet-panel, .pet::before, .pet-fab::before, .pet-fab::after, .pet-dot::after, .pet-msg { animation: none !important; }
+  }
+
+  /* 说明: R 编号为迭代批次号(按上线先后), 非文件内位置顺序 */
+  /* ── R2 字阶统一（v2 沙盒内验证；桌面≈原值，移动端流式收敛）── */
+  .hero h1 { font-size: var(--fs-display); }
+  .chapter-head h2 { font-size: var(--fs-h2); }
+  .dial .num { font-size: var(--fs-stat); }
+  .t-item h3 { font-size: var(--fs-h3); }
+  .card h3 { font-size: var(--fs-h4); }
+
+  /* ── R3 可访问性（作用域限 v2；--ink3 提到 WCAG AA ≥4.5）── */
+  .v2-scope { --ink3: #7e88b3; }
+  .v2-scope :focus-visible {
+    outline: 2px solid var(--star); outline-offset: 2px; border-radius: 5px;
+  }
+  .skip-link {
+    position: fixed; top: 10px; left: 10px; z-index: 200; transform: translateY(-160%);
+    background: var(--star); color: #04060f; font-family: var(--mono); font-size: 13px; font-weight: 700;
+    padding: 9px 15px; border-radius: 9px; text-decoration: none; transition: transform .2s;
+    box-shadow: 0 8px 24px rgba(0,0,0,.4);
+  }
+  .skip-link:focus { transform: none; outline: none; }
+
+  /* ── 升级版星空背景（cosmos 主题下叠加，v2-scoped）── */
+  #nebula-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0;
+    transition: opacity 1.4s ease; }
+  #nebula-bg iframe { width: 100vw; height: 100vh; border: 0; display: block; }
+  html[data-theme="cosmos"] #nebula-bg,
+  html[data-theme="paper"] #nebula-bg,
+  html[data-theme="klein"] #nebula-bg,
+  html[data-theme="snow"] #nebula-bg,
+  html[data-theme="hud"] #nebula-bg { opacity: 1; }
+
+  /* ── 产品·Products 卡片 ── */
+  .products-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 760px) { .products-grid { grid-template-columns: 1fr; } }
+  .product-card { display: block; text-decoration: none; border: 1px solid var(--line); border-radius: 16px;
+    padding: 24px 24px 20px; background: rgba(7,11,31,.6); position: relative; overflow: hidden;
+    transition: transform .3s cubic-bezier(.2,.8,.2,1), border-color .3s, box-shadow .3s; }
+  /* 产品卡按主题换底（对齐 global.css 对 .card 的主题覆盖模式） */
+  :global(html:is([data-theme='paper'], [data-theme='snow'])) .product-card { background: var(--space-3); }
+  :global(html[data-theme='klein']) .product-card { background: rgba(255,255,255,.06); }
+  :global(html[data-theme='hud']) .product-card { background: rgba(10,17,36,.72); }
+  .product-card::before { content: ''; position: absolute; inset: 0; border-radius: 16px; pointer-events: none;
+    background: radial-gradient(420px circle at var(--mx,50%) var(--my,0%), color-mix(in srgb, var(--star) 9%, transparent), transparent 60%);
+    opacity: 0; transition: opacity .3s; }
+  .product-card:hover { transform: translateY(-5px); border-color: var(--star); box-shadow: 0 18px 44px rgba(0,0,0,.42); }
+  .product-card:hover::before { opacity: 1; }
+  .product-card:focus-visible { outline: 2px solid var(--star); outline-offset: 3px; }
+  .pc-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+  .pc-tag { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; padding: 4px 11px; border-radius: 999px; border: 1px solid var(--line); }
+  .pc-tag.b { color: var(--star); border-color: color-mix(in srgb, var(--star) 34%, transparent); }
+  .pc-tag.c { color: var(--rose); border-color: rgba(251,113,133,.32); }
+  .pc-live { font-family: var(--mono); font-size: 10px; color: var(--aurora); letter-spacing: .12em; }
+  .product-card h3 { font-size: var(--fs-h3, 21px); color: var(--ink, #fff); margin-bottom: 10px; letter-spacing: .01em; }
+  .product-card p { font-size: 13.5px; color: var(--ink2); line-height: 1.72; }
+  .pc-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 18px;
+    font-family: var(--mono); font-size: 11px; color: var(--ink3); }
+  .pc-go { color: var(--star); font-weight: 600; }
+
+  /* ── R4 动效降级（reveal 已在全局用 no-preference 守住；这里补 v2 自有动效）── */
+  @media (prefers-reduced-motion: reduce) {
+    .v2-scope .rail-item i,
+    .v2-scope .rail-item b,
+    .v2-scope .rail-item span,
+    .v2-scope .rail { transition: none !important; }
+    .v2-scope .pet-fab { animation: none !important; }
+    .v2-scope .pet-panel { animation: none !important; }
+  }
+
+  /* ── R7 大师级排印（v2-scoped，不动 global.css）── */
+  .v2-scope { text-rendering: optimizeLegibility; }
+  /* Hero 主标题：流动的星光渐变——只在 cosmos 主题生效。
+     注意 Astro 作用域属性会抬高特异性,不加 :global(html[data-theme]) 门禁会压过
+     paper/snow/klein 的主题覆盖,导致浅色主题标题透明不可读(实测踩过) */
+  .v2-scope .hero h1 { letter-spacing: .045em; }
+  :global(html[data-theme='cosmos']) .v2-scope .hero h1 {
+    background: linear-gradient(115deg, #fff 20%, #d6ecff 38%, #93c5fd 56%, #c4b5fd 76%, #f4f0ff 94%);
+    background-size: 220% 100%;
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  @keyframes h1-flow { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
+  /* 副标题：收字距 + 尾部渐隐装饰线（主题色自适应；paper 除外——它有自己的朱砂粗笔触 sub::after，别压掉） */
+  :global(html:not([data-theme='paper'])) .v2-scope .hero .sub { display: flex; align-items: center; gap: 16px; letter-spacing: .14em; }
+  :global(html:not([data-theme='paper'])) .v2-scope .hero .sub::after { content: ''; flex: 0 0 72px; height: 1px;
+    background: linear-gradient(90deg, color-mix(in srgb, var(--star) 75%, transparent), transparent); }
+  :global(html[data-theme='paper']) .v2-scope .hero .sub { letter-spacing: .14em; }
+  /* 正文：CJK 大师级密度——行高 2 上下、字距微开 */
+  .v2-scope .hero .lede { line-height: 2.02; letter-spacing: .012em; }
+  .v2-scope .chapter-head .ch-sub, .v2-scope .card p, .v2-scope .product-card p,
+  .v2-scope .method-card p, .v2-scope .t-item p { letter-spacing: .01em; }
+  .v2-scope h2, .v2-scope h3 { text-wrap: balance; }
+  /* 数字全部表格化对齐（滚动计数时位宽不抖） */
+  .v2-scope .dial .num, .v2-scope .hero-stats span b, .v2-scope [data-count] { font-variant-numeric: tabular-nums; }
+  /* Hero 入场级联（逐元素上浮；.hero-scroll 不参与，保留其自身 drift 动画） */
+  .v2-scope .hero > .kicker { animation: hero-rise .85s cubic-bezier(.16,.84,.3,1) .06s backwards; }
+  .v2-scope .hero > h1 { animation: hero-rise .85s cubic-bezier(.16,.84,.3,1) .14s backwards; }
+  :global(html[data-theme='cosmos']) .v2-scope .hero > h1 { animation: h1-flow 11s ease-in-out infinite alternate, hero-rise .85s cubic-bezier(.16,.84,.3,1) .14s backwards; }
+  .v2-scope .hero > .sub { animation: hero-rise .85s cubic-bezier(.16,.84,.3,1) .22s backwards; }
+  .v2-scope .hero > .lede { animation: hero-rise .85s cubic-bezier(.16,.84,.3,1) .30s backwards; }
+  .v2-scope .hero > .hero-stats { animation: hero-rise .85s cubic-bezier(.16,.84,.3,1) .38s backwards; }
+  .v2-scope .hero > .hero-stats-note { animation: hero-rise .85s cubic-bezier(.16,.84,.3,1) .46s backwards; }
+  .v2-scope .hero > .hero-cta { animation: hero-rise .85s cubic-bezier(.16,.84,.3,1) .54s backwards; }
+  @keyframes hero-rise { from { opacity: 0; transform: translateY(20px); } }
+  @media (prefers-reduced-motion: reduce) {
+    .v2-scope .hero h1, .v2-scope .hero > * { animation: none !important; }
+  }
+
+  /* ── R8 章节节奏与卡片物理（v2-scoped）── */
+  /* 知识区线稿图标 */
+  .kz-h { display: flex; align-items: center; gap: 9px; }
+  .kz-h svg { flex: none; filter: drop-shadow(0 0 6px rgba(125,211,252,.35)); }
+  /* 叫回按钮用吉祥物本尊而非 emoji */
+  .pet-reopen img { border-radius: 50%; display: block; margin: auto; }
+  /* 三段攻坚线稿图标：cosmos 用各卡专属渐变+同色发光；其他主题回落主题色实心描边(浅色主题下渐变对比度不足) */
+  .v2-scope .g-orbit svg { display: block; }
+  .v2-scope .galaxy:nth-child(1) .g-orbit svg { filter: drop-shadow(0 0 9px rgba(125,211,252,.4)); }
+  .v2-scope .galaxy:nth-child(2) .g-orbit svg { filter: drop-shadow(0 0 9px rgba(167,139,250,.4)); }
+  .v2-scope .galaxy:nth-child(3) .g-orbit svg { filter: drop-shadow(0 0 9px rgba(251,191,36,.35)); }
+  :global(html:not([data-theme='cosmos'])) .v2-scope .g-orbit svg g { stroke: var(--star); }
+  :global(html:not([data-theme='cosmos'])) .v2-scope .g-orbit svg > :is(path, circle) { fill: var(--star); }
+  :global(html:not([data-theme='cosmos'])) .v2-scope .galaxy .g-orbit svg {
+    filter: drop-shadow(0 0 9px color-mix(in srgb, var(--star) 30%, transparent)); }
+  :global(html:not([data-theme='cosmos'])) .v2-scope .kz-h svg { stroke: var(--star);
+    filter: drop-shadow(0 0 6px color-mix(in srgb, var(--star) 25%, transparent)); }
+  /* 锚点跳转让出固定导航高度 */
+  .v2-scope .chapter { scroll-margin-top: 72px; }
+  /* 章节间发丝分隔线：中央渐显渐隐，给长页一个呼吸节拍 */
+  .v2-scope .chapter + .chapter::after { content: ''; position: absolute; top: 0; left: 50%;
+    transform: translateX(-50%); width: min(920px, 86vw); height: 1px; pointer-events: none;
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--star) 20%, transparent) 30%, color-mix(in srgb, var(--nebula) 20%, transparent) 70%, transparent); }
+
+  /* ── R12 主题专项：宣纸纸质感 / 全息 HUD 装饰（v2-scoped）── */
+  /* ④ 宣纸：mono 装饰元素衬线化 + 产品卡对齐纸质卡语言 + 朱砂验证点 */
+  :global(html[data-theme='paper']) .v2-scope :is(.kicker, .ch-no) {
+    font-family: var(--serif); letter-spacing: .24em; }
+  :global(html[data-theme='paper']) .v2-scope .product-card {
+    border-color: #D7CFBF; border-radius: 8px;
+    box-shadow: 0 1px 0 #fff inset, 0 10px 28px rgba(23,36,65,.07); }
+  :global(html[data-theme='paper']) .v2-scope .work-card .w-meta::before {
+    background: var(--flare); box-shadow: none; }
+  /* ⑤ 全息：把 global 里 .card 的 HUD 角标语言延伸到 v2 独有的产品卡 */
+  :global(html[data-theme='hud']) .v2-scope .product-card {
+    border-radius: 8px; border-color: rgba(125,211,252,.2); }
+  :global(html[data-theme='hud']) .v2-scope .product-card::before { border-radius: 8px; }
+  :global(html[data-theme='hud']) .v2-scope .product-card::after {
+    content: ''; position: absolute; top: 7px; left: 7px; width: 11px; height: 11px;
+    border-top: 1px solid rgba(125,211,252,.5); border-left: 1px solid rgba(125,211,252,.5);
+    pointer-events: none; transition: .25s; }
+  :global(html[data-theme='hud']) .v2-scope .product-card:hover {
+    box-shadow: 0 0 0 1px rgba(125,211,252,.5), 0 14px 44px rgba(125,211,252,.16); }
+  :global(html[data-theme='hud']) .v2-scope .product-card:hover::after {
+    top: 5px; left: 5px; border-color: var(--star); }
+
+  /* ── R11 主题专项：克莱因金色点睛 / 月白动效收敛（v2-scoped）── */
+  /* ② 克莱因蓝：金色 --flare(#ffe14d) 作为唯一强调色点睛 */
+  :global(html[data-theme='klein']) .v2-scope :is(.card, .product-card, .proto-item):hover {
+    border-color: color-mix(in srgb, var(--flare) 65%, transparent);
+    box-shadow: 0 18px 44px rgba(0,10,60,.35), 0 0 24px color-mix(in srgb, var(--flare) 18%, transparent); }
+  :global(html[data-theme='klein']) .v2-scope .rail-item.active i {
+    background: var(--flare); box-shadow: 0 0 8px var(--flare); }
+  :global(html[data-theme='klein']) .v2-scope .rail-item.active b { color: var(--flare); }
+  :global(html[data-theme='klein']) .v2-scope .hero .sub::after {
+    background: linear-gradient(90deg, color-mix(in srgb, var(--flare) 80%, transparent), transparent); }
+  :global(html[data-theme='klein']) .v2-scope .btn.primary:hover {
+    box-shadow: 0 8px 28px color-mix(in srgb, var(--flare) 30%, transparent); }
+  /* ③ 月白极简：动效收敛——位移减半以下、时长收紧、hero 只淡入不位移、关闭视差 */
+  /* 注意必须 :not(.in) 限定初始态，否则高特异性会把 .in 终态也钉在位移上 */
+  :global(html[data-theme='snow']) .v2-scope :is(.reveal, .reveal-l) { transition-duration: .45s, .45s; }
+  :global(html[data-theme='snow']) .v2-scope .reveal:not(.in) { transform: translateY(12px); }
+  :global(html[data-theme='snow']) .v2-scope .reveal-l:not(.in) { transform: translateX(-14px); }
+  :global(html[data-theme='snow']) .v2-scope [data-stagger] > * { transition-duration: .4s, .4s; }
+  :global(html[data-theme='snow']) .v2-scope [data-stagger]:not(.in) > * { transform: translateY(10px); }
+  :global(html[data-theme='snow']) .v2-scope .hero > :is(.kicker, h1, .sub, .lede, .hero-stats, .hero-stats-note, .hero-cta) {
+    animation-name: hero-fade; animation-duration: .5s; }
+  :global(html[data-theme='snow']) .hero { transform: none !important; transition: none !important; }
+  @keyframes hero-fade { from { opacity: 0; } }
+
+  /* ── R9 作品区节奏（v2-scoped）── */
+  /* works 卡：元信息升级为"可验证"状态条——绿色呼吸点 + 顶部虚线分隔 */
+  .v2-scope .work-card .w-meta { display: flex; align-items: center; gap: 8px;
+    border-top: 1px dashed color-mix(in srgb, var(--star) 16%, transparent); padding-top: 13px; }
+  .v2-scope .work-card .w-meta::before { content: ''; flex: none; width: 5px; height: 5px; border-radius: 50%;
+    background: var(--aurora); box-shadow: 0 0 7px var(--aurora); opacity: .8; }
+  .v2-scope .work-card:hover .w-meta { color: var(--ink2); }
+  /* 原型带：滚动吸附 + 两端渐隐遮罩提示可滑 */
+  .v2-scope .proto-strip { scroll-snap-type: x proximity; scroll-padding-left: 2px;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 14px, #000 calc(100% - 34px), transparent);
+    mask-image: linear-gradient(90deg, transparent 0, #000 14px, #000 calc(100% - 34px), transparent); }
+  .v2-scope .proto-item { scroll-snap-align: start; }
+  .v2-scope .proto-item .p-ver { display: flex; justify-content: space-between; align-items: center; }
+  .v2-scope .proto-item .p-go { opacity: .45; transition: opacity .25s, transform .25s; }
+  .v2-scope .proto-item:hover .p-go { opacity: 1; transform: translate(3px, -2px); }
+
+  /* ── R10 触控热区达标（WCAG 2.2 目标尺寸 ≥24px）── */
+  .v2-scope .rail-item { padding: 5px 0; }
+  .v2-scope .pet-x { min-width: 30px; min-height: 30px; }
+  .v2-scope .pet-hide { min-height: 30px; }
+  .v2-scope .pet-sugs button { min-height: 30px; }
 </style>
