@@ -1884,6 +1884,30 @@ const courses = [
     transform: translateX(-50%); width: min(920px, 86vw); height: 1px; pointer-events: none;
     background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--star) 20%, transparent) 30%, color-mix(in srgb, var(--nebula) 20%, transparent) 70%, transparent); }
 
+  /* ── R11 主题专项：克莱因金色点睛 / 月白动效收敛（v2-scoped）── */
+  /* ② 克莱因蓝：金色 --flare(#ffe14d) 作为唯一强调色点睛 */
+  :global(html[data-theme='klein']) .v2-scope :is(.card, .product-card, .proto-item):hover {
+    border-color: color-mix(in srgb, var(--flare) 65%, transparent);
+    box-shadow: 0 18px 44px rgba(0,10,60,.35), 0 0 24px color-mix(in srgb, var(--flare) 18%, transparent); }
+  :global(html[data-theme='klein']) .v2-scope .rail-item.active i {
+    background: var(--flare); box-shadow: 0 0 8px var(--flare); }
+  :global(html[data-theme='klein']) .v2-scope .rail-item.active b { color: var(--flare); }
+  :global(html[data-theme='klein']) .v2-scope .hero .sub::after {
+    background: linear-gradient(90deg, color-mix(in srgb, var(--flare) 80%, transparent), transparent); }
+  :global(html[data-theme='klein']) .v2-scope .btn.primary:hover {
+    box-shadow: 0 8px 28px color-mix(in srgb, var(--flare) 30%, transparent); }
+  /* ③ 月白极简：动效收敛——位移减半以下、时长收紧、hero 只淡入不位移、关闭视差 */
+  /* 注意必须 :not(.in) 限定初始态，否则高特异性会把 .in 终态也钉在位移上 */
+  :global(html[data-theme='snow']) .v2-scope :is(.reveal, .reveal-l) { transition-duration: .45s, .45s; }
+  :global(html[data-theme='snow']) .v2-scope .reveal:not(.in) { transform: translateY(12px); }
+  :global(html[data-theme='snow']) .v2-scope .reveal-l:not(.in) { transform: translateX(-14px); }
+  :global(html[data-theme='snow']) .v2-scope [data-stagger] > * { transition-duration: .4s, .4s; }
+  :global(html[data-theme='snow']) .v2-scope [data-stagger]:not(.in) > * { transform: translateY(10px); }
+  :global(html[data-theme='snow']) .v2-scope .hero > :is(.kicker, h1, .sub, .lede, .hero-stats, .hero-stats-note, .hero-cta) {
+    animation-name: hero-fade; animation-duration: .5s; }
+  :global(html[data-theme='snow']) .hero { transform: none !important; transition: none !important; }
+  @keyframes hero-fade { from { opacity: 0; } }
+
   /* ── R9 作品区节奏（v2-scoped）── */
   /* works 卡：元信息升级为"可验证"状态条——绿色呼吸点 + 顶部虚线分隔 */
   .v2-scope .work-card .w-meta { display: flex; align-items: center; gap: 8px;
