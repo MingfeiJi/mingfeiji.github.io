@@ -11,6 +11,17 @@ const graphLinkCount = (graphData.links as any[]).length;
 // 环境变量可覆盖；否则用线上代理，未配置则前端回落"演示人格"
 const petEndpoint = import.meta.env.PUBLIC_PET_ENDPOINT || 'https://mingfeiji-github-io.vercel.app/api/pet';
 
+// 知识区线稿图标（24 网格 / 1.6px 圆头描边，与三段攻坚 SVG 同语言）：
+// 输入托盘 / 沉淀层积 / 书写笔 / 代码括号 / 摊开的书 / 齿轮机芯
+const kzIcons = [
+  '<path d="M12 4v8m0 0-3.2-3.2M12 12l3.2-3.2"/><path d="M4 13.5v4A2.5 2.5 0 0 0 6.5 20h11a2.5 2.5 0 0 0 2.5-2.5v-4"/><path d="M4 15h4.6l1.5 2h3.8l1.5-2H20"/>',
+  '<path d="M12 3.5 20 8l-8 4.5L4 8Z"/><path d="m4 12.5 8 4.5 8-4.5"/><path d="m4 17 8 4.5L20 17"/>',
+  '<path d="m4.5 19.5.9-3.6L16.6 4.7a2 2 0 0 1 2.8 2.8L8.2 18.6l-3.7.9Z"/><path d="m14.8 6.5 2.8 2.8"/>',
+  '<path d="M9 6.5 4 12l5 5.5"/><path d="m15 6.5 5 5.5-5 5.5"/>',
+  '<path d="M12 6.8C10.1 5.2 7.6 4.6 4 4.6v13.8c3.6 0 6.1.6 8 2.2 1.9-1.6 4.4-2.2 8-2.2V4.6c-3.6 0-6.1.6-8 2.2Z"/><path d="M12 6.8v13.8"/>',
+  '<circle cx="12" cy="12" r="3.2"/><path d="M12 4.2V7M12 17v2.8M4.2 12H7M17 12h2.8M6.5 6.5l2 2M15.5 15.5l2 2M17.5 6.5l-2 2M8.5 15.5l-2 2"/>',
+];
+
 const allArticles = (await getCollection('articles')).sort(
   (a, b) => (b.data.created?.getTime() ?? 0) - (a.data.created?.getTime() ?? 0)
 );
@@ -185,31 +196,31 @@ const skills = [
 ];
 
 const knowledgeZones = [
-  { icon: '📥', name: 'raw / 输入源', stat: '36 GB', desc: 'Plaud 录音转写 1402 个 · BuilderPulse 中英文头条池 · 切曼课程录音 170 个 · 巴菲特股东信' },
-  { icon: '🧠', name: 'Knowledge / 知识沉淀', stat: '930 MB', desc: '中台项目档案（架构/PRD/调研/实施手册）· 合规审核体系 · 哲学与认知心理学笔记' },
-  { icon: '✍️', name: 'Writing / 内容产出', stat: '2300+ md', desc: '抖音口播稿 280 篇（20 周连续 5 公式覆盖🏆）· 公众号 338 篇 · 小红书 346 篇 · 切曼讲稿 23 节' },
-  { icon: '🛠', name: 'Software / 工具资产', stat: '25+ skills', desc: '写作方法论 skill 库 · 抖音口播 2.0 人设热点公式 · Agent 项目源码 · RAG / workflow 工程' },
-  { icon: '📚', name: 'WIKI / 概念库', stat: '55 概念', desc: 'Vibe Coding · Agent 记忆体系 · 模型选型 · 竞品分析——Karpathy 风格编译产物' },
-  { icon: '⚙️', name: 'Meta / 治理', stat: '8 规则', desc: 'CLAUDE.md 编译规范 · 内容生产规则 · 每日工作流 · 自动备份 launchd 双任务' },
+  { name: 'raw / 输入源', stat: '36 GB', desc: 'Plaud 录音转写 1402 个 · BuilderPulse 中英文头条池 · 切曼课程录音 170 个 · 巴菲特股东信' },
+  { name: 'Knowledge / 知识沉淀', stat: '930 MB', desc: '中台项目档案（架构/PRD/调研/实施手册）· 合规审核体系 · 哲学与认知心理学笔记' },
+  { name: 'Writing / 内容产出', stat: '2300+ md', desc: '抖音口播稿 280 篇（20 周连续 5 公式覆盖）· 公众号 338 篇 · 小红书 346 篇 · 切曼讲稿 23 节' },
+  { name: 'Software / 工具资产', stat: '25+ skills', desc: '写作方法论 skill 库 · 抖音口播 2.0 人设热点公式 · Agent 项目源码 · RAG / workflow 工程' },
+  { name: 'WIKI / 概念库', stat: '55 概念', desc: 'Vibe Coding · Agent 记忆体系 · 模型选型 · 竞品分析——Karpathy 风格编译产物' },
+  { name: 'Meta / 治理', stat: '8 规则', desc: 'CLAUDE.md 编译规范 · 内容生产规则 · 每日工作流 · 自动备份 launchd 双任务' },
 ];
 
 
 const geekGear = [
-  { icon: '🤖', name: 'Agentic Coding', status: 'DAILY DRIVER', desc: 'Claude Code 多 Agent 并行编排 + 后台任务 + Workflow 脚本。本站 156 页（3D 星场 / 知识图谱 / 全文系统）即由 Agent 全程构建。' },
-  { icon: '🌐', name: '浏览器操作 Agent', status: 'IN PRODUCTION', desc: 'Claude in Chrome / browser-use 范式：AI 自己打开页面、截图、验证交互。本站每个版本上线前由 AI 在真实浏览器里自检回归。' },
-  { icon: '🕸', name: 'Multi-Agent Workflow', status: 'DAILY DRIVER', desc: 'fan-out 并行调研 + 对抗验证 + 流水线编排。内容周批次、知识库扫描全部多 Agent 并行跑。' },
-  { icon: '🧩', name: 'MCP 协议工程', status: 'IN PRODUCTION', desc: '薄包装策略：70% 复用既有接口、20 个 Tool 覆盖全业务域；飞书全家桶（Base / 文档 / 事件流 / 妙记）经 CLI 接入 Agent。' },
-  { icon: '⚡️', name: 'Skill 工程化', status: 'SHIPPING', desc: '25+ 写作方法论 skill：抖音口播 2.0 人设热点双引擎、口播四步法、公众号爆款——从"指挥 AI"到"管理 AI"。' },
-  { icon: '📚', name: 'LLM Wiki 知识编译', status: 'SHIPPING', desc: 'Karpathy 风格 raw→wiki 编译管线：双链、实体/概念/来源分型。本站 178 节点知识图谱就是编译产物。' },
-  { icon: '🔍', name: 'RAG 混合检索', status: 'IN PRODUCTION', desc: 'BM25 优先 + pgvector 语义辅助、结构化字段先筛掉 90%；MySQL → PostgreSQL 平滑演进。' },
-  { icon: '🎛', name: 'LLM 应用编排', status: 'IN PRODUCTION', desc: 'Dify / LobeHub 双栈：6 业务域 SubAgent、6 阶段意图识别 Pipeline、组合意图 + 会话对象栈（Entity Stack）。' },
-  { icon: '🎨', name: 'AIGC 视觉工作流', status: 'SHIPPED', desc: 'ComfyUI + Lora 微调（10 万+ 训练数据，生图采纳率 65%→87%）；Seedance / Sora2 / Veo 工业化视频生产。' },
-  { icon: '🛡', name: '多模态审核', status: 'SHIPPED', desc: 'Gemini 2.5 Flash/Pro 文本 / 图像 / 视频三模态"源头把控 + 终筛"，5000+ 条评测集支撑。' },
-  { icon: '📊', name: 'LLM 可观测', status: 'IN PRODUCTION', desc: 'Langfuse 全链路 tracing + 评测集 / badcase 闭环 + Token 成本看板——AI 系统不能是黑盒。' },
-  { icon: '🔁', name: '无人值守自动化', status: 'DAILY DRIVER', desc: 'launchd / cron 定时矩阵：每日内容生产、晨晚双轨备份、IMAP 录音附件拉取——睡觉时系统在干活。' },
-  { icon: '🗣', name: '语音 & 数字人', status: 'SHIPPED', desc: 'Whisper 转写 1402 条录音入库 + TTS 配音 + 数字人口播，录音直达多平台成稿。' },
-  { icon: '📡', name: '信息采集流水线', status: 'DAILY DRIVER', desc: 'BuilderPulse 中英热点池 git 自动拉取 + 邮件附件抓取 + 社媒内容采集归档，输入端全自动。' },
-  { icon: '🧪', name: 'Vibe Coding 原型术', status: 'DAILY DRIVER', desc: '单文件 HTML 高保真：20+ 可交互原型 + 看板 + 蓝图，"业务看得见、研发抄得走、老板拍得了板"。' },
+  { name: 'Agentic Coding', status: 'DAILY DRIVER', desc: 'Claude Code 多 Agent 并行编排 + 后台任务 + Workflow 脚本。本站 156 页（3D 星场 / 知识图谱 / 全文系统）即由 Agent 全程构建。' },
+  { name: '浏览器操作 Agent', status: 'IN PRODUCTION', desc: 'Claude in Chrome / browser-use 范式：AI 自己打开页面、截图、验证交互。本站每个版本上线前由 AI 在真实浏览器里自检回归。' },
+  { name: 'Multi-Agent Workflow', status: 'DAILY DRIVER', desc: 'fan-out 并行调研 + 对抗验证 + 流水线编排。内容周批次、知识库扫描全部多 Agent 并行跑。' },
+  { name: 'MCP 协议工程', status: 'IN PRODUCTION', desc: '薄包装策略：70% 复用既有接口、20 个 Tool 覆盖全业务域；飞书全家桶（Base / 文档 / 事件流 / 妙记）经 CLI 接入 Agent。' },
+  { name: 'Skill 工程化', status: 'SHIPPING', desc: '25+ 写作方法论 skill：抖音口播 2.0 人设热点双引擎、口播四步法、公众号爆款——从"指挥 AI"到"管理 AI"。' },
+  { name: 'LLM Wiki 知识编译', status: 'SHIPPING', desc: 'Karpathy 风格 raw→wiki 编译管线：双链、实体/概念/来源分型。本站 178 节点知识图谱就是编译产物。' },
+  { name: 'RAG 混合检索', status: 'IN PRODUCTION', desc: 'BM25 优先 + pgvector 语义辅助、结构化字段先筛掉 90%；MySQL → PostgreSQL 平滑演进。' },
+  { name: 'LLM 应用编排', status: 'IN PRODUCTION', desc: 'Dify / LobeHub 双栈：6 业务域 SubAgent、6 阶段意图识别 Pipeline、组合意图 + 会话对象栈（Entity Stack）。' },
+  { name: 'AIGC 视觉工作流', status: 'SHIPPED', desc: 'ComfyUI + Lora 微调（10 万+ 训练数据，生图采纳率 65%→87%）；Seedance / Sora2 / Veo 工业化视频生产。' },
+  { name: '多模态审核', status: 'SHIPPED', desc: 'Gemini 2.5 Flash/Pro 文本 / 图像 / 视频三模态"源头把控 + 终筛"，5000+ 条评测集支撑。' },
+  { name: 'LLM 可观测', status: 'IN PRODUCTION', desc: 'Langfuse 全链路 tracing + 评测集 / badcase 闭环 + Token 成本看板——AI 系统不能是黑盒。' },
+  { name: '无人值守自动化', status: 'DAILY DRIVER', desc: 'launchd / cron 定时矩阵：每日内容生产、晨晚双轨备份、IMAP 录音附件拉取——睡觉时系统在干活。' },
+  { name: '语音 & 数字人', status: 'SHIPPED', desc: 'Whisper 转写 1402 条录音入库 + TTS 配音 + 数字人口播，录音直达多平台成稿。' },
+  { name: '信息采集流水线', status: 'DAILY DRIVER', desc: 'BuilderPulse 中英热点池 git 自动拉取 + 邮件附件抓取 + 社媒内容采集归档，输入端全自动。' },
+  { name: 'Vibe Coding 原型术', status: 'DAILY DRIVER', desc: '单文件 HTML 高保真：20+ 可交互原型 + 看板 + 蓝图，"业务看得见、研发抄得走、老板拍得了板"。' },
 ];
 
 const courses = [
@@ -253,7 +264,7 @@ const courses = [
       <span class="pet-dot" aria-hidden="true"></span>
     </button>
     <div class="pet-hi" id="pet-hi" role="status">嗨，我是鸣飞的 AI 分身「小飞」，问我点啥？</div>
-    <button class="pet-reopen" id="pet-reopen" aria-label="重新显示小飞" title="叫回小飞">🤖</button>
+    <button class="pet-reopen" id="pet-reopen" aria-label="重新显示小飞" title="叫回小飞"><img src="/pet/mascot.png" alt="" width="26" height="26" draggable="false" /></button>
 
     <section class="pet-panel" id="pet-panel" role="dialog" aria-label="AI 分身对话" aria-modal="false" hidden>
       <header class="pet-head">
@@ -640,7 +651,7 @@ const courses = [
         </a>
         <a class="product-card" href="/products/companion.html" target="_blank" rel="noopener">
           <div class="pc-head"><span class="pc-tag c">C 端 · 情感陪伴</span><span class="pc-live">● LIVE</span></div>
-          <h3>奶糖 · AI 情感陪伴小猫 🐱</h3>
+          <h3>奶糖 · AI 情感陪伴小猫</h3>
           <p>一只会共情、会安慰、偶尔「喵～」的 AI 小猫，累了随时来聊两句。C 端的另一面——不谈 ROI，只谈体验与陪伴的温度。</p>
           <div class="pc-foot"><span>DeepSeek 驱动 · 拟人短句</span><span class="pc-go">打开产品 ↗</span></div>
         </a>
@@ -684,7 +695,7 @@ const courses = [
         ← 横向滑动 · 每一个都可点开直接交互（真实过程文件）· 用可运行产物代替纯 PRD
       </p>
       <div style="margin-top:22px" class="reveal">
-        <a class="btn primary" href="/prototypes/">🛠 进原型工坊 · 14 个过程文件实时预览</a>
+        <a class="btn primary" href="/prototypes/">进原型工坊 · 14 个过程文件实时预览</a>
       </div>
     </div>
   </section>
@@ -789,9 +800,10 @@ const courses = [
       </div>
 
       <div class="grid-3" style="margin-top:34px" data-stagger>
-        {knowledgeZones.map((z) => (
+        <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="kzg" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#7dd3fc"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs></svg>
+        {knowledgeZones.map((z, i) => (
           <div class="card">
-            <h3>{z.icon} {z.name}</h3>
+            <h3 class="kz-h"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="url(#kzg)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={kzIcons[i]} /> {z.name}</h3>
             <div class="kz-stat">{z.stat}</div>
             <p>{z.desc}</p>
           </div>
@@ -824,7 +836,7 @@ const courses = [
 
       <a class="card reveal" href="/files/philosophical-dialogues.pdf" target="_blank" rel="noopener" style="display:block;color:inherit;margin-top:34px;border-left:3px solid var(--nebula)">
         <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px">
-          <h3 style="margin:0">🍷 哲学对话整理 · 55 页 PDF <span style="font-family:var(--mono);font-size:12px;color:var(--flare)">↗ 直接阅读</span></h3>
+          <h3 style="margin:0">哲学对话整理 · 55 页 PDF <span style="font-family:var(--mono);font-size:12px;color:var(--flare)">↗ 直接阅读</span></h3>
           <span class="chip violet">品味出处</span>
         </div>
         <p style="margin-top:10px">与 AI 的 55 页哲学长对话：否定性推演、符号秩序与自我建构、辩证逆转、爱情命题的解构——
@@ -938,7 +950,7 @@ const courses = [
       </div>
 
       <div style="margin-top:36px;text-align:center" class="reveal">
-        <a class="btn primary" href="/articles/">📡 进入信号塔 · 全部 {allArticles.length} 篇文章</a>
+        <a class="btn primary" href="/articles/">进入信号塔 · 全部 {allArticles.length} 篇文章</a>
       </div>
 
       <h3 style="font-family:var(--serif);font-size:21px;margin:56px 0 20px;color:#fff">AI 产品课程体系（6 节）</h3>
@@ -1832,6 +1844,11 @@ const courses = [
   }
 
   /* ── R8 章节节奏与卡片物理（v2-scoped）── */
+  /* 知识区线稿图标 */
+  .kz-h { display: flex; align-items: center; gap: 9px; }
+  .kz-h svg { flex: none; filter: drop-shadow(0 0 6px rgba(125,211,252,.35)); }
+  /* 叫回按钮用吉祥物本尊而非 emoji */
+  .pet-reopen img { border-radius: 50%; display: block; margin: auto; }
   /* 三段攻坚线稿图标：随各卡轨道环同色发光 */
   .v2-scope .g-orbit svg { display: block; }
   .v2-scope .galaxy:nth-child(1) .g-orbit svg { filter: drop-shadow(0 0 9px rgba(125,211,252,.4)); }
