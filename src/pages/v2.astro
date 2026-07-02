@@ -1781,8 +1781,12 @@ const courses = [
   .product-card { display: block; text-decoration: none; border: 1px solid var(--line); border-radius: 16px;
     padding: 24px 24px 20px; background: rgba(7,11,31,.6); position: relative; overflow: hidden;
     transition: transform .3s cubic-bezier(.2,.8,.2,1), border-color .3s, box-shadow .3s; }
+  /* 产品卡按主题换底（对齐 global.css 对 .card 的主题覆盖模式） */
+  :global(html:is([data-theme='paper'], [data-theme='snow'])) .product-card { background: var(--space-3); }
+  :global(html[data-theme='klein']) .product-card { background: rgba(255,255,255,.06); }
+  :global(html[data-theme='hud']) .product-card { background: rgba(10,17,36,.72); }
   .product-card::before { content: ''; position: absolute; inset: 0; border-radius: 16px; pointer-events: none;
-    background: radial-gradient(420px circle at var(--mx,50%) var(--my,0%), rgba(125,211,252,.08), transparent 60%);
+    background: radial-gradient(420px circle at var(--mx,50%) var(--my,0%), color-mix(in srgb, var(--star) 9%, transparent), transparent 60%);
     opacity: 0; transition: opacity .3s; }
   .product-card:hover { transform: translateY(-5px); border-color: var(--star); box-shadow: 0 18px 44px rgba(0,0,0,.42); }
   .product-card:hover::before { opacity: 1; }
@@ -1792,7 +1796,7 @@ const courses = [
   .pc-tag.b { color: var(--star); border-color: rgba(125,211,252,.32); }
   .pc-tag.c { color: var(--rose); border-color: rgba(251,113,133,.32); }
   .pc-live { font-family: var(--mono); font-size: 10px; color: var(--aurora); letter-spacing: .12em; }
-  .product-card h3 { font-size: var(--fs-h3, 21px); color: #fff; margin-bottom: 10px; letter-spacing: .01em; }
+  .product-card h3 { font-size: var(--fs-h3, 21px); color: var(--ink, #fff); margin-bottom: 10px; letter-spacing: .01em; }
   .product-card p { font-size: 13.5px; color: var(--ink2); line-height: 1.72; }
   .pc-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 18px;
     font-family: var(--mono); font-size: 11px; color: var(--ink3); }
@@ -1810,19 +1814,20 @@ const courses = [
 
   /* ── R7 大师级排印（v2-scoped，不动 global.css）── */
   .v2-scope { text-rendering: optimizeLegibility; }
-  /* Hero 主标题：流动的星光渐变（背景位移动画，clip 到文字） */
-  .v2-scope .hero h1 {
-    letter-spacing: .045em;
+  /* Hero 主标题：流动的星光渐变——只在 cosmos 主题生效。
+     注意 Astro 作用域属性会抬高特异性,不加 :global(html[data-theme]) 门禁会压过
+     paper/snow/klein 的主题覆盖,导致浅色主题标题透明不可读(实测踩过) */
+  .v2-scope .hero h1 { letter-spacing: .045em; }
+  :global(html[data-theme='cosmos']) .v2-scope .hero h1 {
     background: linear-gradient(115deg, #fff 20%, #d6ecff 38%, #93c5fd 56%, #c4b5fd 76%, #f4f0ff 94%);
     background-size: 220% 100%;
     -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-    animation: h1-flow 11s ease-in-out infinite alternate;
   }
   @keyframes h1-flow { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
-  /* 副标题：收字距 + 尾部渐隐装饰线，建立视觉锚点 */
+  /* 副标题：收字距 + 尾部渐隐装饰线，建立视觉锚点（主题色自适应） */
   .v2-scope .hero .sub { display: flex; align-items: center; gap: 16px; letter-spacing: .14em; }
   .v2-scope .hero .sub::after { content: ''; flex: 0 0 72px; height: 1px;
-    background: linear-gradient(90deg, rgba(125,211,252,.75), transparent); }
+    background: linear-gradient(90deg, color-mix(in srgb, var(--star) 75%, transparent), transparent); }
   /* 正文：CJK 大师级密度——行高 2 上下、字距微开 */
   .v2-scope .hero .lede { line-height: 2.02; letter-spacing: .012em; }
   .v2-scope .chapter-head .ch-sub, .v2-scope .card p, .v2-scope .product-card p,
@@ -1832,7 +1837,8 @@ const courses = [
   .v2-scope .dial .num, .v2-scope .hero-stats span b, .v2-scope [data-count] { font-variant-numeric: tabular-nums; }
   /* Hero 入场级联（逐元素上浮；.hero-scroll 不参与，保留其自身 drift 动画） */
   .v2-scope .hero > .kicker { animation: hero-rise .85s cubic-bezier(.16,.84,.3,1) .06s backwards; }
-  .v2-scope .hero > h1 { animation: h1-flow 11s ease-in-out infinite alternate, hero-rise .85s cubic-bezier(.16,.84,.3,1) .14s backwards; }
+  .v2-scope .hero > h1 { animation: hero-rise .85s cubic-bezier(.16,.84,.3,1) .14s backwards; }
+  :global(html[data-theme='cosmos']) .v2-scope .hero > h1 { animation: h1-flow 11s ease-in-out infinite alternate, hero-rise .85s cubic-bezier(.16,.84,.3,1) .14s backwards; }
   .v2-scope .hero > .sub { animation: hero-rise .85s cubic-bezier(.16,.84,.3,1) .22s backwards; }
   .v2-scope .hero > .lede { animation: hero-rise .85s cubic-bezier(.16,.84,.3,1) .30s backwards; }
   .v2-scope .hero > .hero-stats { animation: hero-rise .85s cubic-bezier(.16,.84,.3,1) .38s backwards; }
@@ -1849,22 +1855,28 @@ const courses = [
   .kz-h svg { flex: none; filter: drop-shadow(0 0 6px rgba(125,211,252,.35)); }
   /* 叫回按钮用吉祥物本尊而非 emoji */
   .pet-reopen img { border-radius: 50%; display: block; margin: auto; }
-  /* 三段攻坚线稿图标：随各卡轨道环同色发光 */
+  /* 三段攻坚线稿图标：cosmos 用各卡专属渐变+同色发光；其他主题回落主题色实心描边(浅色主题下渐变对比度不足) */
   .v2-scope .g-orbit svg { display: block; }
   .v2-scope .galaxy:nth-child(1) .g-orbit svg { filter: drop-shadow(0 0 9px rgba(125,211,252,.4)); }
   .v2-scope .galaxy:nth-child(2) .g-orbit svg { filter: drop-shadow(0 0 9px rgba(167,139,250,.4)); }
   .v2-scope .galaxy:nth-child(3) .g-orbit svg { filter: drop-shadow(0 0 9px rgba(251,191,36,.35)); }
+  :global(html:not([data-theme='cosmos'])) .v2-scope .g-orbit svg g { stroke: var(--star); }
+  :global(html:not([data-theme='cosmos'])) .v2-scope .g-orbit svg > :is(path, circle) { fill: var(--star); }
+  :global(html:not([data-theme='cosmos'])) .v2-scope .galaxy .g-orbit svg {
+    filter: drop-shadow(0 0 9px color-mix(in srgb, var(--star) 30%, transparent)); }
+  :global(html:not([data-theme='cosmos'])) .v2-scope .kz-h svg { stroke: var(--star);
+    filter: drop-shadow(0 0 6px color-mix(in srgb, var(--star) 25%, transparent)); }
   /* 锚点跳转让出固定导航高度 */
   .v2-scope .chapter { scroll-margin-top: 72px; }
   /* 章节间发丝分隔线：中央渐显渐隐，给长页一个呼吸节拍 */
   .v2-scope .chapter + .chapter::after { content: ''; position: absolute; top: 0; left: 50%;
     transform: translateX(-50%); width: min(920px, 86vw); height: 1px; pointer-events: none;
-    background: linear-gradient(90deg, transparent, rgba(125,211,252,.20) 30%, rgba(167,139,250,.20) 70%, transparent); }
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--star) 20%, transparent) 30%, color-mix(in srgb, var(--nebula) 20%, transparent) 70%, transparent); }
 
   /* ── R9 作品区节奏（v2-scoped）── */
   /* works 卡：元信息升级为"可验证"状态条——绿色呼吸点 + 顶部虚线分隔 */
   .v2-scope .work-card .w-meta { display: flex; align-items: center; gap: 8px;
-    border-top: 1px dashed rgba(125,211,252,.14); padding-top: 13px; }
+    border-top: 1px dashed color-mix(in srgb, var(--star) 16%, transparent); padding-top: 13px; }
   .v2-scope .work-card .w-meta::before { content: ''; flex: none; width: 5px; height: 5px; border-radius: 50%;
     background: var(--aurora); box-shadow: 0 0 7px var(--aurora); opacity: .8; }
   .v2-scope .work-card:hover .w-meta { color: var(--ink2); }
