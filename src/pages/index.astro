@@ -1055,7 +1055,7 @@ const courses = [
       // 每个主题一套背景特效（独立特效文件，v2-scoped）
       var FX = {
         cosmos: '/cosmos-nebula.html', paper: '/paper-ink.html',
-        klein: '/klein-fx.html', snow: '/snow-fx.html', hud: '/hud-field.html'
+        klein: '/klein-fx.html', snow: '/snow-fx.html', hud: '/ink-dynamic.html'
       };
       var curSrc = null;
       function sync() {
@@ -1629,7 +1629,7 @@ const courses = [
   :global(html[data-theme='klein']) .pet {
     --pet-surface: rgba(0,32,122,.93); --pet-surface2: rgba(0,26,100,.96); --pet-me-ink: #002FA7; }
   :global(html[data-theme='hud']) .pet {
-    --pet-surface: rgba(7,11,26,.93); --pet-surface2: rgba(5,8,20,.96); --pet-me-ink: #04060f; }
+    --pet-surface: rgba(255,255,255,.94); --pet-surface2: rgba(247,245,239,.96); --pet-me-ink: #F7F5EF; }
   /* 地面投影：与浮动反相缩放，营造真实悬浮高度 */
   .pet::before { content: ''; position: absolute; left: 10px; bottom: -7px; width: 44px; height: 9px;
     border-radius: 50%; background: radial-gradient(50% 50% at 50% 50%, rgba(2,6,20,.55), transparent 72%);
@@ -1781,6 +1781,14 @@ const courses = [
   #nebula-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0;
     transition: opacity 1.4s ease; }
   #nebula-bg iframe { width: 100vw; height: 100vh; border: 0; display: block; }
+  /* 文字保护层：正文集中在左侧，用主题底色向右渐隐的柔幕压住背景亮斑（用户反馈：动效有时盖住文字）
+     --space-0 随主题自变：cosmos 深空/paper 米纸/klein 蓝/snow 白，一条规则五主题通用 */
+  #nebula-bg::after { content: ''; position: absolute; inset: 0;
+    background: linear-gradient(100deg,
+      color-mix(in srgb, var(--space-0) 62%, transparent) 0%,
+      color-mix(in srgb, var(--space-0) 34%, transparent) 44%,
+      color-mix(in srgb, var(--space-0) 8%, transparent) 68%,
+      transparent 82%); }
   html[data-theme="cosmos"] #nebula-bg,
   html[data-theme="paper"] #nebula-bg,
   html[data-theme="klein"] #nebula-bg,
@@ -1895,18 +1903,12 @@ const courses = [
     box-shadow: 0 1px 0 #fff inset, 0 10px 28px rgba(23,36,65,.07); }
   :global(html[data-theme='paper']) .v2-scope .work-card .w-meta::before {
     background: var(--flare); box-shadow: none; }
-  /* ⑤ 全息：把 global 里 .card 的 HUD 角标语言延伸到 v2 独有的产品卡 */
+  /* ⑤ 水墨主题（hud 槽位）：产品卡对齐水墨纸感 */
   :global(html[data-theme='hud']) .v2-scope .product-card {
-    border-radius: 8px; border-color: rgba(125,211,252,.2); }
-  :global(html[data-theme='hud']) .v2-scope .product-card::before { border-radius: 8px; }
-  :global(html[data-theme='hud']) .v2-scope .product-card::after {
-    content: ''; position: absolute; top: 7px; left: 7px; width: 11px; height: 11px;
-    border-top: 1px solid rgba(125,211,252,.5); border-left: 1px solid rgba(125,211,252,.5);
-    pointer-events: none; transition: .25s; }
+    border-color: var(--line2);
+    box-shadow: 0 1px 0 #fff inset, 0 10px 28px rgba(26,26,26,.06); }
   :global(html[data-theme='hud']) .v2-scope .product-card:hover {
-    box-shadow: 0 0 0 1px rgba(125,211,252,.5), 0 14px 44px rgba(125,211,252,.16); }
-  :global(html[data-theme='hud']) .v2-scope .product-card:hover::after {
-    top: 5px; left: 5px; border-color: var(--star); }
+    border-color: rgba(26,26,26,.4); box-shadow: 0 12px 36px rgba(26,26,26,.12); }
 
   /* ── R11 主题专项：克莱因金色点睛 / 月白动效收敛（v2-scoped）── */
   /* ② 克莱因蓝：金色 --flare(#ffe14d) 作为唯一强调色点睛 */

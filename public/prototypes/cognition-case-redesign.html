@@ -1,0 +1,775 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>商业认知 × 案例证据链 · 改造效果稿</title>
+    <style>
+      :root {
+        --bg: #050712;
+        --panel: rgba(12, 18, 40, 0.72);
+        --panel2: rgba(20, 30, 62, 0.82);
+        --ink: #f5f7ff;
+        --muted: #9aa8cf;
+        --dim: #667195;
+        --line: rgba(133, 190, 255, 0.16);
+        --blue: #7dd3fc;
+        --gold: #fbbf24;
+        --green: #34d399;
+        --violet: #a78bfa;
+        --rose: #fb7185;
+        --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        --serif: "Songti SC", "Noto Serif SC", "STSong", serif;
+        --sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        font-family: var(--sans);
+        color: var(--ink);
+        background:
+          radial-gradient(900px 460px at 10% 4%, rgba(125, 211, 252, 0.14), transparent 60%),
+          radial-gradient(780px 500px at 92% 10%, rgba(251, 191, 36, 0.11), transparent 62%),
+          linear-gradient(180deg, #030411 0%, var(--bg) 48%, #070b18 100%);
+        line-height: 1.75;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.38;
+        background-image:
+          radial-gradient(circle at 20% 30%, rgba(255,255,255,.45) 0 1px, transparent 1.5px),
+          radial-gradient(circle at 70% 10%, rgba(255,255,255,.32) 0 1px, transparent 1.5px),
+          radial-gradient(circle at 84% 62%, rgba(255,255,255,.22) 0 1px, transparent 1.5px),
+          radial-gradient(circle at 36% 82%, rgba(255,255,255,.2) 0 1px, transparent 1.5px);
+        background-size: 260px 260px, 360px 360px, 420px 420px, 300px 300px;
+      }
+
+      a { color: inherit; text-decoration: none; }
+      .wrap { width: min(1160px, calc(100% - 44px)); margin: 0 auto; }
+
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        border-bottom: 1px solid var(--line);
+        background: rgba(3, 4, 17, 0.78);
+        backdrop-filter: blur(14px);
+      }
+      .nav-inner {
+        width: min(1160px, calc(100% - 44px));
+        margin: 0 auto;
+        min-height: 66px;
+        display: flex;
+        align-items: center;
+        gap: 22px;
+      }
+      .brand {
+        font-family: var(--serif);
+        font-weight: 900;
+        color: #fff;
+        white-space: nowrap;
+      }
+      .nav-links {
+        margin-left: auto;
+        display: flex;
+        gap: 18px;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .nav-links a {
+        flex: 0 0 auto;
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .nav-links a:hover { color: var(--blue); }
+
+      .hero {
+        min-height: 86vh;
+        display: grid;
+        align-items: center;
+        padding: 92px 0 70px;
+      }
+      .kicker {
+        font-family: var(--mono);
+        color: var(--blue);
+        letter-spacing: .24em;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      h1 {
+        font-family: var(--serif);
+        font-size: clamp(42px, 7vw, 82px);
+        line-height: 1.12;
+        margin: 18px 0 22px;
+        letter-spacing: .02em;
+      }
+      .hero-copy {
+        max-width: 850px;
+        color: var(--muted);
+        font-size: 18px;
+      }
+      .hero-copy strong { color: #fff; }
+      .hero-actions {
+        margin-top: 34px;
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        min-height: 46px;
+        padding: 0 22px;
+        border-radius: 10px;
+        border: 1px solid rgba(125, 211, 252, .38);
+        color: var(--blue);
+        background: rgba(125, 211, 252, .07);
+        font-weight: 700;
+      }
+      .btn.primary {
+        color: #07111d;
+        border-color: transparent;
+        background: linear-gradient(135deg, var(--blue), #c4b5fd);
+      }
+      .hero-signal {
+        margin-top: 42px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        overflow: hidden;
+        background: rgba(10, 16, 36, .55);
+      }
+      .signal-cell {
+        padding: 18px 20px;
+        border-left: 1px solid var(--line);
+      }
+      .signal-cell:first-child { border-left: 0; }
+      .signal-cell b {
+        display: block;
+        color: #fff;
+        font-family: var(--serif);
+        font-size: 19px;
+      }
+      .signal-cell span {
+        display: block;
+        color: var(--dim);
+        font-family: var(--mono);
+        font-size: 11px;
+        margin-top: 4px;
+      }
+
+      section { padding: 96px 0; }
+      .head { margin-bottom: 34px; }
+      .eyebrow {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        color: var(--blue);
+        font-family: var(--mono);
+        font-size: 12px;
+        letter-spacing: .18em;
+        text-transform: uppercase;
+      }
+      .eyebrow::before {
+        content: "";
+        width: 42px;
+        height: 1px;
+        background: linear-gradient(90deg, var(--blue), transparent);
+      }
+      h2 {
+        margin: 12px 0 8px;
+        font-family: var(--serif);
+        font-size: clamp(30px, 4.4vw, 48px);
+        line-height: 1.2;
+      }
+      .sub {
+        max-width: 780px;
+        color: var(--muted);
+        font-size: 15.5px;
+      }
+      .sub strong { color: #fff; }
+
+      .bridge {
+        display: grid;
+        grid-template-columns: .95fr 1.25fr;
+        gap: 24px;
+        align-items: stretch;
+      }
+      .thesis-card, .case-card, .panel {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: var(--panel);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 22px 70px rgba(0,0,0,.26);
+      }
+      .thesis-card {
+        padding: 28px;
+        position: sticky;
+        top: 96px;
+        align-self: start;
+      }
+      .thesis-label {
+        display: inline-flex;
+        border: 1px solid rgba(251, 191, 36, .35);
+        color: var(--gold);
+        background: rgba(251, 191, 36, .07);
+        border-radius: 999px;
+        padding: 4px 12px;
+        font-family: var(--mono);
+        font-size: 11px;
+        font-weight: 700;
+      }
+      .thesis-card h3 {
+        margin: 18px 0 12px;
+        font-family: var(--serif);
+        font-size: 28px;
+        line-height: 1.35;
+      }
+      .thesis-card p { color: var(--muted); margin: 0; }
+      .formula {
+        margin-top: 24px;
+        display: grid;
+        gap: 10px;
+      }
+      .formula span {
+        border: 1px solid rgba(52, 211, 153, .22);
+        border-radius: 10px;
+        background: rgba(52, 211, 153, .055);
+        padding: 12px 14px;
+        color: #fff;
+        font-family: var(--mono);
+        font-size: 12px;
+      }
+      .case-stack { display: grid; gap: 16px; }
+      .case-card {
+        padding: 22px 24px;
+        display: grid;
+        grid-template-columns: 160px 1fr;
+        gap: 18px;
+        transition: transform .2s, border-color .2s;
+      }
+      .case-card:hover {
+        transform: translateY(-3px);
+        border-color: rgba(125, 211, 252, .42);
+      }
+      .case-meta {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--blue);
+        letter-spacing: .08em;
+      }
+      .case-meta b {
+        display: block;
+        margin-top: 10px;
+        color: var(--gold);
+        font-size: 18px;
+        letter-spacing: 0;
+      }
+      .case-main h3 {
+        margin: 0 0 8px;
+        font-family: var(--serif);
+        font-size: 21px;
+      }
+      .case-main p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .proofs {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 13px;
+      }
+      .proof {
+        border: 1px solid rgba(125, 211, 252, .25);
+        color: var(--blue);
+        background: rgba(125, 211, 252, .06);
+        border-radius: 999px;
+        padding: 3px 10px;
+        font-family: var(--mono);
+        font-size: 10.5px;
+      }
+
+      .map-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+      }
+      .map-card {
+        padding: 24px;
+        min-height: 260px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background:
+          radial-gradient(420px 180px at 90% 0%, rgba(167, 139, 250, .10), transparent 64%),
+          rgba(12, 18, 40, .72);
+      }
+      .map-card:nth-child(2n) {
+        background:
+          radial-gradient(420px 180px at 90% 0%, rgba(251, 191, 36, .10), transparent 64%),
+          rgba(12, 18, 40, .72);
+      }
+      .map-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+      .map-tag {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--gold);
+        border: 1px solid rgba(251, 191, 36, .30);
+        border-radius: 999px;
+        padding: 3px 10px;
+      }
+      .map-card h3 {
+        font-family: var(--serif);
+        font-size: 20px;
+        margin: 0 0 10px;
+      }
+      .map-card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .linkline {
+        margin-top: 18px;
+        border-top: 1px dashed rgba(125, 211, 252, .20);
+        padding-top: 14px;
+        color: var(--green);
+        font-family: var(--mono);
+        font-size: 12px;
+      }
+
+      .timeline {
+        position: relative;
+        display: grid;
+        gap: 16px;
+      }
+      .step {
+        display: grid;
+        grid-template-columns: 170px 1fr 1fr;
+        gap: 18px;
+        align-items: stretch;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: rgba(12, 18, 40, .68);
+        padding: 18px;
+      }
+      .step-no {
+        font-family: var(--mono);
+        color: var(--blue);
+        font-size: 12px;
+        letter-spacing: .15em;
+      }
+      .step h3 {
+        margin: 6px 0 0;
+        font-family: var(--serif);
+        font-size: 22px;
+      }
+      .step p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .step strong { color: #fff; }
+
+      .wire {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 20px;
+      }
+      .side-nav {
+        padding: 20px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: rgba(5, 8, 20, .72);
+      }
+      .side-nav h3 {
+        margin: 0 0 14px;
+        font-family: var(--serif);
+      }
+      .side-nav a {
+        display: block;
+        padding: 11px 12px;
+        color: var(--muted);
+        border-radius: 10px;
+        font-size: 14px;
+      }
+      .side-nav a.active, .side-nav a:hover {
+        color: #fff;
+        background: rgba(125, 211, 252, .08);
+      }
+      .screen {
+        min-height: 520px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: linear-gradient(160deg, rgba(16, 24, 52, .85), rgba(7, 11, 28, .78));
+        padding: 26px;
+      }
+      .screen-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        align-items: center;
+        margin-bottom: 22px;
+      }
+      .screen-head h3 {
+        margin: 0;
+        font-family: var(--serif);
+        font-size: 26px;
+      }
+      .screen-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+      }
+      .mini {
+        border: 1px solid rgba(125, 211, 252, .17);
+        border-radius: 12px;
+        background: rgba(3, 4, 18, .35);
+        padding: 16px;
+      }
+      .mini b {
+        display: block;
+        margin-bottom: 8px;
+        color: #fff;
+        font-family: var(--serif);
+      }
+      .mini span {
+        display: block;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .screen-band {
+        margin-top: 18px;
+        border: 1px solid rgba(52, 211, 153, .22);
+        border-radius: 12px;
+        background: rgba(52, 211, 153, .055);
+        padding: 18px;
+      }
+      .screen-band b { color: var(--green); }
+
+      .prompt-box {
+        white-space: pre-wrap;
+        padding: 24px;
+        border: 1px solid rgba(251, 191, 36, .26);
+        border-radius: 16px;
+        background: rgba(5, 8, 20, .82);
+        color: #d9e3ff;
+        font-family: var(--mono);
+        font-size: 12.5px;
+        line-height: 1.8;
+        overflow-x: auto;
+      }
+
+      @media (max-width: 920px) {
+        .hero-signal, .bridge, .wire { grid-template-columns: 1fr; }
+        .signal-cell { border-left: 0; border-top: 1px solid var(--line); }
+        .signal-cell:first-child { border-top: 0; }
+        .thesis-card { position: static; }
+        .case-card, .step { grid-template-columns: 1fr; }
+        .map-grid, .screen-grid { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="nav">
+      <div class="nav-inner">
+        <a class="brand" href="#">纪鸣飞 · 改造效果稿</a>
+        <div class="nav-links">
+          <a href="#bridge">认知桥</a>
+          <a href="#matrix">案例矩阵</a>
+          <a href="#flow">首页流</a>
+          <a href="#wireframe">页面结构</a>
+          <a href="#prompt">改造指令</a>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <header class="hero">
+        <div class="wrap">
+          <div class="kicker">BUSINESS COGNITION × CASE EVIDENCE</div>
+          <h1>把商业认知，长进每一个案例里。</h1>
+          <p class="hero-copy">
+            这版不是再给首页加一个“认知模块”，而是把你的核心判断变成站点的信息骨架：
+            <strong>每条商业判断，都能指向一个真实项目、一个取舍动作、一个可验证产物和一个结果指标。</strong>
+          </p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#bridge">看效果结构</a>
+            <a class="btn" href="#prompt">复制给 Claude 的改造指令</a>
+          </div>
+          <div class="hero-signal">
+            <div class="signal-cell"><b>商业判断</b><span>需求 / 差异化 / 壁垒</span></div>
+            <div class="signal-cell"><b>案例证据</b><span>中台 / Agent / 转型</span></div>
+            <div class="signal-cell"><b>产物验证</b><span>原型 / 评测 / 埋点</span></div>
+            <div class="signal-cell"><b>自我闭环</b><span>知识库 / 自动化 / 课程</span></div>
+          </div>
+        </div>
+      </header>
+
+      <section id="bridge">
+        <div class="wrap">
+          <div class="head">
+            <div class="eyebrow">01 / CORE BRIDGE</div>
+            <h2>不要孤立展示认知，要展示“认知如何改变项目动作”</h2>
+            <p class="sub">把面试里吸收的商业判断，翻译成你自己项目里的行为证据。读者看到的不是“我懂很多”，而是“我为什么这样设计系统、这样毙需求、这样定义指标”。</p>
+          </div>
+
+          <div class="bridge">
+            <aside class="thesis-card">
+              <span class="thesis-label">总命题</span>
+              <h3>AI 产品不是模型壳，而是商业闭环系统。</h3>
+              <p>模型会持续吞掉通用工具层。真正能留下利润的，是强需求、差异化、成本结构、反馈飞轮、内容生态和组织效率的组合。</p>
+              <div class="formula">
+                <span>需求决定收入</span>
+                <span>差异化决定利润</span>
+                <span>长期壁垒决定长期利润</span>
+                <span>owner 闭环决定迭代速度</span>
+              </div>
+            </aside>
+
+            <div class="case-stack">
+              <a class="case-card" href="/prototypes/tripflow-arch.html" target="_blank">
+                <div class="case-meta">CASE / 内容增长 AI 中台<b>100 万+</b></div>
+                <div class="case-main">
+                  <h3>从工具提效，转向内容生产生态</h3>
+                  <p>不做“全 AI 一键出片”的性感伪需求，而是把灵感、资产、创作、审核、剪辑、复盘组织成一个内容增长系统。这正对应“工具层会变薄，产品要长出场景和内容飞轮”。</p>
+                  <div class="proofs"><span class="proof">500 素材/周</span><span class="proof">990 发布/周</span><span class="proof">23 埋点 Schema</span><span class="proof">BG 级转型标杆</span></div>
+                </div>
+              </a>
+
+              <a class="case-card" href="/prototypes/chat-agent-arch.html" target="_blank">
+                <div class="case-meta">CASE / C 端闲聊 Agent<b>+30%</b></div>
+                <div class="case-main">
+                  <h3>需求强度来自场景，差异化来自体验深度</h3>
+                  <p>情感陪伴不是“能聊天”就成立，关键在破冰、记忆、人设一致和付费节点。16 路意图、三路 RAG、防注入和动态提示词，是为了把场景价值做厚。</p>
+                  <div class="proofs"><span class="proof">16 路意图</span><span class="proof">三路 RAG</span><span class="proof">158 节点</span><span class="proof">付费转化 +30%</span></div>
+                </div>
+              </a>
+
+              <a class="case-card" href="/prototypes/cs-agent-arch.html" target="_blank">
+                <div class="case-meta">CASE / 智能客服小 V<b>13 FTE</b></div>
+                <div class="case-main">
+                  <h3>企业 AI 要从 owner、指标和 evaluator 开始</h3>
+                  <p>客服不是 demo 场景，而是有明确 ROI、兜底机制、满意度和人力指标的生产系统。它证明“AI 改造不是交付工具，而是让业务 owner 拿回迭代权”。</p>
+                  <div class="proofs"><span class="proof">80% 重复问题</span><span class="proof">满意度 68%→84%</span><span class="proof">年省百万</span><span class="proof">30 类意图</span></div>
+                </div>
+              </a>
+
+              <a class="case-card" href="/prototypes/vibecoding-class.html" target="_blank">
+                <div class="case-meta">CASE / 原型工坊<b>14+</b></div>
+                <div class="case-main">
+                  <h3>球形协作要求个体直接输出可运行产物</h3>
+                  <p>14 个过程文件、Vibe Coding 课程、Skill Workshop 和整站构建，证明你不是“会讲 AI-native”，而是已经把自己的生产方式改造成闭环系统。</p>
+                  <div class="proofs"><span class="proof">14 个原型</span><span class="proof">172 份过程文档</span><span class="proof">Skill 工程化</span><span class="proof">Agent 构站</span></div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="matrix">
+        <div class="wrap">
+          <div class="head">
+            <div class="eyebrow">02 / THESIS TO EVIDENCE</div>
+            <h2>认知点位与个站案例的连接矩阵</h2>
+            <p class="sub">建议把现有“商业与 AI 认知”章节改成这张矩阵：每张卡都包含“判断、案例、证据、页面要链接到哪里”。</p>
+          </div>
+
+          <div class="map-grid">
+            <article class="map-card">
+              <div class="map-top"><span class="map-tag">商业基本式</span><span>01</span></div>
+              <h3>需求决定收入，差异化决定利润</h3>
+              <p>连接到 C 端闲聊 Agent：为什么付费转化不是靠模型新鲜感，而是靠破冰场景、长程记忆和人设一致性。</p>
+              <div class="linkline">链接：拟人化闲聊 Agent / 付费转化 +30% / 16 路意图</div>
+            </article>
+            <article class="map-card">
+              <div class="map-top"><span class="map-tag">模型竞合</span><span>02</span></div>
+              <h3>工具层会被模型吞掉</h3>
+              <p>连接到出海内容增长 AI 中台：不追“万能工具”，转向内容资产、创作者流程、合规审核和复盘飞轮。</p>
+              <div class="linkline">链接：Tripflow 架构 / 资产库 / 47 意图旅程</div>
+            </article>
+            <article class="map-card">
+              <div class="map-top"><span class="map-tag">AI-native 协作</span><span>03</span></div>
+              <h3>链式协作会变成球形协作</h3>
+              <p>连接到原型工坊与课程：产品直接交付可运行结构，设计和工程围绕代码与文档中间层并行贡献。</p>
+              <div class="linkline">链接：原型工坊 / Vibe Coding 课 / Skill Workshop</div>
+            </article>
+            <article class="map-card">
+              <div class="map-top"><span class="map-tag">Harness / Evaluator</span><span>04</span></div>
+              <h3>AI 系统必须可评测、可回滚、可追踪</h3>
+              <p>连接到客服 Agent、多模态审核、Langfuse 与 badcase：不是“感觉效果好”，而是有评测集、埋点和人工兜底。</p>
+              <div class="linkline">链接：智能客服小 V / 5000+ 评测集 / 23 埋点 Schema</div>
+            </article>
+            <article class="map-card">
+              <div class="map-top"><span class="map-tag">Owner 闭环</span><span>05</span></div>
+              <h3>AI 改造必须由 owner 躬身入局</h3>
+              <p>连接到 FDE 驻场术和 90 天交付：蓝图签字、责权利、业务变化归运营维护，都是为了把 loop 留在业务现场。</p>
+              <div class="linkline">链接：90 天驻场交付 / 蓝图签字 / 飞轮分工矩阵</div>
+            </article>
+            <article class="map-card">
+              <div class="map-top"><span class="map-tag">两层组织</span><span>06</span></div>
+              <h3>中层转译会被压缩，闭环个体变贵</h3>
+              <p>连接到团队带教：3 UI + 5+ 开发、3 实习生 + 1 正岗产品，核心不是管理层级，而是让每个人会用 Agent 直接产生结果。</p>
+              <div class="linkline">链接：AI-native 团队带教 / 人人用 Agent / 人人 Vibe Coding</div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="flow">
+        <div class="wrap">
+          <div class="head">
+            <div class="eyebrow">03 / HOMEPAGE FLOW</div>
+            <h2>建议的新首页阅读路径</h2>
+            <p class="sub">把“认知”从一个章节变成整站的解释层。用户先被硬指标吸引，再看到你如何思考，最后进入案例验证。</p>
+          </div>
+
+          <div class="timeline">
+            <div class="step">
+              <div><div class="step-no">STEP 01</div><h3>首屏定位</h3></div>
+              <p><strong>一句话：</strong>我能把业务问题拆成 AI 系统，把系统跑成结果，把结果沉淀成组织能力。</p>
+              <p><strong>动作：</strong>首屏按钮保留“旗舰项目”，新增“看我的商业判断”。</p>
+            </div>
+            <div class="step">
+              <div><div class="step-no">STEP 02</div><h3>关键成果</h3></div>
+              <p><strong>作用：</strong>先证明结果不是空谈，展示降本、转化、产能、背书。</p>
+              <p><strong>动作：</strong>每个指标旁加“来自哪个案例”的小标签。</p>
+            </div>
+            <div class="step">
+              <div><div class="step-no">STEP 03</div><h3>商业认知</h3></div>
+              <p><strong>作用：</strong>告诉读者你不是靠执行堆料，而是有判断框架。</p>
+              <p><strong>动作：</strong>6 张认知卡每张都绑定 1-2 个案例链接。</p>
+            </div>
+            <div class="step">
+              <div><div class="step-no">STEP 04</div><h3>旗舰案例</h3></div>
+              <p><strong>作用：</strong>用出海内容中台证明“工具层变薄，所以转向内容生态与反馈飞轮”。</p>
+              <p><strong>动作：</strong>新增“我为什么毙掉伪需求”的决策块。</p>
+            </div>
+            <div class="step">
+              <div><div class="step-no">STEP 05</div><h3>项目档案</h3></div>
+              <p><strong>作用：</strong>把每个项目从“做了什么”改成“我用哪条商业判断做了什么”。</p>
+              <p><strong>动作：</strong>卡片新增“对应认知”字段。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="wireframe">
+        <div class="wrap">
+          <div class="head">
+            <div class="eyebrow">04 / WIREFRAME</div>
+            <h2>改造后的“商业与 AI 认知”章节长什么样</h2>
+            <p class="sub">左侧是认知导航，右侧是一个认知对应的案例证据面板。正式实现时可以不用交互，静态矩阵也可以。</p>
+          </div>
+
+          <div class="wire">
+            <aside class="side-nav">
+              <h3>认知索引</h3>
+              <a class="active" href="#">需求 × 差异化</a>
+              <a href="#">工具层变薄</a>
+              <a href="#">球形协作</a>
+              <a href="#">Harness / Evaluator</a>
+              <a href="#">Owner 闭环</a>
+              <a href="#">两层组织</a>
+            </aside>
+            <div class="screen">
+              <div class="screen-head">
+                <h3>需求决定收入，差异化决定利润</h3>
+                <span class="map-tag">商业基本式</span>
+              </div>
+              <div class="screen-grid">
+                <div class="mini"><b>判断</b><span>AI 产品不能只靠模型红利，必须回答用户为什么持续付费，以及你的差异化为什么不会被模型吞掉。</span></div>
+                <div class="mini"><b>对应案例</b><span>拟人化闲聊 Agent：破冰、记忆、人设一致、付费节点，是情感陪伴场景的价值厚度。</span></div>
+                <div class="mini"><b>证据</b><span>16 路意图、三路 RAG、防注入、158 节点逻辑追踪，关键环节付费转化 +30%。</span></div>
+              </div>
+              <div class="screen-band">
+                <b>页面文案建议：</b>
+                这不是“我会做 Agent”，而是“我知道 C 端 AI 产品的利润来自哪里，并能把这个判断落实到产品结构和指标里”。
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="prompt">
+        <div class="wrap">
+          <div class="head">
+            <div class="eyebrow">05 / CLAUDE PROMPT</div>
+            <h2>可直接发给 Claude 的改造指令</h2>
+            <p class="sub">下面这段可以直接复制。它会告诉 Claude：不是重写样式，而是重构认知与案例之间的证据链。</p>
+          </div>
+
+          <div class="prompt-box">你要改造我的个人站首页，目标是把“商业与 AI 认知”跟现有案例逻辑串联起来，而不是孤立增加一组认知金句。
+
+请按以下原则改：
+
+1. 保留现有站点的视觉风格和组件体系，不要重做整站。
+2. 在首页“旗舰项目”之后、“项目档案”之前，重构一个章节：商业与 AI 认知。
+3. 这个章节必须使用“认知 → 对应案例 → 证据 → 可点开验证”的结构。
+4. 每个认知点都要绑定现有页面或案例：
+   - 需求决定收入，差异化决定利润 → 绑定“拟人化闲聊 Agent”，证据是 16 路意图、三路 RAG、防注入、付费转化 +30%。
+   - 工具层会被模型吞掉 → 绑定“出海内容增长 AI 中台”，证据是从一键出片伪需求转向灵感、资产、创作、审核、剪辑、复盘的内容生态，MVP 单周 500 素材 / 990 发布 / 100 万+ 播放。
+   - 链式协作会被球形协作替代 → 绑定“原型工坊 / Vibe Coding 课程 / Skill Workshop”，证据是 14 个可交互过程文件、172 份过程文档、整站 Agent 构建。
+   - AI 系统必须有 harness / evaluator / loop → 绑定“智能客服小 V”和“多模态审核体系”，证据是 30 类意图、满意度 68%→84%、5000+ 评测集、23 项埋点 Schema。
+   - AI 改造必须由 owner 躬身入局 → 绑定“90 天驻场交付”和“蓝图签字机制”，证据是业务蓝图签字、飞轮分工矩阵、业务变化归运营维护。
+   - 中层转译会被压缩，两层结构更快 → 绑定“AI-native 团队带教”，证据是 3 UI + 5+ 开发、3 实习生 + 1 正岗产品、人人用 Agent / 人人 Vibe Coding。
+
+章节结构建议：
+
+A. 顶部一句强判断：
+“AI 产品公司的核心问题，不是把工具做得更像工具，而是重新定义自己和模型公司的竞合关系：模型会吞掉通用能力，产品要长出场景、内容、关系、数据飞轮和商业自我造血。”
+
+B. 一个“C 端 AI 产品判断链路”：
+需求强度 → 差异化 → 成本结构 → 反馈飞轮 → 长期壁垒
+每个节点下面写一句解释：
+需求强度：用户是否愿意持续付费
+差异化：效果 / 获客 / 场景 / 生态
+成本结构：token cost + marketing cost
+反馈飞轮：user feedback → data → model/product
+长期壁垒：内容生态、创作者网络、生成关系
+
+C. 六张认知卡，每张卡包括：
+认知标签、判断标题、判断解释、绑定案例、证据 chips、链接按钮。
+
+D. 在“项目档案”每张卡上新增一个小字段：
+“对应认知：xxx”
+例如：
+出海内容增长 AI 中台 → 对应认知：工具层变薄，所以转向内容生态与反馈飞轮。
+拟人化闲聊 Agent → 对应认知：需求决定收入，差异化决定利润。
+智能客服小 V → 对应认知：AI 系统必须可评测、可兜底、可交付 ROI。
+硅基员工 / ERP 转型 → 对应认知：AI 改造必须 owner 闭环，组织机制比工具更重要。
+
+E. 在旗舰案例里新增一个“商业判断与取舍”块：
+标题：为什么我先毙掉两个伪需求
+内容：不做“全 AI 一键出片”和“自动养号”，因为它们看起来性感，但要么违背平台合规，要么不能稳定形成可衡量 ROI。真正应该做的是可持续生产链路：灵感 → 资产 → 创作 → 审核 → 剪辑 → 发布 → 复盘。
+
+文案语气：
+要像一个能独立带 AI 转型战役的人，而不是像一个整理概念的人。
+少写“我认为”，多写“这个判断如何改变了我的项目动作”。
+少写工具名堆叠，多写业务取舍、商业结构、指标、评测、组织接口。
+
+验收标准：
+1. 首屏用户 30 秒内能知道我不是普通 AI PM，而是能把商业判断、AI 系统和组织落地串起来的人。
+2. 商业认知章节里的每个判断，都能点到一个真实案例或作品。
+3. 项目档案读起来不再只是经历列表，而是每个案例都在证明一条认知。
+4. 不牺牲现有视觉风格，不重做导航，不破坏移动端布局。
+5. npm run build 必须通过。</div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
