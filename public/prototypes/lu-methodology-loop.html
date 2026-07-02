@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>炉 LU · 爆款方法论循环系统</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0C0B09;
+  --bg-2:#12100D;
+  --panel:#171410;
+  --panel-2:#1D1913;
+  --line:rgba(255,235,210,.09);
+  --line-2:rgba(255,235,210,.16);
+  --ink:#F4EFE6;
+  --ink-2:#B9B0A1;
+  --ink-3:#7A7266;
+  --ember:#FF6B35;
+  --ember-2:#FF8F5E;
+  --ember-deep:#C13E12;
+  --gold:#E8B04B;
+  --jade:#7FC8A9;
+  --serif:"Noto Serif SC",serif;
+  --sans:"Noto Sans SC",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box; margin:0; padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:var(--sans); font-weight:300; font-size:16px; line-height:1.7;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+}
+body::before{ /* grain */
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:1; opacity:.5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.035 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+::selection{background:var(--ember); color:#0C0B09}
+a{color:inherit}
+button{font-family:inherit; cursor:pointer}
+.mono{font-family:var(--mono)}
+.serif{font-family:var(--serif)}
+
+/* ============ top nav ============ */
+.topbar{
+  position:fixed; top:0; left:0; right:0; z-index:40;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:18px 44px;
+  background:linear-gradient(to bottom, rgba(12,11,9,.92), rgba(12,11,9,0));
+  backdrop-filter:blur(2px);
+}
+.logo{display:flex; align-items:center; gap:13px; text-decoration:none}
+.logo .glyph{
+  width:40px; height:40px; border-radius:10px; display:grid; place-items:center;
+  font-family:var(--serif); font-weight:900; font-size:22px; color:#0C0B09;
+  background:linear-gradient(135deg,var(--ember-2),var(--ember) 55%,var(--ember-deep));
+  box-shadow:0 0 22px rgba(255,107,53,.35);
+}
+.logo .wm{font-family:var(--serif); font-weight:700; font-size:19px; letter-spacing:.14em}
+.logo .en{font-family:var(--mono); font-size:10px; color:var(--ink-3); letter-spacing:.3em; display:block; margin-top:-2px}
+.topnav{display:flex; gap:32px; font-size:13.5px; color:var(--ink-2)}
+.topnav a{text-decoration:none; transition:color .2s; font-family:var(--mono); font-size:12px; letter-spacing:.08em}
+.topnav a:hover{color:var(--ember-2)}
+.topcta{
+  font-family:var(--mono); font-size:12px; letter-spacing:.08em;
+  color:var(--ember-2); border:1px solid rgba(255,107,53,.4); border-radius:99px;
+  background:rgba(255,107,53,.06); padding:9px 20px; transition:.2s;
+}
+.topcta:hover{background:rgba(255,107,53,.16); box-shadow:0 0 18px rgba(255,107,53,.25)}
+
+/* ============ hero ============ */
+.hero{
+  position:relative; min-height:100vh; display:grid; place-items:center;
+  padding:140px 44px 80px; text-align:center; overflow:hidden;
+}
+.hero .halo{
+  position:absolute; left:50%; top:58%; transform:translate(-50%,-50%);
+  width:min(920px,120vw); aspect-ratio:1; border-radius:50%; pointer-events:none;
+  background:radial-gradient(circle, rgba(255,107,53,.16) 0%, rgba(255,107,53,.05) 34%, transparent 62%);
+  filter:blur(4px); animation:breathe 6s ease-in-out infinite;
+}
+@keyframes breathe{0%,100%{opacity:.75; transform:translate(-50%,-50%) scale(1)}50%{opacity:1; transform:translate(-50%,-50%) scale(1.05)}}
+.hero .inner{position:relative; z-index:2; max-width:880px}
+.kicker{
+  display:inline-flex; align-items:center; gap:10px;
+  font-family:var(--mono); font-size:11.5px; letter-spacing:.32em; color:var(--gold);
+  border:1px solid rgba(232,176,75,.28); border-radius:99px; padding:8px 20px 8px 16px;
+  background:rgba(232,176,75,.05); margin-bottom:38px;
+}
+.kicker .dot{width:6px; height:6px; border-radius:50%; background:var(--gold); box-shadow:0 0 8px var(--gold); animation:blink 2.2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero h1{
+  font-family:var(--serif); font-weight:900; letter-spacing:.02em;
+  font-size:clamp(52px, 9.5vw, 118px); line-height:1.12;
+}
+.hero h1 .ember{
+  background:linear-gradient(120deg, var(--ember-2) 10%, var(--ember) 45%, var(--gold) 90%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-shadow:0 0 60px rgba(255,107,53,.25);
+}
+.hero .sub{
+  margin:34px auto 0; max-width:620px; color:var(--ink-2); font-size:17.5px; line-height:1.9;
+}
+.hero .sub b{color:var(--ink); font-weight:500}
+.hero .cta-row{margin-top:46px; display:flex; gap:16px; justify-content:center; flex-wrap:wrap}
+.btn-primary{
+  font-size:15px; font-weight:500; color:#140B06; border:0; border-radius:99px;
+  padding:15px 34px; letter-spacing:.04em;
+  background:linear-gradient(120deg,var(--ember-2),var(--ember) 60%,var(--ember-deep));
+  box-shadow:0 0 30px rgba(255,107,53,.35), inset 0 1px 0 rgba(255,255,255,.25);
+  transition:transform .15s, box-shadow .2s;
+}
+.btn-primary:hover{transform:translateY(-2px); box-shadow:0 6px 44px rgba(255,107,53,.5), inset 0 1px 0 rgba(255,255,255,.25)}
+.btn-ghost{
+  font-size:15px; color:var(--ink-2); border:1px solid var(--line-2); border-radius:99px;
+  padding:15px 34px; background:transparent; transition:.2s; letter-spacing:.04em;
+}
+.btn-ghost:hover{color:var(--ink); border-color:rgba(255,235,210,.35)}
+.hero .oneliner{
+  margin-top:70px; font-family:var(--mono); font-size:12px; letter-spacing:.06em;
+  color:var(--ink-3); display:flex; align-items:center; justify-content:center; gap:0; flex-wrap:wrap;
+}
+.hero .oneliner span{padding:0 6px}
+.hero .oneliner .sep{color:var(--ember); padding:0 4px}
+.scrollhint{
+  position:absolute; bottom:34px; left:50%; transform:translateX(-50%);
+  font-family:var(--mono); font-size:10px; letter-spacing:.3em; color:var(--ink-3);
+  display:flex; flex-direction:column; align-items:center; gap:10px;
+}
+.scrollhint::after{content:""; width:1px; height:44px; background:linear-gradient(to bottom, var(--ember), transparent); animation:drop 1.8s ease-in-out infinite}
+@keyframes drop{0%{transform:scaleY(.2); transform-origin:top}60%{transform:scaleY(1)}100%{opacity:0}}
+
+/* ============ section scaffolding ============ */
+section{position:relative; z-index:2}
+.wrap{max-width:1160px; margin:0 auto; padding:0 44px}
+.sec{padding:130px 0}
+.sec-head{max-width:720px; margin-bottom:70px}
+.sec-eyebrow{
+  font-family:var(--mono); font-size:12px; letter-spacing:.3em; color:var(--ember-2);
+  display:flex; align-items:center; gap:14px; margin-bottom:22px;
+}
+.sec-eyebrow::before{content:""; width:36px; height:1px; background:var(--ember)}
+.sec-head h2{font-family:var(--serif); font-weight:700; font-size:clamp(32px,4.4vw,48px); line-height:1.3; letter-spacing:.01em}
+.sec-head h2 .em{color:var(--ember-2)}
+.sec-head .lede{margin-top:20px; color:var(--ink-2); font-size:16.5px; line-height:1.9}
+
+/* reveal on scroll */
+.rv{opacity:0; transform:translateY(28px); transition:opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1)}
+.rv.in{opacity:1; transform:none}
+
+/* ============ loop section ============ */
+#loopsec{background:linear-gradient(to bottom, var(--bg), var(--bg-2) 30%, var(--bg))}
+.loop-grid{display:grid; grid-template-columns:1fr 1fr; gap:70px; align-items:center}
+.furnace{position:relative; aspect-ratio:1; max-width:520px; margin:0 auto; width:100%}
+.furnace svg{width:100%; height:100%; overflow:visible; display:block}
+.orbit-label{font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; fill:var(--ink-3)}
+.stage-g{cursor:pointer}
+.stage-g .box{fill:var(--panel); stroke:var(--line-2); transition:.25s}
+.stage-g:hover .box{stroke:var(--ember); filter:drop-shadow(0 0 12px rgba(255,107,53,.3))}
+.stage-g .num{font-family:var(--mono); font-size:9.5px; fill:var(--ember-2); letter-spacing:.1em}
+.stage-g .nm{font-family:var(--sans); font-weight:500; font-size:13px; fill:var(--ink)}
+.stage-g .dsc{font-family:var(--sans); font-size:9.5px; fill:var(--ink-3)}
+.core-ring{fill:none; stroke:rgba(255,107,53,.25); stroke-width:1}
+.core-ring.spin{stroke-dasharray:4 10; animation:spin 26s linear infinite; transform-origin:center}
+@keyframes spin{to{transform:rotate(360deg)}}
+.core-num{font-family:var(--serif); font-weight:900; font-size:46px; fill:var(--ink)}
+.core-num .v{fill:var(--ember)}
+.core-cap{font-family:var(--mono); font-size:9.5px; letter-spacing:.3em; fill:var(--ink-3)}
+.flow-arrow{fill:none; stroke:rgba(255,143,94,.4); stroke-width:1.2; marker-end:url(#arr)}
+
+.loop-copy h3{font-family:var(--serif); font-weight:700; font-size:27px; line-height:1.5; margin-bottom:20px}
+.loop-copy h3 .em{color:var(--ember-2)}
+.loop-copy p{color:var(--ink-2); font-size:15.5px; margin-bottom:34px}
+.gauges{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:16px; overflow:hidden; margin-bottom:34px}
+.gauge{background:var(--panel); padding:22px 20px}
+.gauge .n{font-family:var(--serif); font-weight:900; font-size:34px; line-height:1}
+.gauge .n .u{font-size:16px; color:var(--ember-2)}
+.gauge .l{font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; color:var(--ink-3); margin-top:8px}
+.run-btn{
+  width:100%; font-size:15px; font-weight:500; letter-spacing:.06em;
+  color:#140B06; border:0; border-radius:14px; padding:17px;
+  background:linear-gradient(120deg,var(--ember-2),var(--ember) 60%,var(--ember-deep));
+  box-shadow:0 0 26px rgba(255,107,53,.3); transition:.2s; position:relative; overflow:hidden;
+}
+.run-btn:hover{box-shadow:0 0 44px rgba(255,107,53,.5)}
+.run-btn::after{
+  content:""; position:absolute; top:0; left:-70%; width:40%; height:100%;
+  background:linear-gradient(100deg, transparent, rgba(255,255,255,.4), transparent);
+  transform:skewX(-18deg); animation:sheen 3.6s ease-in-out infinite;
+}
+@keyframes sheen{0%,60%{left:-70%}100%{left:130%}}
+
+/* ============ five steps ============ */
+.steps{display:flex; flex-direction:column; gap:0; counter-reset:step}
+.step{
+  display:grid; grid-template-columns:120px 1fr 1.1fr; gap:44px; align-items:start;
+  padding:56px 0; border-top:1px solid var(--line); position:relative;
+}
+.step:last-child{border-bottom:1px solid var(--line)}
+.step .no{
+  font-family:var(--serif); font-weight:900; font-size:64px; line-height:1;
+  color:transparent; -webkit-text-stroke:1px rgba(255,143,94,.45);
+  transition:.4s;
+}
+.step:hover .no{color:var(--ember); -webkit-text-stroke:1px var(--ember); text-shadow:0 0 30px rgba(255,107,53,.4)}
+.step .txt h3{font-family:var(--serif); font-weight:700; font-size:24px; margin-bottom:6px}
+.step .txt .en{font-family:var(--mono); font-size:11px; letter-spacing:.24em; color:var(--ink-3); margin-bottom:16px}
+.step .txt p{color:var(--ink-2); font-size:15px; line-height:1.85}
+.step .txt p b{color:var(--ink); font-weight:500}
+
+/* step-specific demos */
+.demo{
+  background:var(--panel); border:1px solid var(--line); border-radius:18px; padding:24px;
+  box-shadow:0 20px 60px -30px rgba(0,0,0,.8);
+}
+.demo .dhead{font-family:var(--mono); font-size:10.5px; letter-spacing:.2em; color:var(--ink-3); margin-bottom:18px; display:flex; justify-content:space-between}
+.src-row{display:flex; align-items:center; gap:13px; padding:12px 0; border-bottom:1px dashed var(--line)}
+.src-row:last-child{border-bottom:0}
+.src-row .ic{width:34px; height:34px; border-radius:9px; flex:none; display:grid; place-items:center; font-size:15px; background:var(--panel-2); border:1px solid var(--line)}
+.src-row .m .t{font-size:13.5px; font-weight:400; color:var(--ink)}
+.src-row .m .s{font-family:var(--mono); font-size:10.5px; color:var(--ink-3)}
+.src-row .why{margin-left:auto; font-size:11px; color:var(--gold); border:1px solid rgba(232,176,75,.3); background:rgba(232,176,75,.06); border-radius:6px; padding:3px 9px; white-space:nowrap}
+
+.dim-row{display:flex; align-items:center; gap:14px; padding:9.5px 0; border-bottom:1px dashed var(--line); font-size:13px}
+.dim-row:last-child{border-bottom:0}
+.dim-row .k{width:96px; flex:none; color:var(--ink-2); font-weight:400}
+.dim-row .bar{flex:1; height:4px; border-radius:99px; background:var(--panel-2); overflow:hidden}
+.dim-row .bar i{display:block; height:100%; border-radius:99px; background:linear-gradient(90deg,var(--ember-deep),var(--ember-2)); width:0; transition:width 1.2s cubic-bezier(.2,.7,.2,1)}
+.dim-row .v{font-family:var(--mono); font-size:11px; width:64px; text-align:right; color:var(--ember-2)}
+.dim-row.jade .bar i{background:linear-gradient(90deg,#2E6B54,var(--jade))}
+.dim-row.jade .v{color:var(--jade)}
+
+.mini-card{
+  border:1px solid var(--line-2); border-radius:14px; padding:16px 18px; margin-bottom:12px;
+  background:linear-gradient(160deg, var(--panel-2), var(--panel));
+  transition:.25s;
+}
+.mini-card:hover{border-color:rgba(255,107,53,.5); transform:translateX(4px)}
+.mini-card:last-child{margin-bottom:0}
+.mini-card .id{font-family:var(--mono); font-size:10px; letter-spacing:.14em; color:var(--ember-2)}
+.mini-card .nm{font-size:14.5px; font-weight:500; margin:5px 0 3px}
+.mini-card .meta{font-family:var(--mono); font-size:10.5px; color:var(--ink-3)}
+.mini-card .meta b{color:var(--jade); font-weight:500}
+
+.script-line{padding:13px 0; border-bottom:1px dashed var(--line)}
+.script-line:last-child{border-bottom:0}
+.script-line .lab{font-family:var(--mono); font-size:10px; letter-spacing:.2em; color:var(--ember-2); margin-bottom:6px}
+.script-line .tx{font-size:14px; line-height:1.9; color:var(--ink-2)}
+.slot{
+  display:inline-block; padding:1px 9px; margin:0 2px; border-radius:6px;
+  font-size:12.5px; font-weight:500; color:var(--gold);
+  background:rgba(232,176,75,.08); border:1px dashed rgba(232,176,75,.45);
+}
+
+.fb-line{display:flex; align-items:center; justify-content:space-between; gap:14px; padding:11px 0; border-bottom:1px dashed var(--line); font-size:13.5px; color:var(--ink-2)}
+.fb-line:last-child{border-bottom:0}
+.pillset{display:flex; gap:6px}
+.pillset span{font-family:var(--mono); font-size:10.5px; padding:4px 11px; border-radius:99px; border:1px solid var(--line-2); color:var(--ink-3)}
+.pillset span.on{color:#140B06; background:var(--jade); border-color:var(--jade); font-weight:500}
+.pillset span.on.hot{background:var(--ember); border-color:var(--ember)}
+.wb-strip{
+  margin-top:16px; border-radius:12px; padding:14px 16px; font-family:var(--mono); font-size:11.5px;
+  background:rgba(255,107,53,.06); border:1px solid rgba(255,107,53,.25); color:var(--ember-2);
+  display:flex; align-items:center; gap:10px; letter-spacing:.04em;
+}
+.wb-strip .d{width:7px; height:7px; border-radius:50%; background:var(--ember); box-shadow:0 0 10px var(--ember); animation:blink 1.8s infinite; flex:none}
+
+/* ============ eight dims matrix ============ */
+#matrix{background:var(--bg-2)}
+.mtx{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:20px; overflow:hidden}
+.mtx-cell{background:var(--panel); padding:30px 26px; position:relative; transition:.3s; min-height:210px; display:flex; flex-direction:column}
+.mtx-cell:hover{background:var(--panel-2)}
+.mtx-cell::after{
+  content:""; position:absolute; left:26px; right:26px; bottom:0; height:2px;
+  background:linear-gradient(90deg,var(--ember),transparent); opacity:0; transition:.3s;
+}
+.mtx-cell:hover::after{opacity:1}
+.mtx-cell .idx{font-family:var(--mono); font-size:11px; color:var(--ink-3); letter-spacing:.2em}
+.mtx-cell h4{font-family:var(--serif); font-weight:700; font-size:19px; margin:14px 0 10px}
+.mtx-cell p{font-size:13px; color:var(--ink-2); line-height:1.8; flex:1}
+.mtx-cell .tagz{margin-top:16px; display:flex; flex-wrap:wrap; gap:6px}
+.mtx-cell .tagz span{font-family:var(--mono); font-size:10px; padding:3px 9px; border-radius:5px; background:rgba(255,235,210,.05); color:var(--ink-3); border:1px solid var(--line)}
+
+/* ============ three outcomes ============ */
+.outcomes{display:grid; grid-template-columns:repeat(3,1fr); gap:26px}
+.oc{
+  position:relative; border:1px solid var(--line); border-radius:22px; padding:40px 34px;
+  background:linear-gradient(170deg, var(--panel-2), var(--panel) 55%);
+  overflow:hidden; transition:.3s;
+}
+.oc:hover{transform:translateY(-6px); border-color:rgba(255,107,53,.35); box-shadow:0 30px 70px -30px rgba(255,107,53,.25)}
+.oc .big{
+  font-family:var(--serif); font-weight:900; font-size:88px; line-height:1;
+  color:transparent; -webkit-text-stroke:1px rgba(255,143,94,.4);
+  position:absolute; top:18px; right:24px; pointer-events:none;
+}
+.oc .k{font-family:var(--mono); font-size:11px; letter-spacing:.26em; color:var(--gold); margin-bottom:18px}
+.oc h4{font-family:var(--serif); font-weight:700; font-size:22px; line-height:1.45; margin-bottom:14px; position:relative; max-width:82%}
+.oc p{font-size:14px; color:var(--ink-2); line-height:1.85; position:relative}
+
+/* ============ manifesto / closing ============ */
+.closing{padding:160px 44px 120px; text-align:center; position:relative; overflow:hidden}
+.closing .halo2{
+  position:absolute; left:50%; bottom:-30%; transform:translateX(-50%);
+  width:900px; aspect-ratio:1.4; border-radius:50%;
+  background:radial-gradient(ellipse, rgba(255,107,53,.14), transparent 65%); pointer-events:none;
+}
+.closing .flowline{
+  font-family:var(--mono); font-size:12.5px; letter-spacing:.1em; color:var(--ink-3);
+  margin-bottom:46px; display:flex; justify-content:center; flex-wrap:wrap; gap:4px 0;
+}
+.closing .flowline .sep{color:var(--ember); padding:0 8px}
+.closing h2{font-family:var(--serif); font-weight:900; font-size:clamp(38px,6.5vw,74px); line-height:1.3; position:relative}
+.closing h2 .em{color:var(--ember-2)}
+.closing .btn-primary{margin-top:52px}
+.foot{
+  border-top:1px solid var(--line); padding:30px 44px; display:flex; justify-content:space-between;
+  font-family:var(--mono); font-size:11px; letter-spacing:.14em; color:var(--ink-3); flex-wrap:wrap; gap:10px;
+}
+
+/* toast */
+.toast{
+  position:fixed; left:50%; bottom:32px; transform:translateX(-50%) translateY(16px);
+  z-index:60; opacity:0; pointer-events:none; transition:.3s;
+  background:#211B14; border:1px solid rgba(255,107,53,.4); color:var(--ink);
+  border-radius:14px; padding:14px 24px; font-size:13.5px;
+  box-shadow:0 20px 60px rgba(0,0,0,.6), 0 0 30px rgba(255,107,53,.15);
+  display:flex; align-items:center; gap:11px;
+}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+.toast .d{width:8px; height:8px; border-radius:50%; background:var(--ember); box-shadow:0 0 10px var(--ember)}
+
+/* ============ responsive ============ */
+@media(max-width:1020px){
+  .mtx{grid-template-columns:repeat(2,1fr)}
+  .loop-grid{grid-template-columns:1fr; gap:50px}
+  .step{grid-template-columns:70px 1fr; }
+  .step .demo{grid-column:1 / -1}
+  .outcomes{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .topbar{padding:14px 20px}
+  .topnav{display:none}
+  .hero{padding:120px 20px 70px}
+  .wrap{padding:0 20px}
+  .sec{padding:84px 0}
+  .mtx{grid-template-columns:1fr}
+  .step{grid-template-columns:1fr; gap:20px; padding:44px 0}
+  .step .no{font-size:48px}
+  .gauges{grid-template-columns:repeat(3,1fr)}
+  .gauge{padding:16px 12px}
+  .gauge .n{font-size:24px}
+  .closing{padding:110px 20px 90px}
+  .foot{padding:24px 20px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important; transition:none!important}
+  .rv{opacity:1; transform:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= top ================= -->
+<header class="topbar">
+  <a class="logo" href="#top">
+    <span class="glyph">炉</span>
+    <span><span class="wm">炉 LU</span><span class="en">METHODOLOGY&nbsp;LOOP</span></span>
+  </a>
+  <nav class="topnav">
+    <a href="#loopsec">闭环</a>
+    <a href="#steps">五步</a>
+    <a href="#matrix">八维拆解</a>
+    <a href="#outcomes">价值</a>
+  </nav>
+  <button class="topcta" onclick="ping('演示环境 · 数据为示意')">申请内测</button>
+</header>
+
+<!-- ================= hero ================= -->
+<section class="hero" id="top">
+  <div class="halo"></div>
+  <div class="inner">
+    <div class="kicker rv"><span class="dot"></span>爆款方法论循环系统 · FOR 运营团队</div>
+    <h1 class="rv" style="transition-delay:.08s">不囤爆款<br><span class="ember">炼规则</span></h1>
+    <p class="sub rv" style="transition-delay:.16s">外部视频和历史脚本只是<b>原料</b>。真正要沉淀的是——<b>什么内容值得学、为什么值得学、怎么改写成我们业务能用的脚本</b>。系统每跑一轮，判断与生成的规则就更准一点。</p>
+    <div class="cta-row rv" style="transition-delay:.24s">
+      <button class="btn-primary" onclick="location.href='#loopsec'">看闭环怎么转 ↓</button>
+      <button class="btn-ghost" onclick="location.href='#steps'">五步拆解</button>
+    </div>
+    <div class="oneliner rv" style="transition-delay:.32s">
+      <span>原料进炉</span><span class="sep">→</span><span>AI 拆解</span><span class="sep">→</span><span>方法论卡片</span><span class="sep">→</span><span>脚本模板</span><span class="sep">→</span><span>运营评价</span><span class="sep">→</span><span>规则回写</span><span class="sep">↻</span>
+    </div>
+  </div>
+  <div class="scrollhint">SCROLL</div>
+</section>
+
+<!-- ================= loop ================= -->
+<section class="sec" id="loopsec">
+  <div class="wrap">
+    <div class="loop-grid">
+      <div class="furnace rv">
+        <svg viewBox="0 0 560 560" role="img" aria-label="方法论闭环示意图">
+          <defs>
+            <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" fill="rgba(255,143,94,.55)"/>
+            </marker>
+            <radialGradient id="coreglow" cx="50%" cy="50%">
+              <stop offset="0%" stop-color="rgba(255,107,53,.28)"/>
+              <stop offset="100%" stop-color="rgba(255,107,53,0)"/>
+            </radialGradient>
+          </defs>
+
+          <circle cx="280" cy="280" r="196" fill="url(#coreglow)"/>
+          <circle class="core-ring spin" cx="280" cy="280" r="196"/>
+          <circle class="core-ring" cx="280" cy="280" r="88" style="stroke:rgba(255,107,53,.35)"/>
+
+          <!-- flow arcs -->
+          <path class="flow-arrow" d="M 348 111 A 196 196 0 0 1 449 212"/>
+          <path class="flow-arrow" d="M 470 315 A 196 196 0 0 1 405 434"/>
+          <path class="flow-arrow" d="M 315 470 A 196 196 0 0 1 190 455"/>
+          <path class="flow-arrow" d="M 111 348 A 196 196 0 0 1 92 240"/>
+          <path class="flow-arrow" d="M 130 165 A 196 196 0 0 1 218 96"/>
+
+          <!-- core -->
+          <text class="core-num" x="280" y="285" text-anchor="middle">规则库</text>
+          <text class="core-num v" x="280" y="322" text-anchor="middle" style="font-size:26px" id="coreVer">v3</text>
+          <text class="core-cap" x="280" y="352" text-anchor="middle">RULESET</text>
+
+          <!-- stage nodes (5 around) -->
+          <g class="stage-g" transform="translate(280,84)">
+            <rect class="box" x="-64" y="-30" width="128" height="60" rx="13"/>
+            <text class="num" x="-52" y="-10">01 INTAKE</text>
+            <text class="nm" x="-52" y="9">原料进炉</text>
+            <text class="dsc" x="-52" y="23">视频 · 历史脚本</text>
+          </g>
+          <g class="stage-g" transform="translate(466,218)">
+            <rect class="box" x="-64" y="-30" width="128" height="60" rx="13"/>
+            <text class="num" x="-52" y="-10">02 DISSECT</text>
+            <text class="nm" x="-52" y="9">AI 八维拆解</text>
+            <text class="dsc" x="-52" y="23">拆出为什么好</text>
+          </g>
+          <g class="stage-g" transform="translate(398,442)">
+            <rect class="box" x="-64" y="-30" width="128" height="60" rx="13"/>
+            <text class="num" x="-52" y="-10">03 DISTILL</text>
+            <text class="nm" x="-52" y="9">方法论卡片</text>
+            <text class="dsc" x="-52" y="23">可复用 · 带命中率</text>
+          </g>
+          <g class="stage-g" transform="translate(162,442)">
+            <rect class="box" x="-64" y="-30" width="128" height="60" rx="13"/>
+            <text class="num" x="-52" y="-10">04 GENERATE</text>
+            <text class="nm" x="-52" y="9">脚本模板</text>
+            <text class="dsc" x="-52" y="23">填空即可拍</text>
+          </g>
+          <g class="stage-g" transform="translate(94,218)">
+            <rect class="box" x="-64" y="-30" width="128" height="60" rx="13"/>
+            <text class="num" x="-52" y="-10">05 FEEDBACK</text>
+            <text class="nm" x="-52" y="9">评价 · 回写</text>
+            <text class="dsc" x="-52" y="23">下一轮更准</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="loop-copy rv" style="transition-delay:.1s">
+        <div class="sec-eyebrow">THE&nbsp;LOOP · 为什么是闭环</div>
+        <h3>它不是一个爆款库，<br>是一台<span class="em">会变准的判断机器</span></h3>
+        <p>视频和脚本进来后被拆成判断点，提炼成方法论卡片，再变成脚本模板；运营用完给出评价，评价回写进规则——下一轮的筛选和生成，就更贴你的业务。</p>
+        <div class="gauges">
+          <div class="gauge"><div class="n" id="gRuns">42</div><div class="l">已跑轮次</div></div>
+          <div class="gauge"><div class="n" id="gAcc">78<span class="u">%</span></div><div class="l">判断准确率</div></div>
+          <div class="gauge"><div class="n" id="gCards">19</div><div class="l">在用卡片</div></div>
+        </div>
+        <button class="run-btn" id="runBtn">⟳ 运行一轮 · 看规则库升级</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= five steps ================= -->
+<section class="sec" id="steps">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-eyebrow">FIVE&nbsp;STAGES · 怎么达到</div>
+      <h2>五步，把"感觉"<br>炼成<span class="em">可复用的规则</span></h2>
+      <p class="lede">每一步都不是黑盒：收什么、怎么拆、提炼成什么、生成什么、反馈改什么——全部看得见、点得动。</p>
+    </div>
+
+    <div class="steps">
+      <!-- 01 -->
+      <div class="step rv">
+        <div class="no">01</div>
+        <div class="txt">
+          <h3>找内容</h3>
+          <div class="en">INTAKE · 原料进炉</div>
+          <p>运营上传<b>外部高价值视频、竞品视频、历史优秀脚本、历史失败脚本</b>。不只收"播放高"的，也收"和业务相关、表达方式值得借鉴"的——每条原料必须写清收录理由。</p>
+        </div>
+        <div class="demo">
+          <div class="dhead"><span>MATERIAL&nbsp;QUEUE</span><span>36 条</span></div>
+          <div class="src-row"><div class="ic">🔥</div><div class="m"><div class="t">体检前一晚千万别做这件事</div><div class="s">抖音 · 21.4w 赞</div></div><div class="why">钩子值得学</div></div>
+          <div class="src-row"><div class="ic">👀</div><div class="m"><div class="t">同行"9.9 体检套餐"投放视频</div><div class="s">竞品 · 视频号</div></div><div class="why">植入方式</div></div>
+          <div class="src-row"><div class="ic">🏆</div><div class="m"><div class="t">35+ 女性必查的 5 项（旧脚本）</div><div class="s">内部 · 转化 6.2%</div></div><div class="why">结构跑通过</div></div>
+          <div class="src-row"><div class="ic">🪦</div><div class="m"><div class="t">健康科普长口播（旧脚本）</div><div class="s">内部 · 完播 9%</div></div><div class="why">反面教材</div></div>
+        </div>
+      </div>
+
+      <!-- 02 -->
+      <div class="step rv">
+        <div class="no">02</div>
+        <div class="txt">
+          <h3>拆价值</h3>
+          <div class="en">DISSECT · 八维读数</div>
+          <p>每条视频不做泛泛总结，而是拆成判断点：<b>前 3 秒为什么留人、有没有爆点、画面抓不抓眼、结构是什么、怎么建立信任、怎么植入、怎么引导互动、能不能迁移</b>。像给内容做一次体检。</p>
+        </div>
+        <div class="demo" id="dimDemo">
+          <div class="dhead"><span>DISSECT&nbsp;READOUT</span><span>《体检前一晚…》</span></div>
+          <div class="dim-row"><span class="k">前 3 秒留存</span><span class="bar"><i data-w="92"></i></span><span class="v">悬念+反差</span></div>
+          <div class="dim-row"><span class="k">爆点强度</span><span class="bar"><i data-w="86"></i></span><span class="v">反常识</span></div>
+          <div class="dim-row"><span class="k">画面吸引力</span><span class="bar"><i data-w="54"></i></span><span class="v">偏弱</span></div>
+          <div class="dim-row"><span class="k">结构完整度</span><span class="bar"><i data-w="88"></i></span><span class="v">四段闭环</span></div>
+          <div class="dim-row"><span class="k">植入自然度</span><span class="bar"><i data-w="81"></i></span><span class="v">口播·自然</span></div>
+          <div class="dim-row jade"><span class="k">可借鉴程度</span><span class="bar"><i data-w="90"></i></span><span class="v">高·需换画面</span></div>
+        </div>
+      </div>
+
+      <!-- 03 -->
+      <div class="step rv">
+        <div class="no">03</div>
+        <div class="txt">
+          <h3>提方法论</h3>
+          <div class="en">DISTILL · 可复用卡片</div>
+          <p>从单条视频里提炼<b>可复用卡片</b>：反差钩子、人群点名、情绪挑动+事实科普+推荐、先给结果再讲过程……卡片不能只是"好像有道理"——每张都带<b>来源视频数和命中率</b>，用数据证明它真的管用。</p>
+        </div>
+        <div class="demo">
+          <div class="dhead"><span>METHOD&nbsp;CARDS</span><span>19 张在用</span></div>
+          <div class="mini-card"><div class="id">C-01 · 前3秒</div><div class="nm">反差钩子开场</div><div class="meta">7 条来源 · 命中率 <b>84%</b></div></div>
+          <div class="mini-card"><div class="id">C-05 · 结构</div><div class="nm">痛点质问 + 清单式方案</div><div class="meta">8 条来源 · 命中率 <b>86%</b></div></div>
+          <div class="mini-card"><div class="id">C-06 · 互动</div><div class="nm">评论区反推下一条选题</div><div class="meta">6 条来源 · 命中率 <b>64%</b></div></div>
+        </div>
+      </div>
+
+      <!-- 04 -->
+      <div class="step rv">
+        <div class="no">04</div>
+        <div class="txt">
+          <h3>生成脚本</h3>
+          <div class="en">GENERATE · 填空即可拍</div>
+          <p>选几张卡片，系统拼出带<b>填空位</b>的脚本模板。运营替换掉业务变量，就是一条能直接拍的脚本——方法论从"有道理"变成"能落地"。</p>
+        </div>
+        <div class="demo">
+          <div class="dhead"><span>SCRIPT&nbsp;TEMPLATE</span><span>C-01 + C-02 + C-03 + C-06</span></div>
+          <div class="script-line"><div class="lab">前 3 秒 · 钩子+点名</div><div class="tx">如果你是<span class="slot">目标人群</span>，先别急着<span class="slot">行为</span>——</div></div>
+          <div class="script-line"><div class="lab">中段 · 情绪+科普</div><div class="tx">很多人以为是<span class="slot">误区</span>，但真正影响结果的是<span class="slot">事实</span>。</div></div>
+          <div class="script-line"><div class="lab">植入 · 口播自然</div><div class="tx">我们通常会先帮你看<span class="slot">服务动作</span>。</div></div>
+          <div class="script-line"><div class="lab">结尾 · CTA</div><div class="tx">想要完整清单，评论<span class="slot">关键词</span>或私信我。</div></div>
+        </div>
+      </div>
+
+      <!-- 05 -->
+      <div class="step rv">
+        <div class="no">05</div>
+        <div class="txt">
+          <h3>反馈回写</h3>
+          <div class="en">FEEDBACK · 闭环合拢</div>
+          <p>运营评价生成脚本：<b>能不能发、像不像我们业务、前 3 秒抓不抓人、植入自然吗、CTA 有效吗、哪里要改</b>。评价直接写回规则——下一轮的筛选和生成就更准。这是系统真正"变聪明"的一步。</p>
+        </div>
+        <div class="demo">
+          <div class="dhead"><span>OPS&nbsp;REVIEW</span><span>脚本 #0428</span></div>
+          <div class="fb-line"><span>能不能发？</span><span class="pillset"><span class="on">能发</span><span>改了发</span><span>不能发</span></span></div>
+          <div class="fb-line"><span>像不像我们业务？</span><span class="pillset"><span>3</span><span class="on">4</span><span>5</span></span></div>
+          <div class="fb-line"><span>植入是否自然？</span><span class="pillset"><span class="on">自然</span><span>偏硬</span></span></div>
+          <div class="fb-line"><span>CTA 是否有效？</span><span class="pillset"><span class="on">有效</span><span>一般</span><span class="hot">无效</span></span></div>
+          <div class="wb-strip"><span class="d"></span>回写中：C-01 权重 ↑3% · 新增规则「前 3 秒须配业务实拍画面」· 规则库 v3 → v4</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= eight dims ================= -->
+<section class="sec" id="matrix">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-eyebrow">EIGHT&nbsp;DIMENSIONS · 组长盯的点</div>
+      <h2>运营组长看什么，<br>系统就<span class="em">拆什么</span></h2>
+      <p class="lede">这八个维度不是我们发明的——它们本来就是组长审内容时脑子里的清单。系统只是把它固化成每条内容必答的八个问题。</p>
+    </div>
+    <div class="mtx rv">
+      <div class="mtx-cell"><div class="idx">DIM&nbsp;/&nbsp;01</div><h4>灵感价值</h4><p>这条内容给了什么表达方式、选题角度、情绪角度？</p><div class="tagz"><span>表达方式</span><span>选题角度</span></div></div>
+      <div class="mtx-cell"><div class="idx">DIM&nbsp;/&nbsp;02</div><h4>前 3 秒留存</h4><p>开头是反差、痛点、结果、利益、悬念，还是人群点名？</p><div class="tagz"><span>反差</span><span>悬念</span><span>人群点名</span></div></div>
+      <div class="mtx-cell"><div class="idx">DIM&nbsp;/&nbsp;03</div><h4>爆点</h4><p>有没有一句让人想继续看的冲突、利益、情绪或反常识？</p><div class="tagz"><span>冲突</span><span>反常识</span></div></div>
+      <div class="mtx-cell"><div class="idx">DIM&nbsp;/&nbsp;04</div><h4>画面吸引力</h4><p>前 3 秒画面是否抓眼？是否和业务相关？</p><div class="tagz"><span>抓眼</span><span>业务相关</span></div></div>
+      <div class="mtx-cell"><div class="idx">DIM&nbsp;/&nbsp;05</div><h4>视频结构</h4><p>是"反差开头 → 情绪调动 → 事实科普 → 推荐/方案"吗？</p><div class="tagz"><span>四段结构</span></div></div>
+      <div class="mtx-cell"><div class="idx">DIM&nbsp;/&nbsp;06</div><h4>植入方式</h4><p>口播、画面、链接还是评论植入？是否自然？</p><div class="tagz"><span>口播</span><span>画面</span><span>评论</span></div></div>
+      <div class="mtx-cell"><div class="idx">DIM&nbsp;/&nbsp;07</div><h4>结尾互动</h4><p>评论关键词、私信、点击链接、预约，还是无 CTA？</p><div class="tagz"><span>评论关键词</span><span>私信</span></div></div>
+      <div class="mtx-cell"><div class="idx">DIM&nbsp;/&nbsp;08</div><h4>可借鉴程度</h4><p>能不能迁移到我们业务？需要怎么改？</p><div class="tagz"><span>可迁移</span><span>改法</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= outcomes ================= -->
+<section class="sec" id="outcomes">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-eyebrow">OUTCOMES · 帮运营解决三件事</div>
+      <h2>最终，运营拿到的<br>是<span class="em">三个"更快"</span></h2>
+    </div>
+    <div class="outcomes">
+      <div class="oc rv"><div class="big">壹</div><div class="k">FASTER&nbsp;FIND</div><h4>更快找到值得学的内容</h4><p>不是刷大量视频，而是系统筛出"业务相关 + 表达方式可借鉴"的内容，播放量只是参考之一。</p></div>
+      <div class="oc rv" style="transition-delay:.1s"><div class="big">贰</div><div class="k">FASTER&nbsp;WHY</div><h4>更快理解为什么值得学</h4><p>不停留在"这个视频火"，而是拆出前 3 秒、爆点、画面、结构、植入、互动到底好在哪。</p></div>
+      <div class="oc rv" style="transition-delay:.2s"><div class="big">叁</div><div class="k">FASTER&nbsp;MAKE</div><h4>更快生成能用的脚本</h4><p>把方法论直接转成贴合业务的脚本模板，再通过运营反馈不断修正，越用越准。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= closing ================= -->
+<section class="closing">
+  <div class="halo2"></div>
+  <div class="flowline rv">视频/脚本进入<span class="sep">→</span>AI 拆解<span class="sep">→</span>方法论卡片<span class="sep">→</span>脚本模板<span class="sep">→</span>运营评价<span class="sep">→</span>规则回写<span class="sep">→</span>下一轮更准</div>
+  <h2 class="rv" style="transition-delay:.1s">爆款会过时，<br><span class="em">规则会升值。</span></h2>
+  <button class="btn-primary rv" style="transition-delay:.2s" onclick="ping('演示环境 · 数据为示意')">开始炼第一轮 →</button>
+</section>
+
+<footer class="foot">
+  <span>炉 LU · METHODOLOGY&nbsp;LOOP</span>
+  <span>PRODUCT&nbsp;CONCEPT&nbsp;/&nbsp;2026</span>
+</footer>
+
+<div class="toast" id="toast"><span class="d"></span><span id="toastMsg"></span></div>
+
+<script>
+(function(){
+  // reveal on scroll
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  },{threshold:.14});
+  document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+
+  // dim bars animate when visible
+  var dimIo = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        e.target.querySelectorAll('.bar i').forEach(function(b,i){
+          setTimeout(function(){ b.style.width = b.dataset.w + '%'; }, i*120);
+        });
+        dimIo.unobserve(e.target);
+      }
+    });
+  },{threshold:.4});
+  var dd = document.getElementById('dimDemo'); if(dd) dimIo.observe(dd);
+
+  // toast
+  var toast=document.getElementById('toast'), tmsg=document.getElementById('toastMsg'), tt;
+  window.ping = function(m){
+    tmsg.textContent=m; toast.classList.add('show');
+    clearTimeout(tt); tt=setTimeout(function(){toast.classList.remove('show')},2600);
+  };
+
+  // run loop
+  var ver=3, acc=78, runs=42;
+  function countTo(el, from, to, suf){
+    var t0=performance.now(), dur=700;
+    (function f(t){
+      var p=Math.min(1,(t-t0)/dur), v=Math.round(from+(to-from)*p);
+      el.innerHTML = suf ? v+'<span class="u">%</span>' : v;
+      if(p<1) requestAnimationFrame(f);
+    })(t0);
+  }
+  document.getElementById('runBtn').addEventListener('click', function(){
+    ver++; runs++;
+    var na = acc<92 ? acc+(acc<86?2:1) : acc;
+    document.getElementById('coreVer').textContent='v'+ver;
+    countTo(document.getElementById('gRuns'), runs-1, runs, false);
+    countTo(document.getElementById('gAcc'), acc, na, true);
+    acc=na;
+    ping('已运行一轮 · 规则库升到 v'+ver+' · 判断准确率 '+acc+'%');
+  });
+})();
+</script>
+</body>
+</html>
