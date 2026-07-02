@@ -685,14 +685,14 @@ const courses = [
       <div class="proto-strip reveal">
         {protos.map((p) => (
           <a class="proto-item" href={`/prototypes/${p.slug}.html`} target="_blank" rel="noopener" style="color:inherit;display:block">
-            <div class="p-ver">{p.ver} ↗</div>
+            <div class="p-ver"><span>{p.ver}</span><span class="p-go" aria-hidden="true">↗</span></div>
             <h4>{p.name}</h4>
             <p>{p.note}</p>
           </a>
         ))}
       </div>
       <p style="font-family:var(--mono);font-size:12px;color:var(--ink3)">
-        ← 横向滑动 · 每一个都可点开直接交互（真实过程文件）· 用可运行产物代替纯 PRD
+        横向滑动 → 每一个都可点开直接交互（真实过程文件）· 用可运行产物代替纯 PRD
       </p>
       <div style="margin-top:22px" class="reveal">
         <a class="btn primary" href="/prototypes/">进原型工坊 · 14 个过程文件实时预览</a>
@@ -1860,4 +1860,20 @@ const courses = [
   .v2-scope .chapter + .chapter::after { content: ''; position: absolute; top: 0; left: 50%;
     transform: translateX(-50%); width: min(920px, 86vw); height: 1px; pointer-events: none;
     background: linear-gradient(90deg, transparent, rgba(125,211,252,.20) 30%, rgba(167,139,250,.20) 70%, transparent); }
+
+  /* ── R9 作品区节奏（v2-scoped）── */
+  /* works 卡：元信息升级为"可验证"状态条——绿色呼吸点 + 顶部虚线分隔 */
+  .v2-scope .work-card .w-meta { display: flex; align-items: center; gap: 8px;
+    border-top: 1px dashed rgba(125,211,252,.14); padding-top: 13px; }
+  .v2-scope .work-card .w-meta::before { content: ''; flex: none; width: 5px; height: 5px; border-radius: 50%;
+    background: var(--aurora); box-shadow: 0 0 7px var(--aurora); opacity: .8; }
+  .v2-scope .work-card:hover .w-meta { color: var(--ink2); }
+  /* 原型带：滚动吸附 + 两端渐隐遮罩提示可滑 */
+  .v2-scope .proto-strip { scroll-snap-type: x proximity; scroll-padding-left: 2px;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 14px, #000 calc(100% - 34px), transparent);
+    mask-image: linear-gradient(90deg, transparent 0, #000 14px, #000 calc(100% - 34px), transparent); }
+  .v2-scope .proto-item { scroll-snap-align: start; }
+  .v2-scope .proto-item .p-ver { display: flex; justify-content: space-between; align-items: center; }
+  .v2-scope .proto-item .p-go { opacity: .45; transition: opacity .25s, transform .25s; }
+  .v2-scope .proto-item:hover .p-go { opacity: 1; transform: translate(3px, -2px); }
 </style>
