@@ -44,6 +44,15 @@ const CONFIG = {
   fleckOpacity:   0.16,    // 墨点最大不透明度（小点可略高，建议 0.10~0.22）
   fleckFall:      0.18,    // 下落/漂移速度系数
 
+  // —— 呼吸墨晕（缓慢洇开→保持→淡去的活墨团，编辑部大改新增）——
+  breathMax:      3,       // 同时存在的最大呼吸墨晕数
+  breathEvery:    [6,12],  // 生成间隔(秒)
+  breathGrow:     [8,14],  // 洇开时长(秒)
+  breathHold:     [5,9],   // 保持时长(秒)
+  breathFade:     [8,14],  // 淡出时长(秒)
+  breathR:        [140,320],// 满幅半径(px)
+  breathAlpha:    0.05,    // 核心不透明度(0.03~0.07, 比静态晕染团更淡)
+
   // —— 朱砂印章质感光斑（一枚，极淡）——
   showSeal:       false,  // 用户反馈: 印章不要
   sealOpacity:    0.05,    // 印章不透明度（极淡，建议 0.035~0.07）
@@ -237,6 +246,33 @@ function drawSeal(){
   ctx.restore();
 }
 
+/* ---------- 呼吸墨晕：宣纸上缓慢洇开的活墨 ---------- */
+let breaths = [], breathTimer = 0;
+function spawnBreath(){
+  breaths.push({
+    x: edgeBiased(W, CONFIG.blobEdgeBias),
+    y: edgeBiased(H, CONFIG.blobEdgeBias),
+    R: rand(CONFIG.breathR[0], CONFIG.breathR[1]) * Math.max(0.55, MIN / 900),
+    grow: rand(CONFIG.breathGrow[0], CONFIG.breathGrow[1]),
+    hold: rand(CONFIG.breathHold[0], CONFIG.breathHold[1]),
+    fade: rand(CONFIG.breathFade[0], CONFIG.breathFade[1]),
+    t: 0, op: CONFIG.breathAlpha * rand(0.7, 1.1), depth: rand(0.4, 1),
+  });
+}
+function drawBreath(b){
+  let r, a;
+  if (b.t < b.grow){ const p = b.t / b.grow; r = 1 - Math.pow(1 - p, 2.2); a = Math.min(1, p * 1.6); }
+  else if (b.t < b.grow + b.hold){ r = 1; a = 1; }
+  else { const p = (b.t - b.grow - b.hold) / b.fade; r = 1 + p * 0.06; a = 1 - p; }
+  const ox = tx * CONFIG.parallaxBlob * b.depth, oy = ty * CONFIG.parallaxBlob * b.depth;
+  const g = ctx.createRadialGradient(b.x + ox, b.y + oy, 0, b.x + ox, b.y + oy, b.R * r);
+  g.addColorStop(0,   rgba(CONFIG.paperInk, b.op * a));
+  g.addColorStop(0.5, rgba(CONFIG.paperInk, b.op * a * 0.45));
+  g.addColorStop(1,   rgba(CONFIG.paperInk, 0));
+  ctx.fillStyle = g;
+  ctx.beginPath(); ctx.arc(b.x + ox, b.y + oy, b.R * r, 0, Math.PI * 2); ctx.fill();
+}
+
 /* ---------- 主循环（不加 document.hidden 判断，与参考一致）---------- */
 let last = performance.now();
 function loop(now){
@@ -247,6 +283,16 @@ function loop(now){
   // 光标视差缓动
   tx += (px - tx) * CONFIG.parallaxEase;
   ty += (py - ty) * CONFIG.parallaxEase;
+
+  // 呼吸墨晕生命周期（reduce 时不生成）
+  if(!reduce){
+    breathTimer -= dt;
+    if (breathTimer <= 0 && breaths.length < CONFIG.breathMax){
+      spawnBreath();
+      breathTimer = rand(CONFIG.breathEvery[0], CONFIG.breathEvery[1]);
+    }
+    breaths = breaths.filter(b => (b.t += dt) < b.grow + b.hold + b.fade);
+  }
 
   // 墨点缓慢飘落（reduce 时静止）
   if(!reduce){
@@ -261,6 +307,7 @@ function loop(now){
   ctx.clearRect(0, 0, W, H);   // 透明清屏，露出父页面纸底
   drawRules();
   for(const b of blobs) drawBlob(b, t);
+  for(const b of breaths) drawBreath(b);
   for(const f of flecks) drawFleck(f);
   drawSeal();
 }

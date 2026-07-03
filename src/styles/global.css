@@ -717,21 +717,48 @@ html[data-theme="paper"] body::before {
   mix-blend-mode: multiply;
 }
 html[data-theme="paper"] .hero { position: relative; }
-html[data-theme="paper"] .hero h1 { letter-spacing: .1em; }
+/* 报头题签：主标上下双线框（上粗下细，经典报头制式），字距放宽 */
+html[data-theme="paper"] .hero h1 {
+  letter-spacing: .12em; display: inline-block;
+  border-top: 4px solid var(--ink); border-bottom: 1px solid var(--ink);
+  padding: 18px 6px 22px 0; margin-top: 10px;
+}
+html[data-theme="paper"] .hero .kicker {
+  font-family: var(--serif); font-weight: 600; letter-spacing: .38em; color: var(--ink2);
+}
 html[data-theme="paper"] .hero .sub::after {
   content: ''; display: block; width: 110px; height: 4px;
   background: var(--flare); margin-top: 20px;
 }
 html[data-theme="paper"] .nav { border-bottom: 2px solid var(--ink); }
+/* 编辑部标题线：长细线 + 左端短粗线（杂志栏题制式） */
+html[data-theme="paper"] .chapter-head h2 {
+  letter-spacing: .04em; padding-bottom: 14px; position: relative;
+  border-bottom: 1px solid rgba(23, 36, 65, .35);
+}
+html[data-theme="paper"] .chapter-head h2::after {
+  content: ''; position: absolute; left: 0; bottom: -2px; width: 68px; height: 3px;
+  background: var(--ink);
+}
+/* 卡片：上缘墨线 + 直角纸卡（编辑部条目感） */
 html[data-theme="paper"] .card {
-  border-color: #D7CFBF; border-radius: 8px;
+  border-color: #D7CFBF; border-radius: 3px; border-top: 2px solid var(--ink);
   box-shadow: 0 1px 0 #fff inset, 0 10px 28px rgba(23, 36, 65, .07);
 }
-html[data-theme="paper"] .card:hover { box-shadow: 0 1px 0 #fff inset, 0 18px 44px rgba(23, 36, 65, .13); border-color: #C9BFA9; }
-html[data-theme="paper"] .chapter + .chapter { border-top: 1px solid #E3DDD0; }
-html[data-theme="paper"] .chapter-head h2 { letter-spacing: .04em; }
+html[data-theme="paper"] .card:hover {
+  box-shadow: 0 1px 0 #fff inset, 0 18px 44px rgba(23, 36, 65, .13);
+  border-color: #C9BFA9; border-top-color: var(--flare);
+}
+html[data-theme="paper"] :is(.proto-item, .dial, .archive-box, .lib-series) { border-radius: 3px; }
+/* 章节分隔：细双线（编辑部页脚线） */
+html[data-theme="paper"] .chapter + .chapter { border-top: 3px double #D8D1C0; }
 html[data-theme="paper"] .dial .num { font-family: var(--serif); }
+html[data-theme="paper"] .dial { border-top: 1px solid #E3DDD0; }
 html[data-theme="paper"] .footer { border-top: 2px solid var(--ink); }
+/* 时间线与徽章的编辑部化 */
+html[data-theme="paper"] .t-date { font-family: var(--serif); font-weight: 600; color: var(--flare); }
+html[data-theme="paper"] .chip { border-radius: 3px; }
+html[data-theme="paper"] .btn { border-radius: 3px; }
 
 /* ───── 🔵 克莱因蓝 · 颗粒 + 巨型描边水印 + 荧光黄划线 ───── */
 html[data-theme="klein"] body::before {
