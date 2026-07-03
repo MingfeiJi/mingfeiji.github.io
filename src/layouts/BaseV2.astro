@@ -93,9 +93,10 @@ const {
     <div class="theme-panel" id="theme-panel">
       <div class="tp-title">THEME · 选一种你喜欢的</div>
       <button class="theme-opt" data-t="cosmos"><span class="sw"><i style="background:#030412"></i><i style="background:#7dd3fc"></i><i style="background:#a78bfa"></i></span>🌌 星辰大海</button>
+      <button class="theme-opt" data-t="hud"><span class="sw"><i style="background:#F7F5EF"></i><i style="background:#1a1a1a"></i><i style="background:#9E2B25"></i></span>🖌 动态水墨</button>
       <button class="theme-opt" data-t="paper"><span class="sw"><i style="background:#F5F2EA"></i><i style="background:#172441"></i><i style="background:#DD512B"></i></span>📜 宣纸编辑部</button>
       <button class="theme-opt" data-t="klein"><span class="sw"><i style="background:#002FA7"></i><i style="background:#fff"></i><i style="background:#ffe14d"></i></span>🔵 克莱因蓝</button>
-      <button class="theme-opt" data-t="hud"><span class="sw"><i style="background:#F7F5EF"></i><i style="background:#1a1a1a"></i><i style="background:#9E2B25"></i></span>🖌 动态水墨</button>
+      <button class="theme-opt" data-t="cyber"><span class="sw"><i style="background:#030509"></i><i style="background:#00f0ff"></i><i style="background:#c026ff"></i></span>🛰 赛博全息</button>
       <button class="theme-opt" data-t="snow"><span class="sw"><i style="background:#FAFAF8"></i><i style="background:#18181b"></i><i style="background:#1d4ed8"></i></span>⬜️ 月白极简</button>
     </div>
 
@@ -105,17 +106,21 @@ const {
       const themeOpts = panel.querySelectorAll<HTMLButtonElement>('.theme-opt');
       // 全息粒子主题：按需注入粒子场 iframe（只有该主题才加载这个重特效）
       const hudHost = document.getElementById('hud-field')!;
+      // 主题 → 背景特效映射（仅重特效主题按需注入 iframe）
+      const HUD_FX: Record<string, string> = { hud: '/ink-dynamic.html', cyber: '/cyber-field.html' };
       function syncHudField() {
-        const isHud = document.documentElement.getAttribute('data-theme') === 'hud';
+        const t = document.documentElement.getAttribute('data-theme') || '';
+        const want = HUD_FX[t] || null;
         const has = hudHost.querySelector('iframe');
-        if (isHud && !has) {
+        if (want && (!has || has.getAttribute('src') !== want)) {
+          hudHost.innerHTML = '';
           const f = document.createElement('iframe');
-          f.src = '/ink-dynamic.html';
+          f.src = want;
           f.setAttribute('tabindex', '-1');
           f.setAttribute('scrolling', 'no');
           f.setAttribute('aria-hidden', 'true');
           hudHost.appendChild(f);
-        } else if (!isHud && has) {
+        } else if (!want && has) {
           hudHost.innerHTML = '';
         }
       }

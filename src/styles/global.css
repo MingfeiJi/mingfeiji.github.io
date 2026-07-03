@@ -9,6 +9,7 @@
   --ink: #e8ecff;           /* 主文字 */
   --ink2: #9aa6cf;          /* 次文字 */
   --ink3: #5d6890;          /* 弱文字 */
+  --ink-strong: #ffffff;    /* 强调文字（浅色主题覆写为深墨） */
   --star: #7dd3fc;          /* 星蓝 */
   --nebula: #a78bfa;        /* 星云紫 */
   --flare: #fbbf24;         /* 恒星金 */
@@ -123,7 +124,7 @@ a:hover { color: var(--flare); }
 }
 .card:hover { transform: translateY(-6px); border-color: rgba(125, 211, 252, .4); box-shadow: 0 18px 60px rgba(3, 4, 18, .8), var(--glow-star); }
 .card:hover::before { opacity: 1; }
-.card h3 { font-size: 19px; margin-bottom: 10px; color: #fff; }
+.card h3 { font-size: 19px; margin-bottom: 10px; color: var(--ink-strong); }
 .card p { font-size: 14px; color: var(--ink2); }
 
 .chip {
@@ -147,13 +148,13 @@ a:hover { color: var(--flare); }
   transition: all .25s ease; cursor: pointer;
   backdrop-filter: blur(8px);
 }
-.btn:hover { background: rgba(125, 211, 252, .16); box-shadow: var(--glow-star); color: #fff; transform: translateY(-2px); }
+.btn:hover { background: rgba(125, 211, 252, .16); box-shadow: var(--glow-star); color: var(--ink-strong); transform: translateY(-2px); }
 .btn.primary {
   background: rgba(125, 211, 252, .13);
   border-color: rgba(125, 211, 252, .55); color: #eaf6ff;
   box-shadow: inset 0 0 0 1px rgba(125, 211, 252, .12), 0 4px 22px rgba(125, 211, 252, .1);
 }
-.btn.primary:hover { background: rgba(125, 211, 252, .22); border-color: var(--star); color: #fff; transform: translateY(-2px); box-shadow: inset 0 0 0 1px rgba(125, 211, 252, .3), 0 8px 30px rgba(125, 211, 252, .2); }
+.btn.primary:hover { background: rgba(125, 211, 252, .22); border-color: var(--star); color: var(--ink-strong); transform: translateY(-2px); box-shadow: inset 0 0 0 1px rgba(125, 211, 252, .3), 0 8px 30px rgba(125, 211, 252, .2); }
 
 /* ============ 导航 ============ */
 .nav {
@@ -167,7 +168,7 @@ a:hover { color: var(--flare); }
   max-width: var(--maxw); margin: 0 auto; padding: 16px 28px;
   display: flex; align-items: center; gap: 28px;
 }
-.nav-logo { font-family: var(--serif); font-size: 19px; font-weight: 700; color: #fff; }
+.nav-logo { font-family: var(--serif); font-size: 19px; font-weight: 700; color: var(--ink-strong); }
 .nav-logo span { color: var(--star); text-shadow: var(--glow-star); }
 .nav-links { margin-left: auto; display: flex; gap: 24px; }
 .nav-links a { font-size: 13.5px; font-weight: 500; color: var(--ink2); }
@@ -206,7 +207,7 @@ a:hover { color: var(--flare); }
   margin-top: 30px; max-width: 760px;
   font-size: 17px; color: var(--ink2);
 }
-.hero .lede strong { color: #fff; }
+.hero .lede strong { color: var(--ink-strong); }
 .hero-cta { margin-top: 44px; display: flex; gap: 16px; flex-wrap: wrap; }
 .hero-scroll {
   position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
@@ -227,7 +228,7 @@ a:hover { color: var(--flare); }
 .dial { padding: 28px 26px 22px; background: rgba(7, 11, 31, .75); }
 .dial .num {
   font-family: var(--mono); font-weight: 700; font-size: 38px; line-height: 1;
-  color: #fff; text-shadow: var(--glow-star);
+  color: var(--ink-strong); text-shadow: var(--glow-star);
 }
 .dial .num span { font-size: 15px; color: var(--star); margin-left: 3px; }
 .dial .lab { font-size: 12.5px; color: var(--ink2); margin-top: 10px; letter-spacing: .04em; }
@@ -259,7 +260,7 @@ a:hover { color: var(--flare); }
   border: 1px solid var(--line2);
   border-radius: 16px;
   font-family: var(--serif); font-size: clamp(17px, 2.6vw, 22px);
-  font-weight: 600; line-height: 1.85; color: #fff;
+  font-weight: 600; line-height: 1.85; color: var(--ink-strong);
   backdrop-filter: blur(10px);
   position: relative; overflow: hidden;
 }
@@ -300,7 +301,7 @@ a:hover { color: var(--flare); }
   font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--flare);
   text-shadow: 0 0 14px rgba(251, 191, 36, .5);
 }
-.proto-item h4 { font-size: 14.5px; margin: 8px 0 5px; color: #fff; }
+.proto-item h4 { font-size: 14.5px; margin: 8px 0 5px; color: var(--ink-strong); }
 .proto-item p { font-size: 12px; color: var(--ink3); }
 
 /* ============ 航行日志（时间线）============ */
@@ -326,12 +327,12 @@ a:hover { color: var(--flare); }
   font-family: var(--mono); font-size: 12.5px; color: var(--star);
   font-weight: 700; letter-spacing: .1em;
 }
-.t-item h3 { font-size: 23px; margin: 8px 0 4px; color: #fff; }
+.t-item h3 { font-size: 23px; margin: 8px 0 4px; color: var(--ink-strong); }
 .t-item .t-role { font-size: 14px; color: var(--nebula); font-weight: 600; margin-bottom: 14px; }
 .t-item .t-desc { font-size: 14.5px; color: var(--ink2); max-width: 780px; }
 .t-item ul { margin: 14px 0 0; padding-left: 20px; }
 .t-item li { font-size: 14px; color: var(--ink2); margin-bottom: 9px; }
-.t-item li strong { color: #fff; }
+.t-item li strong { color: var(--ink-strong); }
 .t-item li::marker { color: var(--star); }
 .t-chips { display: flex; gap: 9px; flex-wrap: wrap; margin-top: 18px; }
 
@@ -358,7 +359,7 @@ a:hover { color: var(--flare); }
 }
 .pipe-title {
   font-family: var(--serif); font-size: 17px; font-weight: 700;
-  color: #fff; margin-bottom: 20px;
+  color: var(--ink-strong); margin-bottom: 20px;
 }
 .pipe-flow {
   display: flex; align-items: stretch; gap: 10px;
@@ -369,7 +370,7 @@ a:hover { color: var(--flare); }
   padding: 14px 10px; border-radius: 10px;
   background: rgba(7, 11, 31, .65);
   border: 1px solid var(--line);
-  font-size: 13.5px; font-weight: 600; color: #fff;
+  font-size: 13.5px; font-weight: 600; color: var(--ink-strong);
   line-height: 1.6;
 }
 .pipe-node em {
@@ -405,7 +406,7 @@ a:hover { color: var(--flare); }
 .article-row:hover { background: rgba(125, 211, 252, .05); padding-left: 22px; }
 .article-row .a-idx { font-family: var(--mono); font-size: 12px; color: var(--ink3); flex: 0 0 32px; }
 .article-row .a-title { font-family: var(--serif); font-size: 16.5px; font-weight: 600; flex: 1; color: var(--ink); }
-.article-row:hover .a-title { color: #fff; }
+.article-row:hover .a-title { color: var(--ink-strong); }
 .article-row .a-tag { font-family: var(--mono); font-size: 11px; color: var(--aurora); white-space: nowrap; }
 
 /* ============ 哲学碑文 ============ */
@@ -426,7 +427,7 @@ a:hover { color: var(--flare); }
   background: linear-gradient(180deg, transparent, rgba(7, 11, 31, .8));
 }
 .footer-inner { display: flex; flex-wrap: wrap; gap: 32px; justify-content: space-between; align-items: flex-start; }
-.footer .f-name { font-family: var(--serif); font-size: 24px; font-weight: 700; color: #fff; }
+.footer .f-name { font-family: var(--serif); font-size: 24px; font-weight: 700; color: var(--ink-strong); }
 .footer .f-meta { font-family: var(--mono); font-size: 12px; color: var(--ink3); margin-top: 10px; line-height: 2.1; }
 .footer .f-links { display: flex; flex-direction: column; gap: 8px; font-size: 14px; }
 
@@ -455,14 +456,14 @@ a:hover { color: var(--flare); }
   }
   .prose h1 { display: none; } /* 正文首个 H1 与页头重复，隐藏 */
   .prose h2 {
-    font-family: var(--serif); font-size: 25px; color: #fff;
+    font-family: var(--serif); font-size: 25px; color: var(--ink-strong);
     margin: 56px 0 20px; padding-left: 16px;
     border-left: 3px solid var(--star);
   }
-  .prose h3 { font-family: var(--serif); font-size: 19.5px; color: #fff; margin: 38px 0 14px; }
+  .prose h3 { font-family: var(--serif); font-size: 19.5px; color: var(--ink-strong); margin: 38px 0 14px; }
   .prose h4 { font-family: var(--serif); font-size: 17px; color: var(--star); margin: 28px 0 10px; }
   .prose p { margin: 0 0 22px; }
-  .prose strong { color: #fff; }
+  .prose strong { color: var(--ink-strong); }
   .prose a { color: var(--star); border-bottom: 1px dashed rgba(125,211,252,.4); }
   .prose ul, .prose ol { margin: 0 0 22px; padding-left: 26px; }
   .prose li { margin-bottom: 10px; }
@@ -493,7 +494,7 @@ a:hover { color: var(--flare); }
     display: block; overflow-x: auto;
   }
   .prose th, .prose td { padding: 10px 14px; border: 1px solid var(--line); text-align: left; }
-  .prose th { background: rgba(125, 211, 252, .07); color: #fff; font-family: var(--serif); white-space: nowrap; }
+  .prose th { background: rgba(125, 211, 252, .07); color: var(--ink-strong); font-family: var(--serif); white-space: nowrap; }
   .prose img { max-width: 100%; border-radius: 10px; }
 
 /* ============ 极客雷达 ============ */
@@ -530,7 +531,7 @@ html[data-theme]:not([data-theme="cosmos"]) #cosmos { display: none; }
 /* ───── 📜 宣纸编辑部 ───── */
 html[data-theme="paper"] {
   --space-0: #F5F2EA; --space-1: #EFEBE0; --space-2: #E8E2D3; --space-3: #FCFBF7;
-  --ink: #172441; --ink2: #48536d; --ink3: #8a93ab;
+  --ink: #172441; --ink2: #48536d; --ink3: #8a93ab; --ink-strong: #0c1730;
   --star: #0F766E; --nebula: #7c3aed; --flare: #DD512B; --aurora: #0F766E; --rose: #be123c;
   --line: rgba(23, 36, 65, .14); --line2: rgba(23, 36, 65, .22);
   --glow-star: none; --glow-nebula: none;
@@ -538,7 +539,7 @@ html[data-theme="paper"] {
 /* ───── ⬜️ 月白极简 ───── */
 html[data-theme="snow"] {
   --space-0: #FAFAF8; --space-1: #F4F4F2; --space-2: #ECECEA; --space-3: #FFFFFF;
-  --ink: #18181b; --ink2: #52525b; --ink3: #a1a1aa;
+  --ink: #18181b; --ink2: #52525b; --ink3: #a1a1aa; --ink-strong: #000000;
   --star: #1d4ed8; --nebula: #1d4ed8; --flare: #b45309; --aurora: #047857; --rose: #be123c;
   --line: rgba(24, 24, 27, .1); --line2: rgba(24, 24, 27, .18);
   --glow-star: none; --glow-nebula: none;
@@ -573,7 +574,7 @@ html[data-theme="snow"] :is(h1, h2, h3, h4) { letter-spacing: 0; }
 html[data-theme="klein"] {
   --space-0: #002FA7; --space-1: #00279ycc; --space-2: #0036c4; --space-3: rgba(255,255,255,.07);
   --space-1: #002790;
-  --ink: #ffffff; --ink2: rgba(255,255,255,.78); --ink3: rgba(255,255,255,.5);
+  --ink: #ffffff; --ink2: rgba(255,255,255,.78); --ink3: rgba(255,255,255,.5); --ink-strong: #ffffff;
   --star: #ffffff; --nebula: #ffe14d; --flare: #ffe14d; --aurora: #7dffc4; --rose: #ffb3c1;
   --line: rgba(255, 255, 255, .22); --line2: rgba(255, 255, 255, .35);
   --glow-star: none; --glow-nebula: none;
@@ -594,7 +595,7 @@ html[data-theme="klein"] .hero h1 { font-style: italic; }
 /* ───── 🖌 动态水墨（原全息粒子槽位，data-theme 键保持 hud 以兼容 localStorage）───── */
 html[data-theme="hud"] {
   --space-0: #F7F5EF; --space-1: #F0EDE2; --space-2: #E8E4D6; --space-3: #FFFFFF;
-  --ink: #1a1a1a; --ink2: #45454a; --ink3: #8b8b86;
+  --ink: #1a1a1a; --ink2: #45454a; --ink3: #8b8b86; --ink-strong: #000000;
   --star: #1a1a1a; --nebula: #6b7280; --flare: #9E2B25; --aurora: #3f6212; --rose: #9E2B25;
   --line: rgba(26, 26, 26, .14); --line2: rgba(26, 26, 26, .26);
   --glow-star: none; --glow-nebula: none;
@@ -610,9 +611,55 @@ html[data-theme="hud"] .card h3 { color: var(--ink); }
   -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,.35) 30%, #000 60%);
   mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,.35) 30%, #000 60%); }
 #hud-field iframe { width: 100%; height: 100%; border: 0; background: transparent; }
-html[data-theme="hud"] #hud-field { opacity: 1; }
-/* HUD 主题下把原星空压暗，让粒子场成为主角 */
-html[data-theme="hud"] #cosmos { opacity: .4; transition: opacity 1s; }
+html:is([data-theme="hud"], [data-theme="cyber"]) #hud-field { opacity: 1; }
+
+/* ───── 🛰 赛博全息 · CYBER（硬核科技感：霓虹青紫 + 扫描线 + HUD 角标）───── */
+html[data-theme="cyber"] {
+  --space-0: #030509; --space-1: #060a14; --space-2: #0a1020; --space-3: #0c1526;
+  --ink: #d9f6ff; --ink2: #8fb8d8; --ink3: #4b628a; --ink-strong: #ffffff;
+  --star: #00f0ff; --nebula: #c026ff; --flare: #00ff9c; --aurora: #00ff9c; --rose: #ff2d78;
+  --line: rgba(0, 240, 255, .18); --line2: rgba(0, 240, 255, .36);
+  --serif: "JetBrains Mono", "LXGW WenKai", monospace;
+  --glow-star: 0 0 26px rgba(0, 240, 255, .45);
+}
+html[data-theme="cyber"] body { background-image: none; }
+/* 全屏扫描线（纯 CSS，零性能开销） */
+html[data-theme="cyber"] body::before {
+  content: ''; position: fixed; inset: 0; z-index: 2; pointer-events: none;
+  background: repeating-linear-gradient(180deg, rgba(0,240,255,.022) 0 1px, transparent 1px 3px);
+  mix-blend-mode: screen;
+}
+html[data-theme="cyber"] :is(.hero h1, .chapter-head h2, .epigraph) {
+  background: linear-gradient(120deg, var(--star) 20%, var(--nebula) 80%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; filter: none;
+  text-shadow: 0 0 34px rgba(0, 240, 255, .3);
+}
+html[data-theme="cyber"] :is(.card, .proto-item, .lib-series, .archive-box, .kg-shell, .flagship-quote, .pipeline, .dial) {
+  background: rgba(8, 14, 30, .74);
+}
+html[data-theme="cyber"] :is(.card, .proto-item, .dial, .lib-series, .archive-box, .btn) { border-radius: 6px; }
+html[data-theme="cyber"] .card { border: 1px solid rgba(0, 240, 255, .22); position: relative; }
+/* 卡片四角 HUD 角标 */
+html[data-theme="cyber"] .card::after {
+  content: ''; position: absolute; top: 7px; left: 7px; width: 11px; height: 11px;
+  border-top: 1px solid rgba(0, 240, 255, .55); border-left: 1px solid rgba(0, 240, 255, .55);
+  pointer-events: none; transition: .25s;
+}
+html[data-theme="cyber"] .card:hover {
+  border-color: var(--star);
+  box-shadow: 0 0 0 1px rgba(0, 240, 255, .5), 0 14px 44px rgba(0, 240, 255, .18);
+}
+html[data-theme="cyber"] .card:hover::after { top: 5px; left: 5px; border-color: var(--star); }
+html[data-theme="cyber"] .card h3 { color: var(--star); }
+html[data-theme="cyber"] .card h3::before { content: '▸ '; color: var(--nebula); }
+html[data-theme="cyber"] .hero .kicker::before { content: '◰ '; color: var(--star); }
+html[data-theme="cyber"] .nav-logo::before { content: '◈ '; font-family: var(--mono); color: var(--star); font-size: 13px; }
+html[data-theme="cyber"] .dial .num { color: var(--star); text-shadow: 0 0 18px rgba(0, 240, 255, .6); }
+html[data-theme="cyber"] #voyage-progress { background: linear-gradient(90deg, var(--star), var(--nebula)); box-shadow: 0 0 14px var(--star); }
+html[data-theme="cyber"] .ch-no { color: var(--star); }
+html[data-theme="cyber"] .chip { border-color: rgba(0, 240, 255, .32); }
+html[data-theme="cyber"] .btn.primary { background: rgba(0, 240, 255, .14); border-color: rgba(0, 240, 255, .6); color: #d9f6ff; }
 
 /* ───── 🎨 主题切换器 ───── */
 .theme-fab {
@@ -670,20 +717,6 @@ html[data-theme="paper"] body::before {
   mix-blend-mode: multiply;
 }
 html[data-theme="paper"] .hero { position: relative; }
-html[data-theme="paper"] .hero::after {
-  content: '纪 鸣 飞 印';
-  position: absolute; right: 8%; top: 38%;
-  width: 96px; height: 96px;
-  display: flex; align-items: center; justify-content: center; text-align: center;
-  font-family: var(--serif); font-weight: 900; font-size: 26px; line-height: 1.25;
-  letter-spacing: 0; word-break: break-all; padding: 10px;
-  color: #B33A2B; border: 3.5px solid #B33A2B; border-radius: 10px;
-  transform: rotate(4deg);
-  opacity: .85;
-  box-shadow: 0 0 0 1px rgba(179, 58, 43, .25) inset;
-  pointer-events: none;
-}
-@media (max-width: 760px) { html[data-theme="paper"] .hero::after { display: none; } }
 html[data-theme="paper"] .hero h1 { letter-spacing: .1em; }
 html[data-theme="paper"] .hero .sub::after {
   content: ''; display: block; width: 110px; height: 4px;
