@@ -105,8 +105,11 @@ const clock=new THREE.Clock();
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const GLYPHS = '01アイウエオカキクケコサシスセソ<>/{}[]=+#$%';
   let W,H,cols,drops;
+  const DPR = Math.min(devicePixelRatio || 1, 2);
   function resize(){
-    W = c.width = innerWidth; H = c.height = innerHeight;
+    W = innerWidth; H = innerHeight;
+    c.width = W * DPR; c.height = H * DPR;
+    x.setTransform(DPR, 0, 0, DPR, 0, 0);   // Retina 下按 CSS 像素坐标绘制,字形不糊
     const cw = 18; cols = Math.floor(W / cw);
     drops = [];
     for(let i=0;i<cols;i++){

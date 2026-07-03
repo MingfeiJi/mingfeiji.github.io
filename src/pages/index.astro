@@ -1101,8 +1101,6 @@ const courses = [
       if (!rail) return;
       var items = Array.prototype.slice.call(rail.querySelectorAll('.rail-item'));
       var fill = rail.querySelector('.rail-fill');
-      var map = {};
-      items.forEach(function (a) { map[a.getAttribute('data-spy')] = a; });
       var ids = items.map(function (a) { return a.getAttribute('data-spy'); });
       var current = null;
       function setActive(id) {
@@ -1304,6 +1302,11 @@ const courses = [
         if (!dragging) return; dragging = false; fab.classList.remove('grabbing');
         try { fab.releasePointerCapture(e.pointerId); } catch (er) {}
         if (moved) { var r = root.getBoundingClientRect(); localStorage.setItem(POSKEY, JSON.stringify({ x: r.left, y: r.top })); }
+      });
+      // 系统手势打断拖拽时复位，避免 grabbing 状态残留
+      fab.addEventListener('pointercancel', function (e) {
+        dragging = false; fab.classList.remove('grabbing');
+        try { fab.releasePointerCapture(e.pointerId); } catch (er) {}
       });
       fab.addEventListener('click', function () { if (moved) { moved = false; return; } opened ? close() : open(false); });
 
