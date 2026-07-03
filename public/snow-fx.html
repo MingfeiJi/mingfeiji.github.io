@@ -221,6 +221,7 @@ function drawAccent(a, t){
 let last = performance.now();
 function loop(now){
   requestAnimationFrame(loop);
+  if (document.hidden) return;   // 后台/隐藏时不渲染,省电
   const dt = Math.min((now - last) / 1000, 0.05); last = now;
   const t = now / 1000;
 

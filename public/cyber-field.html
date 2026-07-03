@@ -88,6 +88,7 @@ const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const clock=new THREE.Clock();
 (function loop(){
   requestAnimationFrame(loop);
+  if (document.hidden) return;   // 后台/隐藏时不渲染,省电
   const dt=Math.min(clock.getDelta(),.05);
   if(!reduce){ sphere.rotation.y+=dt*.05; dust.rotation.y+=dt*.012; ring.rotation.z+=dt*.035; }
   tx+=(px*.6-tx)*.045; ty+=(-py*.4-ty)*.045;

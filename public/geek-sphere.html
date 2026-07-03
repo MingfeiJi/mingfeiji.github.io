@@ -75,6 +75,7 @@ const clock = new THREE.Clock();
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 (function loop(){
   requestAnimationFrame(loop);
+  if (document.hidden) return;   // 后台/隐藏时不渲染,省电
   const dt = clock.getDelta();
   if(!reduce) points.rotation.y += dt*0.06;
   tx2 += (px*0.5 - tx2)*0.05; ty2 += (-py*0.35 - ty2)*0.05;

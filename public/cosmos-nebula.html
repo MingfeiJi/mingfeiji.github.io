@@ -373,6 +373,7 @@ addEventListener('resize', resize);
 const clock = new THREE.Clock();
 (function loop(){
   requestAnimationFrame(loop);
+  if (document.hidden) return;   // 后台/隐藏时不渲染,省电
   const dt = Math.min(clock.getDelta(), .05);
   const t = clock.elapsedTime;
 

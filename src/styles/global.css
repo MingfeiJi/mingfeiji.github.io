@@ -78,6 +78,7 @@ body {
 }
 
 h1, h2, h3, h4 { font-family: var(--serif); font-weight: 700; line-height: 1.3; }
+/* 注: 站内 font-weight:600 依赖浏览器回退到已载入的 700(serif 只导入 700/900, sans 只有 regular/bold)——刻意为之,勿再导入 600 字重 */
 
 .hero h1, .chapter-head h2 { font-weight: 900; }
 

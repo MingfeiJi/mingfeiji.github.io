@@ -886,7 +886,8 @@ const courses = [
   <!-- ════════════ CH.10 · 能力·极客雷达 ════════════ -->
   <section class="chapter geek-chapter" id="geek">
     <div class="geek-particles" aria-hidden="true">
-      <iframe src="/geek-sphere.html" title="" loading="lazy" scrolling="no" tabindex="-1"></iframe>
+      <!-- 粒子球只在深色科技主题注入(浅色主题下近乎不可见还白跑一套 Three.js),src 由下方主题脚本按需设置 -->
+      <iframe id="geek-sphere-frame" data-src="/geek-sphere.html" title="" loading="lazy" scrolling="no" tabindex="-1"></iframe>
       <span class="gp-corner c-tl"></span><span class="gp-corner c-tr"></span>
       <span class="gp-corner c-bl"></span><span class="gp-corner c-br"></span>
       <span class="gp-tag">CAPABILITY FIELD · LIVE</span>
@@ -1078,6 +1079,17 @@ const courses = [
       }
       new MutationObserver(sync).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
       sync();
+      // 极客区粒子球按主题门禁: 仅深色科技主题(cosmos/cyber)加载, 浅色主题不白跑 Three.js
+      var gsf = document.getElementById('geek-sphere-frame');
+      function syncGeek() {
+        if (!gsf) return;
+        var t = document.documentElement.getAttribute('data-theme');
+        var want = (t === 'cosmos' || t === 'cyber');
+        if (want && !gsf.getAttribute('src')) gsf.setAttribute('src', gsf.getAttribute('data-src'));
+        else if (!want && gsf.getAttribute('src')) gsf.removeAttribute('src');
+      }
+      new MutationObserver(syncGeek).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+      syncGeek();
       // hero 深度视差：内容与星空反向微移，形成前/后景层次（仅精确指针 + 允许动效时）
       // 平滑交给 CSS transition，事件里直接写目标值，无常驻 rAF
       var hero = document.querySelector('.hero');
@@ -1881,6 +1893,8 @@ const courses = [
   :global(html:is([data-theme='paper'], [data-theme='snow'], [data-theme='hud'])) .v2-scope :is(.geek-chapter .method-card, .cf-track span, .lab-portal) {
     background: var(--space-3);
   }
+  /* 粒子球容器只在 cosmos/cyber 显示（与 syncGeek 的注入门禁配对） */
+  :global(html:not([data-theme='cosmos'], [data-theme='cyber'])) .v2-scope .geek-particles { display: none; }
 
   /* ── R8 章节节奏与卡片物理（v2-scoped）── */
   /* 知识区线稿图标 */
