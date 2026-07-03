@@ -32,19 +32,28 @@ const CONFIG = {
   bloomHold:      [4,8],   // 满幅保持时长(秒)
   bloomFade:      [6,10],  // 淡出时长(秒)
   bloomR:         [120,300],// 满幅半径(px, 按屏幕短边 900 比例缩放)
-  bloomAlpha:     0.10,    // 单团核心不透明度(0.06~0.14, 太高糊字)
+  bloomAlpha:     0.12,    // 单团外围不透明度(0.08~0.16, 太高糊字)
+  bloomCore:      1.9,     // 浓心倍率(墨心比边缘浓多少, 1.5~2.5——洇墨要有骨)
   bloomEdgeBias:  0.55,    // 位置向边缘偏置(0~1)
 
   // —— 大写意笔触（自书 + 飞白 + 干透淡去）——
-  strokeEvery:    [9,15],  // 新笔触间隔区间(秒)
-  strokeMax:      2,       // 同时存在的最大笔触数
-  strokeDraw:     [2.2,3.2],// 书写时长(秒)
-  strokeLife:     [9,14],  // 写完后保持+淡出总时长(秒)
-  strokeAlpha:    0.22,    // 笔触主干不透明度(0.14~0.30)
-  strokeWidth:    [14,28], // 主干最大宽度区间(px)
-  strokeLen:      [0.35,0.6],// 笔触长度占屏幕宽比例
+  strokeEvery:    [7,12],  // 新笔触间隔区间(秒)
+  strokeMax:      3,       // 同时存在的最大笔触数
+  strokeDraw:     [1.8,2.8],// 书写时长(秒)
+  strokeLife:     [10,16], // 写完后保持+淡出总时长(秒)
+  strokeAlpha:    0.55,    // 笔触主干不透明度(0.4~0.7, 浓墨才有笔墨精神)
+  strokeWidth:    [16,30], // 主干最大宽度区间(px)
+  strokeLen:      [0.28,0.5],// 笔触长度占屏幕宽比例
   flyWhite:       0.30,    // 飞白比例(0~0.5, 越大断墨越多)
-  cinnabarOdds:   0.12,    // 某笔用朱磦的概率(点睛,别高)
+  cinnabarOdds:   0.10,    // 某笔用朱磦的概率(点睛,别高)
+  // 笔触形态权重: 长弧(横撇) / S兰叶描 / 点厾(短粗按笔)
+  kindWeights:    { arc: 0.45, s: 0.35, dab: 0.20 },
+  // 落笔联动: 起笔处同时洇开一团墨的概率(让元素有因果,不是随机散点)
+  bloomOnStroke:  0.6,
+
+  // —— 构图焦点: 每次加载随机定一个视觉焦点(右侧黄金区), 大部分元素向它聚拢 ——
+  focalPull:      0.68,    // 元素落在焦点簇内的比例(其余散布边缘作呼应)
+  focalSpread:    0.22,    // 焦点簇半径(占屏幕宽比例)
 
   // —— 墨点飞溅（随笔触起笔出现）——
   splatterN:      [3,7],   // 每笔溅点数量区间
@@ -89,18 +98,34 @@ function textSafeX(x){
 const clampX = (x) => Math.max(W * 0.05, Math.min(W * 0.95, x));
 const clampY = (y) => Math.max(H * 0.08, Math.min(H * 0.92, y));
 
+// 构图焦点（每次加载随机落在右侧黄金区），元素大概率向它聚拢
+let focal = { x: 0, y: 0 };
+function pickSpot(){
+  if (Math.random() < CONFIG.focalPull){
+    const r = W * CONFIG.focalSpread * Math.sqrt(Math.random());
+    const a = rand(0, Math.PI * 2);
+    return { x: clampX(focal.x + Math.cos(a) * r), y: clampY(focal.y + Math.sin(a) * r * 0.8) };
+  }
+  return { x: clampX(textSafeX(edgeBiased(W, CONFIG.bloomEdgeBias))), y: clampY(edgeBiased(H, CONFIG.bloomEdgeBias)) };
+}
+function pickKind(){
+  const r = Math.random(), k = CONFIG.kindWeights;
+  return r < k.arc ? 'arc' : (r < k.arc + k.s ? 's' : 'dab');
+}
+
 /* ---------- 洇墨团 ---------- */
 let blooms = [], bloomTimer = 0;
-function spawnBloom(){
+function spawnBloom(at){
   const scaleR = Math.max(0.55, MIN / 900);
   const lobes = [];
   const n = 6 + (Math.random() * 4 | 0);          // 6~9 个花瓣叠出不规则边缘
   for(let i = 0; i < n; i++){
     lobes.push({ a: rand(0, Math.PI*2), d: rand(0.15, 0.55), s: rand(0.5, 0.95) });
   }
+  const spot = at || pickSpot();
   blooms.push({
-    x: clampX(textSafeX(edgeBiased(W, CONFIG.bloomEdgeBias))),
-    y: clampY(edgeBiased(H, CONFIG.bloomEdgeBias)),
+    x: spot.x,
+    y: spot.y,
     R: pick(CONFIG.bloomR) * scaleR,
     grow: pick(CONFIG.bloomGrow), hold: pick(CONFIG.bloomHold), fade: pick(CONFIG.bloomFade),
     t: 0, lobes,
@@ -134,23 +159,41 @@ function drawBloom(b){
     ctx.fillStyle = g;
     ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
   }
+  // 浓心: 墨心一点深墨, 洇墨才有"骨"
+  const coreR = b.R * st.r * 0.30;
+  const g2 = ctx.createRadialGradient(b.x + ox, b.y + oy, 0, b.x + ox, b.y + oy, coreR);
+  const ca = b.op * st.a * CONFIG.bloomCore;
+  g2.addColorStop(0,   rgba(CONFIG.ink, ca));
+  g2.addColorStop(0.6, rgba(CONFIG.ink, ca * 0.35));
+  g2.addColorStop(1,   rgba(CONFIG.ink, 0));
+  ctx.fillStyle = g2;
+  ctx.beginPath(); ctx.arc(b.x + ox, b.y + oy, coreR, 0, Math.PI * 2); ctx.fill();
 }
 
 /* ---------- 大写意笔触 ---------- */
 let strokes = [], strokeTimer = 0;
 function spawnStroke(){
-  const len = W * pick(CONFIG.strokeLen) * (mobile() ? 0.8 : 1);
-  // 起笔与收笔都锁在画面安全框内：先定起点(偏右/偏边)，再选一个能容下整笔的方向
-  let x0 = clampX(textSafeX(edgeBiased(W, 0.5)));
-  let y0 = clampY(edgeBiased(H, 0.45));
+  const kind = pickKind();
+  // 点厾: 短粗按笔; 其余: 长笔
+  const len = (kind === 'dab' ? rand(50, 110) : W * pick(CONFIG.strokeLen)) * (mobile() ? 0.8 : 1);
+  // 起笔锁焦点簇/安全框内，再选一个能容下整笔的方向
+  const spot = pickSpot();
+  let x0 = spot.x, y0 = spot.y;
   let ang = rand(-0.45, 0.45) + (Math.random() < 0.5 ? 0 : Math.PI);
   let x3 = x0 + Math.cos(ang) * len, y3 = y0 + Math.sin(ang) * len * rand(0.35, 0.8);
   if (x3 < W * 0.05 || x3 > W * 0.95){ ang = Math.PI - ang; x3 = x0 + Math.cos(ang) * len; }
   x3 = clampX(x3); y3 = clampY(y3);
-  const x1 = x0 + (x3-x0)*0.33 + rand(-len*0.12, len*0.12);
-  const y1 = y0 + (y3-y0)*0.33 + rand(-len*0.18, len*0.18);
-  const x2 = x0 + (x3-x0)*0.66 + rand(-len*0.12, len*0.12);
-  const y2 = y0 + (y3-y0)*0.66 + rand(-len*0.18, len*0.18);
+  // 控制点: arc=同侧弧; s=异侧双弯(兰叶描); dab=近直
+  const bend = kind === 's' ? len * 0.22 : (kind === 'dab' ? len * 0.06 : len * 0.15);
+  const side = Math.random() < 0.5 ? 1 : -1;
+  const nx = -(y3 - y0), ny = (x3 - x0);
+  const nd = Math.hypot(nx, ny) || 1;
+  const ux = nx / nd, uy = ny / nd;
+  const s2 = kind === 's' ? -side : side;
+  const x1 = x0 + (x3-x0)*0.33 + ux * bend * side;
+  const y1 = y0 + (y3-y0)*0.33 + uy * bend * side;
+  const x2 = x0 + (x3-x0)*0.66 + ux * bend * s2;
+  const y2 = y0 + (y3-y0)*0.66 + uy * bend * s2;
   // 采样 64 点 + 每点法向
   const N = 64, pts = [];
   for(let i = 0; i <= N; i++){
@@ -171,20 +214,27 @@ function spawnStroke(){
     pts[i].gap = Math.random() < CONFIG.flyWhite * t;   // 越到笔尾飞白越多
   }
   // 主锋一条实带 + 2~3 条边缘干笔细丝
-  const subs = [{ off: 0, wMul: 1, aMul: 0.9 }];
+  const subs = [{ off: 0, wMul: 1, aMul: 1 }];
   const sn = 2 + (Math.random() * 2 | 0);
   for(let i = 0; i < sn; i++){
     subs.push({ off: rand(0.55, 1.1) * (Math.random() < 0.5 ? -1 : 1), wMul: rand(0.12, 0.3), aMul: rand(0.45, 0.85) });
   }
   const cinnabar = Math.random() < CONFIG.cinnabarOdds;
   strokes.push({
-    pts, subs, cinnabar,
-    wMax: pick(CONFIG.strokeWidth) * (mobile() ? 0.7 : 1),
-    draw: pick(CONFIG.strokeDraw), life: pick(CONFIG.strokeLife),
-    t: 0, op: CONFIG.strokeAlpha * rand(0.8, 1.1),
+    pts, subs, cinnabar, kind,
+    wMax: pick(CONFIG.strokeWidth) * (kind === 'dab' ? 1.6 : 1) * (mobile() ? 0.7 : 1),
+    draw: (kind === 'dab' ? 0.7 : pick(CONFIG.strokeDraw)),
+    life: pick(CONFIG.strokeLife),
+    t: 0, op: CONFIG.strokeAlpha * (kind === 'dab' ? 1.15 : 1) * rand(0.8, 1.1),
     depth: rand(0.5, 1),
     splat: null,
   });
+  // 落笔联动: 起笔处洇开一团墨(小半径, 有因果的构图)
+  if (!cinnabar && Math.random() < CONFIG.bloomOnStroke && blooms.length < CONFIG.bloomMax + 2){
+    spawnBloom({ x: clampX(x0 + rand(-30, 30)), y: clampY(y0 + rand(-24, 24)) });
+    const b = blooms[blooms.length - 1];
+    b.R *= 0.55;
+  }
   // 起笔溅点
   const s = strokes[strokes.length-1];
   const sn2 = Math.round(pick(CONFIG.splatterN));
@@ -263,10 +313,20 @@ function buildMountains(){
 }
 function drawMountains(){
   for(const m of mountains){
-    ctx.fillStyle = rgba(CONFIG.ink, m.a);
+    // 山脊线略深、向下渐隐入雾(垂直渐变), 脊线用二次曲线平滑
+    const top = Math.min(...m.pts.map(p => p.y));
+    const g = ctx.createLinearGradient(0, top, 0, H);
+    g.addColorStop(0,   rgba(CONFIG.ink, m.a * 1.6));
+    g.addColorStop(0.45, rgba(CONFIG.ink, m.a * 0.7));
+    g.addColorStop(1,   rgba(CONFIG.ink, m.a * 0.25));
+    ctx.fillStyle = g;
     ctx.beginPath();
     ctx.moveTo(m.pts[0].x, H + 2);
-    for(const p of m.pts) ctx.lineTo(p.x, p.y);
+    ctx.lineTo(m.pts[0].x, m.pts[0].y);
+    for(let i = 1; i < m.pts.length; i++){
+      const a = m.pts[i-1], b = m.pts[i];
+      ctx.quadraticCurveTo(a.x, a.y, (a.x + b.x) / 2, (a.y + b.y) / 2);
+    }
     ctx.lineTo(m.pts[m.pts.length-1].x, H + 2);
     ctx.closePath(); ctx.fill();
   }
@@ -278,6 +338,7 @@ function resize(){
   canvas.width = Math.round(W * PX);
   canvas.height = Math.round(H * PX);
   ctx.setTransform(PX, 0, 0, PX, 0, 0);
+  focal = { x: W * rand(0.62, 0.8), y: H * rand(0.28, 0.52) };   // 焦点落右侧黄金区
   buildMountains();
 }
 
