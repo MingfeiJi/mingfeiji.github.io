@@ -31,7 +31,9 @@ const SYSTEM_PROMPT = `你是「小飞」，纪鸣飞个人作品集网站上的
 
 export default async function handler(req, res) {
   const origin = req.headers.origin || '';
-  if (ALLOW_ORIGINS.has(origin)) res.setHeader('Access-Control-Allow-Origin', origin);
+  // 非白名单来源(含无 Origin 的脚本直调)一律 403——防止代理被当免费 DeepSeek 中继刷额度
+  if (!ALLOW_ORIGINS.has(origin)) { res.statusCode = 403; return res.end('forbidden'); }
+  res.setHeader('Access-Control-Allow-Origin', origin);
   res.setHeader('Vary', 'Origin');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');

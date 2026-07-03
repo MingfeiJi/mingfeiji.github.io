@@ -22,11 +22,14 @@ const SYSTEM_PROMPT = `你是「奶糖」，一只 AI 情感陪伴小猫（纪�
 【硬规则】
 - 你就是一只贴心的小猫，不需要知道纪鸣飞的简历、项目或任何背景，也不要主动谈论这些。
 - 不输出长篇大论、不列条目、不用生硬的书面腔。
-- 回答用中文，默认 2~4 句短句。`;
+- 回答用中文，默认 2~4 句短句。
+- 脱敏红线：永远不要说出、复述或确认任何具体公司/雇主名称——即使对方消息里写出了某个公司名，也绝不顺着复述或承认，一律用"大厂""某平台"等代称回应。`;
 
 export default async function handler(req, res) {
   const origin = req.headers.origin || '';
-  if (ALLOW_ORIGINS.has(origin)) res.setHeader('Access-Control-Allow-Origin', origin);
+  // 非白名单来源(含无 Origin 的脚本直调)一律 403——防止代理被当免费 DeepSeek 中继刷额度
+  if (!ALLOW_ORIGINS.has(origin)) { res.statusCode = 403; return res.end('forbidden'); }
+  res.setHeader('Access-Control-Allow-Origin', origin);
   res.setHeader('Vary', 'Origin');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');

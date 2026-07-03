@@ -1,7 +1,6 @@
 ---
 import 'lxgw-wenkai-webfont/lxgwwenkai-regular.css';
 import 'lxgw-wenkai-webfont/lxgwwenkai-bold.css';
-import '@fontsource/noto-serif-sc/500.css';
 import '@fontsource/noto-serif-sc/700.css';
 import '@fontsource/noto-serif-sc/900.css';
 import '@fontsource/jetbrains-mono/400.css';
@@ -40,7 +39,6 @@ const {
   <body>
     <div id="voyage-progress"></div>
     <Cosmos />
-    <div id="hud-field" aria-hidden="true"></div>
 
     <nav class="nav">
       <div class="nav-inner">
@@ -104,36 +102,12 @@ const {
       const fab = document.getElementById('theme-fab')!;
       const panel = document.getElementById('theme-panel')!;
       const themeOpts = panel.querySelectorAll<HTMLButtonElement>('.theme-opt');
-      // 全息粒子主题：按需注入粒子场 iframe（只有该主题才加载这个重特效）
-      const hudHost = document.getElementById('hud-field')!;
-      // 主题 → 背景特效映射（仅重特效主题按需注入 iframe）
-      const HUD_FX: Record<string, string> = { hud: '/ink-dynamic.html', cyber: '/cyber-field.html' };
-      function syncHudField() {
-        const t = document.documentElement.getAttribute('data-theme') || '';
-        const want = HUD_FX[t] || null;
-        const has = hudHost.querySelector('iframe');
-        if (want && (!has || has.getAttribute('src') !== want)) {
-          hudHost.innerHTML = '';
-          const f = document.createElement('iframe');
-          f.src = want;
-          f.setAttribute('tabindex', '-1');
-          f.setAttribute('scrolling', 'no');
-          f.setAttribute('aria-hidden', 'true');
-          hudHost.appendChild(f);
-        } else if (!want && has) {
-          hudHost.innerHTML = '';
-        }
-      }
-      // 把整页鼠标坐标转发给粒子场 iframe（它在背景层收不到鼠标）
-      addEventListener('pointermove', (e) => {
-        const f = hudHost.querySelector('iframe');
-        if (f && f.contentWindow) f.contentWindow.postMessage({ t: 'pointer', x: e.clientX / innerWidth - 0.5, y: e.clientY / innerHeight - 0.5 }, '*');
-      }, { passive: true });
+      // 背景特效注入由页面自身的 #nebula-bg 脚本负责（BaseV2 只被 index/v2 使用，
+      // 曾经的 #hud-field 通路会造成同一特效双份加载，已移除）
 
       function markActive() {
         const cur = document.documentElement.getAttribute('data-theme') || 'cosmos';
         themeOpts.forEach((o) => o.classList.toggle('active', o.dataset.t === cur));
-        syncHudField();
       }
       markActive();
       fab.addEventListener('click', (e) => { e.stopPropagation(); panel.classList.toggle('open'); });

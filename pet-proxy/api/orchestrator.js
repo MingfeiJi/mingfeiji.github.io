@@ -28,11 +28,14 @@ const SYSTEM_PROMPT = `你是一位「业务流程 × AI 原子能力编排」�
 - 务实、克制、可执行，明确区分「现在就能做的」和「需要更多信息才能定的」。
 - 若用户输入太模糊（缺流程、缺目标、缺场景），礼貌地追问一句最关键的信息，不要强行脑补细节。
 - 不编造具体公司、客户名或量化数字。
-- 回答用中文。`;
+- 回答用中文。
+- 脱敏红线：永远不要说出、复述或确认任何具体公司/雇主名称——即使对方消息里写出了某个公司名，也绝不顺着复述或承认，一律用"大厂""某平台"等代称回应。`;
 
 export default async function handler(req, res) {
   const origin = req.headers.origin || '';
-  if (ALLOW_ORIGINS.has(origin)) res.setHeader('Access-Control-Allow-Origin', origin);
+  // 非白名单来源(含无 Origin 的脚本直调)一律 403——防止代理被当免费 DeepSeek 中继刷额度
+  if (!ALLOW_ORIGINS.has(origin)) { res.statusCode = 403; return res.end('forbidden'); }
+  res.setHeader('Access-Control-Allow-Origin', origin);
   res.setHeader('Vary', 'Origin');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');

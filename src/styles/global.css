@@ -568,11 +568,10 @@ html:is([data-theme="paper"], [data-theme="snow"], [data-theme="hud"]) .prose bl
 html:is([data-theme="paper"], [data-theme="snow"], [data-theme="hud"]) .prose pre { background: #1c2333 !important; }
 html:is([data-theme="paper"], [data-theme="snow"], [data-theme="hud"]) .prose code { background: rgba(15, 118, 110, .1); color: var(--star); }
 html[data-theme="paper"] body { background-image: radial-gradient(1100px 560px at 88% -8%, rgba(221, 81, 43, .05), transparent 60%); }
-html[data-theme="snow"] :is(h1, h2, h3, h4) { letter-spacing: 0; }
 
 /* ───── 🔵 克莱因蓝 ───── */
 html[data-theme="klein"] {
-  --space-0: #002FA7; --space-1: #00279ycc; --space-2: #0036c4; --space-3: rgba(255,255,255,.07);
+  --space-0: #002FA7; --space-2: #0036c4; --space-3: rgba(255,255,255,.07);
   --space-1: #002790;
   --ink: #ffffff; --ink2: rgba(255,255,255,.78); --ink3: rgba(255,255,255,.5); --ink-strong: #ffffff;
   --star: #ffffff; --nebula: #ffe14d; --flare: #ffe14d; --aurora: #7dffc4; --rose: #ffb3c1;
@@ -786,22 +785,12 @@ html[data-theme="klein"] .chapter-head .ch-no em { color: #ffe14d; }
 html[data-theme="klein"] .btn { border-radius: 2px; }
 html[data-theme="klein"] .dial .num { color: #ffe14d; text-shadow: none; }
 
-/* ───── 🛰 全息粒子 · HUD · 扫描线 + 网格 + 坐标十字 + 卡片角框 ───── */
+/* ───── 🖌 动态水墨 · 纸纹（去掉全息时代残留的暗角与青色扫描线）───── */
 html[data-theme="hud"] body::before {
   content: ''; position: fixed; inset: 0; z-index: 2; pointer-events: none;
-  background:
-    radial-gradient(ellipse 130% 95% at 50% 45%, transparent 62%, rgba(2, 4, 12, .55) 100%),
-    linear-gradient(rgba(125, 211, 252, .03) 1px, transparent 1px) 0 0 / 100% 46px,
-    linear-gradient(90deg, rgba(125, 211, 252, .03) 1px, transparent 1px) 0 0 / 46px 100%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='0.05'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
 }
-html[data-theme="hud"] body::after {
-  content: ''; position: fixed; left: 0; right: 0; height: 1px; z-index: 2; pointer-events: none;
-  background: linear-gradient(90deg, transparent, rgba(125, 211, 252, .55), transparent);
-  box-shadow: 0 0 10px rgba(125, 211, 252, .4);
-  animation: hud-scan 7.5s linear infinite;
-}
-@keyframes hud-scan { from { top: -2px; } to { top: 100vh; } }
-@media (prefers-reduced-motion: reduce) { html[data-theme="hud"] body::after { animation: none; opacity: .25; } }
 /* 水墨细节：墨线界、朱磦点睛、毛笔气质 */
 html[data-theme="hud"] .chapter-head .ch-no em { color: var(--flare); }
 html[data-theme="hud"] .card { border: 1px solid var(--line); position: relative; }

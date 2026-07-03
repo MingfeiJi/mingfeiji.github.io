@@ -1774,7 +1774,7 @@ const courses = [
   }
   .skip-link {
     position: fixed; top: 10px; left: 10px; z-index: 200; transform: translateY(-160%);
-    background: var(--star); color: #04060f; font-family: var(--mono); font-size: 13px; font-weight: 700;
+    background: var(--star); color: var(--space-0); font-family: var(--mono); font-size: 13px; font-weight: 700;
     padding: 9px 15px; border-radius: 9px; text-decoration: none; transition: transform .2s;
     box-shadow: 0 8px 24px rgba(0,0,0,.4);
   }
@@ -1808,7 +1808,7 @@ const courses = [
   /* 产品卡按主题换底（对齐 global.css 对 .card 的主题覆盖模式） */
   :global(html:is([data-theme='paper'], [data-theme='snow'])) .product-card { background: var(--space-3); }
   :global(html[data-theme='klein']) .product-card { background: rgba(255,255,255,.06); }
-  :global(html[data-theme='hud']) .product-card { background: rgba(10,17,36,.72); }
+  :global(html[data-theme='hud']) .product-card { background: var(--space-3); }
   .product-card::before { content: ''; position: absolute; inset: 0; border-radius: 16px; pointer-events: none;
     background: radial-gradient(420px circle at var(--mx,50%) var(--my,0%), color-mix(in srgb, var(--star) 9%, transparent), transparent 60%);
     opacity: 0; transition: opacity .3s; }
@@ -1872,6 +1872,11 @@ const courses = [
   @keyframes hero-rise { from { opacity: 0; transform: translateY(20px); } }
   @media (prefers-reduced-motion: reduce) {
     .v2-scope .hero h1, .v2-scope .hero > * { animation: none !important; }
+  }
+
+  /* ── R13 浅色主题深底组件补丁（max审计: scoped 特异性压过主题覆盖导致深底深字不可读）── */
+  :global(html:is([data-theme='paper'], [data-theme='snow'], [data-theme='hud'])) .v2-scope :is(.geek-chapter .method-card, .cf-track span, .lab-portal) {
+    background: var(--space-3);
   }
 
   /* ── R8 章节节奏与卡片物理（v2-scoped）── */
