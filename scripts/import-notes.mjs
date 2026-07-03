@@ -1,6 +1,7 @@
 // 从 Obsidian 导入"自有笔记"（概念库/来源摘要/哲学笔记）+ 生成知识图谱数据
 // 仅导入本人撰写/编译的内容；外部转写、书摘、付费课程一律不碰。
 // 用法：node scripts/import-notes.mjs
+import { redact } from './redact.mjs';
 import { readdirSync, readFileSync, writeFileSync, mkdirSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -17,12 +18,9 @@ const SOURCES = [
   { dir: `${OBS}/Knowledge/from-老库/哲学/命题模块`, cat: '哲学命题', match: () => true },
 ];
 
-// 脱敏（与 import-articles 一致）
+// 脱敏（与 import-articles 一致；词表在本机 ~/.config/mfj/redact-map.json，不入仓）
 function desensitize(s) {
-  return s
-    .replace(/携程/g, '大厂')
-    .replace(/vidaXL|荷贝/g, '某跨境电商')
-    .replace(/北京更好玩科技?/g, '某AI初创');
+  return redact(s);
 }
 
 function titleFromFile(f, cat) {

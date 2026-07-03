@@ -1,5 +1,6 @@
 // 档案柜清单生成：备份目录顶层文档名 → 脱敏列表（站上仅展示名称，不展示内容）
 // 排除：4-30 备份（他人文件，整目录不收）、课程类（藏书阁单独分类）、同名多版本（留一）
+import { redact } from './redact.mjs';
 import { readdirSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -22,12 +23,13 @@ for (const bk of ['Downloads-2026-06-10', 'Downloads-2026-05-25', 'Downloads-202
     try { if (!statSync(join(BK, bk, f)).isFile()) continue; } catch { continue; }
     let name = f.slice(0, dot)
       .replace(/TripFlow/gi, '中台')
-      .replace(/携程/g, '大厂')
+      
       .replace(/纪鸣飞/g, '')
       .replace(/-[0-9a-f]{10,}$/, '')
       .replace(/\s*\(\d+\)$/, '')
       .trim()
       .replace(/^[-_·\s]+|[-_·\s]+$/g, '');
+    name = redact(name);
     if (!name || seen.has(name)) continue;
     seen.add(name);
     items.push({ n: name, e: ext.slice(1) });
