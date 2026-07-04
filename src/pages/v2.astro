@@ -67,7 +67,7 @@ const protos = [
   { ver: 'v8', name: '内容工作台 · 信息架构地图', note: '6-08 · IA 总图', slug: 'workbench-v8' },
   { ver: 'BP', name: '产品形态整合蓝图', note: '6-08 · 形态收敛', slug: 'product-blueprint' },
   { ver: 'SYS', name: '系统蓝图 · 六合一工作台', note: '6-05 · OOUX 五视角', slug: 'system-blueprint' },
-  { ver: 'MAP', name: '47 意图旅程图谱', note: '6-07 · 体验底层', slug: 'intent-47-journeys' },
+  { ver: 'MAP', name: '47 旅程 · 意图图谱', note: '6-07 · 体验底层', slug: 'intent-47-journeys' },
   { ver: 'ATLAS', name: '38 Intent Atlas（英文）', note: '6-07 · 国际化版本', slug: 'intent-38-atlas' },
   { ver: 'HAI', name: '人机协作设计方案集', note: '6-07 · 可控可信可回退', slug: 'collab-preview' },
   { ver: 'PRD', name: '内容创作模块详细 PRD', note: '6-05 · OOUX + 四指标', slug: 'content-prd' },
@@ -121,7 +121,7 @@ const methods = [
   {
     num: '吃自己的狗粮',
     title: '「给业务装 AI 前，先把自己 AI 化」',
-    desc: '280 篇口播稿 20 周连续生产、156 页个站全程 Agent 构建、知识库由编译管线自动维护——自己的生产方式先跑通闭环，才有资格给 70 人团队做转型。自己淋过雨，才配给别人撑伞。',
+    desc: '280 篇口播稿 20 周连续生产、150+ 页个站全程 Agent 构建、知识库由编译管线自动维护——自己的生产方式先跑通闭环，才有资格给 70 人团队做转型。自己淋过雨，才配给别人撑伞。',
   },
 ];
 
@@ -145,7 +145,7 @@ const cognitionPoints = [
   {
     tag: 'AI 原生组织',
     title: '链式协作会被球形协作替代',
-    desc: '传统链路是产品、设计、前端、后端、测试逐段交付；AI-native 团队更像球形贡献：每个人直接往项目里提交可运行产物，中间层靠清晰文档衔接，日级版本迭代成为默认节奏。',
+    desc: '传统链路是产品、设计、前端、后端、测试逐段交付；AI-native 团队更像球形协作：每个人直接往项目里提交可运行产物，中间层靠清晰文档衔接，日级版本迭代成为默认节奏。',
     chips: ['20+ 高保真原型', '整站 Agent 构建', 'Vibe Coding 课', 'Skill Workshop'],
     caseLabel: '原型工坊',
     caseUrl: '/prototypes/',
@@ -169,7 +169,7 @@ const cognitionPoints = [
   {
     tag: '组织判断',
     title: '未来中层会被压缩，两层结构足够快',
-    desc: 'AI-native 团队不需要一层层转译，也不需要慢的一环。最高效的结构是目标层直接连接闭环个体：少量聪明人围绕可衡量指标、可运行产物和清晰接口高速协作。',
+    desc: 'AI-native 团队不需要一层层转译，也容不下拖慢节奏的一环。最高效的结构是目标层直接连接闭环个体：少量聪明人围绕可衡量指标、可运行产物和清晰接口高速协作。',
     chips: ['3 UI + 5+ 开发', '3 实习 + 1 正岗', '人人用 Agent', '人人 Vibe Coding'],
     caseLabel: 'AI-native 团队带教',
     caseUrl: '#flagship',
@@ -206,12 +206,12 @@ const knowledgeZones = [
 
 
 const geekGear = [
-  { name: 'Agentic Coding', status: 'DAILY DRIVER', desc: 'Claude Code 多 Agent 并行编排 + 后台任务 + Workflow 脚本。本站 156 页（3D 星场 / 知识图谱 / 全文系统）即由 Agent 全程构建。' },
+  { name: 'Agentic Coding', status: 'DAILY DRIVER', desc: 'Claude Code 多 Agent 并行编排 + 后台任务 + Workflow 脚本。本站 150+ 页（3D 星场 / 知识图谱 / 全文系统）即由 Agent 全程构建。' },
   { name: '浏览器操作 Agent', status: 'IN PRODUCTION', desc: 'Claude in Chrome / browser-use 范式：AI 自己打开页面、截图、验证交互。本站每个版本上线前由 AI 在真实浏览器里自检回归。' },
   { name: 'Multi-Agent Workflow', status: 'DAILY DRIVER', desc: 'fan-out 并行调研 + 对抗验证 + 流水线编排。内容周批次、知识库扫描全部多 Agent 并行跑。' },
   { name: 'MCP 协议工程', status: 'IN PRODUCTION', desc: '薄包装策略：70% 复用既有接口、20 个 Tool 覆盖全业务域；飞书全家桶（Base / 文档 / 事件流 / 妙记）经 CLI 接入 Agent。' },
   { name: 'Skill 工程化', status: 'SHIPPING', desc: '25+ 写作方法论 skill：抖音口播 2.0 人设热点双引擎、口播四步法、公众号爆款——从"指挥 AI"到"管理 AI"。' },
-  { name: 'LLM Wiki 知识编译', status: 'SHIPPING', desc: 'Karpathy 风格 raw→wiki 编译管线：双链、实体/概念/来源分型。本站 178 节点知识图谱就是编译产物。' },
+  { name: 'LLM Wiki 知识编译', status: 'SHIPPING', desc: 'Karpathy 风格 raw→wiki 编译管线：双链、实体/概念/来源分型。本站 190+ 节点知识图谱就是编译产物。' },
   { name: 'RAG 混合检索', status: 'IN PRODUCTION', desc: 'BM25 优先 + pgvector 语义辅助、结构化字段先筛掉 90%；MySQL → PostgreSQL 平滑演进。' },
   { name: 'LLM 应用编排', status: 'IN PRODUCTION', desc: 'Dify / LobeHub 双栈：6 业务域 SubAgent、6 阶段意图识别 Pipeline、组合意图 + 会话对象栈（Entity Stack）。' },
   { name: 'AIGC 视觉工作流', status: 'SHIPPED', desc: 'ComfyUI + Lora 微调（10 万+ 训练数据，生图采纳率 65%→87%）；Seedance / Sora2 / Veo 工业化视频生产。' },
@@ -276,7 +276,7 @@ const courses = [
       <div class="pet-log" id="pet-log" aria-live="polite"></div>
       <div class="pet-sugs" id="pet-sugs">
         <button data-q="鸣飞做过哪些 AI 项目？">做过哪些 AI 项目？</button>
-        <button data-q="TripFlow 旗舰项目是什么？">TripFlow 是什么？</button>
+        <button data-q="旗舰的内容增长 AI 中台是什么？">旗舰中台是什么？</button>
         <button data-q="他的核心能力是什么？">核心能力？</button>
         <button data-q="怎么联系鸣飞？">怎么联系？</button>
       </div>
@@ -419,7 +419,7 @@ const courses = [
           </div>
           <div class="g-era">2025 — 至今 · 第三阶段</div>
           <h3>大厂出海 AI 中台</h3>
-          <p>出海内容增长 AI 中台：0-1 主导，组织内容生产全流程并嵌入 AI 原子能力，服务 70-80 人运营团队；MVP 单周播放 100 万+，升级为 BG 级转型立项标杆。</p>
+          <p>出海内容增长 AI 中台：0-1 主导，组织内容生产全流程并嵌入 AI 原子能力，服务 70–80 人运营团队；MVP 单周播放 100 万+，升级为 BG 级转型立项标杆。</p>
           <a href="/prototypes/tripflow-arch.html" target="_blank" rel="noopener" style="font-family:var(--mono);font-size:12px;color:var(--star)">看项目档案 ↗</a>
         </div>
       </div>
@@ -449,7 +449,7 @@ const courses = [
 
       <blockquote class="flagship-quote reveal">
         服务 70–80 人内容运营团队、日产出海短视频 100+ 条。将「选题 → 脚本 → 素材 → 剪辑 → 合规 → 发布 → 复盘」
-        7 步中 6 步纯人工的链路，改造为多 Agent 协同的营销 AI 中台。
+        7 步中 6 步纯人工的链路，改造为多 Agent 协同的内容增长 AI 中台。
         <footer><span style="color:var(--star)">已实测 · MVP 阶段</span>：单周硬指标见下　·　<span style="color:var(--ink3)">在途目标 · 全年</span>：节省 ¥500 万 / 2.8 万工时 ≈ 13 FTE</footer>
       </blockquote>
 
@@ -695,7 +695,7 @@ const courses = [
         横向滑动 → 每一个都可点开直接交互（真实过程文件）· 用可运行产物代替纯 PRD
       </p>
       <div style="margin-top:22px" class="reveal">
-        <a class="btn primary" href="/prototypes/">进原型工坊 · 14 个过程文件实时预览</a>
+        <a class="btn primary" href="/prototypes/">进原型工坊 · 16 个过程文件实时预览</a>
       </div>
     </div>
   </section>
@@ -714,9 +714,9 @@ const courses = [
           <div class="t-date">2025.10 — 至今 ✦ 现在位置</div>
           <h3>头部 OTA 大厂 · AI Lab</h3>
           <div class="t-role">AI 产品经理（产品架构与转型主导）· 出海内容增长 AI 中台</div>
-          <p class="t-desc">0-1 主导多 Agent 营销中台；MVP 验证单位效率后，作为成功案例推动核心事业群（BG）级 AI 化转型立项启动（详见旗舰章节）。</p>
+          <p class="t-desc">0-1 主导多 Agent 内容增长中台；MVP 验证单位效率后，作为成功案例推动核心事业群（BG）级 AI 化转型立项启动（详见旗舰章节）。</p>
           <ul>
-            <li><strong>组织设计：</strong>多层级 3 小时深度访谈 → 用"需求四象限 + 伪需求过滤"从 7 个环节锁定 2 个 P0 刚需，毙掉 2 个伪需求</li>
+            <li><strong>需求诊断：</strong>多层级 3 小时深度访谈 → 用"需求四象限 + 伪需求过滤"从 7 个环节锁定 2 个 P0 刚需，毙掉 2 个伪需求</li>
             <li><strong>工程资产：</strong>《Agent 实施手册 V2》《MCP / Skill 规范》可移交；23 项埋点 Schema + AARRR 映射 + 三受众分层看板</li>
             <li><strong>带教：</strong>3 UI + 5+ 开发统筹，3 实习生 + 1 正岗产品，"人人用 Agent / 人人 Vibe Coding"</li>
           </ul>
