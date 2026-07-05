@@ -3,298 +3,50 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>klein fx</title>
+<title>obsidian glass video</title>
 <style>
-  html,body{margin:0;height:100%;background:transparent;overflow:hidden}
-  canvas{display:block;width:100vw;height:100vh}
+  /* 「曜黑玻璃」主题背景层：全屏静音循环视频（Mux HLS），黑底兜底。
+     调参: VIDEO_SRC 换流地址 / video 的 opacity 控制明暗 */
+  html,body{margin:0;height:100%;background:#000;overflow:hidden}
+  video{width:100vw;height:100vh;object-fit:cover;display:block;opacity:1}
+  /* 流挂掉/加载中兜底: 极淡的白色雾光,保证不是死黑 */
+  #fallback{position:fixed;inset:0;pointer-events:none;
+    background:
+      radial-gradient(60% 50% at 70% 20%, rgba(255,255,255,.07), transparent 70%),
+      radial-gradient(40% 40% at 20% 85%, rgba(255,255,255,.04), transparent 70%);}
 </style>
-<script type="importmap">
-{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.module.js" } }
-</script>
 </head>
 <body>
-<canvas id="c"></canvas>
-<script type="module">
-import * as THREE from 'three';
+<div id="fallback"></div>
+<video id="v" autoplay muted loop playsinline></video>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js"></script>
+<script>
+(function () {
+  var VIDEO_SRC = 'https://stream.mux.com/kimF2ha9zLrX64H00UgLGPflCzNtl1T0215MlAmeOztv8.m3u8';
+  var video = document.getElementById('v');
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/* ============================================================
-   克莱因蓝主题背景特效 — klein-fx
-   透明画布，父页面提供克莱因蓝底 (#002FA7) 作衬托。
-   美学：极简、笃定、画廊装置感；白/金元素以低-中透明度浮于深蓝之上。
-   ------------------------------------------------------------
-   ★★★ 微调面板 TUNING —— 想改密度/透明度/位置，只动这里 ★★★
-   ============================================================ */
-const CFG = {
-  // —— 配色（特效元素本身，底色由父页面提供）——
-  colWhite : '#ffffff',   // 纯白：几何描边、稀疏点
-  colGold  : '#ffe14d',   // 金色点缀：微尘、少量亮点
-  colGlow  : '#3f6fff',   // 柔光呼吸的蓝（比底色略亮，营造光晕层次）
+  function hideFallback(){ document.getElementById('fallback').style.display = 'none'; }
 
-  // —— 各层透明度（深蓝底上要有呼吸感但不糊住正文）——
-  ringOpacity   : 0.16,   // 几何线框（圆环/方框）描边透明度 0.10–0.20
-  gridOpacity   : 0.14,   // 点阵/稀疏白点透明度
-  dustOpacity   : 0.55,   // 金色微尘 additive 峰值（很淡，靠数量堆叠观感）
-  glowOpacity   : 0.22,   // 柔光呼吸峰值透明度（大面积，务必克制）
-  accentOpacity : 0.85,   // 少量金色亮点（画龙点睛，数量极少）
-
-  // —— 密度（密集区偏边缘，中间留白给文字）——
-  dustCount     : 900,    // 金色微尘粒子数（移动端自动减半）
-  gridCount     : 140,    // 稀疏白点数
-  accentCount   : 7,      // 金色亮点数（宁少勿多）
-
-  // —— 运动（一律极缓、优雅）——
-  ringSpin      : 0.010,  // 线框旋转基速 (rad/s 量级)
-  dustDrift     : 0.006,  // 微尘整体漂移
-  glowSpeed     : 0.045,  // 柔光呼吸/游走速度
-  parallax      : 0.10,   // 光标视差强度（丝滑、轻微）
-
-  // —— 构图：整体 group 偏移，把密集元素推向右侧/边缘，中间留白 ——
-  //   x 越大越靠右；移动端收窄。
-  groupX_desktop: 3.2,
-  groupX_mobile : 0.8,
-  groupY        : 0.4,
-};
-
-const canvas = document.getElementById('c');
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-renderer.setPixelRatio(Math.min(devicePixelRatio, 1.6));
-renderer.setClearColor(0x000000, 0);   // 透明背景
-
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(50, innerWidth/innerHeight, 0.1, 200);
-camera.position.set(0, 0, 16);
-
-const mobile = innerWidth < 760;
-const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-// 密集几何区偏右，中央留白给标题/正文
-const root = new THREE.Group();
-root.position.set(mobile ? CFG.groupX_mobile : CFG.groupX_desktop, CFG.groupY, 0);
-scene.add(root);
-
-/* ---------- 圆形柔光贴图（微尘/亮点用）---------- */
-function softDot(r, g, b){
-  const t=document.createElement('canvas'); t.width=t.height=64;
-  const x=t.getContext('2d'); const gr=x.createRadialGradient(32,32,0,32,32,32);
-  gr.addColorStop(0,`rgba(${r},${g},${b},1)`);
-  gr.addColorStop(.35,`rgba(${r},${g},${b},.6)`);
-  gr.addColorStop(1,`rgba(${r},${g},${b},0)`);
-  x.fillStyle=gr; x.fillRect(0,0,64,64); return new THREE.CanvasTexture(t);
-}
-// 大范围羽化贴图（柔光呼吸用）
-function haloTex(){
-  const t=document.createElement('canvas'); t.width=t.height=256;
-  const x=t.getContext('2d'); const g=x.createRadialGradient(128,128,0,128,128,128);
-  g.addColorStop(0,'rgba(255,255,255,.9)');
-  g.addColorStop(.3,'rgba(220,230,255,.4)');
-  g.addColorStop(.65,'rgba(150,180,255,.12)');
-  g.addColorStop(1,'rgba(120,150,255,0)');
-  x.fillStyle=g; x.fillRect(0,0,256,256); return new THREE.CanvasTexture(t);
-}
-const goldSprite  = softDot(255, 225, 100);   // 暖金
-const whiteSprite = softDot(255, 255, 255);   // 纯白
-const halo        = haloTex();
-
-/* ============================================================
-   ① 极简几何线框 —— 细白描边的圆环 / 方框，轻微景深与缓慢旋转
-   opacity ~0.14–0.16，稀疏摆放，偏画面右侧
-   ============================================================ */
-const geoLayer = new THREE.Group(); root.add(geoLayer);
-
-function ringOutline(radius, z, tilt){
-  const m = new THREE.Mesh(
-    new THREE.RingGeometry(radius, radius + 0.018, 180),
-    new THREE.MeshBasicMaterial({ color: CFG.colWhite, transparent:true, opacity: CFG.ringOpacity, side:THREE.DoubleSide, depthWrite:false })
-  );
-  m.rotation.set(tilt.x, tilt.y, tilt.z); m.position.z = z;
-  return m;
-}
-function squareOutline(size, z, tilt){
-  const h = size/2;
-  const pts = [ new THREE.Vector3(-h,-h,0), new THREE.Vector3(h,-h,0), new THREE.Vector3(h,h,0), new THREE.Vector3(-h,h,0), new THREE.Vector3(-h,-h,0) ];
-  const g = new THREE.BufferGeometry().setFromPoints(pts);
-  const l = new THREE.Line(g, new THREE.LineBasicMaterial({ color: CFG.colWhite, transparent:true, opacity: CFG.ringOpacity, depthWrite:false }));
-  l.rotation.set(tilt.x, tilt.y, tilt.z); l.position.z = z;
-  return l;
-}
-
-// 稀疏摆放：不同尺度/景深，互不重叠，营造装置感
-const r1 = ringOutline(3.4, -2, {x:Math.PI*0.5, y:0.15, z:0});      // 大环，近水平
-const r2 = ringOutline(2.1, -5, {x:Math.PI*0.42, y:-0.2, z:0.3});   // 中环，稍远
-const r3 = ringOutline(1.15, 1, {x:Math.PI*0.55, y:0.1, z:0});      // 小环，靠前
-const sq1 = squareOutline(4.6, -7, {x:0.3, y:0.4, z:Math.PI*0.08}); // 大方框，远景
-const sq2 = squareOutline(1.7, -1, {x:0.2, y:-0.3, z:Math.PI*0.02});// 小方框
-geoLayer.add(r1, r2, r3, sq1, sq2);
-// 各自不同的缓慢旋转轴/速率（loop 里驱动）
-const spinners = [
-  {o:r1,  ax:'z', k: 1.0},
-  {o:r2,  ax:'z', k:-0.7},
-  {o:r3,  ax:'z', k: 1.4},
-  {o:sq1, ax:'y', k: 0.5},
-  {o:sq2, ax:'z', k:-1.1},
-];
-
-/* ============================================================
-   ② 稀疏白点阵 —— 极简点，白色，低透明度，散布偏边缘
-   ============================================================ */
-const GN = mobile ? Math.round(CFG.gridCount*0.55) : CFG.gridCount;
-const gp = new Float32Array(GN*3), gs = new Float32Array(GN);
-for(let i=0;i<GN;i++){
-  // 环形偏置：让点更多落在外圈（边缘），中央稀疏 → 给文字留白
-  const ang = Math.random()*Math.PI*2;
-  const rad = 3.0 + Math.pow(Math.random(), .5)*7.0;   // 3–10，外圈更密
-  gp[i*3]   = Math.cos(ang)*rad;
-  gp[i*3+1] = Math.sin(ang)*rad*0.7;                   // 竖向压扁
-  gp[i*3+2] = (Math.random()-.5)*10 - 3;
-  gs[i] = Math.random()*1.2 + 0.5;
-}
-const gGeo = new THREE.BufferGeometry();
-gGeo.setAttribute('position', new THREE.BufferAttribute(gp,3));
-gGeo.setAttribute('aSize', new THREE.BufferAttribute(gs,1));
-const gridMat = new THREE.ShaderMaterial({
-  uniforms:{ uTex:{value:whiteSprite}, uPx:{value:Math.min(devicePixelRatio,1.6)}, uOp:{value:CFG.gridOpacity} },
-  transparent:true, depthWrite:false, blending:THREE.NormalBlending,
-  vertexShader:`attribute float aSize; uniform float uPx;
-    void main(){ vec4 mv=modelViewMatrix*vec4(position,1.); gl_PointSize=aSize*uPx*(90./-mv.z); gl_Position=projectionMatrix*mv; }`,
-  fragmentShader:`uniform sampler2D uTex; uniform float uOp;
-    void main(){ float a=texture2D(uTex,gl_PointCoord).a; gl_FragColor=vec4(1.,1.,1.,a*uOp); }`
-});
-const grid = new THREE.Points(gGeo, gridMat); root.add(grid);
-
-/* ============================================================
-   ③ 金色微尘 —— additive，很淡，缓慢流动，遍布全屏（不入 root，独立慢漂）
-   ============================================================ */
-const DN = mobile ? Math.round(CFG.dustCount*0.5) : CFG.dustCount;
-const dp = new Float32Array(DN*3), ds = new Float32Array(DN), dph = new Float32Array(DN);
-for(let i=0;i<DN;i++){
-  dp[i*3]   = (Math.random()-.5)*46;
-  dp[i*3+1] = (Math.random()-.5)*30;
-  dp[i*3+2] = (Math.random()-.5)*26 - 6;
-  ds[i] = Math.random()*1.1 + 0.25;
-  dph[i]= Math.random()*Math.PI*2;
-}
-const dGeo = new THREE.BufferGeometry();
-dGeo.setAttribute('position', new THREE.BufferAttribute(dp,3));
-dGeo.setAttribute('aSize', new THREE.BufferAttribute(ds,1));
-dGeo.setAttribute('aPhase', new THREE.BufferAttribute(dph,1));
-const dustMat = new THREE.ShaderMaterial({
-  uniforms:{
-    uTex:{value:goldSprite}, uPx:{value:Math.min(devicePixelRatio,1.6)},
-    uOp:{value:CFG.dustOpacity}, uTime:{value:0}, uFlow:{value: reduce?0.0:1.0}
-  },
-  transparent:true, depthWrite:false, blending:THREE.AdditiveBlending,
-  vertexShader:`attribute float aSize; attribute float aPhase;
-    uniform float uPx, uTime, uFlow; varying float vTw;
-    void main(){
-      vec3 p=position;
-      p.y += sin(uTime*0.08 + aPhase)*uFlow*0.9;   // 极缓上浮
-      p.x += cos(uTime*0.05 + aPhase)*uFlow*0.6;
-      vTw = 0.55 + 0.45*sin(uTime*0.5 + aPhase);    // 微弱明灭
-      vec4 mv=modelViewMatrix*vec4(p,1.); gl_PointSize=aSize*uPx*(160./-mv.z); gl_Position=projectionMatrix*mv;
-    }`,
-  fragmentShader:`uniform sampler2D uTex; uniform float uOp; varying float vTw;
-    void main(){ float a=texture2D(uTex,gl_PointCoord).a; gl_FragColor=vec4(1.0,0.88,0.40,a*uOp*vTw); }`
-});
-const dust = new THREE.Points(dGeo, dustMat); scene.add(dust);
-
-/* ============================================================
-   ④ 少量金色亮点 —— 画龙点睛，数量极少，稍大稍亮，偏边缘
-   ============================================================ */
-const AN = CFG.accentCount;
-const ap = new Float32Array(AN*3), as = new Float32Array(AN), aph = new Float32Array(AN);
-for(let i=0;i<AN;i++){
-  const ang = Math.random()*Math.PI*2;
-  const rad = 4.5 + Math.random()*5.0;
-  ap[i*3]   = Math.cos(ang)*rad;
-  ap[i*3+1] = Math.sin(ang)*rad*0.7;
-  ap[i*3+2] = (Math.random()-.5)*6 - 1;
-  as[i] = Math.random()*2.0 + 2.2;
-  aph[i]= Math.random()*Math.PI*2;
-}
-const aGeo = new THREE.BufferGeometry();
-aGeo.setAttribute('position', new THREE.BufferAttribute(ap,3));
-aGeo.setAttribute('aSize', new THREE.BufferAttribute(as,1));
-aGeo.setAttribute('aPhase', new THREE.BufferAttribute(aph,1));
-const accentMat = new THREE.ShaderMaterial({
-  uniforms:{ uTex:{value:goldSprite}, uPx:{value:Math.min(devicePixelRatio,1.6)}, uOp:{value:CFG.accentOpacity}, uTime:{value:0}, uTw:{value: reduce?0.0:1.0} },
-  transparent:true, depthWrite:false, blending:THREE.AdditiveBlending,
-  vertexShader:`attribute float aSize; attribute float aPhase; uniform float uPx, uTime, uTw; varying float vB;
-    void main(){ vB = 1.0 + uTw*0.4*sin(uTime*0.9 + aPhase);
-      vec4 mv=modelViewMatrix*vec4(position,1.); gl_PointSize=aSize*uPx*(200./-mv.z); gl_Position=projectionMatrix*mv; }`,
-  fragmentShader:`uniform sampler2D uTex; uniform float uOp; varying float vB;
-    void main(){ float a=texture2D(uTex,gl_PointCoord).a; gl_FragColor=vec4(1.0,0.90,0.45,a*uOp*vB); }`
-});
-const accents = new THREE.Points(aGeo, accentMat); root.add(accents);
-
-/* ============================================================
-   ⑤ 柔光呼吸 —— 大面积单色蓝光晕，极缓游走 + 呼吸，置于最远景
-   靠 additive 在深蓝底上抬亮一小片，营造光的呼吸感
-   ============================================================ */
-const glowMat = new THREE.SpriteMaterial({
-  map: halo, color: new THREE.Color(CFG.colGlow),
-  transparent:true, opacity: CFG.glowOpacity, depthWrite:false, blending:THREE.AdditiveBlending
-});
-const glow = new THREE.Sprite(glowMat);
-glow.scale.set(38, 38, 1);
-glow.position.set(6, 3, -22);   // 偏右上、最远景
-scene.add(glow);
-// 第二片更淡的白光晕，位置相对，增强层次
-const glow2Mat = new THREE.SpriteMaterial({ map: halo, color: 0xffffff, transparent:true, opacity: CFG.glowOpacity*0.5, depthWrite:false, blending:THREE.AdditiveBlending });
-const glow2 = new THREE.Sprite(glow2Mat);
-glow2.scale.set(26, 26, 1);
-glow2.position.set(-8, -4, -18);
-scene.add(glow2);
-
-/* ---------- 光标视差（父页面 postMessage + 自身 mousemove）---------- */
-let px=0, py=0, tx=0, ty=0;
-addEventListener('message',(e)=>{ if(e.data && e.data.t==='pointer'){ px=e.data.x; py=e.data.y; } });
-addEventListener('mousemove',(e)=>{ px=e.clientX/innerWidth-.5; py=e.clientY/innerHeight-.5; });
-
-function resize(){
-  renderer.setSize(innerWidth, innerHeight, false);
-  camera.aspect = innerWidth/innerHeight;
-  camera.updateProjectionMatrix();
-}
-resize();
-addEventListener('resize', resize);
-
-/* ---------- 渲染循环（不加 document.hidden 判断，透明背景常驻渲染）---------- */
-const clock = new THREE.Clock();
-(function loop(){
-  requestAnimationFrame(loop);
-  if (document.hidden) return;   // 后台/隐藏时不渲染,省电
-  const dt = Math.min(clock.getDelta(), .05);
-  const t  = clock.elapsedTime;
-
-  dustMat.uniforms.uTime.value   = t;
-  accentMat.uniforms.uTime.value = t;
-
-  if(!reduce){
-    // 几何线框各自极缓旋转
-    for(const s of spinners){ s.o.rotation[s.ax] += dt*CFG.ringSpin*s.k; }
-    // 点阵与整体极缓漂移
-    grid.rotation.z += dt*CFG.dustDrift*0.5;
-    dust.rotation.y += dt*CFG.dustDrift;
-    // 柔光呼吸：缓慢游走 + 缩放呼吸
-    const b = 1.0 + 0.12*Math.sin(t*CFG.glowSpeed*2.0);
-    glow.scale.set(38*b, 38*b, 1);
-    glow.position.x = 6 + Math.sin(t*CFG.glowSpeed)*3.0;
-    glow.position.y = 3 + Math.cos(t*CFG.glowSpeed*0.8)*2.0;
-    glowMat.opacity  = CFG.glowOpacity * (0.75 + 0.25*Math.sin(t*CFG.glowSpeed*1.5));
-    glow2.position.x = -8 + Math.cos(t*CFG.glowSpeed*0.7)*2.5;
-    glow2Mat.opacity = CFG.glowOpacity*0.5 * (0.7 + 0.3*Math.cos(t*CFG.glowSpeed*1.2));
+  if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    // Safari 原生 HLS
+    video.src = VIDEO_SRC;
+    video.addEventListener('loadeddata', hideFallback);
+  } else if (window.Hls && Hls.isSupported()) {
+    var hls = new Hls();
+    hls.loadSource(VIDEO_SRC);
+    hls.attachMedia(video);
+    hls.on(Hls.Events.FRAG_LOADED, hideFallback);
+    hls.on(Hls.Events.ERROR, function (_, data) {
+      if (data.fatal) { hls.destroy(); video.style.display = 'none'; }  // 流挂了→雾光兜底
+    });
+  } else {
+    video.style.display = 'none';
   }
 
-  // 光标视差：轻微、丝滑
-  tx += (px - tx) * 0.045;
-  ty += (py - ty) * 0.045;
-  camera.position.x = tx * CFG.parallax * 30;
-  camera.position.y = -ty * CFG.parallax * 22;
-  root.rotation.y = tx * CFG.parallax * 0.9;
-  root.rotation.x = ty * CFG.parallax * 0.7;
-  camera.lookAt(root.position.x*0.25, root.position.y*0.25, 0);
-
-  renderer.render(scene, camera);
+  video.addEventListener('error', function(){ video.style.display = 'none'; });
+  // 降低运动偏好: 视频定格第一帧
+  if (reduce) video.addEventListener('loadeddata', function(){ video.pause(); });
 })();
 </script>
 </body>

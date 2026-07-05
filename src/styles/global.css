@@ -570,27 +570,62 @@ html:is([data-theme="paper"], [data-theme="snow"], [data-theme="hud"]) .prose pr
 html:is([data-theme="paper"], [data-theme="snow"], [data-theme="hud"]) .prose code { background: rgba(15, 118, 110, .1); color: var(--star); }
 html[data-theme="paper"] body { background-image: radial-gradient(1100px 560px at 88% -8%, rgba(221, 81, 43, .05), transparent 60%); }
 
-/* ───── 🔵 克莱因蓝 ───── */
+/* ───── ⚫️ 曜黑玻璃 · OBSIDIAN GLASS（原克莱因蓝槽位，data-theme 键保持 klein 兼容 localStorage）
+   参照: 纯黑底 + liquid glass + Instrument Serif 渐变大标 + 全屏背景视频(klein-fx.html) ───── */
 html[data-theme="klein"] {
-  --space-0: #002FA7; --space-2: #0036c4; --space-3: rgba(255,255,255,.07);
-  --space-1: #002790;
-  --ink: #ffffff; --ink2: rgba(255,255,255,.78); --ink3: rgba(255,255,255,.5); --ink-strong: #ffffff;
-  --star: #ffffff; --nebula: #ffe14d; --flare: #ffe14d; --aurora: #7dffc4; --rose: #ffb3c1;
-  --line: rgba(255, 255, 255, .22); --line2: rgba(255, 255, 255, .35);
+  --space-0: #000000; --space-1: #050506; --space-2: #0a0a0c; --space-3: rgba(255,255,255,.04);
+  --ink: #ffffff; --ink2: rgba(255,255,255,.8); --ink3: rgba(255,255,255,.45); --ink-strong: #ffffff;
+  --star: #ffffff; --nebula: rgba(255,255,255,.7); --flare: #ffffff; --aurora: #7dffc4; --rose: #ffb3c1;
+  --line: rgba(255, 255, 255, .10); --line2: rgba(255, 255, 255, .20);
   --glow-star: none; --glow-nebula: none;
 }
-html[data-theme="klein"] body { background-image: none; }
-html[data-theme="klein"] .nav { background: rgba(0, 47, 167, .82); }
+html[data-theme="klein"] body { background-image: none; letter-spacing: -0.01em; }
+html[data-theme="klein"] ::selection { background: #fff; color: #000; }
+/* 玻璃胶囊导航（liquid glass navbar） */
+html[data-theme="klein"] .nav { background: transparent; border-bottom: none;
+  backdrop-filter: none; -webkit-backdrop-filter: none; padding-top: 10px; }
+html[data-theme="klein"] .nav-inner { max-width: 1020px; border-radius: 9999px; padding: 12px 26px;
+  background: rgba(255,255,255,.04);
+  backdrop-filter: blur(16px) saturate(180%); -webkit-backdrop-filter: blur(16px) saturate(180%);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,.1); }
+/* Instrument Serif 大标 + 白色纵向渐变字（CJK 回落 Noto Serif） */
 html[data-theme="klein"] :is(.hero h1, .chapter-head h2, .epigraph) {
-  background: none; -webkit-text-fill-color: #fff; filter: none;
+  font-family: 'Instrument Serif', var(--serif);
+  font-weight: 500; font-style: normal; letter-spacing: -0.01em;
+  background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,.95) 55%, rgba(255,255,255,.7) 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; filter: none;
 }
-html[data-theme="klein"] :is(.card, .proto-item, .lib-series, .archive-box, .kg-shell, .flagship-quote, .pipeline, .dial) {
-  background: rgba(255, 255, 255, .06);
+html[data-theme="klein"] .kicker { color: rgba(255,255,255,.8); font-weight: 500;
+  letter-spacing: .2em; text-shadow: none; }
+/* 液态玻璃卡片: 极淡底 + 顶部内高光 + 上下渐变描边(xor mask 环) */
+html[data-theme="klein"] :is(.card, .proto-item, .lib-series, .archive-box, .kg-shell, .flagship-quote, .pipeline, .dial, .product-card) {
+  background: rgba(255,255,255,.01); background-blend-mode: luminosity;
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  border-color: transparent;
+  box-shadow: inset 0 1px 1px rgba(255,255,255,.1);
 }
-html[data-theme="klein"] .pipe-node { background: rgba(0, 20, 90, .35); }
-html[data-theme="klein"] .btn.primary { background: #fff; color: #002FA7; box-shadow: none; }
-html[data-theme="klein"] .chip { color: #fff; border-color: rgba(255,255,255,.4); background: rgba(255,255,255,.08); }
-html[data-theme="klein"] .hero h1 { font-style: italic; }
+html[data-theme="klein"] :is(.card, .product-card, .dial)::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1.4px; pointer-events: none;
+  background: linear-gradient(180deg, rgba(255,255,255,.45) 0%, rgba(255,255,255,.15) 20%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(255,255,255,.15) 80%, rgba(255,255,255,.45) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+}
+html[data-theme="klein"] :is(.card, .product-card):hover { border-color: transparent;
+  box-shadow: inset 0 1px 1px rgba(255,255,255,.18), 0 18px 50px rgba(0,0,0,.6); }
+html[data-theme="klein"] .pipe-node { background: rgba(255,255,255,.03); }
+/* 胶囊按钮（Get early access 制式: 细白描边 + hover 提亮） */
+html[data-theme="klein"] .btn { border-radius: 9999px;
+  border: 1px solid rgba(255,255,255,.10); color: rgba(255,255,255,.9);
+  background: rgba(255,255,255,.02); backdrop-filter: blur(6px); }
+html[data-theme="klein"] .btn:hover { border-color: rgba(255,255,255,.30);
+  background: rgba(255,255,255,.04); box-shadow: none; color: #fff; }
+html[data-theme="klein"] .btn.primary { background: #fff; color: #000; border-color: #fff; box-shadow: none; }
+html[data-theme="klein"] .btn.primary:hover { background: rgba(255,255,255,.88); color: #000; box-shadow: none; }
+html[data-theme="klein"] .chip { border-radius: 9999px; color: rgba(255,255,255,.8);
+  border-color: rgba(255,255,255,.15); background: rgba(255,255,255,.04); }
+html[data-theme="klein"] .dial .num { color: #fff; text-shadow: none; }
+html[data-theme="klein"] .chapter-head .ch-no em { color: #fff; }
 
 /* ───── 🖌 动态水墨（原全息粒子槽位，data-theme 键保持 hud 以兼容 localStorage）───── */
 html[data-theme="hud"] {
@@ -760,31 +795,11 @@ html[data-theme="paper"] .t-date { font-family: var(--serif); font-weight: 600; 
 html[data-theme="paper"] .chip { border-radius: 3px; }
 html[data-theme="paper"] .btn { border-radius: 3px; }
 
-/* ───── 🔵 克莱因蓝 · 颗粒 + 巨型描边水印 + 荧光黄划线 ───── */
-html[data-theme="klein"] body::before {
-  content: ''; position: fixed; inset: 0; z-index: 2; pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='0.10'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)'/%3E%3C/svg%3E");
-  mix-blend-mode: overlay;
-}
-html[data-theme="klein"] body::after {
-  content: 'MINGFEI JI ✦ FDE';
-  position: fixed; left: -2vw; bottom: -4vw; z-index: 0;
-  font-family: var(--serif); font-style: italic; font-weight: 900;
-  font-size: 13vw; line-height: 1; white-space: nowrap;
-  color: transparent; -webkit-text-stroke: 1.5px rgba(255, 255, 255, .14);
-  pointer-events: none; letter-spacing: .02em;
-}
-html[data-theme="klein"] ::selection { background: #ffe14d; color: #002FA7; }
-html[data-theme="klein"] .chapter-head h2 { font-style: italic; }
-html[data-theme="klein"] .hero .sub {
-  display: inline-block;
-  background: linear-gradient(transparent 62%, rgba(255, 225, 77, .4) 62%);
-}
-html[data-theme="klein"] .card { border-radius: 2px; }
-html[data-theme="klein"] .card:hover { border-color: #ffe14d; box-shadow: 0 18px 50px rgba(0, 10, 60, .5); }
-html[data-theme="klein"] .chapter-head .ch-no em { color: #ffe14d; }
-html[data-theme="klein"] .btn { border-radius: 2px; }
-html[data-theme="klein"] .dial .num { color: #ffe14d; text-shadow: none; }
+/* ───── ⚫️ 曜黑玻璃 · 细节层（去蓝底颗粒/巨型水印/荧光黄） ───── */
+html[data-theme="klein"] .chapter-head h2 { font-style: normal; }
+html[data-theme="klein"] .hero .sub { background: none; }
+html[data-theme="klein"] .nav-logo { font-family: 'Instrument Serif', var(--serif); }
+html[data-theme="klein"] .footer { background: transparent; border-top: 1px solid rgba(255,255,255,.08); }
 
 /* ───── 🖌 动态水墨 · 纸纹（去掉全息时代残留的暗角与青色扫描线）───── */
 html[data-theme="hud"] body::before {
