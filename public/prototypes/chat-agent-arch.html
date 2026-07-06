@@ -21,9 +21,12 @@
     color:var(--ink); font-family:var(--mono);
     min-height:100vh; padding:40px 24px 76px; line-height:1.6; -webkit-font-smoothing:antialiased;
   }
-  .stars{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-  .stars i{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;animation:tw 4s infinite}
-  @keyframes tw{0%,100%{opacity:.04}50%{opacity:.5}}
+  /* 主站「星辰大海」同款星空（色温星场/银河带/流星/彗星, 复用 /cosmos-nebula.html）*/
+  #nebula-bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+  #nebula-bg iframe{width:100vw;height:100vh;border:0;display:block}
+  /* 文字保护柔幕: 正文偏左, 底色向右渐隐压住亮斑 */
+  #nebula-bg::after{content:'';position:absolute;inset:0;
+    background:linear-gradient(100deg, rgba(7,11,22,.62) 0%, rgba(7,11,22,.34) 44%, rgba(7,11,22,.08) 68%, transparent 82%)}
   .wrap{position:relative;z-index:1;max-width:1140px;margin:0 auto}
 
   header{margin-bottom:8px}
@@ -95,7 +98,9 @@
 </style>
 </head>
 <body>
-<div class="stars" id="stars"></div>
+<div id="nebula-bg" aria-hidden="true">
+  <iframe src="/cosmos-nebula.html" tabindex="-1" scrolling="no" title=""></iframe>
+</div>
 <div class="wrap">
   <header>
     <div class="kick">CASE · Runtime Architecture & Logic Trace（脱敏）</div>
@@ -177,9 +182,11 @@
 </div>
 
 <script>
-  // 星点
-  const sc=document.getElementById('stars');
-  for(let i=0;i<64;i++){const e=document.createElement('i');e.style.left=Math.random()*100+'%';e.style.top=Math.random()*100+'%';e.style.animationDelay=(Math.random()*4)+'s';sc.appendChild(e);}
+  // 星空视差: 把指针坐标转发给背景 iframe（背景层收不到鼠标事件）
+  addEventListener('pointermove', (e)=>{
+    const f = document.querySelector('#nebula-bg iframe');
+    if (f && f.contentWindow) f.contentWindow.postMessage({t:'pointer', x:e.clientX/innerWidth-.5, y:e.clientY/innerHeight-.5}, '*');
+  }, {passive:true});
 
   // 脱敏示意场景：展示功能逻辑，非真实日志
   const STEPS = [
