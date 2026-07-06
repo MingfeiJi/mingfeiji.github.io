@@ -670,6 +670,10 @@ html[data-theme="cyber"] :is(.hero h1, .chapter-head h2, .epigraph) {
   -webkit-text-fill-color: transparent; filter: none;
   text-shadow: 0 0 34px rgba(0, 240, 255, .3);
 }
+/* RGB 色散故障感: 用双层 drop-shadow 模拟红/青偏移(不影响渐变clip) */
+html[data-theme="cyber"] .hero h1 {
+  filter: drop-shadow(2px 0 0 rgba(255,45,120,.45)) drop-shadow(-2px 0 0 rgba(0,240,255,.45));
+}
 html[data-theme="cyber"] :is(.card, .proto-item, .lib-series, .archive-box, .kg-shell, .flagship-quote, .pipeline, .dial) {
   background: rgba(8, 14, 30, .74);
 }

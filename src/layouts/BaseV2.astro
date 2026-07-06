@@ -55,6 +55,7 @@ const {
     <script is:inline>
       (function () {
         var t = localStorage.getItem('mfj-theme') || 'cosmos';
+        if (t === 'paper') { t = 'hud'; localStorage.setItem('mfj-theme', t); }  // 宣纸已下架→迁移到水墨
         document.documentElement.setAttribute('data-theme', t);
       })();
     </script>
@@ -115,7 +116,6 @@ const {
       <div class="tp-title">THEME · 选一种你喜欢的</div>
       <button class="theme-opt" data-t="cosmos"><span class="sw"><i style="background:#030412"></i><i style="background:#7dd3fc"></i><i style="background:#a78bfa"></i></span>🌌 星辰大海</button>
       <button class="theme-opt" data-t="hud"><span class="sw"><i style="background:#F7F5EF"></i><i style="background:#1a1a1a"></i><i style="background:#9E2B25"></i></span>🖌 动态水墨</button>
-      <button class="theme-opt" data-t="paper"><span class="sw"><i style="background:#F5F2EA"></i><i style="background:#172441"></i><i style="background:#DD512B"></i></span>📜 宣纸编辑部</button>
       <button class="theme-opt" data-t="klein"><span class="sw"><i style="background:#000"></i><i style="background:#fff"></i><i style="background:#8a8a8a"></i></span>⚫️ 曜黑玻璃</button>
       <button class="theme-opt" data-t="cyber"><span class="sw"><i style="background:#030509"></i><i style="background:#00f0ff"></i><i style="background:#c026ff"></i></span>🛰 赛博全息</button>
       <button class="theme-opt" data-t="snow"><span class="sw"><i style="background:#FAFAF8"></i><i style="background:#18181b"></i><i style="background:#1d4ed8"></i></span>⬜️ 月白极简</button>
