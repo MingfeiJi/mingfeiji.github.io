@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>素材资产库 · 端到端流程与表结构</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root{
+  --paper:#EBEEF3; --card:#FFFFFF; --card-2:#F7F9FB;
+  --ink:#141A22; --ink-2:#4E5763; --ink-3:#8A93A0;
+  --rule:#E1E6EC; --rule-2:#CFD6DE;
+  --font-d:'Space Grotesk',system-ui,sans-serif;
+  --font-b:'Inter','PingFang SC','Microsoft YaHei',system-ui,sans-serif;
+  --font-m:'IBM Plex Mono',ui-monospace,monospace;
+
+  --c1:#B0740F; --c1-fill:#F8EDD3; --c1-line:#E4AC3E; --c1-ink:#6A470B;   /* collection_task 采集任务 */
+  --c2:#0B767F; --c2-fill:#D4EEF0; --c2-line:#40B0B8; --c2-ink:#094E53;   /* asset 素材主表 */
+  --c3:#514BC1; --c3-fill:#E5E3FA; --c3-line:#8983E4; --c3-ink:#35307C;   /* asset_clip 切片 */
+  --c0:#5A6470; --c0-fill:#E7ECF1; --c0-line:#A8B2BE; --c0-ink:#363F4B;   /* 外部/系统 */
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:var(--font-b); line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1120px; margin:0 auto; padding:56px 28px 72px}
+
+/* ---------- header ---------- */
+.head{margin-bottom:44px}
+.eyebrow{
+  font-family:var(--font-m); font-size:12px; font-weight:500; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--ink-3); margin:0 0 14px;
+}
+h1{
+  font-family:var(--font-d); font-weight:600; font-size:38px; line-height:1.12;
+  margin:0 0 12px; letter-spacing:-.01em;
+}
+.sub{font-size:15px; color:var(--ink-2); max-width:640px; margin:0 0 28px}
+
+.legend{
+  display:flex; flex-wrap:wrap; gap:10px 26px; align-items:center;
+  padding:16px 18px; background:var(--card); border:1px solid var(--rule);
+  border-radius:12px;
+}
+.leg-group{display:flex; align-items:center; gap:14px; flex-wrap:wrap}
+.leg-label{font-family:var(--font-m); font-size:11px; color:var(--ink-3); letter-spacing:.08em; text-transform:uppercase}
+.leg-item{display:inline-flex; align-items:center; gap:7px; font-size:13px; color:var(--ink-2)}
+.sw{width:13px; height:13px; border-radius:4px; border:1px solid}
+.sw.t1{background:var(--c1-fill); border-color:var(--c1-line)}
+.sw.t2{background:var(--c2-fill); border-color:var(--c2-line)}
+.sw.t3{background:var(--c3-fill); border-color:var(--c3-line)}
+.leg-code{font-family:var(--font-m); font-size:12px}
+.divider{width:1px; height:20px; background:var(--rule-2)}
+.op-key{display:inline-flex; align-items:center; gap:5px; font-size:12.5px; color:var(--ink-2)}
+.op{
+  font-family:var(--font-m); font-size:10.5px; font-weight:600; letter-spacing:.04em;
+  padding:1px 6px; border-radius:5px;
+}
+.op.w{background:#1B2530; color:#fff}
+.op.r{background:transparent; color:var(--ink-2); border:1px solid var(--rule-2)}
+.op.u{background:var(--c1-fill); color:var(--c1-ink)}
+
+/* ---------- flow ---------- */
+.phase{margin-top:38px}
+.phase-head{display:flex; align-items:baseline; gap:14px; margin-bottom:20px; flex-wrap:wrap}
+.phase-idx{font-family:var(--font-d); font-weight:700; font-size:15px; color:var(--ink-3)}
+.phase-name{font-family:var(--font-d); font-weight:600; font-size:22px; letter-spacing:-.01em}
+.phase-note{font-family:var(--font-m); font-size:12px; color:var(--ink-3)}
+.phase-note b{font-weight:600}
+.pn1 b{color:var(--c1)} .pn2 b{color:var(--c2)} .pn3 b{color:var(--c3)} .pn0 b{color:var(--c0)}
+
+.steps{position:relative}
+.steps::before{content:''; position:absolute; left:24px; top:12px; bottom:12px; width:2px; background:var(--rule-2)}
+
+.step{
+  display:grid; grid-template-columns:50px 1fr; gap:18px;
+  margin-bottom:12px; position:relative;
+  animation:rise .5s cubic-bezier(.2,.7,.3,1) both;
+}
+.rail{display:flex; justify-content:center; padding-top:2px}
+.num{
+  width:34px; height:34px; border-radius:50%; background:var(--card);
+  border:2px solid var(--c0-line); display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-d); font-weight:600; font-size:14px; color:var(--ink-2);
+  position:relative; z-index:1; flex-shrink:0;
+}
+.num.n1{border-color:var(--c1-line); color:var(--c1)}
+.num.n2{border-color:var(--c2-line); color:var(--c2)}
+.num.n3{border-color:var(--c3-line); color:var(--c3)}
+
+.card{
+  background:var(--card); border:1px solid var(--rule); border-radius:12px;
+  padding:15px 17px 14px; transition:border-color .18s, transform .18s;
+}
+.card:hover{border-color:var(--rule-2); transform:translateY(-1px)}
+.card.edge1{border-left:3px solid var(--c1-line)}
+.card.edge2{border-left:3px solid var(--c2-line)}
+.card.edge3{border-left:3px solid var(--c3-line)}
+.card.edge0{border-left:3px solid var(--c0-line)}
+
+.step-top{display:flex; align-items:center; gap:10px; margin-bottom:5px; flex-wrap:wrap}
+.actor{
+  font-family:var(--font-m); font-size:11px; font-weight:500; color:var(--c0-ink);
+  background:var(--c0-fill); border:1px solid var(--c0-line); border-radius:20px;
+  padding:2px 9px; white-space:nowrap;
+}
+.actor.ext{background:transparent; border-style:dashed}
+.title{font-family:var(--font-d); font-weight:600; font-size:16px; letter-spacing:-.005em}
+.desc{font-size:13.5px; color:var(--ink-2); margin:0 0 11px}
+
+.fields{display:flex; flex-direction:column; gap:7px}
+.oprow{display:flex; gap:8px; align-items:flex-start; flex-wrap:wrap}
+.oprow .op{margin-top:2px; flex-shrink:0}
+.chips{display:flex; flex-wrap:wrap; gap:5px}
+.chip{
+  font-family:var(--font-m); font-size:11.5px; padding:2.5px 8px; border-radius:6px;
+  border:1px solid; white-space:nowrap;
+}
+.chip.c1{background:var(--c1-fill); color:var(--c1-ink); border-color:var(--c1-line)}
+.chip.c2{background:var(--c2-fill); color:var(--c2-ink); border-color:var(--c2-line)}
+.chip.c3{background:var(--c3-fill); color:var(--c3-ink); border-color:var(--c3-line)}
+.chip.c0{background:var(--c0-fill); color:var(--c0-ink); border-color:var(--c0-line)}
+.chip em{font-style:normal; opacity:.62}
+
+/* ---------- tables ---------- */
+.tables-head{margin:64px 0 22px}
+.tables-head .phase-name{font-size:24px}
+.tables{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; align-items:start}
+.tbl{background:var(--card); border:1px solid var(--rule); border-radius:14px; overflow:hidden}
+.tbl-head{padding:14px 16px; border-bottom:1px solid var(--rule)}
+.tbl-head.h1{background:var(--c1-fill)} .tbl-head.h2{background:var(--c2-fill)} .tbl-head.h3{background:var(--c3-fill)}
+.tbl-name{font-family:var(--font-m); font-size:15px; font-weight:600}
+.tbl-head.h1 .tbl-name{color:var(--c1-ink)} .tbl-head.h2 .tbl-name{color:var(--c2-ink)} .tbl-head.h3 .tbl-name{color:var(--c3-ink)}
+.tbl-cn{font-size:12.5px; margin-top:2px}
+.tbl-head.h1 .tbl-cn{color:var(--c1)} .tbl-head.h2 .tbl-cn{color:var(--c2)} .tbl-head.h3 .tbl-cn{color:var(--c3)}
+.rows{padding:6px 0}
+.row{display:flex; align-items:baseline; gap:8px; padding:5px 16px; border-left:3px solid transparent}
+.row.new1{border-left-color:var(--c1-line); background:var(--c1-fill)}
+.row.new2{border-left-color:var(--c2-line); background:var(--c2-fill)}
+.row.new3{border-left-color:var(--c3-line); background:var(--c3-fill)}
+.fname{font-family:var(--font-m); font-size:12.5px; font-weight:500; color:var(--ink)}
+.ftype{font-family:var(--font-m); font-size:11px; color:var(--ink-3)}
+.ftag{font-family:var(--font-m); font-size:9.5px; font-weight:600; letter-spacing:.04em; padding:0 4px; border-radius:3px; background:var(--ink); color:#fff}
+.ftag.fk{background:var(--c0-ink)}
+.fnote{font-size:11.5px; color:var(--ink-2); margin-left:auto; text-align:right; max-width:52%}
+.star{color:var(--c2); font-weight:700}
+
+/* ---------- open questions ---------- */
+.open{margin-top:52px; padding:22px 24px; background:var(--card); border:1px dashed var(--rule-2); border-radius:14px}
+.open-t{font-family:var(--font-d); font-weight:600; font-size:17px; margin:0 0 4px}
+.open-s{font-size:13px; color:var(--ink-3); margin:0 0 16px}
+.qlist{display:grid; gap:12px}
+.q{display:grid; grid-template-columns:auto 1fr; gap:12px; align-items:start}
+.qmark{font-family:var(--font-d); font-weight:700; font-size:13px; color:var(--c2); background:var(--c2-fill); border:1px solid var(--c2-line); border-radius:7px; padding:2px 8px; white-space:nowrap}
+.qtext{font-size:13.5px; color:var(--ink-2)}
+.qtext b{color:var(--ink); font-weight:600}
+.qtext code{font-family:var(--font-m); font-size:12px; background:var(--card-2); border:1px solid var(--rule); border-radius:4px; padding:0 4px}
+
+.foot{margin-top:34px; font-size:12px; color:var(--ink-3); font-family:var(--font-m)}
+
+@keyframes rise{from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none}}
+@media (prefers-reduced-motion:reduce){.step{animation:none}}
+
+@media (max-width:820px){
+  .tables{grid-template-columns:1fr}
+  h1{font-size:30px}
+  .fnote{max-width:100%; margin-left:0; text-align:left}
+  .row{flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="head">
+    <p class="eyebrow">素材资产库 · Pipeline</p>
+    <h1>端到端流程与表结构</h1>
+    <p class="sub">采集入库 → 打标 → MAIX 切片向量化 → 检索召回。竖轴为处理主线，每一步标出执行方、操作的表与字段。颜色即字段归属的表。</p>
+
+    <div class="legend">
+      <div class="leg-group">
+        <span class="leg-label">表</span>
+        <span class="leg-item"><span class="sw t1"></span><span class="leg-code">collection_task</span>&nbsp;采集任务</span>
+        <span class="leg-item"><span class="sw t2"></span><span class="leg-code">asset</span>&nbsp;素材主表</span>
+        <span class="leg-item"><span class="sw t3"></span><span class="leg-code">asset_clip</span>&nbsp;切片</span>
+      </div>
+      <span class="divider"></span>
+      <div class="leg-group">
+        <span class="leg-label">操作</span>
+        <span class="op-key"><span class="op w">写</span>新增行</span>
+        <span class="op-key"><span class="op u">改</span>更新字段</span>
+        <span class="op-key"><span class="op r">读</span>查询</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== PHASE 1 ========== -->
+  <section class="phase">
+    <div class="phase-head">
+      <span class="phase-idx">01</span>
+      <span class="phase-name">采集任务</span>
+      <span class="phase-note pn1">写 <b>collection_task</b> · 关键词+平台去重</span>
+    </div>
+    <div class="steps">
+
+      <div class="step" style="animation-delay:.02s">
+        <div class="rail"><div class="num n1">1</div></div>
+        <div class="card edge1">
+          <div class="step-top"><span class="actor">运营</span><span class="title">创建采集任务</span></div>
+          <p class="desc">输入关键词 + 平台，归一化后按唯一键查重；命中则提示「[运营X] 已有相同任务」，可查看结果或仍然创建，不阻断。</p>
+          <div class="fields">
+            <div class="oprow"><span class="op w">写</span><div class="chips">
+              <span class="chip c1">keyword</span><span class="chip c1">normalized_keyword</span><span class="chip c1">platform</span><span class="chip c1">creator</span><span class="chip c1">status<em>=active</em></span>
+            </div></div>
+            <div class="oprow"><span class="op r">约束</span><div class="chips">
+              <span class="chip c1">UNIQUE(normalized_keyword, platform)</span>
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step" style="animation-delay:.06s">
+        <div class="rail"><div class="num n1">2</div></div>
+        <div class="card edge1">
+          <div class="step-top"><span class="actor ext">爬虫</span><span class="title">每日增量抓取</span></div>
+          <p class="desc">按任务持续抓取，返回结果列表：标题、描述、平台原始标签、播放/点赞/收藏、作者、发布时间等，进入入库环节。</p>
+          <div class="fields">
+            <div class="oprow"><span class="op u">改</span><div class="chips"><span class="chip c1">last_run_at</span></div></div>
+            <div class="oprow"><span class="op r">产出</span><div class="chips"><span class="chip c0">抓取结果列表 <em>→ 待运营确认入库</em></span></div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========== PHASE 2 ========== -->
+  <section class="phase">
+    <div class="phase-head">
+      <span class="phase-idx">02</span>
+      <span class="phase-name">入库打标</span>
+      <span class="phase-note pn2">写 <b>asset</b> · 两入口最终 maix_status=pending</span>
+    </div>
+    <div class="steps">
+
+      <div class="step" style="animation-delay:.02s">
+        <div class="rail"><div class="num n2">3</div></div>
+        <div class="card edge2">
+          <div class="step-top"><span class="actor">运营</span><span class="title">手动上传打标</span></div>
+          <p class="desc">从本地/云盘选文件上传，填写表单。必填产线/来源/地区/是否 AI/是否水印，选填类型/人群/场景（多选）。</p>
+          <div class="fields">
+            <div class="oprow"><span class="op w">写</span><div class="chips">
+              <span class="chip c2">source_channel<em>=upload</em></span><span class="chip c2">product_line</span><span class="chip c2">source</span><span class="chip c2">region</span><span class="chip c2">is_ai_generated</span><span class="chip c2">has_watermark</span><span class="chip c2">content_type</span><span class="chip c2">crowd[]</span><span class="chip c2">scene[]</span>
+            </div></div>
+            <div class="oprow"><span class="op u">自动</span><div class="chips">
+              <span class="chip c2">upload_user</span><span class="chip c2">upload_time</span><span class="chip c2">duration</span><span class="chip c2">file_hash</span><span class="chip c2">video_url</span>
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step" style="animation-delay:.06s">
+        <div class="rail"><div class="num n2">4</div></div>
+        <div class="card edge2">
+          <div class="step-top"><span class="actor">运营</span><span class="title">采集入库打标</span></div>
+          <p class="desc">查看采集结果确认入库，同批统一打标（同关键词+平台回来的素材类型基本一致）。来源自动映射，地区取爬虫字段。</p>
+          <div class="fields">
+            <div class="oprow"><span class="op w">写</span><div class="chips">
+              <span class="chip c2">source_channel<em>=collection</em></span><span class="chip c2">collection_task_id<em> FK</em></span><span class="chip c2">source<em>←platform</em></span><span class="chip c2">region<em>←爬虫</em></span><span class="chip c2">product_line</span><span class="chip c2">content_type</span><span class="chip c2">crowd[]</span><span class="chip c2">scene[]</span>
+            </div></div>
+            <div class="oprow"><span class="op u">带入</span><div class="chips">
+              <span class="chip c2">title</span><span class="chip c2">play_count</span><span class="chip c2">digg_count</span><span class="chip c2">collect_count</span><span class="chip c2">viral_score</span><span class="chip c2">author_name</span><span class="chip c2">platform_tags</span><span class="chip c2">source_url</span><span class="chip c2">publish_time</span>
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step" style="animation-delay:.1s">
+        <div class="rail"><div class="num n2">5</div></div>
+        <div class="card edge2">
+          <div class="step-top"><span class="actor">系统</span><span class="title">入库去重</span></div>
+          <p class="desc">比对文件指纹（采集再比源链接）。命中则展示已有素材（上传人/产线/标签/时间）与 [跳过]/[仍然入库]。提示不阻断——不同产线复用同一视频是合理场景。</p>
+          <div class="fields">
+            <div class="oprow"><span class="op r">索引</span><div class="chips">
+              <span class="chip c2">file_hash <em>非唯一</em></span><span class="chip c2">source_url <em>非唯一</em></span>
+            </div></div>
+            <div class="oprow"><span class="op u">结果</span><div class="chips"><span class="chip c2">maix_status<em>=pending</em></span></div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========== PHASE 3 ========== -->
+  <section class="phase">
+    <div class="phase-head">
+      <span class="phase-idx">03</span>
+      <span class="phase-name">MAIX 处理</span>
+      <span class="phase-note pn3">写 <b>asset_clip</b> · 改 asset 状态 → vectorized</span>
+    </div>
+    <div class="steps">
+
+      <div class="step" style="animation-delay:.02s">
+        <div class="rail"><div class="num n2">6</div></div>
+        <div class="card edge2">
+          <div class="step-top"><span class="actor ext">MAIX</span><span class="title">每日增量拉表</span></div>
+          <p class="desc">MAIX 每日拉取待处理素材：采集落 URL、手动上传落具体视频文件，连同标签一并同步。</p>
+          <div class="fields">
+            <div class="oprow"><span class="op r">读</span><div class="chips"><span class="chip c2">asset <em>where maix_status=pending</em></span></div></div>
+            <div class="oprow"><span class="op u">改</span><div class="chips"><span class="chip c2">maix_status<em>=synced</em></span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step" style="animation-delay:.06s">
+        <div class="rail"><div class="num n3">7</div></div>
+        <div class="card edge3">
+          <div class="step-top"><span class="actor ext">MAIX</span><span class="title">切片 + 向量化</span></div>
+          <p class="desc">生成视频切片与时间码并向量化，回传切片列表。一条源素材对应多条切片。</p>
+          <div class="fields">
+            <div class="oprow"><span class="op w">写</span><div class="chips">
+              <span class="chip c3">asset_id<em> FK</em></span><span class="chip c3">seq</span><span class="chip c3">start_ms</span><span class="chip c3">end_ms</span><span class="chip c3">clip_url</span><span class="chip c3">vector_status<em>=done</em></span>
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step" style="animation-delay:.1s">
+        <div class="rail"><div class="num n2">8</div></div>
+        <div class="card edge2">
+          <div class="step-top"><span class="actor ext">QMQ</span><span class="title">处理完成回调</span></div>
+          <p class="desc">收到完成通知，把素材标记为「可检索」。此后前端可查询到该素材。</p>
+          <div class="fields">
+            <div class="oprow"><span class="op u">改</span><div class="chips">
+              <span class="chip c2">maix_status<em>=vectorized</em></span><span class="chip c2">is_searchable<em>=true</em></span>
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========== PHASE 4 ========== -->
+  <section class="phase">
+    <div class="phase-head">
+      <span class="phase-idx">04</span>
+      <span class="phase-name">检索召回</span>
+      <span class="phase-note pn0">读 <b>asset</b> + <b>asset_clip</b> · 硬筛 + 语义匹配</span>
+    </div>
+    <div class="steps">
+
+      <div class="step" style="animation-delay:.02s">
+        <div class="rail"><div class="num n2">9</div></div>
+        <div class="card edge2">
+          <div class="step-top"><span class="actor">运营</span><span class="title">选硬标签 + 输入词</span></div>
+          <p class="desc">前端勾选筛选项并输入 query（关键词/自然语言）。产线单选，其余维度多选。</p>
+          <div class="fields">
+            <div class="oprow"><span class="op r">筛选维度</span><div class="chips">
+              <span class="chip c2">product_line <em>单选</em></span><span class="chip c2">source</span><span class="chip c2">content_type</span><span class="chip c2">crowd</span><span class="chip c2">scene</span><span class="chip c2">platform</span><span class="chip c2">region</span><span class="chip c2">is_ai_generated</span><span class="chip c2">has_watermark</span>
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step" style="animation-delay:.06s">
+        <div class="rail"><div class="num n2">10</div></div>
+        <div class="card edge2">
+          <div class="step-top"><span class="actor">系统</span><span class="title">组装请求传 MAIX</span></div>
+          <p class="desc">打包 {query, filters, sort}。filters 直接映射 asset 列，sort 决定排序口径。</p>
+          <div class="fields">
+            <div class="oprow"><span class="op r">filters</span><div class="chips"><span class="chip c2">→ asset.* 硬标签等值/多选</span></div></div>
+            <div class="oprow"><span class="op r">sort</span><div class="chips">
+              <span class="chip c0">语义分 <em>默认</em></span><span class="chip c2">viral_score</span><span class="chip c2">play_count</span><span class="chip c2">upload_time</span><span class="chip c2">publish_time</span>
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step" style="animation-delay:.1s">
+        <div class="rail"><div class="num n3">11</div></div>
+        <div class="card edge3">
+          <div class="step-top"><span class="actor ext">MAIX</span><span class="title">过滤 + 语义匹配</span></div>
+          <p class="desc">先按 filters 在同步表上砍出候选，再用候选切片向量与 query 向量做相似度匹配，按 sort 排序回传命中列表。</p>
+          <div class="fields">
+            <div class="oprow"><span class="op r">读</span><div class="chips">
+              <span class="chip c2">asset <em>filters</em></span><span class="chip c3">asset_clip <em>向量</em></span>
+            </div></div>
+            <div class="oprow"><span class="op r">回传</span><div class="chips"><span class="chip c0">命中素材/切片列表</span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step" style="animation-delay:.14s">
+        <div class="rail"><div class="num n2">12</div></div>
+        <div class="card edge2">
+          <div class="step-top"><span class="actor">运营</span><span class="title">前端展示结果</span></div>
+          <p class="desc">展示命中切片，或回到源素材。运营从中选取使用。</p>
+          <div class="fields">
+            <div class="oprow"><span class="op r">读</span><div class="chips">
+              <span class="chip c2">asset</span><span class="chip c3">asset_clip</span>
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========== TABLES ========== -->
+  <div class="tables-head">
+    <div class="phase-head" style="margin-bottom:6px">
+      <span class="phase-name">三张表 · 字段字典</span>
+    </div>
+    <p class="phase-note" style="font-size:13px; color:var(--ink-3)">底色标注的行 = 相对现有 spec 的新增/关键区分字段 · <span class="ftag">PK</span> 主键 <span class="ftag fk">FK</span> 外键</p>
+  </div>
+
+  <div class="tables">
+
+    <!-- collection_task -->
+    <div class="tbl">
+      <div class="tbl-head h1">
+        <div class="tbl-name">collection_task</div>
+        <div class="tbl-cn">采集任务 · 新增表</div>
+      </div>
+      <div class="rows">
+        <div class="row new1"><span class="fname">id</span><span class="ftag">PK</span><span class="ftype">string</span></div>
+        <div class="row new1"><span class="fname">keyword</span><span class="ftype">string</span><span class="fnote">关键词</span></div>
+        <div class="row new1"><span class="fname">normalized_keyword</span><span class="ftype">string</span><span class="fnote">归一化，用于去重</span></div>
+        <div class="row new1"><span class="fname">platform</span><span class="ftype">enum</span><span class="fnote">抖音/小红书…</span></div>
+        <div class="row new1"><span class="fname">creator</span><span class="ftype">string</span><span class="fnote">创建运营</span></div>
+        <div class="row new1"><span class="fname">status</span><span class="ftype">enum</span><span class="fnote">active/paused</span></div>
+        <div class="row new1"><span class="fname">last_run_at</span><span class="ftype">datetime</span><span class="fnote">上次抓取</span></div>
+        <div class="row new1"><span class="fname">created_at</span><span class="ftype">datetime</span></div>
+      </div>
+    </div>
+
+    <!-- asset -->
+    <div class="tbl">
+      <div class="tbl-head h2">
+        <div class="tbl-name">asset</div>
+        <div class="tbl-cn">素材主表 · 上传+采集合表</div>
+      </div>
+      <div class="rows">
+        <div class="row"><span class="fname">asset_id</span><span class="ftag">PK</span><span class="ftype">string</span></div>
+        <div class="row new2"><span class="fname">source_channel</span><span class="ftype">enum</span><span class="fnote">upload / collection 区分键</span></div>
+        <div class="row new2"><span class="fname">collection_task_id</span><span class="ftag fk">FK</span><span class="ftype">string</span><span class="fnote">采集来源关联</span></div>
+        <div class="row"><span class="fname">video_url</span><span class="ftype">string</span></div>
+        <div class="row"><span class="fname">title</span><span class="ftype">string</span></div>
+        <div class="row"><span class="fname">product_line</span><span class="ftype">enum</span><span class="fnote">产线（含「全部」）</span></div>
+        <div class="row"><span class="fname">source</span><span class="ftype">enum</span></div>
+        <div class="row"><span class="fname">content_type</span><span class="ftype">enum</span><span class="fnote">各产线独立</span></div>
+        <div class="row"><span class="fname">crowd</span><span class="ftype">string[]</span></div>
+        <div class="row"><span class="fname">scene</span><span class="ftype">string[]</span></div>
+        <div class="row"><span class="fname">region</span><span class="ftype">string</span></div>
+        <div class="row new2"><span class="fname">region_object_id</span><span class="ftype">string</span><span class="fnote">目的地 objectId 映射</span></div>
+        <div class="row"><span class="fname">platform</span><span class="ftype">enum</span></div>
+        <div class="row"><span class="fname">duration</span><span class="ftype">int</span></div>
+        <div class="row"><span class="fname">is_ai_generated</span><span class="ftype">bool</span></div>
+        <div class="row"><span class="fname">has_watermark</span><span class="ftype">bool</span></div>
+        <div class="row"><span class="fname">play_count</span><span class="ftype">bigint</span></div>
+        <div class="row"><span class="fname">digg_count</span><span class="ftype">bigint</span></div>
+        <div class="row"><span class="fname">collect_count</span><span class="ftype">bigint</span></div>
+        <div class="row"><span class="fname">viral_score</span><span class="ftype">float</span></div>
+        <div class="row"><span class="fname">author_name</span><span class="ftype">string</span></div>
+        <div class="row"><span class="fname">platform_tags</span><span class="ftype">string</span></div>
+        <div class="row"><span class="fname">description</span><span class="ftype">string</span></div>
+        <div class="row"><span class="fname">upload_user</span><span class="ftype">string</span></div>
+        <div class="row"><span class="fname">upload_time</span><span class="ftype">datetime</span></div>
+        <div class="row"><span class="fname">publish_time</span><span class="ftype">datetime</span></div>
+        <div class="row"><span class="fname">file_hash</span><span class="ftype">string</span><span class="fnote">去重·索引非唯一</span></div>
+        <div class="row"><span class="fname">source_url</span><span class="ftype">string</span><span class="fnote">去重·索引非唯一</span></div>
+        <div class="row new2"><span class="fname">maix_status</span><span class="ftype">enum</span><span class="fnote">pending→synced→vectorized</span></div>
+        <div class="row new2"><span class="fname">is_searchable</span><span class="ftype">bool</span><span class="fnote">可检索冗余位</span></div>
+        <div class="row"><span class="fname">created_at</span><span class="ftype">datetime</span></div>
+      </div>
+    </div>
+
+    <!-- asset_clip -->
+    <div class="tbl">
+      <div class="tbl-head h3">
+        <div class="tbl-name">asset_clip</div>
+        <div class="tbl-cn">切片 · 新增表（MAIX 回传）</div>
+      </div>
+      <div class="rows">
+        <div class="row new3"><span class="fname">id</span><span class="ftag">PK</span><span class="ftype">string</span></div>
+        <div class="row new3"><span class="fname">asset_id</span><span class="ftag fk">FK</span><span class="ftype">string</span><span class="fnote">所属源素材</span></div>
+        <div class="row new3"><span class="fname">seq</span><span class="ftype">int</span><span class="fnote">切片序号</span></div>
+        <div class="row new3"><span class="fname">start_ms</span><span class="ftype">int</span><span class="fnote">起时间码</span></div>
+        <div class="row new3"><span class="fname">end_ms</span><span class="ftype">int</span><span class="fnote">止时间码</span></div>
+        <div class="row new3"><span class="fname">clip_url</span><span class="ftype">string</span><span class="fnote">切片地址，可空</span></div>
+        <div class="row new3"><span class="fname">vector_status</span><span class="ftype">enum</span><span class="fnote">pending/done</span></div>
+        <div class="row new3"><span class="fname">created_at</span><span class="ftype">datetime</span></div>
+      </div>
+      <div style="padding:12px 16px 15px; border-top:1px solid var(--rule); font-size:12px; color:var(--ink-3); line-height:1.55">
+        另可选 <span style="font-family:var(--font-m); color:var(--ink-2)">tag_option</span> 标签字典，支撑「标签新增需申请、评估聚合后上架」——维度 + 值 + 状态(active/pending_review)，asset 各标签列取值指向此表。
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ========== OPEN QUESTIONS ========== -->
+  <section class="open">
+    <p class="open-t">需和 MAIX 拍板的三处</p>
+    <p class="open-s">影响 schema 与请求组装，建议先对齐</p>
+    <div class="qlist">
+      <div class="q">
+        <span class="qmark">region</span>
+        <span class="qtext"><b>是否仍以 objectId 对接。</b>若是，采集后要在爬虫 <code>region</code> 与 <code>objectId</code> 之间做一层映射——schema 已预留 <code>region_object_id</code>。</span>
+      </div>
+      <div class="q">
+        <span class="qmark">向量粒度</span>
+        <span class="qtext"><b>按切片还是整条。</b>当前按切片建（片段级召回，<code>vector_status</code> 落在 <code>asset_clip</code>）；若整条则改落 <code>asset</code>。</span>
+      </div>
+      <div class="q">
+        <span class="qmark">全部</span>
+        <span class="qtext"><b>「全部/通用」产线的筛选语义。</b>素材可跨线复用，选某产线时建议并入 <code>product_line=全部</code> 的素材——组装 filters 时需特殊处理，而非纯等值匹配。</span>
+      </div>
+    </div>
+  </section>
+
+  <p class="foot">asset_pipeline_flow · 采集 → 入库打标 → MAIX 切片向量化 → 检索召回</p>
+
+</div>
+</body>
+</html>
