@@ -544,6 +544,8 @@ html[data-theme="snow"] {
   --star: #1d4ed8; --nebula: #1d4ed8; --flare: #b45309; --aurora: #047857; --rose: #be123c;
   --line: rgba(24, 24, 27, .1); --line2: rgba(24, 24, 27, .18);
   --glow-star: none; --glow-nebula: none;
+  /* 瑞士 grotesk 栈：跳过 --sans 首选的楷体（LXGW WenKai），标题用无衬线才立得住 */
+  --grotesk: -apple-system, "Helvetica Neue", "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
 }
 /* 浅色主题共享结构覆盖 */
 html:is([data-theme="paper"], [data-theme="snow"], [data-theme="hud"]) body { background-image: none; }
@@ -569,6 +571,17 @@ html:is([data-theme="paper"], [data-theme="snow"], [data-theme="hud"]) .prose bl
 html:is([data-theme="paper"], [data-theme="snow"], [data-theme="hud"]) .prose pre { background: #1c2333 !important; }
 html:is([data-theme="paper"], [data-theme="snow"], [data-theme="hud"]) .prose code { background: rgba(15, 118, 110, .1); color: var(--star); }
 html[data-theme="paper"] body { background-image: radial-gradient(1100px 560px at 88% -8%, rgba(221, 81, 43, .05), transparent 60%); }
+
+/* ⬜️ 月白瑞士编辑：无衬线紧排大字 + 单一蓝强调 + 扁平细线（置于浅色共享组之后以覆盖） */
+html[data-theme="snow"] ::selection { background: var(--star); color: #fff; }
+html[data-theme="snow"] :is(.hero h1, .chapter-head h2) { font-family: var(--grotesk); letter-spacing: -0.02em; }
+html[data-theme="snow"] .hero .sub { font-family: var(--grotesk); font-weight: 700; letter-spacing: .02em; }
+html[data-theme="snow"] .chapter-head .ch-no::before { background: var(--ink); width: 26px; }
+html[data-theme="snow"] #voyage-progress { background: var(--star); box-shadow: none; }
+html[data-theme="snow"] .card { border-radius: 10px; }
+html[data-theme="snow"] .card::before { display: none; }
+html[data-theme="snow"] .btn { border-radius: 8px; border-color: var(--line2); color: var(--ink); background: transparent; backdrop-filter: none; }
+html[data-theme="snow"] .btn:hover { border-color: var(--ink); background: var(--space-1); color: var(--ink); box-shadow: none; transform: none; }
 
 /* ───── ⚫️ 曜黑玻璃 · OBSIDIAN GLASS（原克莱因蓝槽位，data-theme 键保持 klein 兼容 localStorage）
    参照: 纯黑底 + liquid glass + Instrument Serif 渐变大标 + 全屏背景视频(klein-fx.html) ───── */
@@ -636,11 +649,23 @@ html[data-theme="hud"] {
   --glow-star: none; --glow-nebula: none;
 }
 html[data-theme="hud"] body { background-image: none; }
+html[data-theme="hud"] ::selection { background: var(--flare); color: var(--space-0); }
 html[data-theme="hud"] :is(.hero h1, .chapter-head h2, .epigraph) {
   background: none; -webkit-text-fill-color: var(--ink); filter: none;
 }
-html[data-theme="hud"] .hero h1 { letter-spacing: .12em; }
+html[data-theme="hud"] .hero h1 { letter-spacing: .14em; font-weight: 700; }
+html[data-theme="hud"] .hero .sub { letter-spacing: .3em; }
 html[data-theme="hud"] .card h3 { color: var(--ink); }
+/* 朱砂单强调纪律：只落在 kicker/章号线/主按钮 hover，其余全墨（进度条/章号 em 见文末灵魂层） */
+html[data-theme="hud"] .kicker { color: var(--flare); letter-spacing: .42em; }
+html[data-theme="hud"] .chapter-head .ch-no::before { background: var(--flare); width: 30px; }
+html[data-theme="hud"] .chapter-head h2 { letter-spacing: .1em; font-weight: 700; }
+/* 墨线卡片：去光标径向高光，收圆角（hover 态见灵魂层） */
+html[data-theme="hud"] .card { border-radius: 10px; }
+html[data-theme="hud"] .card::before { display: none; }
+/* 墨style按钮：细墨边，hover 反白（主按钮见灵魂层） */
+html[data-theme="hud"] .btn { border-radius: 6px; border-color: var(--line2); color: var(--ink); background: transparent; backdrop-filter: none; }
+html[data-theme="hud"] .btn:hover { background: var(--ink); border-color: var(--ink); color: var(--space-0); box-shadow: none; }
 /* 全息粒子背景层 */
 #hud-field { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0; transition: opacity 1.2s ease;
   -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,.35) 30%, #000 60%);
@@ -652,7 +677,7 @@ html:is([data-theme="hud"], [data-theme="cyber"]) #hud-field { opacity: 1; }
 html[data-theme="cyber"] {
   --space-0: #030509; --space-1: #060a14; --space-2: #0a1020; --space-3: #0c1526;
   --ink: #d9f6ff; --ink2: #8fb8d8; --ink3: #4b628a; --ink-strong: #ffffff;
-  --star: #00f0ff; --nebula: #c026ff; --flare: #00ff9c; --aurora: #00ff9c; --rose: #ff2d78;
+  --star: #00f0ff; --nebula: #c026ff; --flare: #7ae7ff; --aurora: #00ff9c; --rose: #ff2d78;
   --line: rgba(0, 240, 255, .18); --line2: rgba(0, 240, 255, .36);
   --serif: "JetBrains Mono", "LXGW WenKai", monospace;
   --glow-star: 0 0 26px rgba(0, 240, 255, .45);
@@ -664,25 +689,31 @@ html[data-theme="cyber"] body::before {
   background: repeating-linear-gradient(180deg, rgba(0,240,255,.022) 0 1px, transparent 1px 3px);
   mix-blend-mode: screen;
 }
-html[data-theme="cyber"] :is(.hero h1, .chapter-head h2, .epigraph) {
+/* 层次纪律：全息渐变只留给 hero 大标，章节标题回归可读实色 */
+html[data-theme="cyber"] :is(.hero h1, .epigraph) {
   background: linear-gradient(120deg, var(--star) 20%, var(--nebula) 80%);
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; filter: none;
   text-shadow: 0 0 34px rgba(0, 240, 255, .3);
 }
-/* RGB 色散故障感: 用双层 drop-shadow 模拟红/青偏移(不影响渐变clip) */
+html[data-theme="cyber"] .chapter-head h2 {
+  background: none; -webkit-text-fill-color: var(--ink);
+  letter-spacing: .06em; text-shadow: 0 0 24px rgba(0, 240, 255, .22);
+}
+/* RGB 色散故障感: 用双层 drop-shadow 模拟红/青偏移(不影响渐变clip)，幅度收敛避免糊字 */
 html[data-theme="cyber"] .hero h1 {
-  filter: drop-shadow(2px 0 0 rgba(255,45,120,.45)) drop-shadow(-2px 0 0 rgba(0,240,255,.45));
+  filter: drop-shadow(1.4px 0 0 rgba(255,45,120,.32)) drop-shadow(-1.4px 0 0 rgba(0,240,255,.32));
 }
 html[data-theme="cyber"] :is(.card, .proto-item, .lib-series, .archive-box, .kg-shell, .flagship-quote, .pipeline, .dial) {
   background: rgba(8, 14, 30, .74);
 }
 html[data-theme="cyber"] :is(.card, .proto-item, .dial, .lib-series, .archive-box, .btn) { border-radius: 6px; }
-html[data-theme="cyber"] .card { border: 1px solid rgba(0, 240, 255, .22); position: relative; }
+/* 卡片默认态降噪：暗青细边+暗角标，全霓虹只在 hover 点亮（避免所有元素同等争抢） */
+html[data-theme="cyber"] .card { border: 1px solid rgba(0, 240, 255, .12); position: relative; }
 /* 卡片四角 HUD 角标 */
 html[data-theme="cyber"] .card::after {
   content: ''; position: absolute; top: 7px; left: 7px; width: 11px; height: 11px;
-  border-top: 1px solid rgba(0, 240, 255, .55); border-left: 1px solid rgba(0, 240, 255, .55);
+  border-top: 1px solid rgba(0, 240, 255, .3); border-left: 1px solid rgba(0, 240, 255, .3);
   pointer-events: none; transition: .25s;
 }
 html[data-theme="cyber"] .card:hover {
@@ -690,8 +721,10 @@ html[data-theme="cyber"] .card:hover {
   box-shadow: 0 0 0 1px rgba(0, 240, 255, .5), 0 14px 44px rgba(0, 240, 255, .18);
 }
 html[data-theme="cyber"] .card:hover::after { top: 5px; left: 5px; border-color: var(--star); }
-html[data-theme="cyber"] .card h3 { color: var(--star); }
-html[data-theme="cyber"] .card h3::before { content: '▸ '; color: var(--nebula); }
+html[data-theme="cyber"] .card h3 { color: var(--ink); transition: color .25s; }
+html[data-theme="cyber"] .card:hover h3 { color: var(--star); }
+html[data-theme="cyber"] .card h3::before { content: '▸ '; color: var(--ink3); transition: color .25s; }
+html[data-theme="cyber"] .card:hover h3::before { color: var(--nebula); }
 html[data-theme="cyber"] .hero .kicker::before { content: '◰ '; color: var(--star); }
 html[data-theme="cyber"] .nav-logo::before { content: '◈ '; font-family: var(--mono); color: var(--star); font-size: 13px; }
 html[data-theme="cyber"] .dial .num { color: var(--star); text-shadow: 0 0 18px rgba(0, 240, 255, .6); }
@@ -743,7 +776,8 @@ html[data-theme="cyber"] .btn.primary { background: rgba(0, 240, 255, .14); bord
 
 /* 浅色主题主按钮去紫蓝渐变（impeccable 戒律：拒绝 AI 味渐变）*/
 html[data-theme="paper"] .btn.primary { background: var(--flare); box-shadow: 0 6px 20px rgba(221, 81, 43, .3); }
-html[data-theme="snow"] .btn.primary { background: var(--star); box-shadow: 0 6px 20px rgba(29, 78, 216, .25); }
+html[data-theme="snow"] .btn.primary { background: var(--star); border-color: var(--star); color: #fff; box-shadow: 0 6px 20px rgba(29, 78, 216, .25); }
+html[data-theme="snow"] .btn.primary:hover { background: #1e40af; border-color: #1e40af; color: #fff; box-shadow: 0 6px 20px rgba(29, 78, 216, .3); }
 
 /* ════════════════════════════════════════════════
    主题品质升级 · 每套主题的"灵魂层"
@@ -820,8 +854,8 @@ html[data-theme="hud"] .card:hover {
 }
 html[data-theme="hud"] .dial .num { color: var(--ink); text-shadow: none; }
 html[data-theme="hud"] #voyage-progress { background: linear-gradient(90deg, var(--ink), var(--flare)); box-shadow: none; }
-html[data-theme="hud"] .btn.primary { background: var(--ink); color: #F7F5EF; box-shadow: none; }
-html[data-theme="hud"] .btn.primary:hover { background: #000; color: #fff; }
+html[data-theme="hud"] .btn.primary { background: var(--ink); border-color: var(--ink); color: #F7F5EF; box-shadow: none; }
+html[data-theme="hud"] .btn.primary:hover { background: var(--flare); border-color: var(--flare); color: #fff; box-shadow: none; }
 html[data-theme="hud"] .chip { color: var(--ink2); border-color: var(--line2); background: rgba(26,26,26,.04); }
 
 /* ───── ⬜️ 月白极简 · 细网格 + 发丝线 + 克制阴影 ───── */

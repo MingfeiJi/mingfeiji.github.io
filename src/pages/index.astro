@@ -60,7 +60,6 @@ const works = [
 ];
 
 const protos = [
-  { ver: 'FLOW', name: '素材资产库 · 端到端流程与表结构', note: '7-09 · 采集→打标→切片→检索', slug: 'asset-pipeline-flow' },
   { ver: 'ARCH', name: '拟人化闲聊 Agent · 架构可视化', note: 'C 端 · 16 路意图 / 三路 RAG / 防注入', slug: 'chat-agent-arch' },
   { ver: 'v6', name: '内容工作台 · 可交互原型', note: '6-08 · 全流程可点击', slug: 'workbench-v6' },
   { ver: 'NEW', name: '灵感引擎 · 创作台 V2', note: '6-29 · 最新迭代', slug: 'inspiration-engine-creator-v2' },
@@ -2070,6 +2069,14 @@ const courses = [
     animation-name: hero-fade; animation-duration: .5s; }
   :global(html[data-theme='snow']) .hero { transform: none !important; transition: none !important; }
   @keyframes hero-fade { from { opacity: 0; } }
+
+  /* ── R15 水墨/雪 hero 排印门控（identity-skill 品味整改）──
+     R7 的 .v2-scope .hero h1/.sub 字距规则特异性压过全局主题覆盖，需页面级门控收回：
+     水墨=宽字距慢节奏（quiet cinematic），雪=grotesk 紧排（瑞士编辑） */
+  :global(html[data-theme='hud']) .v2-scope .hero h1 { letter-spacing: .14em; font-weight: 700; }
+  :global(html[data-theme='hud']) .v2-scope .hero .sub { letter-spacing: .3em; }
+  :global(html[data-theme='snow']) .v2-scope .hero h1 { font-family: var(--grotesk); letter-spacing: -0.02em; }
+  :global(html[data-theme='snow']) .v2-scope .hero .sub { font-family: var(--grotesk); letter-spacing: .02em; }
 
   /* ── R9 作品区节奏（v2-scoped）── */
   /* works 卡：元信息升级为"可验证"状态条——绿色呼吸点 + 顶部虚线分隔 */
