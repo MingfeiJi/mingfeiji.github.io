@@ -2079,6 +2079,18 @@ const courses = [
   :global(html[data-theme='snow']) .v2-scope .hero h1 { font-family: var(--grotesk); letter-spacing: -0.02em; }
   :global(html[data-theme='snow']) .v2-scope .hero .sub { font-family: var(--grotesk); letter-spacing: .02em; }
 
+  /* ── R15b 大改层（用户要求 2/4/5 加大力度·一眼可见）──
+     水墨: 桌面端 hero 大标竖排书法构图；雪: 海报级 grotesk 字号 */
+  @media (min-width: 900px) {
+    :global(html[data-theme='hud']) .v2-scope .hero h1 {
+      writing-mode: vertical-rl; text-orientation: upright;
+      letter-spacing: .3em; line-height: 1.04;
+      min-height: 380px; max-height: 62svh;
+      width: max-content; /* 收缩到单列宽，否则 block 盒占满整行、竖列贴右缘 */
+    }
+  }
+  :global(html[data-theme='snow']) .v2-scope .hero h1 { font-size: clamp(56px, 11vw, 128px); font-weight: 900; }
+
   /* ── R9 作品区节奏（v2-scoped）── */
   /* works 卡：元信息升级为"可验证"状态条——绿色呼吸点 + 顶部虚线分隔 */
   .v2-scope .work-card .w-meta { display: flex; align-items: center; gap: 8px;

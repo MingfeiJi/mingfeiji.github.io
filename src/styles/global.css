@@ -732,6 +732,29 @@ html[data-theme="cyber"] #voyage-progress { background: linear-gradient(90deg, v
 html[data-theme="cyber"] .ch-no { color: var(--star); }
 html[data-theme="cyber"] .chip { border-color: rgba(0, 240, 255, .32); }
 html[data-theme="cyber"] .btn.primary { background: rgba(0, 240, 255, .14); border-color: rgba(0, 240, 255, .6); color: #d9f6ff; }
+/* ── 赛博大改·一眼可见层 ── */
+/* 终端闪烁光标：hero 大标尾部 */
+html[data-theme="cyber"] .hero h1::after {
+  content: '▍'; -webkit-text-fill-color: var(--star); margin-left: 8px;
+  font-size: .8em; animation: cy-blink 1.15s steps(1) infinite;
+}
+@keyframes cy-blink { 50% { opacity: 0; } }
+/* 章节头 HUD 框线：左侧细青线 + 左上角标 */
+html[data-theme="cyber"] .chapter-head { border-left: 1px solid rgba(0, 240, 255, .28); padding-left: 22px; position: relative; }
+html[data-theme="cyber"] .chapter-head::before {
+  content: ''; position: absolute; left: -1px; top: 0; width: 14px; height: 14px;
+  border-top: 1px solid var(--star); border-left: 1px solid var(--star);
+}
+/* 卡片 hover 扫描光带（复用 .card::before 高光层，赛博下改为线性扫掠） */
+html[data-theme="cyber"] .card::before {
+  background: linear-gradient(105deg, transparent 42%, rgba(0, 240, 255, .09) 50%, transparent 58%);
+  background-size: 240% 100%; background-position: 120% 0;
+}
+html[data-theme="cyber"] .card:hover::before { animation: cy-sweep .9s ease; }
+@keyframes cy-sweep { from { background-position: 120% 0; } to { background-position: -60% 0; } }
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme="cyber"] .hero h1::after, html[data-theme="cyber"] .card:hover::before { animation: none; }
+}
 
 /* ───── 🎨 主题切换器 ───── */
 .theme-fab {
@@ -847,6 +870,8 @@ html[data-theme="hud"] body::before {
 }
 /* 水墨细节：墨线界、朱磦点睛、毛笔气质 */
 html[data-theme="hud"] .chapter-head .ch-no em { color: var(--flare); }
+/* 编辑部粗墨条：章节标题左侧立一道浓墨（大改·一眼可见） */
+html[data-theme="hud"] .chapter-head h2 { border-left: 6px solid var(--ink); padding-left: 20px; }
 html[data-theme="hud"] .card { border: 1px solid var(--line); position: relative; }
 html[data-theme="hud"] .card:hover {
   border-color: rgba(26, 26, 26, .4);
@@ -885,6 +910,23 @@ html[data-theme="snow"] .hero h1::after {
 }
 html[data-theme="snow"] .kicker { letter-spacing: .42em; }
 html[data-theme="snow"] .hero-stats span b { color: var(--star); }
+/* ── 雪大改·一眼可见层（瑞士海报语言）── */
+/* 巨型章节序号沉底（editorial index mark） */
+html[data-theme="snow"] .chapter-head { position: relative; }
+html[data-theme="snow"] .chapter-head .ch-no em {
+  position: absolute; left: -10px; top: -44px; z-index: -1;
+  font-family: var(--grotesk); font-weight: 900; font-style: normal;
+  font-size: clamp(88px, 13vw, 160px); line-height: 1;
+  color: rgba(24, 24, 27, .055); letter-spacing: -0.04em; pointer-events: none;
+}
+/* 瑞士方块标记：kicker 前置蓝方块 */
+html[data-theme="snow"] .hero .kicker::before {
+  content: ''; display: inline-block; width: 13px; height: 13px;
+  background: var(--star); margin-right: 14px;
+}
+/* 下划线加粗直角化（海报感） */
+html[data-theme="snow"] .hero h1::after { width: 110px; height: 7px; margin-top: 30px; border-radius: 0; }
+html[data-theme="snow"] :is(.card, .proto-item, .archive-box, .lib-series) { border-radius: 4px; }
 html[data-theme="snow"] .dial .num { color: var(--star); text-shadow: none; }
 html[data-theme="snow"] .chapter + .chapter { border-top: 1px solid rgba(24, 24, 27, .07); }
 html[data-theme="snow"] .nav { box-shadow: 0 1px 0 rgba(24, 24, 27, .06); }
