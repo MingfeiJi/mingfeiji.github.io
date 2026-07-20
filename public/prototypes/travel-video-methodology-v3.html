@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>旅行交易引流短视频方法论 · v3.1</title>
+<style>
+  :root{
+    --ink:#1a1d24; --sub:#5c6470; --line:#e8e6e0; --paper:#faf9f6; --card:#ffffff;
+    --s:#2563a8; --s-bg:#eef4fb; --r:#c2410c; --r-bg:#fdf3ec; --g:#2f7d4f; --g-bg:#eef7f0;
+    --bad:#b91c1c; --good:#15803d; --gold:#a16207;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:"Songti SC","Noto Serif SC",Georgia,serif;background:var(--paper);color:var(--ink);line-height:1.75;font-size:16px}
+  .sans{font-family:"PingFang SC","Hiragino Sans GB",-apple-system,sans-serif}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 32px 120px}
+  /* HERO */
+  .hero{padding:88px 0 56px;border-bottom:3px solid var(--ink)}
+  .hero .tag{font-family:"PingFang SC",sans-serif;font-size:13px;letter-spacing:.25em;color:var(--sub);margin-bottom:20px}
+  .hero h1{font-size:44px;font-weight:800;letter-spacing:.02em;line-height:1.3}
+  .hero .sub{margin-top:18px;font-size:18px;color:var(--sub)}
+  .hero .one{margin-top:36px;padding:26px 30px;background:var(--ink);color:#faf9f6;font-size:21px;font-weight:700;letter-spacing:.03em;border-radius:2px}
+  .hero .one em{font-style:normal;border-bottom:2px solid #e8b04b;padding-bottom:1px}
+  /* SECTION */
+  section{margin-top:88px}
+  .kicker{font-family:"PingFang SC",sans-serif;font-size:13px;letter-spacing:.3em;color:var(--sub);margin-bottom:10px}
+  h2{font-size:30px;font-weight:800;margin-bottom:8px}
+  .lede{color:var(--sub);font-size:16.5px;max-width:760px;margin-bottom:36px}
+  /* 三层结构 */
+  .layers{display:grid;grid-template-columns:1fr;gap:0;border:1.5px solid var(--ink);border-radius:4px;overflow:hidden}
+  .layer{display:grid;grid-template-columns:200px 1fr 260px;align-items:stretch}
+  .layer+.layer{border-top:1.5px solid var(--ink)}
+  .layer .name{padding:26px 24px;font-family:"PingFang SC",sans-serif;font-weight:800;font-size:18px;color:#fff;display:flex;flex-direction:column;justify-content:center}
+  .layer .name small{font-weight:500;font-size:12px;opacity:.85;letter-spacing:.15em;margin-bottom:4px}
+  .layer .body{padding:24px 28px;background:var(--card);font-size:15.5px}
+  .layer .verdict{padding:24px 22px;background:var(--paper);border-left:1px dashed var(--line);font-family:"PingFang SC",sans-serif;font-size:14px;color:var(--sub);display:flex;align-items:center}
+  .layer.ls .name{background:var(--s)} .layer.lr .name{background:var(--r)} .layer.lg .name{background:var(--g)}
+  .chips{margin-top:8px;display:flex;flex-wrap:wrap;gap:8px}
+  .chip{font-family:"PingFang SC",sans-serif;font-size:13px;padding:3px 12px;border-radius:99px;border:1px solid var(--line);background:var(--paper)}
+  /* 档位阶梯 */
+  .ladder{border:1.5px solid var(--ink);border-radius:4px;background:var(--card);padding:36px 40px}
+  .lrow{display:grid;grid-template-columns:130px 1fr 320px;align-items:center;gap:20px;padding:14px 0}
+  .lrow+.lrow{border-top:1px solid var(--line)}
+  .lpass{font-family:"PingFang SC",sans-serif;font-weight:800;font-size:15px}
+  .lbar{height:34px;border-radius:3px;display:flex;align-items:center;padding-left:14px;color:#fff;font-family:"PingFang SC",sans-serif;font-weight:700;font-size:14px;min-width:60px}
+  .lcase{font-family:"PingFang SC",sans-serif;font-size:13px;color:var(--sub)}
+  .lnote{margin-top:22px;font-family:"PingFang SC",sans-serif;font-size:14px;color:var(--r);font-weight:600}
+  /* R 规则卡 */
+  .rule{border:1.5px solid var(--ink);border-radius:4px;background:var(--card);margin-top:36px;overflow:hidden}
+  .rule .rhead{display:flex;align-items:baseline;gap:16px;padding:22px 30px;background:var(--r-bg);border-bottom:1.5px solid var(--ink)}
+  .rule .rno{font-family:"PingFang SC",sans-serif;font-size:14px;font-weight:800;color:#fff;background:var(--r);padding:4px 12px;border-radius:3px;flex:none}
+  .rule .rtitle{font-size:21px;font-weight:800}
+  .rule .rhow{margin-left:auto;font-family:"PingFang SC",sans-serif;font-size:13px;color:var(--sub);flex:none;text-align:right}
+  .rule .rbody{padding:26px 30px}
+  .logic{font-size:15.5px;color:var(--ink);margin-bottom:22px;padding-left:14px;border-left:3px solid var(--gold)}
+  .logic b{color:var(--gold)}
+  .duel{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:760px){.duel{grid-template-columns:1fr}.layer{grid-template-columns:1fr}.lrow{grid-template-columns:90px 1fr}.lcase{display:none}}
+  .qcard{border:1px solid var(--line);border-radius:4px;overflow:hidden;display:flex;flex-direction:column}
+  .qcard .qtop{font-family:"PingFang SC",sans-serif;font-size:13px;font-weight:700;padding:9px 16px;display:flex;justify-content:space-between;align-items:center}
+  .qcard.good .qtop{background:var(--g-bg);color:var(--good)} .qcard.badx .qtop{background:#fbeaea;color:var(--bad)}
+  .qcard .qdata{font-weight:800}
+  .qcard blockquote{padding:16px 18px;font-size:15px;flex:1}
+  .qcard blockquote .t{font-family:"PingFang SC",sans-serif;font-size:12px;color:var(--sub);display:block;margin-bottom:4px}
+  .qcard blockquote mark{background:#fbe8a6;padding:0 2px}
+  .qcard blockquote mark.bad{background:#f6c9c9}
+  .qcard .qwhy{font-family:"PingFang SC",sans-serif;font-size:13px;color:var(--sub);padding:10px 18px;border-top:1px dashed var(--line);background:var(--paper)}
+  /* diff 表 */
+  .diff{width:100%;border-collapse:collapse;font-size:14.5px;margin-top:6px}
+  .diff th{font-family:"PingFang SC",sans-serif;font-size:13px;text-align:left;padding:8px 12px;border-bottom:2px solid var(--ink)}
+  .diff td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  .diff td:first-child{color:var(--sub);font-family:"PingFang SC",sans-serif;font-size:13px;white-space:nowrap}
+  /* 组公式 */
+  .groups{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:760px){.groups{grid-template-columns:1fr}}
+  .gcard{border:1px solid var(--line);border-left:4px solid var(--g);border-radius:4px;background:var(--card);padding:18px 22px}
+  .gcard h4{font-family:"PingFang SC",sans-serif;font-size:15px;margin-bottom:6px}
+  .gcard p{font-size:14px;color:var(--ink)}
+  .gcard .gd{font-family:"PingFang SC",sans-serif;font-size:12.5px;color:var(--sub);margin-top:8px}
+  /* checklist */
+  .check{border:1.5px solid var(--ink);border-radius:4px;background:var(--card);padding:30px 36px;column-count:2;column-gap:44px}
+  @media(max-width:760px){.check{column-count:1}}
+  .check li{list-style:none;font-size:15px;padding:9px 0 9px 34px;position:relative;break-inside:avoid;border-bottom:1px dashed var(--line)}
+  .check li::before{content:"□";position:absolute;left:2px;font-size:18px;color:var(--r)}
+  .check li b{font-family:"PingFang SC",sans-serif}
+  .check li small{display:block;color:var(--sub);font-family:"PingFang SC",sans-serif;font-size:12.5px}
+
+  .strips{margin-top:16px;border-top:1px dashed var(--line);padding-top:14px}
+  .strips .slabel{font-family:"PingFang SC",sans-serif;font-size:12px;letter-spacing:.15em;color:var(--sub);margin-bottom:8px}
+  .strips img{width:100%;display:block;border:1px solid var(--line);border-radius:4px;margin-bottom:10px;background:#fff}
+  .overview img{width:100%;border:1.5px solid var(--ink);border-radius:4px;display:block}
+  .overview .cap{font-family:"PingFang SC",sans-serif;font-size:12.5px;color:var(--sub);margin-top:8px}
+  footer{margin-top:80px;padding-top:22px;border-top:3px solid var(--ink);font-family:"PingFang SC",sans-serif;font-size:13px;color:var(--sub);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="tag">TRAVEL DEAL SHORT-VIDEO PLAYBOOK · v4.0 双目标版 · 2026-07</div>
+  <h1>旅行交易引流短视频方法论</h1>
+  <div class="sub">45 条内部视频(8 组 · 爆款 + bad case)逐句归因 + 39 条外部样本 · 十组同人对照实验</div>
+  <div class="one"><em>播放篇</em>决定能不能爆,<em>引流篇</em>决定转化档位——两套要素,先活下来,再谈转化。</div>
+</div>
+
+<!-- 三层结构 -->
+<section>
+  <div class="kicker">STRUCTURE · 框架</div>
+  <h2>三层结构</h2>
+  <p class="lede">条件是入场券,原因才是排位赛。同样满足 S 层的视频,引流率可以差 5-100 倍——差异全部由 R 层解释。</p>
+  <div class="layers">
+    <div class="layer ls">
+      <div class="name"><small>LAYER 1 · 入场条件</small>S1–S4</div>
+      <div class="body">缺任何一件,引流没有资格发生。
+        <div class="chips"><span class="chip">S1 三秒利益数字</span><span class="chip">S2 证明画面三选一</span><span class="chip">S3 关键词化 CTA</span><span class="chip">S4 评论区第二转化层</span></div>
+      </div>
+      <div class="verdict">必要不充分。⑮的 CTA 全组最强仍 0 引流——条件没机会生效,因为视频死于冷启动。</div>
+    </div>
+    <div class="layer lr">
+      <div class="name"><small>LAYER 2 · 档位开关</small>R1–R5</div>
+      <div class="body">同条件下决定 0 / 20 / 100 / 250 档,<b>开关不是滑块</b>。
+        <div class="chips"><span class="chip">R1 因果链</span><span class="chip">R2 承诺-兑现</span><span class="chip">R3 确定性话术</span><span class="chip">R4 CTA 可执行</span><span class="chip">R5 钱前码后</span></div>
+      </div>
+      <div class="verdict">来自十组同人/同模板/同素材对照实验,人、账号、题材变量全部被排除。</div>
+    </div>
+    <div class="layer lg">
+      <div class="name"><small>LAYER 3 · 执行公式</small>组打法</div>
+      <div class="body">7 个组各自被数据验证的公式与发布前 checklist(英铁"秘密宣告+点三下"、韩语"人群点名+魔法词"、火酒"三连断言+常驻水印"……)</div>
+      <div class="verdict">同一模板下,分差全部来自执行细节:CTA 动词、界面帧、封面、钩子首句。</div>
+    </div>
+  </div>
+</section>
+
+<!-- 档位阶梯 -->
+<section>
+  <div class="kicker">EVIDENCE · 总验证</div>
+  <h2>档位阶梯:R 通过数 ↔ 引流率</h2>
+  <p class="lede">把 45 条按 R1–R5 通过数排序,引流率(引流/万次播放)呈离散档位,<b>中间没有过渡带</b>。中文、英文、韩文三个语种复现同一形态。</p>
+  <div class="ladder sans">
+    <div class="lrow"><div class="lpass">R 通过 5/5</div><div><div class="lbar" style="width:100%;background:#15803d">100 – 250 / 万播</div></div><div class="lcase">牛首山 250 · 车门关闭 22/23/25 均 100</div></div>
+    <div class="lrow"><div class="lpass">R 通过 4</div><div><div class="lbar" style="width:34%;background:#4d9960">23 – 28</div></div><div class="lcase">万岁山 26.7 · 候补⑨ 26.8 · 廉航 23.5 · 日本免税 28.3</div></div>
+    <div class="lrow"><div class="lpass">R 通过 2.5–3.5</div><div><div class="lbar" style="width:16%;background:#c98a2c">8 – 20</div></div><div class="lcase">火车候补⑤ 7.9 · Cornwall(TT) 20 · 幽灵火车 20</div></div>
+    <div class="lrow"><div class="lpass">R 通过 ≤2</div><div><div class="lbar" style="width:6%;background:#b91c1c">0 – 4.3</div></div><div class="lcase">武功山 4.3 · 演绎酒店 2.2 · 全部 bad case 0</div></div>
+    <div class="lnote" style="color:var(--ink);font-weight:500">归因目标分离(v3.2):R1/R4 归因<b>引流</b>,R3 归因<b>播放</b>(22vs23 引流率相同、播放差 36%),R2 双目标;无引流数据样本(投放素材/未回填)只做播放归因,引流侧标 ⚠结构预判。</div>
+    <div class="lnote">⚠ 反直觉自洽:赞率全表第二的「演绎酒店」引流垫底(2.2);赞率全表最低的「牛首山」引流第一(250)。引流和点赞是两套机制。</div>
+  
+  <div class="overview" style="margin-top:28px"><img src="抽帧分析/00_全组0秒帧总览.jpg" alt="全组0秒帧总览"><div class="cap">▲ 8 组全部样本的 0 秒开场帧对照:爆款组整齐呈现"实拍+利益/秘密大字",bad case 集中在图库空镜、AI 生成图与泛词封面。</div></div>
+</div>
+</section>
+
+<!-- R1 -->
+<section>
+  <div class="kicker">RULE · 原因层</div>
+  <h2>双目标要素总览:播放篇 × 引流篇</h2>
+  <p class="lede">方法论按两个判断目标拆解。<b>播放篇七要素</b>(钩子句式/确定性/承诺兑现/钱词前置/封面/清单密度/人设选题)决定能不能爆;<b>引流篇七要素</b>(因果链/CTA可执行/承接物/码后留人/分层/证明画面/评论区)决定 0/20/100/250 哪一档。下面按目标分组给出最硬的实验证据;全部十四要素的完整证据见《方法论_完整版.md》。</p>
+
+  
+</section>
+
+<section>
+  <div class="kicker" style="color:#2563a8">TARGET 1 · 播放篇</div>
+  <h2>播放判断要素(能不能爆)</h2>
+  <p class="lede">七要素:播1 钩子句式 · <b>播2 确定性(hedge=0)</b> · <b>播3 承诺-兑现(冷启动生死)</b> · 播4 钱词≤10s · 播5 封面实拍双词 · 播6 清单密度 · 播7 人设+选题半径。铁证:22vs23 引流率完全相同,播放差 36%——下面两张卡是播放篇最硬的实验。</p>
+  <div class="rule">
+    <div class="rhead"><span class="rno">播2</span><span class="rtitle">确定性话术:hedge 词=0(原 R3)</span><span class="rhow">检验:数弱化词<br>中文「可以/的话/其实也」· 英文「effectively/one reason/all that」</span></div>
+    <div class="rbody">
+      <p class="logic">实验:#22 与 #23 同账号同结构同 CTA 同封面,引流率<b>完全相同</b>(100/万播),播放差 36%。逐词 diff 只有四处——全部是弱化词。</p>
+      <table class="diff">
+        <tr><th></th><th style="color:var(--good)">#22 · 28 万播放</th><th style="color:var(--bad)">#23 · 18 万播放(-36%)</th></tr>
+        <tr><td>钩子</td><td>"nobody tells you"(有人在瞒你)</td><td>"most people never <mark class="bad">hear about</mark>"(只是没听过——指控对象消失)</td></tr>
+        <tr><td>机制</td><td>"<b>immediately</b> lose value"</td><td>"<mark class="bad">effectively</mark> lose value"(瞬间→约略)</td></tr>
+        <tr><td>推论</td><td>"<b>That's why</b>…never displayed"</td><td>"That's <mark class="bad">one reason</mark>…aren't advertised <mark class="bad">all that</mark> prominently"(唯一因果→部分原因)</td></tr>
+        <tr><td>利益</td><td>"save around a third <b>every time</b>"(比例+复利想象)</td><td>"saving <mark class="bad">seven pounds</mark>"(一次性 £7,自己把价值说小)</td></tr>
+      </table>
+      <div class="duel" style="margin-top:18px">
+        <div class="qcard good">
+          <div class="qtop"><span>中文复现 · #9 候补时间</span><span class="qdata">112w 播(内部第一)· 26.8/万播</span></div>
+          <blockquote><span class="t">6.1–13.5s</span>「周二下午 3 点,<mark>有票</mark>。周三下午 6 点,<mark>有票</mark>。周日上午 8 点之前和晚上 10 点之后,<mark>有票</mark>。」</blockquote>
+          <div class="qwhy">三连断言像钉钉子,hedge=0,收尾「您记住了吗」。</div>
+        </div>
+        <div class="qcard badx">
+          <div class="qtop"><span>中文反例 · #5 火车候补</span><span class="qdata">63w 播 · 引流率仅 #9 的 30%</span></div>
+          <blockquote><span class="t">23.3–27.3s</span>「<mark class="bad">嫌麻烦的话,你可以</mark>在这搜这几位数……」</blockquote>
+          <div class="qwhy">把核心承接物降级成可有可无的备选项。</div>
+        </div>
+      </div>
+<div class="strips"><div class="slabel">证据帧 · #22(上,0 hedge,28w) vs #23(中,4 处 hedge,18w):同封面同结构;#9 候补(下):三连断言+常驻水印</div>
+<img src="抽帧分析/22_抽帧条.jpg" alt="22_抽帧条.jpg">
+<img src="抽帧分析/23_抽帧条.jpg" alt="23_抽帧条.jpg">
+<img src="抽帧分析/09_抽帧条.jpg" alt="09_抽帧条.jpg"></div>
+
+    </div>
+  </div>
+
+  <!-- R4 -->
+  <div class="rule">
+    <div class="rhead"><span class="rno">播3</span><span class="rtitle">承诺-兑现一致:冷启动生死(原 R2)</span><span class="rhow">检验:问"观众照旧做会亏吗?"<br>答不亏 = 毙稿;码前 ≥1 条免费干货</span></div>
+    <div class="rbody">
+      <p class="logic">实验:同人同钩子句式,一条正文兑现损失、一条正文自我否定,<b>播放差 230 倍</b>(刘唱 #17 vs #20);同款利益点+CTA,"干货先兑现"全爆、"秘密=广告"全扑(韩语 197 vs 225 模板)。</p>
+      <div class="duel">
+        <div class="qcard good">
+          <div class="qtop"><span>正例 · #4 万岁山(郭玉儒)</span><span class="qdata">15w 播 · 26.7/万播</span></div>
+          <blockquote><span class="t">13.2–22.9s</span>「万岁山的门票<mark>千万不要直接买</mark>。成人票一百,学生票半价,<mark>但是小程序购票没有任何优惠</mark>。按照这个方法,<mark>领五十块钱的优惠券</mark>,门票直接半价拿下」</blockquote>
+          <div class="qwhy">禁令句 + 亏钱路径被点名 + 方法有名字。照旧买 = 实亏 50 元(50%)。</div>
+        </div>
+        <div class="qcard badx">
+          <div class="qtop"><span>反例 · #3 武功山(同一个郭玉儒)</span><span class="qdata">6.9w 播 · 4.3/万播(差 6.2 倍)</span></div>
+          <blockquote><span class="t">11.3–16.0s</span>「门票价格<mark class="bad">正常是七十元</mark>,但用<mark class="bad">这个方法</mark>可以买到另一种票,双人门票六十拿下」</blockquote>
+          <div class="qwhy">陈述句念价目表;不用方法只多花 10 元(14%),无亏损感;"这个方法"没有名字。</div>
+        </div>
+      </div>
+      <div class="duel" style="margin-top:18px">
+        <div class="qcard badx">
+          <div class="qtop"><span>反例 · #20 中国退税(钩子与正文互相打架)</span><span class="qdata">231 播放</span></div>
+          <blockquote><span class="t">钩子 0–4.8s</span>「照以前那样购物,10 万韩元白白飞了!」<span class="t" style="margin-top:8px">正文 4.8–13.8s</span>「中国退税<mark class="bad">完全升级了</mark>…手机就能办,更方便了」</blockquote>
+          <div class="qwhy">钩子喊"要亏钱",正文讲"变好了"——不存在"照旧做会亏"的路径,3 秒后观众失去留下的理由。同人 #17(日本免税真取消)5.3w 播。</div>
+        </div>
+        <div class="qcard badx">
+          <div class="qtop"><span>反例 · #15 空座亏损("秘密"=广告)</span><span class="qdata">295 播放 · CTA 全组最强仍 0 引流</span></div>
+          <blockquote><span class="t">7.8–10.6s</span>「现在有个买折扣高铁票的方法」→ <mark class="bad">10.6 秒直接报折扣码</mark>,全片 23 秒,0 条免费干货</blockquote>
+          <div class="qwhy">对照:197 模板先给魔法词「놀이코시」(JR 免费送回)再出广告,三条全爆(7.6w–23.2w)。免费给的必须是承接物的降级版,不能是替代品。</div>
+        </div>
+      </div>
+<div class="strips"><div class="slabel">证据帧 · #4 万岁山(上,26.7) vs #3 武功山(中,4.3);#20 中国退税(下):全组唯一图库空镜开场</div>
+<img src="抽帧分析/04_抽帧条.jpg" alt="04_抽帧条.jpg">
+<img src="抽帧分析/03_抽帧条.jpg" alt="03_抽帧条.jpg">
+<img src="抽帧分析/20_抽帧条.jpg" alt="20_抽帧条.jpg"></div>
+
+    </div>
+  </div>
+
+  <!-- R3 -->
+  
+</section>
+
+<section>
+  <div class="kicker" style="color:#c2410c">TARGET 2 · 引流篇</div>
+  <h2>引流判断要素(能不能转)</h2>
+  <p class="lede">七要素:<b>引1 因果链</b> · <b>引2 CTA 可执行</b> · 引3 承接物关键词化 · <b>引4 码后留人</b> · 引5 免费=降级版 · 引6 证明画面 · 引7 评论区SOP。档位离散(0/20/100/250 无过渡带);播放篇满分救不了引流(Google Flights 80w 赞 CTA=0),引流篇满分也救不了冷启动(韩语15 最强 CTA 仍 0 引流)。</p>
+  <div class="rule">
+    <div class="rhead"><span class="rno">引1</span><span class="rtitle">因果链:钩子必须推导出你卖的东西(原 R1)</span><span class="rhow">检验:钩子和 CTA 连成"因为__所以__"<br>+ 全文搜缝合词(too/顺便)</span></div>
+    <div class="rbody">
+      <p class="logic">实验:<b>固定 CTA,更换前置内容</b>。#22 与 #24 的 CTA 一字不差(点三下+DEAL3),引流率 100 vs 20——唯一变量是前 20 秒与折扣有无因果。</p>
+      <div class="duel">
+        <div class="qcard good">
+          <div class="qtop"><span>正例 · #22 车门关闭</span><span class="qdata">28w 播 · 100/万播</span></div>
+          <blockquote><span class="t">0.0–12.1s</span>"Once the train doors close, any unsold seats immediately lose their commercial value. <mark>That's why</mark> many discounts are never displayed prominently."<br><span class="t" style="margin-top:8px">→ 车门关 → 空座失值 → 所以有隐藏折扣 → 点三下是故事的必然结局</span></blockquote>
+          <div class="qwhy">秘密本身就是优惠的成因,CTA 不是广告,是谜底。</div>
+        </div>
+        <div class="qcard badx">
+          <div class="qtop"><span>反例 · #24 幽灵火车</span><span class="qdata">1.2w 播 · 20/万播</span></div>
+          <blockquote><span class="t">22.7–26.5s(前面 22.7 秒是纯冷知识科普)</span>"And if you're traveling, it helps to know the ticket system, <mark class="bad">too</mark>."</blockquote>
+          <div class="qwhy">一个 "too" 就是缝合的伤口。趣闻推导不出折扣,同一 CTA 效率掉 5 倍。</div>
+        </div>
+      </div>
+      <div class="duel" style="margin-top:18px">
+        <div class="qcard badx">
+          <div class="qtop"><span>反例 · #1 演绎酒店(平行双链)</span><span class="qdata">5.9w 播 · 仅 13 引流</span></div>
+          <blockquote><span class="t">33.7–36.0s 教训句</span>「我第一次住店都知道<mark class="bad">拍视频防身</mark>」<span class="t" style="margin-top:8px">角标水印卖的却是「智行 25620 内部低价酒店」</span></blockquote>
+          <div class="qwhy">内容教"拍视频",水印卖"订酒店"——两条平行线。修复=36s 加一句:"这种酒店我再也不敢乱订,现在只在__查有保障的内部价"。</div>
+        </div>
+        <div class="qcard good">
+          <div class="qtop"><span>补件 · #7 牛首山「优惠因果来源句」</span><span class="qdata">250/万播 · 全库第一</span></div>
+          <blockquote><span class="t">7.4–11.1s</span>「牛首山<mark>为了刺激客流量,联合去哪儿推出专属活动</mark>」</blockquote>
+          <div class="qwhy">一句话回答"折扣凭什么存在",信任成本归零。内部 45 条无一有此句,建议标配。</div>
+        </div>
+      </div>
+<div class="strips"><div class="slabel">证据帧 · #22 车门关闭(上,100/万播) vs #24 幽灵火车(下,20/万播):同为无人实拍,22 全程车厢 POV+录屏,24 封面是卡通 emoji 贴图</div>
+<img src="抽帧分析/22_抽帧条.jpg" alt="22_抽帧条.jpg">
+<img src="抽帧分析/24_抽帧条.jpg" alt="24_抽帧条.jpg">
+<img src="抽帧分析/01_抽帧条.jpg" alt="01_抽帧条.jpg"></div>
+
+    </div>
+  </div>
+
+  <!-- R2 -->
+  <div class="rule">
+    <div class="rhead"><span class="rno">引2</span><span class="rtitle">CTA 可执行:≤1 手势+界面帧;藏名词不藏动词(原 R4)</span><span class="rhow">检验:关掉画面只听音频,<br>让没用过产品的新人照做一遍</span></div>
+    <div class="rbody">
+      <p class="logic">三组实验从三个角度锁定同一变量:同文案换 CTA 动词(#31 vs #22/43)、同素材换 CTA 模块(#21 vs #25)、同人跨平台(#6 vs #10)。</p>
+      <div class="duel">
+        <div class="qcard badx">
+          <div class="qtop"><span>反例 · #31(与 #22 同一篇文案)</span><span class="qdata">7.2w 播 · 引流未回填 ⚠预判</span></div>
+          <blockquote><span class="t">15.0s</span>"<mark class="bad">Search RC7</mark> on TrainPal."<span class="t" style="margin-top:8px">TrainPal 首页搜索框是查车站的——照做必失败;且全片 0 帧 App 界面,码只有 3s 处一行小水印</span></blockquote>
+          <div class="qwhy">播放能起(文案同源);CTA 存在两个结构断点(动作不可执行+无视觉锚)——引流数据未回填,此为⚠结构预判;有数据的同类对照见 21vs25(率差5倍)。</div>
+        </div>
+        <div class="qcard good">
+          <div class="qtop"><span>正例 · #22 / #43</span><span class="qdata">2800 引流 / 50.9w 播</span></div>
+          <blockquote><span class="t">#22 · 12.1–17.0s</span>"tap the train icon <mark>in the top left corner</mark> three times, then enter deal three"<span class="t" style="margin-top:8px">#43 · p2 帧 = 三步信息图:STEP1 圈图标 → STEP2 码写在输入框里 → STEP3 Claim</span></blockquote>
+          <div class="qwhy">五步空间定位,闭眼能做对;码在输入框内"可视"。</div>
+        </div>
+      </div>
+      <div class="duel" style="margin-top:18px">
+        <div class="qcard badx">
+          <div class="qtop"><span>占位符流行病 · #2 / #6(两组三人独立踩坑)</span><span class="qdata">#2:0 引流 · #6:断在最后一环</span></div>
+          <blockquote><span class="t">#6 · 32.1–34.5s</span>「我一般都是用这个,<mark class="bad">第一步第二步</mark>」+ 打码图标 3 秒<span class="t" style="margin-top:8px">#2 · 真答案(智行 65361 燃油券)只以手写纸卡默片出现</span></blockquote>
+          <div class="qwhy">动词名词一起哑掉,音频听完无法复述任何操作。</div>
+        </div>
+        <div class="qcard good">
+          <div class="qtop"><span>正确姿势 · #10(同一个段志超)</span><span class="qdata">R 层 5/5 全过</span></div>
+          <blockquote><span class="t">29.6–43.7s</span>「<mark>打开智行</mark>,首页<mark>搜</mark>自己的航段…<mark>别着急下单,再输这几个数,领一张燃油券</mark>,机建燃油费直接便宜一半」</blockquote>
+          <div class="qwhy">连"智行"都直接口播照样过审——藏名词可以,动词链必须让耳朵听完整。另:同素材 #21(四步导航+SAVE111)20/万播 vs #25(点三下+You'll see)100/万播。</div>
+        </div>
+      </div>
+<div class="strips"><div class="slabel">证据帧 · #31(上):全片无 App 界面帧,7.2w 播放、引流未回填(⚠结构预判:CTA 结构断链);#43(中):三步信息图,码写在输入框里;#10(下):动作链全口播+界面帧</div>
+<img src="抽帧分析/31_抽帧条.jpg" alt="31_抽帧条.jpg">
+<img src="抽帧分析/43_抽帧条.jpg" alt="43_抽帧条.jpg">
+<img src="抽帧分析/10_抽帧条.jpg" alt="10_抽帧条.jpg"></div>
+
+    </div>
+  </div>
+
+  <!-- R5 -->
+  <div class="rule">
+    <div class="rhead"><span class="rno">引4</span><span class="rtitle">码后留人:码不能是内容的终点(原 R5)</span><span class="rhow">检验:掐表钱词秒数<br>+ 数码后干货条数(≥2 或常驻水印)</span></div>
+    <div class="rbody">
+      <p class="logic">钱词秒数与播放强对应(#22 在 8.2s → 28w;#24 拖到 32s → 1.2w)。码位置的真实变量不是百分比,是<b>码后面还剩多少留人内容</b>——两个"违规"样本揭示了机理。</p>
+      <table class="diff">
+        <tr><th>样本</th><th>码位置</th><th>码后内容</th><th>结果</th></tr>
+        <tr><td>#15 空座亏损</td><td>10.6s(46%)</td><td style="color:var(--bad)">0 条干货,只剩权益罗列</td><td style="color:var(--bad)">295 播放</td></tr>
+        <tr><td>#8 泰山攻略</td><td>13.3s(23%,更靠前!)</td><td style="color:var(--good)">压 7 条干货 40 秒:寄存 30/5 · 摆渡车 5 块 · 萤火虫隐藏线 · 日出 4:40 · 夜爬 22:30 · 索道 18 点停运 · 足浴</td><td style="color:var(--good)">100w 播 · 60/万播</td></tr>
+        <tr><td>#9 候补时间</td><td>常驻水印(全程在场)</td><td style="color:var(--good)">19s 短片循环播放,水印曝光 ×N,从不打断故事</td><td style="color:var(--good)">112w 播 · 26.8/万播</td></tr>
+      </table>
+      <div class="qwhy" style="border:none;background:none;padding:14px 2px 0;font-size:14px">码位置几乎相同(46% vs 23%),结果差 300 倍——变量是码后留人内容量(0 条 vs 7 条)。"码后置 60%"是简化表述,真实规则:<b>码不能是内容的终点。</b></div>
+<div class="strips"><div class="slabel">证据帧 · #8 泰山(上):码在 23% 但后压 7 条干货,60/万播;#15 空座亏损(下):码在 46% 后无干货,295 播</div>
+<img src="抽帧分析/08_抽帧条.jpg" alt="08_抽帧条.jpg">
+<img src="抽帧分析/15_抽帧条.jpg" alt="15_抽帧条.jpg"></div>
+
+    </div>
+  </div>
+
+</section>
+
+<!-- 组打法 -->
+<section>
+  <div class="kicker">PLAYBOOK · 执行层</div>
+  <h2>7 个组的已验证公式</h2>
+  <p class="lede">同一模板下分差全部来自执行细节。每组 5 条可打勾的 review 规则见各组报告,此处为公式速览。</p>
+  <div class="groups sans">
+    <div class="gcard"><h4>英铁 3 / 1 组</h4><p>秘密宣告(0 hedge)→ 秘密即优惠成因 → those in the know 分界 → <b>点三下 + You'll see + 界面帧</b> → act fast。封面 = 利益+秘密双词实拍。</p><div class="gd">100/万播三条全用此链;泛词/AI 封面全部冷启动死(142–729 播)</div></div>
+    <div class="gcard"><h4>韩语入境组</h4><p>人群点名+真实损失第一句 → 첫번째 动作级免费干货(魔法词/座位号/话术句)→ 두번째 痛点桥接 → 码(后 1/3)→ 关键词评论。0 秒帧 = 实地人物实拍。</p><div class="gd">爆款码位 19.3–30.5s;唯一图库空镜开场 = 全组最扑(231 播)</div></div>
+    <div class="gcard"><h4>火酒 1 组</h4><p>制服答疑体:答案 ≤3 个可背数字、0 跨 App → 三连断言 → 常驻水印 + 用途词(「查看精准兑现时间」)。免费版必须是承接物的降级版。</p><div class="gd">#9(26.8)vs #5(7.9),3.4 倍</div></div>
+    <div class="gcard"><h4>机酒 1 组</h4><p>金额跳变损失句(10s 内)→ 3+1 结构(工具前 ≥2 条免费干货)→ 动作链全口播,藏名词说动词。</p><div class="gd">#10 全过 vs #6 占位符断链(补口播动词 = 全表最易升档实验)</div></div>
+    <div class="gcard"><h4>创新组</h4><p>劝退体清单 → 优惠 = "禁令 + 亏钱路径"双句 → 方法必须有名词(X 元券)。省额 ≥50 元或 ≥30% 才配当转化位。</p><div class="gd">#4(26.7)vs #3(4.3),6.2 倍</div></div>
+    <div class="gcard"><h4>机酒 3 组</h4><p>冲突演绎保留(赞率全表第二)→ 最后一拍改"领取动作"→ 水印文案要与教训句连成一句话。</p><div class="gd">#1 修复方案:36s 处加一句"翻译"</div></div>
+    <div class="gcard"><h4>火酒 3 组(对标选品)</h4><p>两极配额(交易极 引流/万播≥50 + 内容极 赞/万播≥200)+ R 预筛 ≥4 分 + 承接物同构。</p><div class="gd">#7/#8 各占一极,互补;只按播放选会漏掉 250/万播 的 #7</div></div>
+    <div class="gcard" style="border-left-color:var(--gold)"><h4>全组共同缺口(下阶段)</h4><p>① 优惠因果来源句(45 条无一有);② 真人出镜(英铁两组零人脸,赞率 0.1–0.5% vs 外部 24.3%);③ R4 界面帧标准件推广(#43 三步信息图)。</p><div class="gd">已列入 selector 定向补课清单</div></div>
+  </div>
+</section>
+
+<!-- Checklist -->
+<section>
+  <div class="kicker">SHIP GATE · 发布闸门</div>
+  <h2>发布前 10 项 Checklist(≥9 项才发)</h2>
+  <ul class="check">
+    <li><b>第一句有钱数/真实损失,"照旧做会亏"成立</b><small>R2 · #17 vs #20 = 230 倍播放差</small></li>
+    <li><b>钱词 ≤10 秒首现</b><small>R5 · #22 在 8.2s vs #24 在 32s</small></li>
+    <li><b>hedge 弱化词 = 0</b><small>R3 · #22 vs #23 = 播放 −36%</small></li>
+    <li><b>钩子→产品因果链通,无缝合词</b><small>R1 · #22 vs #24 = 引流率 5 倍</small></li>
+    <li><b>码前 ≥1 条动作级免费干货,且是承接物的降级版</b><small>R2 · #5 vs #9;197 vs 225 模板</small></li>
+    <li><b>CTA ≤1 手势、动词真实、有界面帧</b><small>R4 · 21vs25 率差5倍(真实数据);#31 Search码断链(引流未回填,⚠预判)</small></li>
+    <li><b>关画面单听音频可走完动作(禁「第一步第二步」)</b><small>R4 · #6/#2 vs #10「藏名词说动词」</small></li>
+    <li><b>证明画面三选一在场(双截图/录屏/条款)</b><small>S2 · #28「80% off」无画面 = 522 播</small></li>
+    <li><b>封面与 0 秒帧 = 实拍 + 利益或秘密词(禁图库/AI 图/泛词)</b><small>组打法 · 刘艺 4 条封面判决;#20 空镜</small></li>
+    <li><b>结尾 = 动作指令或投递问句;发布后 1h 评论区 SOP 排班</b><small>S3/S4 · #1 剧情收尾 / #25 act fast</small></li>
+  </ul>
+</section>
+
+<footer>
+  <span>证据文件:45条逐条打分明细表.csv · 抽帧分析/(44 张标注帧条)· 四份组报告 · 方法论_完整版.md(秒级证据全文)</span>
+  <span>v3.1 · 2026-07-06 · 样本 84 条</span>
+</footer>
+
+</div>
+</body>
+</html>

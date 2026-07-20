@@ -1,0 +1,1115 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>旅行交易引流短视频方法论 · 可视化</title>
+  <style>
+    :root {
+      --ink: #20252f;
+      --muted: #667085;
+      --line: #d9dee8;
+      --bg: #f7f8fb;
+      --panel: #ffffff;
+      --blue: #2563eb;
+      --green: #16845b;
+      --amber: #c77a10;
+      --red: #d63b3b;
+      --teal: #0f766e;
+      --violet: #7c3aed;
+      --shadow: 0 12px 28px rgba(21, 31, 52, .08);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.55;
+    }
+    a { color: inherit; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 28px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, .94);
+      backdrop-filter: blur(12px);
+    }
+    .brand { min-width: 230px; font-weight: 800; letter-spacing: 0; }
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+    .nav a {
+      padding: 7px 10px;
+      border-radius: 6px;
+      color: #475467;
+      text-decoration: none;
+      font-size: 13px;
+    }
+    .nav a:hover { background: #eef3ff; color: var(--blue); }
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(360px, .9fr);
+      gap: 24px;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 34px 28px 18px;
+    }
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: clamp(32px, 5vw, 68px);
+      line-height: 1.03;
+      letter-spacing: 0;
+    }
+    .lead {
+      max-width: 820px;
+      margin: 0 0 20px;
+      color: #495366;
+      font-size: 18px;
+    }
+    .meta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      color: #344054;
+      font-size: 13px;
+    }
+    .hero-visual {
+      align-self: stretch;
+      min-height: 330px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 28px 22px;
+    }
+    .metric, .panel, .rule-card, .sample-card, .formula, .check-item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .metric { padding: 16px; }
+    .metric b { display: block; font-size: 28px; line-height: 1.15; }
+    .metric span { color: var(--muted); font-size: 13px; }
+    main { max-width: 1440px; margin: 0 auto; padding: 0 28px 56px; }
+    section { margin-top: 28px; }
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 12px;
+    }
+    .section-head h2 { margin: 0; font-size: 26px; letter-spacing: 0; }
+    .section-head p { margin: 4px 0 0; color: var(--muted); }
+    .panel { padding: 18px; overflow: hidden; }
+    .model {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .layer {
+      min-height: 220px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-left: 6px solid var(--blue);
+      border-radius: 8px;
+      background: #fbfcff;
+    }
+    .layer:nth-child(2) { border-left-color: var(--red); }
+    .layer:nth-child(3) { border-left-color: var(--green); }
+    .layer h3 { margin: 0 0 10px; font-size: 20px; }
+    .layer p { color: #475467; margin: 0 0 12px; }
+    .mini-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .mini-list span {
+      padding: 5px 8px;
+      border: 1px solid #dbe4f2;
+      border-radius: 6px;
+      background: #fff;
+      color: #334155;
+      font-size: 12px;
+    }
+    .chart-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 16px;
+      align-items: start;
+    }
+    .chart-box {
+      position: relative;
+      min-height: 520px;
+      border: 1px solid #ccd6e6;
+      border-radius: 8px;
+      background: #fbfcff;
+      padding: 16px;
+    }
+    .chart-intro {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 14px;
+      padding: 14px 16px;
+      border: 1px solid #d7dfec;
+      border-radius: 8px;
+      background: #ffffff;
+    }
+    .chart-intro b {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 18px;
+    }
+    .chart-intro span { color: var(--muted); font-size: 13px; }
+    .chart-intro .formula-chip {
+      padding: 9px 12px;
+      border-radius: 8px;
+      background: #101828;
+      color: #fff;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .ladder { display: grid; gap: 12px; }
+    .tier-card {
+      display: grid;
+      grid-template-columns: 210px minmax(0, 1fr);
+      min-height: 104px;
+      border: 1px solid #d7dfec;
+      border-radius: 8px;
+      background: #ffffff;
+      overflow: hidden;
+    }
+    .tier-head {
+      display: grid;
+      align-content: center;
+      gap: 4px;
+      padding: 14px;
+      border-left: 8px solid var(--tier-color);
+      background: var(--tier-bg);
+    }
+    .tier-head strong {
+      color: var(--tier-color);
+      font-size: 24px;
+      line-height: 1.05;
+    }
+    .tier-head b { font-size: 16px; }
+    .tier-head span { color: #475467; font-size: 12px; }
+    .tier-body {
+      display: grid;
+      gap: 8px;
+      align-content: center;
+      padding: 14px;
+    }
+    .tier-note {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .tier-note b { color: var(--ink); }
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-height: 36px;
+    }
+    .sample-chip {
+      display: inline-grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 7px;
+      max-width: 280px;
+      min-height: 34px;
+      padding: 6px 8px;
+      border: 1px solid #d7dfec;
+      border-radius: 7px;
+      background: #fff;
+      color: #1f2937;
+      cursor: pointer;
+      font: inherit;
+      font-size: 12px;
+      text-align: left;
+      box-shadow: 0 6px 16px rgba(16, 24, 40, .05);
+    }
+    .sample-chip:hover, .sample-chip.active {
+      border-color: var(--tier-color);
+      box-shadow: 0 0 0 3px var(--tier-ring);
+    }
+    .sample-chip em {
+      display: inline-grid;
+      place-items: center;
+      min-width: 28px;
+      height: 22px;
+      border-radius: 5px;
+      background: var(--tier-bg);
+      color: var(--tier-color);
+      font-style: normal;
+      font-weight: 800;
+    }
+    .sample-chip span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .sample-chip b { color: var(--tier-color); white-space: nowrap; }
+    .empty-tier {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .chart-summary {
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+      border: 1px solid #d7dfec;
+      border-radius: 8px;
+      background: #fff;
+    }
+    .summary-kpi {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .summary-kpi div {
+      padding: 10px;
+      border-radius: 8px;
+      background: #f6f8fc;
+    }
+    .summary-kpi b { display: block; font-size: 20px; line-height: 1.1; }
+    .summary-kpi span { color: var(--muted); font-size: 12px; }
+    .fate-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .fate-card {
+      min-height: 180px;
+      padding: 14px;
+      border: 1px solid #d7dfec;
+      border-top: 6px solid var(--fate-color);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+    .fate-card h3 { margin: 0 0 6px; font-size: 17px; }
+    .fate-card .count { color: var(--fate-color); font-size: 30px; font-weight: 900; line-height: 1; }
+    .fate-card p { margin: 8px 0; color: #475467; font-size: 13px; }
+    .fate-card ul {
+      display: grid;
+      gap: 5px;
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
+      color: #344054;
+      font-size: 12px;
+    }
+    .fate-card button {
+      width: 100%;
+      padding: 6px 8px;
+      border: 1px solid #d7dfec;
+      border-radius: 7px;
+      background: var(--fate-bg);
+      color: #1f2937;
+      cursor: pointer;
+      font: inherit;
+      font-size: 12px;
+      text-align: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .fate-card button:hover {
+      border-color: var(--fate-color);
+      box-shadow: 0 0 0 3px var(--fate-ring);
+    }
+    svg { display: block; width: 100%; height: auto; }
+    .tooltip {
+      position: fixed;
+      pointer-events: none;
+      z-index: 30;
+      display: none;
+      max-width: 310px;
+      padding: 10px 12px;
+      border: 1px solid #cfd8e6;
+      border-radius: 8px;
+      background: #fff;
+      color: #101828;
+      box-shadow: 0 14px 30px rgba(16, 24, 40, .18);
+      font-size: 13px;
+    }
+    .filters { display: grid; gap: 10px; }
+    .filters label { color: var(--muted); font-size: 12px; }
+    select, input[type="search"] {
+      width: 100%;
+      min-height: 36px;
+      border: 1px solid #cfd8e6;
+      border-radius: 6px;
+      background: #fff;
+      color: var(--ink);
+      padding: 7px 9px;
+      font: inherit;
+      font-size: 14px;
+    }
+    .legend { display: grid; gap: 7px; margin-top: 10px; color: #475467; font-size: 13px; }
+    .legend span::before {
+      content: "";
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      margin-right: 8px;
+      border-radius: 50%;
+      background: var(--dot);
+    }
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(360px, .85fr) minmax(0, 1.15fr);
+      gap: 14px;
+    }
+    .sample-list { display: grid; gap: 8px; max-height: 650px; overflow: auto; padding-right: 4px; }
+    .sample-card {
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 10px;
+      cursor: pointer;
+      box-shadow: none;
+    }
+    .sample-card:hover, .sample-card.active { border-color: #93b4ff; background: #f7faff; }
+    .rank {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: #eef4ff;
+      color: var(--blue);
+      font-weight: 800;
+    }
+    .sample-card h3 { margin: 0; font-size: 15px; overflow-wrap: anywhere; }
+    .sample-card p { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+    .score {
+      min-width: 70px;
+      text-align: right;
+      color: var(--green);
+      font-weight: 800;
+    }
+    .detail {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+    .detail img {
+      width: 100%;
+      max-height: 310px;
+      object-fit: contain;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f1f4f9;
+    }
+    .detail h3 { margin: 0; font-size: 22px; }
+    .stat-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+    .stat {
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcff;
+    }
+    .stat b { display: block; }
+    .stat span { color: var(--muted); font-size: 12px; }
+    .rules-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .rule-card { padding: 16px; box-shadow: none; }
+    .rule-card strong {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 30px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      color: #fff;
+      background: var(--blue);
+    }
+    .rule-card.r strong { background: var(--red); }
+    .rule-card h3 { margin: 0 0 8px; font-size: 18px; }
+    .rule-card p { margin: 8px 0; color: #475467; }
+    .rule-card .test { color: #101828; font-weight: 700; }
+    .table-wrap { overflow: auto; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+    table { width: 100%; border-collapse: collapse; min-width: 980px; }
+    th, td {
+      padding: 10px 9px;
+      border-bottom: 1px solid #edf0f5;
+      text-align: left;
+      vertical-align: top;
+      font-size: 13px;
+    }
+    th {
+      position: sticky;
+      top: 54px;
+      z-index: 5;
+      background: #f7f9fc;
+      color: #475467;
+      font-size: 12px;
+    }
+    .mark {
+      display: inline-grid;
+      place-items: center;
+      width: 28px;
+      height: 24px;
+      border-radius: 5px;
+      color: #fff;
+      font-weight: 800;
+    }
+    .ok { background: var(--green); }
+    .half { background: var(--amber); }
+    .bad { background: var(--red); }
+    .formulas {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .formula { padding: 15px; box-shadow: none; }
+    .formula h3 { margin: 0 0 8px; font-size: 18px; }
+    .formula p { margin: 0 0 8px; color: #475467; }
+    .formula b { color: var(--teal); }
+    .check-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .check-item {
+      display: grid;
+      grid-template-columns: 28px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      box-shadow: none;
+    }
+    .check-item input { width: 18px; height: 18px; }
+    .check-item span { color: var(--muted); font-size: 12px; }
+    .progress {
+      height: 12px;
+      border-radius: 999px;
+      background: #e8edf5;
+      overflow: hidden;
+    }
+    .progress b { display: block; height: 100%; width: 0; background: var(--green); transition: width .2s ease; }
+    .evidence {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .evidence a {
+      display: block;
+      min-height: 92px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .evidence b { display: block; margin-bottom: 5px; }
+    .evidence span { color: var(--muted); font-size: 13px; }
+    .frame-strip {
+      width: 100%;
+      margin-top: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+    footer {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 28px 42px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    @media (max-width: 1080px) {
+      .hero, .chart-layout, .two-col { grid-template-columns: 1fr; }
+      .metric-grid, .rules-grid, .formulas, .evidence, .fate-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .hero-visual { min-height: 260px; }
+      .tier-card { grid-template-columns: 180px minmax(0, 1fr); }
+    }
+    @media (max-width: 720px) {
+      .topbar { padding: 10px 14px; display: block; }
+      .brand { margin-bottom: 8px; }
+      .hero, main, footer { padding-left: 14px; padding-right: 14px; }
+      .metric-grid { grid-template-columns: 1fr 1fr; padding-left: 14px; padding-right: 14px; }
+      .rules-grid, .formulas, .check-grid, .evidence, .model, .fate-grid { grid-template-columns: 1fr; }
+      .stat-row { grid-template-columns: repeat(2, 1fr); }
+      .hero h1 { font-size: 34px; }
+      .chart-box { padding: 10px; }
+      .chart-intro { grid-template-columns: 1fr; }
+      .chart-intro .formula-chip { white-space: normal; text-align: center; }
+      .tier-card { grid-template-columns: 1fr; }
+      .tier-head { border-left: 0; border-top: 8px solid var(--tier-color); }
+      .sample-chip { max-width: 100%; }
+    }
+    @page {
+      size: A4 landscape;
+      margin: 10mm;
+    }
+    @media print {
+      html, body {
+        background: #ffffff;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .topbar {
+        position: static;
+        padding: 0 0 8px;
+        border-bottom: 1px solid #d9dee8;
+        background: #ffffff;
+      }
+      .nav { display: none; }
+      .hero, main, footer {
+        max-width: none;
+        padding-left: 0;
+        padding-right: 0;
+      }
+      .hero {
+        grid-template-columns: minmax(0, 1.2fr) minmax(260px, .8fr);
+        padding-top: 14px;
+      }
+      .hero h1 { font-size: 42px; }
+      .lead { font-size: 15px; }
+      .hero-visual { min-height: 260px; box-shadow: none; }
+      .metric-grid {
+        max-width: none;
+        padding-left: 0;
+        padding-right: 0;
+      }
+      section { margin-top: 20px; }
+      .section-head, .metric, .rule-card, .sample-card, .formula, .check-item, .tier-card, .evidence a {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+      .panel, .metric, .rule-card, .sample-card, .formula, .check-item, .evidence a {
+        box-shadow: none;
+      }
+      .chart-layout { grid-template-columns: 1fr; }
+      .chart-box { min-height: 0; }
+      .filters {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        align-items: start;
+      }
+      .chart-summary { grid-column: 1 / -1; }
+      .sample-list { max-height: none; overflow: visible; }
+      .two-col { grid-template-columns: 1fr; }
+      .detail img { max-height: 220px; }
+      .rules-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .formulas, .check-grid, .evidence { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .fate-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+      .fate-card { box-shadow: none; min-height: 0; }
+      .table-wrap { overflow: visible; }
+      table { min-width: 0; table-layout: fixed; }
+      th {
+        position: static;
+        top: auto;
+      }
+      th, td {
+        padding: 6px 5px;
+        font-size: 9px;
+        overflow-wrap: anywhere;
+      }
+      .frame-strip { max-height: 250px; object-fit: contain; }
+      footer { padding-bottom: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand">旅行交易方法论 · 可视化</div>
+    <nav class="nav" aria-label="页面导航">
+      <a href="#model">双目标模型</a>
+      <a href="#chart">四种命运</a>
+      <a href="#samples">样本证据</a>
+      <a href="#rules">规则卡片</a>
+      <a href="#matrix">双目标表</a>
+      <a href="#formula">组打法</a>
+      <a href="#checklist">Checklist</a>
+      <a href="#evidence">证据索引</a>
+    </nav>
+  </div>
+
+  <header class="hero">
+    <div>
+      <h1>旅行交易短视频双目标判稿台</h1>
+      <p class="lead">播放和引流是两张考卷。播放篇解释能不能活过冷启动，引流篇解释流量起来后能不能转化；无引流口径的样本只做播放归因，引流侧只能标为结构预判。</p>
+      <div class="meta-row">
+        <span class="pill">v4.0 双目标版 · 2026-07-06</span>
+        <span class="pill">45 条内部批次</span>
+        <span class="pill">39 条外部采集</span>
+        <span class="pill">播放篇 × 引流篇</span>
+      </div>
+    </div>
+    <div class="hero-visual" id="heroVisual" aria-label="三层结构图"></div>
+  </header>
+
+  <div class="metric-grid" id="metrics"></div>
+
+  <main>
+    <section id="model">
+      <div class="section-head">
+        <div>
+          <h2>核心模型</h2>
+          <p>先判断播放卷，再判断引流卷；两张卷子互不给分。</p>
+        </div>
+      </div>
+      <div class="panel model">
+        <div class="layer">
+          <h3>播放篇 · 能不能爆</h3>
+          <p>解释点开、停留和冷启动。高播放但不转化，不是矛盾，是播放卷过了、引流卷可能没过。</p>
+          <div class="mini-list"><span>钩子句式</span><span>确定性话术</span><span>承诺兑现</span><span>钱词前置</span><span>封面/0秒帧</span><span>清单密度</span><span>人设/选题半径</span></div>
+        </div>
+        <div class="layer">
+          <h3>引流篇 · 能不能转</h3>
+          <p>解释下载、输码、评论投递和成交承接。只有有引流口径时，才能做真实转化归因。</p>
+          <div class="mini-list"><span>因果链</span><span>CTA可执行</span><span>关键词承接</span><span>码后留人</span><span>免费分层</span><span>证明画面</span><span>评论区SOP</span></div>
+        </div>
+        <div class="layer">
+          <h3>归因口径 · 别混账</h3>
+          <p>无引流数据只能解释播放；引流侧可以做结构预判，但不能写成 0 引流结论。</p>
+          <div class="mini-list"><span>全量归因</span><span>播放归因</span><span>结构预判</span><span>口径存疑</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="chart">
+      <div class="section-head">
+        <div>
+          <h2>四种命运 + 引流档位</h2>
+          <p>先看四种命运解释“为什么播放和引流背离”，再看有引流口径样本的转化档位。</p>
+        </div>
+      </div>
+      <div id="fateGrid" class="fate-grid"></div>
+      <div class="panel chart-layout">
+        <div class="chart-box">
+          <div class="chart-intro">
+            <div>
+              <b>引流档位只统计有引流口径的样本</b>
+              <span>无引流数据、#10 存疑样本进入 N/A，只用于播放归因或结构预判。</span>
+            </div>
+            <div class="formula-chip">播放卷 ≠ 引流卷</div>
+          </div>
+          <div id="ladder" class="ladder" role="img" aria-label="R 通过数对应引流每万播放档位"></div>
+        </div>
+        <aside class="filters">
+          <div class="chart-summary" id="chartSummary"></div>
+          <label>组别<select id="groupFilter"></select></label>
+          <label>平台<select id="platformFilter"></select></label>
+          <label>搜索视频/归因<input id="searchBox" type="search" placeholder="例如：牛首山、点三下、hedge"></label>
+        </aside>
+      </div>
+    </section>
+
+    <section id="samples">
+      <div class="section-head">
+        <div>
+          <h2>样本证据</h2>
+          <p>有效引流样本优先，无/存疑口径后置；点开看播放开关、引流开关、归因口径和抽帧条。</p>
+        </div>
+      </div>
+      <div class="panel two-col">
+        <div class="sample-list" id="sampleList"></div>
+        <div class="detail" id="sampleDetail"></div>
+      </div>
+    </section>
+
+    <section id="rules">
+      <div class="section-head">
+        <div>
+          <h2>规则卡片</h2>
+          <p>每条规则保留“规则陈述 + 推导证据 + 发布前检验”。</p>
+        </div>
+      </div>
+      <div class="rules-grid" id="rulesGrid"></div>
+    </section>
+
+    <section id="matrix">
+      <div class="section-head">
+        <div>
+          <h2>双目标明细表</h2>
+          <p>逐条看播放开关、引流开关和归因口径；绿是通过，黄是半通过，红是未通过。</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table id="matrixTable"></table>
+      </div>
+    </section>
+
+    <section id="formula">
+      <div class="section-head">
+        <div>
+          <h2>7 组打法公式</h2>
+          <p>从“方法论”落到脚本骨架，减少每次从零写稿。</p>
+        </div>
+      </div>
+      <div class="formulas" id="formulas"></div>
+    </section>
+
+    <section id="checklist">
+      <div class="section-head">
+        <div>
+          <h2>发布前 Checklist</h2>
+          <p>10 项里至少 9 项通过再发；勾选会自动计算通过率。</p>
+        </div>
+        <div style="min-width: 230px">
+          <div id="checkScore" style="margin-bottom: 6px; font-weight: 800">0/10</div>
+          <div class="progress"><b id="checkBar"></b></div>
+        </div>
+      </div>
+      <div class="check-grid" id="checkGrid"></div>
+    </section>
+
+    <section id="evidence">
+      <div class="section-head">
+        <div>
+          <h2>证据文件索引</h2>
+          <p>同目录文件可直接打开；抽帧条已在样本详情中引用。</p>
+        </div>
+      </div>
+      <div class="evidence">
+        <a href="旅行交易引流短视频方法论_完整版.md"><b>原始方法论</b><span>完整 v4.0 双目标文档</span></a>
+        <a href="45条逐条打分明细表.csv"><b>45 条明细表</b><span>播放开关、引流开关、归因口径</span></a>
+        <a href="抽帧分析/00_全组0秒帧总览.jpg"><b>0 秒帧总览</b><span>8 组开场帧横向对比</span></a>
+        <a href="内部视频全量归因报告.md"><b>内部全量归因</b><span>十组对照实验汇总</span></a>
+        <a href="归因_英铁3组.md"><b>英铁3组归因</b><span>22/23/24 逐句 diff</span></a>
+        <a href="归因_英铁1组.md"><b>英铁1组归因</b><span>31 断链解剖</span></a>
+        <a href="归因_韩语入境组.md"><b>韩语入境组</b><span>197 vs 225 模板</span></a>
+        <a href="归因_中文5组_机酒火酒创新.md"><b>中文 5 组</b><span>机酒火酒创新对照</span></a>
+      </div>
+      <img class="frame-strip" src="抽帧分析/00_全组0秒帧总览.jpg" alt="全组 0 秒帧总览">
+    </section>
+  </main>
+
+  <footer>生成自同目录 CSV 与方法论文档。数据口径沿用 v4.0 双目标版：无引流数据只做播放归因，引流侧为结构预判；行 10 引流率存疑不参与核心量化判断。</footer>
+  <div class="tooltip" id="tooltip"></div>
+
+  <script>
+    const DATA = [{"line": 1, "group": "机酒3组", "owner": "陈潇", "type": "内部爆款", "platform": "抖音", "video": "6.22演绎酒店(带广)", "views": 59000.0, "likes": 859.0, "leads": 13.0, "likePer10k": 145.6, "leadPer10k": 2.2, "leadMissing": false, "playSwitch": 2.0, "flowSwitch": 0.0, "attributionScope": "全量(播放+引流)", "duration": 46.2, "scores": {"利益明确": 0.0, "证明画面": 2.0, "CTA强度": 1.0, "第四维": 4.0}, "rMarks": {"R1": "✗", "R2": "✓", "R3": "✓", "R4": "✗", "R5": "✗"}, "rScore": 2.0, "diagnosis": "内容链(拍视频防身)与水印链(低价酒店)平行不相交,36s处缺一句翻译", "frame": "抽帧分析/01_抽帧条.jpg", "keyframe": "关键帧/01_0s.jpg"}, {"line": 2, "group": "机酒3组", "owner": "陈潇", "type": "内部bad", "platform": "抖音", "video": "机建燃油费(双人带广)", "views": 224.0, "likes": 1.0, "leads": 0.0, "likePer10k": 44.6, "leadPer10k": 0.0, "leadMissing": false, "playSwitch": 1.0, "flowSwitch": 0.0, "attributionScope": "全量(播放+引流)", "duration": 23.5, "scores": {"利益明确": 1.0, "证明画面": 1.0, "CTA强度": 0.0, "第四维": 1.0}, "rMarks": {"R1": "✗", "R2": "✗", "R3": "✓", "R4": "✗", "R5": "✗"}, "rScore": 1.0, "diagnosis": "钩子问错问题(照旧交不亏,R2先天死);70%时长兑现名词解释;答案哑剧化", "frame": "抽帧分析/02_抽帧条.jpg", "keyframe": "关键帧/02_0s.jpg"}, {"line": 3, "group": "创新组", "owner": "郭玉儒", "type": "内部爆款", "platform": "抖音", "video": "6.17武功山", "views": 69000.0, "likes": 878.0, "leads": 30.0, "likePer10k": 127.2, "leadPer10k": 4.3, "leadMissing": false, "playSwitch": 1.0, "flowSwitch": 1.0, "attributionScope": "全量(播放+引流)", "duration": 39.1, "scores": {"利益明确": 2.0, "证明画面": 3.0, "CTA强度": 1.0, "第四维": 4.0}, "rMarks": {"R1": "✓", "R2": "✗", "R3": "✓", "R4": "✗", "R5": "✗"}, "rScore": 2.0, "diagnosis": "优惠写成可选知识点:无禁令句、无亏钱路径、方法无名词(省10元不足以承诺)", "frame": "抽帧分析/03_抽帧条.jpg", "keyframe": "关键帧/03_0s.jpg"}, {"line": 4, "group": "创新组", "owner": "郭玉儒", "type": "内部爆款", "platform": "抖音", "video": "万岁山门票", "views": 150000.0, "likes": 1810.0, "leads": 400.0, "likePer10k": 120.7, "leadPer10k": 26.7, "leadMissing": false, "playSwitch": 2.0, "flowSwitch": 2.0, "attributionScope": "全量(播放+引流)", "duration": 39.3, "scores": {"利益明确": 4.0, "证明画面": 3.0, "CTA强度": 3.0, "第四维": 4.0}, "rMarks": {"R1": "✓", "R2": "✓", "R3": "✓", "R4": "半", "R5": "半"}, "rScore": 4.0, "diagnosis": "禁令+亏钱路径双句(千万不要直接买/小程序没有任何优惠)+方法命名(50元券)", "frame": "抽帧分析/04_抽帧条.jpg", "keyframe": "关键帧/04_0s.jpg"}, {"line": 5, "group": "火酒1组", "owner": "胡金贝", "type": "内部爆款", "platform": "抖音", "video": "火车候补隐藏操作", "views": 630000.0, "likes": 5200.0, "leads": 500.0, "likePer10k": 82.5, "leadPer10k": 7.9, "leadMissing": false, "playSwitch": 1.0, "flowSwitch": 1.5, "attributionScope": "全量(播放+引流)", "duration": 32.3, "scores": {"利益明确": 2.0, "证明画面": 4.0, "CTA强度": 2.0, "第四维": 4.0}, "rMarks": {"R1": "✓", "R2": "✓", "R3": "✗", "R4": "✗", "R5": "半"}, "rScore": 2.5, "diagnosis": "答案=4步跨App教程(学会即不需要工具);hedge句「嫌麻烦的话你可以」;口令仅5s曝光", "frame": "抽帧分析/05_抽帧条.jpg", "keyframe": "关键帧/05_0s.jpg"}, {"line": 6, "group": "机酒1组", "owner": "段志超", "type": "内部爆款", "platform": "抖音", "video": "廉航行李箱", "views": 170000.0, "likes": 845.0, "leads": 400.0, "likePer10k": 49.7, "leadPer10k": 23.5, "leadMissing": false, "playSwitch": 2.0, "flowSwitch": 1.5, "attributionScope": "全量(播放+引流)", "duration": 34.6, "scores": {"利益明确": 4.0, "证明画面": 3.0, "CTA强度": 1.0, "第四维": 4.0}, "rMarks": {"R1": "✓", "R2": "✓", "R3": "✓", "R4": "✗", "R5": "半"}, "rScore": 3.5, "diagnosis": "「第一步第二步」占位符+打码图标(动词名词全哑);R2损失(补300)硬扛出23.5档", "frame": "抽帧分析/06_抽帧条.jpg", "keyframe": "关键帧/06_0s.jpg"}, {"line": 7, "group": "火酒3组", "owner": "朱乐辉", "type": "外部对标", "platform": "抖音", "video": "牛首山(去哪儿)", "views": 200000.0, "likes": 740.0, "leads": 5000.0, "likePer10k": 37.0, "leadPer10k": 250.0, "leadMissing": false, "playSwitch": 2.0, "flowSwitch": 3.0, "attributionScope": "全量(播放+引流)", "duration": 33.6, "scores": {"利益明确": 5.0, "证明画面": 5.0, "CTA强度": 5.0, "第四维": 5.0}, "rMarks": {"R1": "✓", "R2": "✓", "R3": "✓", "R4": "✓", "R5": "✓"}, "rScore": 5.0, "diagnosis": "R层5/5全过:钱词1.96s+优惠因果来源句+双路径兜底+拆顾虑条款", "frame": "抽帧分析/07_抽帧条.jpg", "keyframe": "关键帧/07_0s.jpg"}, {"line": 8, "group": "火酒3组", "owner": "涂天驰", "type": "外部对标", "platform": "抖音", "video": "泰山攻略", "views": 1000000.0, "likes": 23000.0, "leads": 6000.0, "likePer10k": 230.0, "leadPer10k": 60.0, "leadMissing": false, "playSwitch": 2.0, "flowSwitch": 1.5, "attributionScope": "全量(播放+引流)", "duration": 57.9, "scores": {"利益明确": 4.0, "证明画面": 4.0, "CTA强度": 2.0, "第四维": 5.0}, "rMarks": {"R1": "✓", "R2": "✓", "R3": "✓", "R4": "✗", "R5": "半"}, "rScore": 3.5, "diagnosis": "内容极:码在23%但后压7条干货仍60/万播(修正R5机理:变量是码后留人内容量)", "frame": "抽帧分析/08_抽帧条.jpg", "keyframe": "关键帧/08_0s.jpg"}, {"line": 9, "group": "火酒1组", "owner": "钟薇", "type": "内部爆款", "platform": "抖音", "video": "候补时间", "views": 1120000.0, "likes": 7633.0, "leads": 3000.0, "likePer10k": 68.2, "leadPer10k": 26.8, "leadMissing": false, "playSwitch": 2.0, "flowSwitch": 2.5, "attributionScope": "全量(播放+引流)", "duration": 19.0, "scores": {"利益明确": 3.0, "证明画面": 2.0, "CTA强度": 4.0, "第四维": 5.0}, "rMarks": {"R1": "✓", "R2": "✓", "R3": "✓", "R4": "✓", "R5": "半"}, "rScore": 4.5, "diagnosis": "3个可背时间点+三连断言「有票」+常驻水印标注用途;免费版=承接物的降级版", "frame": "抽帧分析/09_抽帧条.jpg", "keyframe": "关键帧/09_0s.jpg"}, {"line": 10, "group": "机酒1组", "owner": "段志超", "type": "内部爆款", "platform": "小红书", "video": "机票提前一周", "views": 18000.0, "likes": 888.0, "leads": 4000.0, "likePer10k": 493.3, "leadPer10k": 2222.2, "leadMissing": false, "playSwitch": 2.0, "flowSwitch": 3.0, "attributionScope": "全量(播放+引流)", "duration": 68.6, "scores": {"利益明确": 4.0, "证明画面": 4.0, "CTA强度": 5.0, "第四维": 4.0}, "rMarks": {"R1": "✓", "R2": "✓", "R3": "✓", "R4": "✓", "R5": "✓"}, "rScore": 5.0, "diagnosis": "R层5/5:藏名词说动词(动作链全口播);3+1结构;⚠引流口径存疑", "frame": "抽帧分析/10_抽帧条.jpg", "keyframe": "关键帧/10_0s.jpg"}, {"line": 11, "group": "韩语入境组", "owner": "曾熙夏", "type": "内部爆款", "platform": "IG", "video": "日本入境-197", "views": 232000.0, "likes": 1388.0, "leads": 400.0, "likePer10k": 59.8, "leadPer10k": 17.2, "leadMissing": false, "playSwitch": 2.0, "flowSwitch": 3.0, "attributionScope": "全量(播放+引流)", "duration": 41.8, "scores": {"利益明确": 4.0, "证明画面": 3.0, "CTA强度": 4.0, "第四维": 4.0}, "rMarks": {"R1": "✓", "R2": "✓", "R3": "✓", "R4": "✓", "R5": "✓"}, "rScore": 5.0, "diagnosis": "真实损失钩(排队浪费时间)+干货先兑现(VisitJapanWeb省20-30分钟)", "frame": "抽帧分析/11_抽帧条.jpg", "keyframe": "关键帧/11_0s.jpg"}, {"line": 12, "group": "韩语入境组", "owner": "曾熙夏", "type": "内部爆款", "platform": "IG", "video": "车站迷路-197", "views": 152000.0, "likes": 884.0, "leads": 200.0, "likePer10k": 58.2, "leadPer10k": 13.2, "leadMissing": false, "playSwitch": 2.0, "flowSwitch": 3.0, "attributionScope": "全量(播放+引流)", "duration": 34.4, "scores": {"利益明确": 4.0, "证明画面": 4.0, "CTA强度": 4.0, "第四维": 4.0}, "rMarks": {"R1": "✓", "R2": "✓", "R3": "✓", "R4": "✓", "R5": "✓"}, "rScore": 5.0, "diagnosis": "人群点名(坐新干线的韩国人)+魔法词놀이코시+站务员制服动作级证明", "frame": "抽帧分析/12_抽帧条.jpg", "keyframe": "关键帧/12_0s.jpg"}, {"line": 13, "group": "韩语入境组", "owner": "曾熙夏", "type": "内部爆款", "platform": "IG", "video": "环球影城-197v2", "views": 76000.0, "likes": 334.0, "leads": 100.0, "likePer10k": 43.9, "leadPer10k": 13.2, "leadMissing": false, "playSwitch": 2.0, "flowSwitch": 3.0, "attributionScope": "全量(播放+引流)", "duration": 34.0, "scores": {"利益明确": 5.0, "证明画面": 3.0, "CTA强度": 4.0, "第四维": 4.0}, "rMarks": {"R1": "✓", "R2": "✓", "R3": "✓", "R4": "✓", "R5": "✓"}, "rScore": 5.0, "diagnosis": "冤大头钩+夜场半价+提前15分钟入场,广告=解决抢光痛点的工具", "frame": "抽帧分析/13_抽帧条.jpg", "keyframe": "关键帧/13_0s.jpg"}, {"line": 14, "group": "韩语入境组", "owner": "曾熙夏", "type": "内部bad", "platform": "IG", "video": "最亏方式-225", "views": 444.0, "likes": 5.0, "leads": 0.0, "likePer10k": 112.6, "leadPer10k": 0.0, "leadMissing": false, "playSwitch": 1.0, "flowSwitch": 0.5, "attributionScope": "全量(播放+引流)", "duration": 40.4, "scores": {"利益明确": 2.0, "证明画面": 2.0, "CTA强度": 3.0, "第四维": 1.0}, "rMarks": {"R1": "✗", "R2": "✗", "R3": "✓", "R4": "半", "R5": "✗"}, "rScore": 1.5, "diagnosis": "全片0数字0可执行动作,两条\"技巧\"都是广告脚手架;反讽钩无人群", "frame": "抽帧分析/14_抽帧条.jpg", "keyframe": "关键帧/14_0s.jpg"}, {"line": 15, "group": "韩语入境组", "owner": "曾熙夏", "type": "内部bad", "platform": "IG", "video": "空座亏损-225", "views": 295.0, "likes": 1.0, "leads": 0.0, "likePer10k": 33.9, "leadPer10k": 0.0, "leadMissing": false, "playSwitch": 1.0, "flowSwitch": 1.0, "attributionScope": "全量(播放+引流)", "duration": 23.9, "scores": {"利益明确": 2.0, "证明画面": 3.0, "CTA强度": 4.0, "第四维": 1.0}, "rMarks": {"R1": "✗", "R2": "✗", "R3": "✓", "R4": "✓", "R5": "✗"}, "rScore": 2.0, "diagnosis": "10.6s(46%)报码,\"秘密\"揭晓=广告本身;CTA全组最强照样0引流", "frame": "抽帧分析/15_抽帧条.jpg", "keyframe": "关键帧/15_0s.jpg"}, {"line": 16, "group": "韩语入境组", "owner": "刘唱", "type": "内部爆款", "platform": "IG", "video": "中国酒店延迟退房", "views": 88000.0, "likes": 407.0, "leads": 200.0, "likePer10k": 46.2, "leadPer10k": 22.7, "leadMissing": false, "playSwitch": 2.0, "flowSwitch": 3.0, "attributionScope": "全量(播放+引流)", "duration": 30.8, "scores": {"利益明确": 4.0, "证明画面": 3.0, "CTA强度": 4.0, "第四维": 4.0}, "rMarks": {"R1": "✓", "R2": "✓", "R3": "✓", "R4": "✓", "R5": "✓"}, "rScore": 5.0, "diagnosis": "可照念话术模板(下午3点飞机能2点退房吗→免费多2小时)", "frame": "抽帧分析/16_抽帧条.jpg", "keyframe": "关键帧/16_0s.jpg"}, {"line": 17, "group": "韩语入境组", "owner": "刘唱", "type": "内部爆款", "platform": "IG", "video": "日本免税新规", "views": 53000.0, "likes": 213.0, "leads": 150.0, "likePer10k": 40.2, "leadPer10k": 28.3, "leadMissing": false, "playSwitch": 2.0, "flowSwitch": 3.0, "attributionScope": "全量(播放+引流)", "duration": 32.6, "scores": {"利益明确": 4.0, "证明画面": 2.0, "CTA强度": 5.0, "第四维": 3.0}, "rMarks": {"R1": "✓", "R2": "✓", "R3": "✓", "R4": "✓", "R5": "✓"}, "rScore": 5.0, "diagnosis": "制度真实变更=损失成立;첫번째/두번째干净两拍", "frame": "抽帧分析/17_抽帧条.jpg", "keyframe": "关键帧/17_0s.jpg"}, {"line": 18, "group": "韩语入境组", "owner": "刘唱", "type": "内部爆款", "platform": "IG", "video": "日本花火大会", "views": 108000.0, "likes": 1259.0, "leads": 100.0, "likePer10k": 116.6, "leadPer10k": 9.3, "leadMissing": false, "playSwitch": 2.0, "flowSwitch": 3.0, "attributionScope": "全量(播放+引流)", "duration": 42.2, "scores": {"利益明确": 3.0, "证明画面": 4.0, "CTA强度": 3.0, "第四维": 5.0}, "rMarks": {"R1": "✓", "R2": "✓", "R3": "✓", "R4": "✓", "R5": "✓"}, "rScore": 5.0, "diagnosis": "人生清单钩+显式저장收藏钩;赞数全组第一梯队", "frame": "抽帧分析/18_抽帧条.jpg", "keyframe": "关键帧/18_0s.jpg"}, {"line": 19, "group": "韩语入境组", "owner": "刘唱", "type": "内部爆款", "platform": "IG", "video": "中国高铁靠窗", "views": 81000.0, "likes": 450.0, "leads": 150.0, "likePer10k": 55.6, "leadPer10k": 18.5, "leadMissing": false, "playSwitch": 2.0, "flowSwitch": 3.0, "attributionScope": "全量(播放+引流)", "duration": 44.9, "scores": {"利益明确": 4.0, "证明画面": 3.0, "CTA强度": 5.0, "第四维": 5.0}, "rMarks": {"R1": "✓", "R2": "✓", "R3": "✓", "R4": "✓", "R5": "✓"}, "rScore": 5.0, "diagnosis": "A/F座动作级干货(记住=终身受用);广告=干货的执行工具,桥接全组最顺", "frame": "抽帧分析/19_抽帧条.jpg", "keyframe": "关键帧/19_0s.jpg"}, {"line": 20, "group": "韩语入境组", "owner": "刘唱", "type": "内部bad", "platform": "IG", "video": "中国退税", "views": 231.0, "likes": 3.0, "leads": 0.0, "likePer10k": 129.9, "leadPer10k": 0.0, "leadMissing": false, "playSwitch": 1.0, "flowSwitch": 1.5, "attributionScope": "全量(播放+引流)", "duration": 33.9, "scores": {"利益明确": 3.0, "证明画面": 2.0, "CTA强度": 4.0, "第四维": 3.0}, "rMarks": {"R1": "✗", "R2": "✗", "R3": "✓", "R4": "✓", "R5": "半"}, "rScore": 2.5, "diagnosis": "钩子喊亏钱正文讲好消息(承诺-兑现断裂);全组唯一图库空镜开场", "frame": "抽帧分析/20_抽帧条.jpg", "keyframe": "关键帧/20_0s.jpg"}, {"line": 21, "group": "英铁3组", "owner": "赵舒毅", "type": "内部爆款", "platform": "TikTok", "video": "夜间火车Cornwall(TT)", "views": 340000.0, "likes": 19000.0, "leads": 680.0, "likePer10k": 558.8, "leadPer10k": 20.0, "leadMissing": false, "playSwitch": 2.0, "flowSwitch": 1.5, "attributionScope": "全量(播放+引流)", "duration": 41.4, "scores": {"利益明确": 3.0, "证明画面": 3.0, "CTA强度": 2.0, "第四维": 4.0}, "rMarks": {"R1": "✓", "R2": "✓", "R3": "✓", "R4": "✗", "R5": "半"}, "rScore": 3.5, "diagnosis": "四步account导航+SAVE111(产品说明书语言);收尾利益复读非动作;平台混杂", "frame": "抽帧分析/21_抽帧条.jpg", "keyframe": "关键帧/21_0s.jpg"}, {"line": 22, "group": "英铁3组", "owner": "赵舒毅", "type": "内部爆款", "platform": "IG", "video": "车门一旦关闭v1", "views": 280000.0, "likes": 2118.0, "leads": 2800.0, "likePer10k": 75.6, "leadPer10k": 100.0, "leadMissing": false, "playSwitch": 2.0, "flowSwitch": 3.0, "attributionScope": "全量(播放+引流)", "duration": 36.2, "scores": {"利益明确": 4.0, "证明画面": 4.0, "CTA强度": 5.0, "第四维": 3.0}, "rMarks": {"R1": "✓", "R2": "✓", "R3": "✓", "R4": "✓", "R5": "✓"}, "rScore": 5.0, "diagnosis": "组内标杆:秘密即优惠成因因果链+0 hedge+点三下仪式+act fast", "frame": "抽帧分析/22_抽帧条.jpg", "keyframe": "关键帧/22_0s.jpg"}, {"line": 23, "group": "英铁3组", "owner": "赵舒毅", "type": "内部爆款", "platform": "IG", "video": "车门一旦关闭v2", "views": 180000.0, "likes": 333.0, "leads": 1800.0, "likePer10k": 18.5, "leadPer10k": 100.0, "leadMissing": false, "playSwitch": 1.0, "flowSwitch": 3.0, "attributionScope": "全量(播放+引流)", "duration": 31.8, "scores": {"利益明确": 3.0, "证明画面": 4.0, "CTA强度": 4.0, "第四维": 3.0}, "rMarks": {"R1": "✓", "R2": "✓", "R3": "✗", "R4": "✓", "R5": "✓"}, "rScore": 4.0, "diagnosis": "同率100/万播;4个hedge词稀释阴谋叙事→播放-36%;利益降级(£7显小)", "frame": "抽帧分析/23_抽帧条.jpg", "keyframe": "关键帧/23_0s.jpg"}, {"line": 24, "group": "英铁3组", "owner": "赵舒毅", "type": "内部爆款", "platform": "IG", "video": "幽灵火车", "views": 12000.0, "likes": 27.0, "leads": 24.0, "likePer10k": 22.5, "leadPer10k": 20.0, "leadMissing": false, "playSwitch": 2.0, "flowSwitch": 1.0, "attributionScope": "全量(播放+引流)", "duration": 43.4, "scores": {"利益明确": 2.0, "证明画面": 3.0, "CTA强度": 4.0, "第四维": 3.0}, "rMarks": {"R1": "✗", "R2": "✓", "R3": "✓", "R4": "✓", "R5": "✗"}, "rScore": 3.0, "diagnosis": "同CTA不同命:趣闻与折扣零因果(too缝合);钱32s才首现;无稀缺收尾", "frame": "抽帧分析/24_抽帧条.jpg", "keyframe": "关键帧/24_0s.jpg"}, {"line": 25, "group": "英铁3组", "owner": "赵舒毅", "type": "内部爆款", "platform": "IG", "video": "夜间火车Cornwall(IG)", "views": 100000.0, "likes": 775.0, "leads": 1000.0, "likePer10k": 77.5, "leadPer10k": 100.0, "leadMissing": false, "playSwitch": 2.0, "flowSwitch": 3.0, "attributionScope": "全量(播放+引流)", "duration": 41.6, "scores": {"利益明确": 3.0, "证明画面": 4.0, "CTA强度": 5.0, "第四维": 4.0}, "rMarks": {"R1": "✓", "R2": "✓", "R3": "✓", "R4": "✓", "R5": "✓"}, "rScore": 5.0, "diagnosis": "同素材换装点三下模块→率5倍于21;You'll see即时反馈", "frame": "抽帧分析/25_抽帧条.jpg", "keyframe": "关键帧/25_0s.jpg"}, {"line": 26, "group": "英铁3组", "owner": "刘艺", "type": "内部bad", "platform": "IG", "video": "买贵赔三下", "views": 142.0, "likes": 0.0, "leads": 0.0, "likePer10k": 0.0, "leadPer10k": 0.0, "leadMissing": false, "playSwitch": 2.0, "flowSwitch": 2.5, "attributionScope": "全量(播放+引流)", "duration": 26.6, "scores": {"利益明确": 3.0, "证明画面": 2.0, "CTA强度": 4.0, "第四维": 2.0}, "rMarks": {"R1": "✓", "R2": "✓", "R3": "✓", "R4": "✓", "R5": "半"}, "rScore": 4.5, "diagnosis": "比价选题无比价画面;泛词封面(UK TRAVEL Budget Friendly)冷启动死", "frame": "抽帧分析/26_抽帧条.jpg", "keyframe": "关键帧/26_0s.jpg"}, {"line": 27, "group": "英铁3组", "owner": "刘艺", "type": "内部bad", "platform": "IG", "video": "拆车", "views": 234.0, "likes": 0.0, "leads": 0.0, "likePer10k": 0.0, "leadPer10k": 0.0, "leadMissing": false, "playSwitch": 2.0, "flowSwitch": 0.0, "attributionScope": "全量(播放+引流)", "duration": 35.7, "scores": {"利益明确": 2.0, "证明画面": 3.0, "CTA强度": 2.0, "第四维": 3.0}, "rMarks": {"R1": "✗", "R2": "✓", "R3": "✓", "R4": "✗", "R5": "✗"}, "rScore": 2.0, "diagnosis": "恐惧科普22.2s才见钱+三步导航CTA;复刻的是24的缝合结构", "frame": "抽帧分析/27_抽帧条.jpg", "keyframe": "关键帧/27_0s.jpg"}, {"line": 28, "group": "英铁3组", "owner": "刘艺", "type": "内部bad", "platform": "IG", "video": "夏天厕所", "views": 522.0, "likes": 0.0, "leads": 0.0, "likePer10k": 0.0, "leadPer10k": 0.0, "leadMissing": false, "playSwitch": 2.0, "flowSwitch": 0.5, "attributionScope": "全量(播放+引流)", "duration": 27.0, "scores": {"利益明确": 3.0, "证明画面": 1.0, "CTA强度": 3.0, "第四维": 2.0}, "rMarks": {"R1": "✗", "R2": "✓", "R3": "✓", "R4": "✗", "R5": "半"}, "rScore": 2.5, "diagnosis": "AI生成封面;proof=1(80%off无任何画面);唯一亮点=投递问句方向对", "frame": "抽帧分析/28_抽帧条.jpg", "keyframe": "关键帧/28_0s.jpg"}, {"line": 29, "group": "英铁3组", "owner": "刘艺", "type": "内部bad", "platform": "TikTok", "video": "插座", "views": 729.0, "likes": 1.0, "leads": 0.0, "likePer10k": 13.7, "leadPer10k": 0.0, "leadMissing": false, "playSwitch": 2.0, "flowSwitch": 0.0, "attributionScope": "全量(播放+引流)", "duration": 42.2, "scores": {"利益明确": 3.0, "证明画面": 3.0, "CTA强度": 2.0, "第四维": 3.0}, "rMarks": {"R1": "✗", "R2": "✓", "R3": "✓", "R4": "✗", "R5": "✗"}, "rScore": 2.0, "diagnosis": "20.7s插座干货后\"But if you want\"缝合;21型失败CTA;最好的截图埋片尾", "frame": "抽帧分析/29_抽帧条.jpg", "keyframe": "关键帧/29_0s.jpg"}, {"line": 30, "group": "英铁3组", "owner": "刘艺", "type": "内部bad", "platform": "IG", "video": "(缺文件)", "views": 120.0, "likes": 3.0, "leads": 0.0, "likePer10k": 250.0, "leadPer10k": 0.0, "leadMissing": false, "playSwitch": 0.0, "flowSwitch": 0.0, "attributionScope": "仅播放(无引流数据)", "duration": 0.0, "scores": {"利益明确": 0.0, "证明画面": 0.0, "CTA强度": 0.0, "第四维": 0.0}, "rMarks": {"R1": "", "R2": "", "R3": "", "R4": "", "R5": ""}, "rScore": 0.0, "diagnosis": "仅数据,文件未提供", "frame": "抽帧分析/30_抽帧条.jpg", "keyframe": "关键帧/30_0s.jpg"}, {"line": 31, "group": "英铁1组", "owner": "唐光楠", "type": "内部爆款", "platform": "IG", "video": "0615v2", "views": 72000.0, "likes": 141.0, "leads": 0.0, "likePer10k": 19.6, "leadPer10k": 0.0, "leadMissing": true, "playSwitch": 2.0, "flowSwitch": 1.5, "attributionScope": "仅播放(无引流数据)", "duration": 29.2, "scores": {"利益明确": 3.0, "证明画面": 3.0, "CTA强度": 1.5, "第四维": 1.0}, "rMarks": {"R1": "✓", "R2": "✓", "R3": "✓", "R4": "✗", "R5": "半"}, "rScore": 3.5, "diagnosis": "播放归因:与22/43同文案,播放端成立(7.2w);引流(⚠结构预判):「Search RC7」动词不可执行(搜索框是车站搜索)+全片无app界面帧,照做必失败——待引流数据回填验证", "frame": "抽帧分析/31_抽帧条.jpg", "keyframe": "关键帧/31_0s.jpg"}, {"line": 32, "group": "英铁1组", "owner": "唐光楠(收集)", "type": "外部爆款", "platform": "IG", "video": "5h伦敦-爱丁堡", "views": 441000.0, "likes": 15000.0, "leads": 0.0, "likePer10k": 340.1, "leadPer10k": 0.0, "leadMissing": true, "playSwitch": 0.0, "flowSwitch": 0.0, "attributionScope": "仅播放(无引流数据)", "duration": 115.7, "scores": {"利益明确": 1.0, "证明画面": 2.0, "CTA强度": 1.0, "第四维": 3.0}, "rMarks": {"R1": "", "R2": "", "R3": "", "R4": "", "R5": ""}, "rScore": 0.0, "diagnosis": "播放归因:travel-with-me涨粉型(邀请钩+时间节点推进);引流(⚠结构预判):无任何引流承接物,结构上不具转化路径", "frame": "抽帧分析/32_抽帧条.jpg", "keyframe": "关键帧/32_0s.jpg"}, {"line": 33, "group": "英铁1组", "owner": "饶元", "type": "内部爆款", "platform": "IG", "video": "AQM车门关闭", "views": 367000.0, "likes": 1832.0, "leads": 0.0, "likePer10k": 49.9, "leadPer10k": 0.0, "leadMissing": true, "playSwitch": 2.0, "flowSwitch": 3.0, "attributionScope": "仅播放(无引流数据)", "duration": 32.4, "scores": {"利益明确": 3.5, "证明画面": 4.0, "CTA强度": 4.0, "第四维": 1.5}, "rMarks": {"R1": "✓", "R2": "✓", "R3": "✓", "R4": "✓", "R5": "✓"}, "rScore": 5.0, "diagnosis": "播放归因:标准模板执行,同文案播放5倍于31(组内直接证据);引流(⚠预判):CTA链完整+app首页帧,待补数据验证", "frame": "抽帧分析/33_抽帧条.jpg", "keyframe": "关键帧/33_0s.jpg"}, {"line": 34, "group": "英铁1组", "owner": "饶元", "type": "内部爆款", "platform": "IG", "video": "AQN拆票", "views": 145000.0, "likes": 278.0, "leads": 0.0, "likePer10k": 19.2, "leadPer10k": 0.0, "leadMissing": true, "playSwitch": 2.0, "flowSwitch": 2.5, "attributionScope": "仅播放(无引流数据)", "duration": 36.3, "scores": {"利益明确": 4.0, "证明画面": 2.0, "CTA强度": 4.5, "第四维": 2.0}, "rMarks": {"R1": "✓", "R2": "✓", "R3": "✓", "R4": "✓", "R5": "半"}, "rScore": 4.5, "diagnosis": "播放归因:组内唯一新骨架(split ticketing);引流(⚠预判):唯一投递CTA但proof裸奔(£96只有口播)", "frame": "抽帧分析/34_抽帧条.jpg", "keyframe": "关键帧/34_0s.jpg"}, {"line": 35, "group": "英铁3组", "owner": "陈力帆(收集)", "type": "投放素材", "platform": "TikTok", "video": "easyJet英国72h游", "views": 4070000.0, "likes": 0.0, "leads": 0.0, "likePer10k": 0.0, "leadPer10k": 0.0, "leadMissing": true, "playSwitch": 0.0, "flowSwitch": 0.0, "attributionScope": "仅播放(无引流数据)", "duration": 89.4, "scores": {"利益明确": 0.0, "证明画面": 0.0, "CTA强度": 0.0, "第四维": 0.0}, "rMarks": {"R1": "", "R2": "", "R3": "", "R4": "", "R5": ""}, "rScore": 0.0, "diagnosis": "播放归因:真人vlog体+时间压缩钩('72小时能装下多少');引流侧无数据——'软广低转'为投放方标签:卖目的地梦无code无入口", "frame": "抽帧分析/35_抽帧条.jpg", "keyframe": "关键帧/35_0s.jpg"}, {"line": 36, "group": "英铁3组", "owner": "陈力帆(收集)", "type": "投放素材", "platform": "-", "video": "Hostelworld社交功能", "views": 4260000.0, "likes": 0.0, "leads": 0.0, "likePer10k": 0.0, "leadPer10k": 0.0, "leadMissing": true, "playSwitch": 0.0, "flowSwitch": 0.0, "attributionScope": "仅播放(无引流数据)", "duration": 20.8, "scores": {"利益明确": 0.0, "证明画面": 0.0, "CTA强度": 0.0, "第四维": 0.0}, "rMarks": {"R1": "", "R2": "", "R3": "", "R4": "", "R5": ""}, "rScore": 0.0, "diagnosis": "播放归因:8句微型故事闭环,产品演示长在故事里不是故事后面(投放素材,无互动数据)", "frame": "抽帧分析/36_抽帧条.jpg", "keyframe": "关键帧/36_0s.jpg"}, {"line": 37, "group": "英铁3组", "owner": "陈力帆(收集)", "type": "投放素材", "platform": "-", "video": "bolt女性友好打车", "views": 4030000.0, "likes": 0.0, "leads": 0.0, "likePer10k": 0.0, "leadPer10k": 0.0, "leadMissing": true, "playSwitch": 0.0, "flowSwitch": 0.0, "attributionScope": "仅播放(无引流数据)", "duration": 32.0, "scores": {"利益明确": 0.0, "证明画面": 0.0, "CTA强度": 0.0, "第四维": 0.0}, "rMarks": {"R1": "", "R2": "", "R3": "", "R4": "", "R5": ""}, "rScore": 0.0, "diagnosis": "播放归因:闺蜜短剧,功能以'我为什么敢出门'情绪证词报出(投放素材,无互动数据)", "frame": "抽帧分析/37_抽帧条.jpg", "keyframe": "关键帧/37_0s.jpg"}, {"line": 38, "group": "英铁3组", "owner": "陈力帆(收集)", "type": "投放素材", "platform": "-", "video": "TravelPirates省钱硬广", "views": 3810000.0, "likes": 0.0, "leads": 0.0, "likePer10k": 0.0, "leadPer10k": 0.0, "leadMissing": true, "playSwitch": 0.0, "flowSwitch": 0.0, "attributionScope": "仅播放(无引流数据)", "duration": 37.5, "scores": {"利益明确": 0.0, "证明画面": 0.0, "CTA强度": 0.0, "第四维": 0.0}, "rMarks": {"R1": "", "R2": "", "R3": "", "R4": "", "R5": ""}, "rScore": 0.0, "diagnosis": "播放归因:荒诞比价钩(飞迪拜比火车去曼城便宜)+真实售票机锚点,付费素材借用自然流hack话术(投放素材,无互动数据)", "frame": "抽帧分析/38_抽帧条.jpg", "keyframe": "关键帧/38_0s.jpg"}, {"line": 39, "group": "英铁3组", "owner": "陈力帆(收集)", "type": "投放素材", "platform": "-", "video": "TrainPal省钱硬广", "views": 1530000.0, "likes": 0.0, "leads": 0.0, "likePer10k": 0.0, "leadPer10k": 0.0, "leadMissing": true, "playSwitch": 0.0, "flowSwitch": 0.0, "attributionScope": "仅播放(无引流数据)", "duration": 37.0, "scores": {"利益明确": 0.0, "证明画面": 0.0, "CTA强度": 0.0, "第四维": 0.0}, "rMarks": {"R1": "", "R2": "", "R3": "", "R4": "", "R5": ""}, "rScore": 0.0, "diagnosis": "播放归因:街头真人口播+同程双价锚(£20 vs £6.20)+code页录屏(投放素材,无互动数据)", "frame": "抽帧分析/39_抽帧条.jpg", "keyframe": "关键帧/39_0s.jpg"}, {"line": 40, "group": "英铁1组", "owner": "郝羽宁", "type": "内部爆款", "platform": "IG", "video": "6月8日-02", "views": 61000.0, "likes": 89.0, "leads": 0.0, "likePer10k": 14.6, "leadPer10k": 0.0, "leadMissing": true, "playSwitch": 1.0, "flowSwitch": 1.0, "attributionScope": "仅播放(无引流数据)", "duration": 26.9, "scores": {"利益明确": 2.5, "证明画面": 3.5, "CTA强度": 2.0, "第四维": 1.0}, "rMarks": {"R1": "✓", "R2": "✓", "R3": "✗", "R4": "✗", "R5": "✗"}, "rScore": 2.0, "diagnosis": "播放归因:meta铺垫5.6s零信息+全片无£数字(同人对照输给41);引流(⚠预判):「Search码」错误动词=31同款坑", "frame": "抽帧分析/40_抽帧条.jpg", "keyframe": "关键帧/40_0s.jpg"}, {"line": 41, "group": "英铁1组", "owner": "郝羽宁", "type": "内部爆款", "platform": "IG", "video": "6月24日-05", "views": 190000.0, "likes": 627.0, "leads": 0.0, "likePer10k": 33.0, "leadPer10k": 0.0, "leadMissing": true, "playSwitch": 2.0, "flowSwitch": 3.0, "attributionScope": "仅播放(无引流数据)", "duration": 30.0, "scores": {"利益明确": 3.5, "证明画面": 4.5, "CTA强度": 4.0, "第四维": 1.5}, "rMarks": {"R1": "✓", "R2": "✓", "R3": "✓", "R4": "✓", "R5": "✓"}, "rScore": 5.0, "diagnosis": "播放归因:同人正例,2.8s进机制;引流(⚠预判):「tap here 3」界面帧齐备", "frame": "抽帧分析/41_抽帧条.jpg", "keyframe": "关键帧/41_0s.jpg"}, {"line": 42, "group": "英铁1组", "owner": "陈欣", "type": "内部爆款", "platform": "IG", "video": "6.30-4", "views": 126000.0, "likes": 212.0, "leads": 0.0, "likePer10k": 16.8, "leadPer10k": 0.0, "leadMissing": true, "playSwitch": 2.0, "flowSwitch": 2.5, "attributionScope": "仅播放(无引流数据)", "duration": 35.0, "scores": {"利益明确": 4.0, "证明画面": 4.0, "CTA强度": 3.5, "第四维": 2.5}, "rMarks": {"R1": "✓", "R2": "✓", "R3": "✓", "R4": "✓", "R5": "半"}, "rScore": 4.5, "diagnosis": "播放归因:选题半径窄(仅伊丽莎白线)+前16.3s不碰钱,钩子层输给43;引流(⚠预判):转化件齐", "frame": "抽帧分析/42_抽帧条.jpg", "keyframe": "关键帧/42_0s.jpg"}, {"line": 43, "group": "英铁1组", "owner": "陈欣", "type": "内部爆款", "platform": "IG", "video": "6.17-1", "views": 509000.0, "likes": 1552.0, "leads": 0.0, "likePer10k": 30.5, "leadPer10k": 0.0, "leadMissing": true, "playSwitch": 2.0, "flowSwitch": 3.0, "attributionScope": "仅播放(无引流数据)", "duration": 37.6, "scores": {"利益明确": 3.5, "证明画面": 5.0, "CTA强度": 4.5, "第四维": 2.0}, "rMarks": {"R1": "✓", "R2": "✓", "R3": "✓", "R4": "✓", "R5": "✓"}, "rScore": 5.0, "diagnosis": "播放归因:50.9w组内最高=单线悬念+全国级选题;引流(⚠预判):三步信息图为转化件标准案,待数据验证", "frame": "抽帧分析/43_抽帧条.jpg", "keyframe": "关键帧/43_0s.jpg"}, {"line": 44, "group": "英铁1组", "owner": "唐彬豪(收集)", "type": "外部爆款", "platform": "TikTok", "video": "7级瀑布(hope.elliott)", "views": 1000000.0, "likes": 243000.0, "leads": 0.0, "likePer10k": 2430.0, "leadPer10k": 0.0, "leadMissing": true, "playSwitch": 0.0, "flowSwitch": 0.0, "attributionScope": "仅播放(无引流数据)", "duration": 143.9, "scores": {"利益明确": 0.5, "证明画面": 0.0, "CTA强度": 0.5, "第四维": 2.0}, "rMarks": {"R1": "", "R2": "", "R3": "", "R4": "", "R5": ""}, "rScore": 0.0, "diagnosis": "播放归因:游戏化进度条(7关+距离读数+每10秒情绪峰值),赞率24.3%,人格与情绪是内部最大缺口", "frame": "抽帧分析/44_抽帧条.jpg", "keyframe": "关键帧/44_0s.jpg"}, {"line": 45, "group": "英铁1组", "owner": "唐彬豪(收集)", "type": "外部爆款", "platform": "小红书", "video": "高铁隐藏福利", "views": 707000.0, "likes": 46000.0, "leads": 0.0, "likePer10k": 650.6, "leadPer10k": 0.0, "leadMissing": true, "playSwitch": 2.0, "flowSwitch": 3.0, "attributionScope": "仅播放(无引流数据)", "duration": 36.7, "scores": {"利益明确": 4.5, "证明画面": 4.0, "CTA强度": 5.0, "第四维": 4.0}, "rMarks": {"R1": "✓", "R2": "✓", "R3": "✓", "R4": "✓", "R5": "✓"}, "rScore": 5.0, "diagnosis": "播放归因:制服人设+话术级干货(可照念原话);引流(⚠预判):双暗号+查价投递形态完备,跨语言可迁移样板", "frame": "抽帧分析/45_抽帧条.jpg", "keyframe": "关键帧/45_0s.jpg"}];
+    const RULES = {"S": [{"id": "S1", "title": "3 秒内给具体利益数字", "rule": "第一句话里要有钱、折扣、百分比或明确省额，不用泛泛的“技巧”。", "evidence": "#7 牛首山 1.96s 出“108”；#2 到 16.8s 才谈省钱且无数字，0 引流。", "test": "掐表，钱词首现 ≤10s；最好第一句完成。"}, {"id": "S2", "title": "证明画面三选一", "rule": "同商品双截图对比、操作路径录屏、规则/条款原文截图，至少命中一种。", "evidence": "#43 三步信息图和输入框可视；#28 只有 80% off 口播无折扣画面，522 播放。", "test": "素材指令写进脚本，不能留给“后期补”。"}, {"id": "S3", "title": "关键词化 CTA + 平台适配", "rule": "评论 X 领 Y、搜 X 查 Y，首次 15-25s，结尾复读，禁“点赞收藏”。", "evidence": "#9 常驻口令水印；#10 评论航线留言形成查价工单池。", "test": "看 CTA 是否能被平台机制承接，且是否有固定交付物。"}, {"id": "S4", "title": "评论区是第二转化层", "rule": "发布后 1 小时内置顶交付、统一回复热评、结尾投递问句。", "evidence": "外部水水样本 2113 条评论变成航线投递；J 人置顶评论承接思维导图。", "test": "发布前排好评论区 SOP，不把评论区留空。"}], "R": [{"id": "R1", "title": "因果链", "rule": "钩子必须一路推导到 CTA，让下载、输码、买票成为必然结局。", "evidence": "#22 与 #24 CTA 近似相同，引流/万播 100 vs 20；变量是前 20 秒是否能推导折扣。", "test": "把钩子和 CTA 连成“因为__所以我应该__”；读不通就打回。"}, {"id": "R2", "title": "承诺-兑现一致", "rule": "钩子的损失必须真实成立，广告前至少给 1 条动作级免费干货。", "evidence": "#17 vs #20 同句式差 230 倍播放；197 模板免费干货先兑现，225 模板直接广告全扑。", "test": "问“照旧做会亏吗”；再问“学完免费段还需要承接物吗”。"}, {"id": "R3", "title": "确定性话术", "rule": "秘密和威胁类断言不加水，hedge 词为 0。", "evidence": "#22 vs #23 同结构同 CTA，引流率同为 100，但播放差 36%，差异集中在 hedge。", "test": "全文搜：可以、的话、嫌麻烦的话、effectively、one reason、might、kind of。"}, {"id": "R4", "title": "CTA 可执行性", "rule": "≤1 手势，动词真实，有界面帧，动作后接可见反馈。", "evidence": "#31 播放 7.2w 但 0 引流，Search RC7 与真实交互不匹配；#25 点三下 + You'll see 到 100/万播。", "test": "关画面只听音频，让新人照做；失败就重写 CTA。"}, {"id": "R5", "title": "钱前码后", "rule": "钱词 ≤10s；码不能成为内容终点，码后继续压干货或使用常驻水印。", "evidence": "#8 码在 23% 仍 60/万播，因为码后还有 7 条干货；#15 码前 0 干货、码后无留人内容，295 播。", "test": "掐钱词秒数，数码后干货条数 ≥2，或改常驻口令水印。"}]};
+    const FORMULAS = [["英铁3/1组", "秘密宣告 → 优惠成因 → those in the know → 点三下 + You'll see + 界面帧 → act fast", "100/万播 三条复现"], ["韩语入境组", "人群点名 + 真实损失 → 动作级干货 → 痛点桥接 → 码后 1/3 → 关键词评论", "爆款码位 19.3-30.5s"], ["火酒1组", "制服答疑体 → ≤3 个可背数字 → 三连断言 → 常驻水印 + 用途词", "#9 26.8 vs #5 7.9"], ["机酒1组", "金额跳变损失句 → 带广 3+1 → 动作链全口播，藏名词说动词", "#10 全过 vs #6 占位符断链"], ["创新组", "劝退体清单 → 禁令 + 亏钱路径 → X 元券命名", "#4 26.7 vs #3 4.3"], ["机酒3组", "冲突演绎 → 最后一拍改领取动作 → 水印与教训句连成一句话", "#1 修复方案"], ["火酒3组", "交易极 + 内容极双配额 → R 预筛 ≥4 → 承接物同构", "#7/#8 互补"]];
+    const CHECKLIST = [["第一句有钱数/真实损失，“照旧做会亏”成立", "R2"], ["钱词 ≤10 秒首现", "S1/R5"], ["hedge 词 = 0", "R3"], ["钩子 → 产品因果链通，无缝合词", "R1"], ["码前 ≥1 条动作级免费干货，且是承接物降级版", "R2"], ["CTA ≤1 手势、动词真实、有界面帧", "R4"], ["关画面单听音频可走完动作，禁占位符", "R4"], ["证明画面三选一在场", "S2"], ["封面/0 秒帧 = 实拍 + 利益或秘密词", "组打法"], ["结尾 = 动作指令或投递问句，评论区 SOP 排班", "S3/S4"]];
+
+    const fmt = new Intl.NumberFormat('zh-CN');
+    const colorFor = score => score >= 5 ? '#16845b' : score >= 4 ? '#2563eb' : score >= 2.5 ? '#c77a10' : '#d63b3b';
+    const markClass = value => value === '✓' ? 'ok' : value === '半' ? 'half' : 'bad';
+    const markText = value => value === '✓' ? '✓' : value === '半' ? '半' : '×';
+    const isQuantValid = d => !d.leadMissing && d.line !== 10;
+    const leadLabel = d => d.leadMissing ? '无数据' : (isQuantValid(d) ? d.leadPer10k : '存疑');
+    const leadRankValue = d => isQuantValid(d) ? d.leadPer10k : -1;
+    const isPlayStrong = d => d.views >= 100000 || d.likePer10k >= 100 || d.playSwitch >= 2;
+    const isFlowStrong = d => isQuantValid(d) && d.leadPer10k >= 23;
+    const isFlowWeak = d => isQuantValid(d) && d.leadPer10k < 23;
+    const isFlowUnknown = d => !isQuantValid(d);
+    const median = values => {
+      if (!values.length) return 0;
+      const sorted = values.slice().sort((a, b) => a - b);
+      const mid = Math.floor(sorted.length / 2);
+      return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+    };
+    const tierDefs = [
+      { id: 'king', name: '王炸档', score: '100+', range: '100-250 引流/万播', rule: d => isQuantValid(d) && d.leadPer10k >= 100, color: '#16845b', bg: '#e8f7f0', ring: 'rgba(22,132,91,.15)', note: '引流卷高度闭合，流量进入最高转化档。' },
+      { id: 'strong', name: '稳定转化档', score: '23-28', range: '23-28 引流/万播', rule: d => isQuantValid(d) && d.leadPer10k >= 23 && d.leadPer10k < 100, color: '#2563eb', bg: '#edf4ff', ring: 'rgba(37,99,235,.14)', note: '播放起来后，转化结构基本可用。' },
+      { id: 'middle', name: '中间档', score: '7.9-20', range: '7.9-20 引流/万播', rule: d => isQuantValid(d) && d.leadPer10k >= 7.9 && d.leadPer10k < 23, color: '#c77a10', bg: '#fff5e5', ring: 'rgba(199,122,16,.16)', note: '内容能起，但引流卷有关键缺口。' },
+      { id: 'dead', name: '低效/归零档', score: '0-4.3', range: '0-4.3 引流/万播', rule: d => isQuantValid(d) && d.leadPer10k < 7.9, color: '#d63b3b', bg: '#fff0f0', ring: 'rgba(214,59,59,.14)', note: '这里才是真实低转，不含无数据样本。' },
+      { id: 'missing', name: '无/存疑引流口径', score: 'N/A', range: '不参与转化档位统计', rule: d => d.leadMissing || d.line === 10, color: '#64748b', bg: '#f1f5f9', ring: 'rgba(100,116,139,.14)', note: '这些样本只能用于内容/R 结构参考，不能当作 0 引流证据。' },
+    ];
+    const fateDefs = [
+      { id: 'win', title: '播放强 × 引流强', name: '爆款强转化', color: '#16845b', bg: '#e8f7f0', ring: 'rgba(22,132,91,.15)', rule: d => isPlayStrong(d) && isFlowStrong(d), note: '播放卷和引流卷都过，优先沉淀为可复用模板。' },
+      { id: 'waste', title: '播放强 × 引流弱', name: '流量浪费型', color: '#c77a10', bg: '#fff5e5', ring: 'rgba(199,122,16,.16)', rule: d => isPlayStrong(d) && isFlowWeak(d), note: '内容能起，但 CTA/因果链/承接断，重点修引流卷。' },
+      { id: 'cold', title: '播放弱 × 引流有件', name: '冷启动死', color: '#2563eb', bg: '#edf4ff', ring: 'rgba(37,99,235,.14)', rule: d => !isPlayStrong(d) && d.flowSwitch >= 2 && !isFlowUnknown(d), note: '引流件可能不差，但播放卷没过，CTA 没机会生效。' },
+      { id: 'double', title: '播放弱 × 引流弱', name: '双弱', color: '#d63b3b', bg: '#fff0f0', ring: 'rgba(214,59,59,.14)', rule: d => !isPlayStrong(d) && (isFlowWeak(d) || d.flowSwitch < 2) && !isFlowUnknown(d), note: '先修播放卷，再谈转化。' },
+      { id: 'unknown', title: '播放强 × 引流未知', name: '播放归因样本', color: '#64748b', bg: '#f1f5f9', ring: 'rgba(100,116,139,.14)', rule: d => isPlayStrong(d) && isFlowUnknown(d), note: '高播放或高赞但无引流口径，只能做播放归因和结构预判。' },
+    ];
+
+    let filters = { group: '全部', platform: '全部', q: '' };
+    let selectedLine = DATA.slice().sort((a, b) => leadRankValue(b) - leadRankValue(a))[0].line;
+
+    function filteredData() {
+      const q = filters.q.trim().toLowerCase();
+      return DATA.filter(d => {
+        const okGroup = filters.group === '全部' || d.group === filters.group;
+        const okPlatform = filters.platform === '全部' || d.platform === filters.platform;
+        const haystack = `${d.video} ${d.group} ${d.platform} ${d.diagnosis}`.toLowerCase();
+        return okGroup && okPlatform && (!q || haystack.includes(q));
+      });
+    }
+
+    function renderHeroVisual() {
+      const el = document.getElementById('heroVisual');
+      el.innerHTML = `
+        <svg viewBox="0 0 620 360" aria-hidden="true">
+          <defs>
+            <linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#eef4ff"/><stop offset="1" stop-color="#f1f5f9"/></linearGradient>
+          </defs>
+          <rect x="10" y="10" width="600" height="340" rx="8" fill="url(#g1)" stroke="#d9dee8"/>
+          <g font-family="inherit" letter-spacing="0">
+            <rect x="48" y="58" width="235" height="112" rx="8" fill="#ffffff" stroke="#b7c5dd"/>
+            <text x="166" y="90" text-anchor="middle" font-size="22" font-weight="900" fill="#2563eb">播放卷</text>
+            <text x="166" y="118" text-anchor="middle" font-size="13" fill="#667085">钩子 · 兑现 · 封面 · 选题半径</text>
+            <text x="166" y="145" text-anchor="middle" font-size="15" font-weight="800" fill="#20252f">决定能不能活下来</text>
+            <rect x="337" y="58" width="235" height="112" rx="8" fill="#ffffff" stroke="#a7d7c5"/>
+            <text x="455" y="90" text-anchor="middle" font-size="22" font-weight="900" fill="#16845b">引流卷</text>
+            <text x="455" y="118" text-anchor="middle" font-size="13" fill="#667085">因果链 · CTA · 承接 · 评论区</text>
+            <text x="455" y="145" text-anchor="middle" font-size="15" font-weight="800" fill="#20252f">决定流量怎么转</text>
+            <path d="M282 114 L337 114" stroke="#98a2b3" stroke-width="2"/>
+            <polygon points="337,114 323,106 323,122" fill="#98a2b3"/>
+            <rect x="74" y="222" width="472" height="62" rx="8" fill="#101828"/>
+            <text x="310" y="248" text-anchor="middle" font-size="18" font-weight="900" fill="#ffffff">归因先声明目标</text>
+            <text x="310" y="272" text-anchor="middle" font-size="13" fill="#d0d5dd">无引流数据 = 播放归因 + 引流结构预判，不等于 0 引流</text>
+          </g>
+        </svg>`;
+    }
+
+    function renderMetrics() {
+      const totalViews = DATA.reduce((s, d) => s + d.views, 0);
+      const totalLeads = DATA.reduce((s, d) => s + d.leads, 0);
+      const quantRows = DATA.filter(isQuantValid);
+      const top = quantRows.reduce((a, b) => a.leadPer10k > b.leadPer10k ? a : b);
+      const missing = DATA.filter(isFlowUnknown).length;
+      document.getElementById('metrics').innerHTML = [
+        [`${DATA.length} 条`, '内部逐条打分样本'],
+        [`${fmt.format(totalViews)}`, '累计播放'],
+        [`${fmt.format(totalLeads)}`, '累计引流'],
+        [`#${top.line} · ${top.leadPer10k}`, `最高有效引流/万播 · 无/存疑口径 ${missing} 条`],
+      ].map(([a, b]) => `<div class="metric"><b>${a}</b><span>${b}</span></div>`).join('');
+    }
+
+    function initFilters() {
+      const groupSel = document.getElementById('groupFilter');
+      const platformSel = document.getElementById('platformFilter');
+      const groups = ['全部', ...new Set(DATA.map(d => d.group))];
+      const platforms = ['全部', ...new Set(DATA.map(d => d.platform))];
+      groupSel.innerHTML = groups.map(x => `<option>${x}</option>`).join('');
+      platformSel.innerHTML = platforms.map(x => `<option>${x}</option>`).join('');
+      groupSel.addEventListener('change', e => { filters.group = e.target.value; renderDynamic(); });
+      platformSel.addEventListener('change', e => { filters.platform = e.target.value; renderDynamic(); });
+      document.getElementById('searchBox').addEventListener('input', e => { filters.q = e.target.value; renderDynamic(); });
+    }
+
+    function renderFateGrid() {
+      const rows = filteredData();
+      const grid = document.getElementById('fateGrid');
+      grid.innerHTML = fateDefs.map(fate => {
+        const fateRows = rows.filter(fate.rule).sort((a, b) => {
+          const av = isFlowUnknown(a) ? a.views : leadRankValue(a);
+          const bv = isFlowUnknown(b) ? b.views : leadRankValue(b);
+          return bv - av;
+        });
+        const examples = fateRows.slice(0, 4).map(d => `
+          <li><button data-line="${d.line}" style="--fate-color:${fate.color};--fate-bg:${fate.bg};--fate-ring:${fate.ring}">#${d.line} ${d.video} · ${isFlowUnknown(d) ? fmt.format(d.views) + '播' : leadLabel(d) + '/万播'}</button></li>
+        `).join('');
+        return `
+          <article class="fate-card" style="--fate-color:${fate.color};--fate-bg:${fate.bg};--fate-ring:${fate.ring}">
+            <div class="count">${fateRows.length}</div>
+            <h3>${fate.name}</h3>
+            <p><b>${fate.title}</b></p>
+            <p>${fate.note}</p>
+            <ul>${examples || '<li style="color:var(--muted)">当前筛选下无样本</li>'}</ul>
+          </article>`;
+      }).join('');
+      grid.querySelectorAll('[data-line]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          selectedLine = Number(btn.dataset.line);
+          renderDynamic();
+          document.getElementById('samples').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+    }
+
+    function renderScatter() {
+      const rows = filteredData();
+      const tooltip = document.getElementById('tooltip');
+      const ladder = document.getElementById('ladder');
+      ladder.innerHTML = tierDefs.map(tier => {
+        const tierRows = rows.filter(tier.rule).sort((a, b) => leadRankValue(b) - leadRankValue(a));
+        const best = tierRows.filter(isQuantValid)[0];
+        const chips = tierRows.map(d => `
+          <button class="sample-chip ${d.line === selectedLine ? 'active' : ''}" data-line="${d.line}" style="--tier-color:${tier.color};--tier-bg:${tier.bg};--tier-ring:${tier.ring}">
+            <em>#${d.line}</em>
+            <span>${d.video}</span>
+            <b>${leadLabel(d)}</b>
+          </button>`).join('');
+        return `
+          <section class="tier-card" style="--tier-color:${tier.color};--tier-bg:${tier.bg};--tier-ring:${tier.ring}">
+            <div class="tier-head">
+              <strong>${tier.score}</strong>
+              <b>${tier.name}</b>
+              <span>${tier.range}</span>
+            </div>
+            <div class="tier-body">
+              <div class="tier-note">
+                <span><b>${tierRows.length}</b> 条样本</span>
+                ${best ? `<span>本档最高有效 <b>#${best.line} ${best.leadPer10k}</b></span>` : ''}
+                <span>${tier.note}</span>
+              </div>
+              <div class="chip-row">${chips || '<span class="empty-tier">当前筛选下没有样本落在这一档。</span>'}</div>
+            </div>
+          </section>`;
+      }).join('');
+
+      ladder.querySelectorAll('[data-line]').forEach(chip => {
+        chip.addEventListener('mousemove', e => {
+          const d = DATA.find(x => x.line === Number(chip.dataset.line));
+          tooltip.style.display = 'block';
+          tooltip.style.left = `${e.clientX + 14}px`;
+          tooltip.style.top = `${e.clientY + 14}px`;
+          tooltip.innerHTML = `<b>#${d.line} ${d.video}</b><br>${d.group} · ${d.platform}<br>播放开关：${d.playSwitch}　引流开关：${d.flowSwitch}<br>引流/万播：${leadLabel(d)}<br>${d.diagnosis}`;
+        });
+        chip.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
+        chip.addEventListener('click', () => {
+          const d = DATA.find(x => x.line === Number(chip.dataset.line));
+          selectedLine = d.line;
+          renderDynamic();
+          document.getElementById('samples').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+
+      const quantRows = rows.filter(isQuantValid);
+      const best = quantRows.slice().sort((a, b) => b.leadPer10k - a.leadPer10k)[0];
+      const playStrong = rows.filter(isPlayStrong).length;
+      const flowStrong = rows.filter(isFlowStrong).length;
+      const flowUnknown = rows.filter(isFlowUnknown).length;
+      document.getElementById('chartSummary').innerHTML = `
+        <div><b>当前筛选怎么读</b><p style="margin:4px 0 0;color:var(--muted);font-size:13px">先看命运象限，再看有口径样本的引流档位。</p></div>
+        <div class="summary-kpi">
+          <div><b>${rows.length}</b><span>样本数</span></div>
+          <div><b>${playStrong}</b><span>播放强</span></div>
+          <div><b>${flowStrong}</b><span>引流强</span></div>
+          <div><b>${flowUnknown}</b><span>无/存疑引流口径</span></div>
+          <div><b>${best ? best.leadPer10k : 0}</b><span>最高有效引流/万播</span></div>
+          <div><b>${median(quantRows.map(d => d.leadPer10k)).toFixed(1)}</b><span>有效中位数</span></div>
+        </div>
+        ${best ? `<p style="margin:0;color:#475467;font-size:13px">最高有效样本：<b>#${best.line} ${best.video}</b></p>` : ''}`;
+    }
+
+    function renderSamples() {
+      const rows = filteredData().slice().sort((a, b) => leadRankValue(b) - leadRankValue(a));
+      if (!rows.some(d => d.line === selectedLine) && rows[0]) selectedLine = rows[0].line;
+      const list = document.getElementById('sampleList');
+      list.innerHTML = rows.map((d, i) => `
+        <article class="sample-card ${d.line === selectedLine ? 'active' : ''}" data-line="${d.line}">
+          <div class="rank">#${d.line}</div>
+          <div><h3>${d.video}</h3><p>${d.group} · ${d.platform} · 播放开关 ${d.playSwitch} · 引流开关 ${d.flowSwitch} · ${fmt.format(d.views)} 播</p></div>
+          <div class="score">${leadLabel(d)}</div>
+        </article>`).join('') || '<p>没有匹配样本。</p>';
+      list.querySelectorAll('[data-line]').forEach(el => el.addEventListener('click', () => {
+        selectedLine = Number(el.dataset.line);
+        renderDynamic();
+      }));
+
+      const d = DATA.find(x => x.line === selectedLine) || rows[0];
+      const detail = document.getElementById('sampleDetail');
+      if (!d) {
+        detail.innerHTML = '<p>没有匹配样本。</p>';
+        return;
+      }
+      detail.innerHTML = `
+        <h3>#${d.line} ${d.video}</h3>
+        <div class="stat-row">
+          <div class="stat"><b>${fmt.format(d.views)}</b><span>播放</span></div>
+          <div class="stat"><b>${d.leadMissing ? '无数据' : fmt.format(d.leads)}</b><span>引流</span></div>
+          <div class="stat"><b>${leadLabel(d)}</b><span>引流/万播</span></div>
+          <div class="stat"><b>${d.playSwitch}</b><span>播放开关</span></div>
+          <div class="stat"><b>${d.flowSwitch}</b><span>引流开关</span></div>
+        </div>
+        <p><b>归因口径：</b>${d.attributionScope || (d.leadMissing ? '播放归因/结构预判' : '全量')}</p>
+        <div class="mini-list">${Object.entries(d.rMarks).map(([k, v]) => `<span>${k} <i class="mark ${markClass(v)}">${markText(v)}</i></span>`).join('')}</div>
+        <p><b>一句话归因：</b>${d.diagnosis}</p>
+        <img src="${d.frame}" alt="#${d.line} 抽帧条" onerror="this.alt='该条抽帧缺失'; this.style.display='none'">
+      `;
+    }
+
+    function renderRules() {
+      const all = [...RULES.S.map(x => ({...x, cls: 's'})), ...RULES.R.map(x => ({...x, cls: 'r'}))];
+      document.getElementById('rulesGrid').innerHTML = all.map(r => `
+        <article class="rule-card ${r.cls}">
+          <strong>${r.id}</strong>
+          <h3>${r.title}</h3>
+          <p>${r.rule}</p>
+          <p><b>证据：</b>${r.evidence}</p>
+          <p class="test">检验：${r.test}</p>
+        </article>`).join('');
+    }
+
+    function renderMatrix() {
+      const rows = filteredData().slice().sort((a, b) => a.line - b.line);
+      document.getElementById('matrixTable').innerHTML = `
+        <thead><tr><th>#</th><th>视频</th><th>组别</th><th>播放</th><th>引流/万播</th><th>播放开关</th><th>引流开关</th><th>归因口径</th><th>R1</th><th>R2</th><th>R3</th><th>R4</th><th>R5</th><th>一句话归因</th></tr></thead>
+        <tbody>${rows.map(d => `
+          <tr>
+            <td>${d.line}</td><td>${d.video}</td><td>${d.group}</td><td>${fmt.format(d.views)}</td><td><b>${leadLabel(d)}</b></td><td>${d.playSwitch}</td><td>${d.flowSwitch}</td><td>${d.attributionScope}</td>
+            ${['R1','R2','R3','R4','R5'].map(k => `<td><span class="mark ${markClass(d.rMarks[k])}">${markText(d.rMarks[k])}</span></td>`).join('')}
+            <td>${d.diagnosis}</td>
+          </tr>`).join('')}</tbody>`;
+    }
+
+    function renderFormulas() {
+      document.getElementById('formulas').innerHTML = FORMULAS.map(([group, formula, anchor]) => `
+        <article class="formula"><h3>${group}</h3><p>${formula}</p><b>${anchor}</b></article>`).join('');
+    }
+
+    function renderChecklist() {
+      const grid = document.getElementById('checkGrid');
+      grid.innerHTML = CHECKLIST.map(([text, basis], i) => `
+        <label class="check-item"><input type="checkbox"><b>${i + 1}. ${text}</b><span>${basis}</span></label>`).join('');
+      const update = () => {
+        const total = CHECKLIST.length;
+        const done = grid.querySelectorAll('input:checked').length;
+        document.getElementById('checkScore').textContent = `${done}/${total}${done >= 9 ? ' · 可发' : ' · 继续改'}`;
+        document.getElementById('checkBar').style.width = `${done / total * 100}%`;
+      };
+      grid.querySelectorAll('input').forEach(input => input.addEventListener('change', update));
+      update();
+    }
+
+    function renderDynamic() {
+      renderFateGrid();
+      renderScatter();
+      renderSamples();
+      renderMatrix();
+    }
+
+    renderHeroVisual();
+    renderMetrics();
+    initFilters();
+    renderRules();
+    renderFormulas();
+    renderChecklist();
+    renderDynamic();
+  </script>
+</body>
+</html>
