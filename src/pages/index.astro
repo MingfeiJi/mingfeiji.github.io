@@ -649,6 +649,30 @@ const courses = [
     </div>
   </section>
 
+  <!-- ════════════ VIBE CODING · 可运行视觉实验 ════════════ -->
+  <section class="chapter vibe-preview" id="vibe-coding">
+    <div class="wrap">
+      <div class="chapter-head reveal">
+        <div class="ch-no"><em>LAB</em> VIBE CODING · INTERACTIVE ARTIFACTS</div>
+        <h2>不是会写 Prompt，是能把想法做成现场</h2>
+        <div class="ch-sub">三个可玩的生成式视觉作品：用粒子理解意图收敛，用星图观察 Agent 闭环，用流场体验 Prompt 如何改变概率方向。</div>
+      </div>
+      <a class="vibe-preview-stage reveal" href="/vibe-coding/" aria-label="进入 Vibe Coding 交互实验室">
+        <div class="vp-grid" aria-hidden="true"></div>
+        <div class="vp-orb" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="vp-copy">
+          <span>LIVE LAB / 3 INTERACTIVE WORKS</span>
+          <h3>意图星核 · Agent 星图 · 信号花园</h3>
+          <p>鼠标、触控、键盘都能改变作品。每个实验背后都有一条从 Intent 到 Ship 的真实构建链。</p>
+        </div>
+        <div class="vp-meta">
+          <span>THREE.JS</span><span>GENERATIVE CANVAS</span><span>REDUCED MOTION READY</span>
+        </div>
+        <div class="vp-enter">ENTER LAB <b>↗</b></div>
+      </a>
+    </div>
+  </section>
+
   <!-- ════════════ CH.05 · 产品 · Products ════════════ -->
   <section class="chapter" id="products">
     <div class="wrap">
@@ -1407,6 +1431,36 @@ const courses = [
 
 <style>
   /* —— v2 页面级 scoped 样式（不影响原首页 global.css）—— */
+  .vibe-preview-stage {
+    min-height: 440px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: clamp(30px, 5vw, 64px);
+    overflow: hidden;
+    color: var(--ink);
+    border: 1px solid color-mix(in srgb, var(--star) 24%, transparent);
+    background:
+      radial-gradient(circle at 76% 40%, color-mix(in srgb, var(--nebula) 22%, transparent), transparent 24%),
+      radial-gradient(circle at 72% 45%, color-mix(in srgb, var(--star) 15%, transparent), transparent 38%),
+      linear-gradient(135deg, rgba(4, 9, 20, .96), rgba(12, 13, 28, .9));
+    isolation: isolate;
+  }
+  .vibe-preview-stage:hover { color: var(--ink); border-color: color-mix(in srgb, var(--star) 58%, transparent); }
+  .vp-grid { position: absolute; inset: 0; z-index: -1; opacity: .22; background-image: linear-gradient(color-mix(in srgb, var(--star) 24%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--star) 24%, transparent) 1px, transparent 1px); background-size: 48px 48px; mask-image: linear-gradient(90deg, black, transparent 78%); }
+  .vp-copy { max-width: 650px; position: relative; z-index: 2; }
+  .vp-copy > span, .vp-meta { font: 10px var(--mono); letter-spacing: .14em; color: var(--star); }
+  .vp-copy h3 { font-family: var(--serif); font-size: clamp(34px, 5vw, 64px); line-height: 1.08; margin: 18px 0; color: var(--ink-strong); }
+  .vp-copy p { color: var(--ink2); max-width: 560px; font-size: 14px; }
+  .vp-meta { display: flex; flex-wrap: wrap; gap: 10px 26px; color: var(--ink3); position: relative; z-index: 2; }
+  .vp-enter { position: absolute; right: 42px; bottom: 36px; font: 11px var(--mono); letter-spacing: .12em; color: var(--star); z-index: 2; }.vp-enter b{font-size:22px;margin-left:7px;display:inline-block;transition:transform .25s}.vibe-preview-stage:hover .vp-enter b{transform:translate(5px,-5px)}
+  .vp-orb { position: absolute; width: min(34vw, 340px); aspect-ratio: 1; right: 8%; top: 50%; transform: translateY(-50%); border: 1px solid color-mix(in srgb, var(--star) 22%, transparent); border-radius: 50%; box-shadow: inset 0 0 70px color-mix(in srgb, var(--star) 8%, transparent), 0 0 80px color-mix(in srgb, var(--nebula) 8%, transparent); }
+  .vp-orb::before,.vp-orb::after{content:'';position:absolute;inset:16%;border:1px dashed color-mix(in srgb,var(--nebula) 35%,transparent);border-radius:50%;animation:vp-spin 20s linear infinite}.vp-orb::after{inset:38%;border-style:solid;background:color-mix(in srgb,var(--star) 14%,transparent);box-shadow:0 0 46px color-mix(in srgb,var(--star) 20%,transparent);animation-direction:reverse;animation-duration:12s}
+  .vp-orb i{position:absolute;width:6px;height:6px;border-radius:50%;background:var(--star);box-shadow:0 0 16px var(--star)}.vp-orb i:nth-child(1){left:8%;top:35%}.vp-orb i:nth-child(2){right:18%;top:12%;background:var(--nebula)}.vp-orb i:nth-child(3){right:5%;bottom:28%;background:var(--flare)}
+  @keyframes vp-spin { to { transform: rotate(360deg); } }
+  @media (max-width: 720px) { .vibe-preview-stage{min-height:520px}.vp-orb{width:240px;right:-85px;opacity:.55}.vp-enter{right:24px;bottom:22px}.vp-meta{max-width:70%;gap:7px 14px} }
+  @media (prefers-reduced-motion: reduce) { .vp-orb::before,.vp-orb::after{animation:none} }
   .hero-stats {
     display: flex; flex-wrap: wrap; gap: 10px 28px;
     margin: 26px 0 10px;
