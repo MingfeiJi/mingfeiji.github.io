@@ -11,10 +11,12 @@ import Cosmos from '../components/Cosmos.astro';
 interface Props {
   title?: string;
   description?: string;
+  immersive?: boolean;
 }
 const {
   title = '纪鸣飞 · AI 产品架构师 / 企业 AI 化转型专家 · FDE',
   description = '5 年产品与数字化、4 年专注 AI 落地。制造业数字化 → 千人电商 AI 转型 → 大厂出海内容增长 AI 中台，用可运行的产物推动落地。',
+  immersive = false,
 } = Astro.props;
 ---
 
@@ -62,25 +64,24 @@ const {
   </head>
   <body>
     <div id="voyage-progress"></div>
-    <Cosmos />
+    {!immersive && <Cosmos />}
 
     <nav class="nav">
       <div class="nav-inner">
-        <a href="#top" class="nav-logo">纪鸣飞<span> ✦</span></a>
+        <a href="/#top" class="nav-logo">纪鸣飞<span> ✦</span></a>
         <div class="nav-links">
-          <a href="#voyage">关键成果</a>
-          <a href="#flagship">旗舰</a>
-          <a href="#cognition">认知</a>
-          <a href="#cases">项目档案</a>
-          <a href="#works">作品</a>
-          <a href="#logbook">履历</a>
-          <a href="#method">方法论</a>
-          <a href="#knowledge">知识体系</a>
-          <a href="#engagement">驻场交付</a>
+          <a href="/#voyage">关键成果</a>
+          <a href="/#flagship">旗舰</a>
+          <a href="/#cases">项目档案</a>
+          <a href="/vibe-coding/">Vibe Coding</a>
+          <a href="/#works">作品</a>
+          <a href="/#method">方法论</a>
+          <a href="/#knowledge">知识体系</a>
+          <a href="/#engagement">驻场交付</a>
           <a href="/prototypes/">原型</a>
           <a href="/library/">藏书阁</a>
           <a href="/articles/">写作</a>
-          <a href="#contact">联系</a>
+          <a href="/#contact">联系</a>
         </div>
       </div>
     </nav>
@@ -111,20 +112,24 @@ const {
       </div>
     </footer>
 
-    <button class="theme-fab" id="theme-fab" title="切换主题" aria-label="切换主题">🎨</button>
-    <div class="theme-panel" id="theme-panel">
-      <div class="tp-title">THEME · 选一种你喜欢的</div>
-      <button class="theme-opt" data-t="cosmos"><span class="sw"><i style="background:#030412"></i><i style="background:#7dd3fc"></i><i style="background:#a78bfa"></i></span>🌌 星辰大海</button>
-      <button class="theme-opt" data-t="hud"><span class="sw"><i style="background:#F7F5EF"></i><i style="background:#1a1a1a"></i><i style="background:#9E2B25"></i></span>🖌 动态水墨</button>
-      <button class="theme-opt" data-t="klein"><span class="sw"><i style="background:#000"></i><i style="background:#fff"></i><i style="background:#8a8a8a"></i></span>⚫️ 曜黑玻璃</button>
-      <button class="theme-opt" data-t="cyber"><span class="sw"><i style="background:#030509"></i><i style="background:#00f0ff"></i><i style="background:#c026ff"></i></span>🛰 赛博全息</button>
-      <button class="theme-opt" data-t="snow"><span class="sw"><i style="background:#FAFAF8"></i><i style="background:#18181b"></i><i style="background:#1d4ed8"></i></span>⬜️ 月白极简</button>
-    </div>
+    {!immersive && (
+      <>
+        <button class="theme-fab" id="theme-fab" title="切换主题" aria-label="切换主题">🎨</button>
+        <div class="theme-panel" id="theme-panel">
+          <div class="tp-title">THEME · 选一种你喜欢的</div>
+          <button class="theme-opt" data-t="cosmos"><span class="sw"><i style="background:#030412"></i><i style="background:#7dd3fc"></i><i style="background:#a78bfa"></i></span>🌌 星辰大海</button>
+          <button class="theme-opt" data-t="hud"><span class="sw"><i style="background:#F7F5EF"></i><i style="background:#1a1a1a"></i><i style="background:#9E2B25"></i></span>🖌 动态水墨</button>
+          <button class="theme-opt" data-t="klein"><span class="sw"><i style="background:#000"></i><i style="background:#fff"></i><i style="background:#8a8a8a"></i></span>⚫️ 曜黑玻璃</button>
+          <button class="theme-opt" data-t="cyber"><span class="sw"><i style="background:#030509"></i><i style="background:#00f0ff"></i><i style="background:#c026ff"></i></span>🛰 赛博全息</button>
+          <button class="theme-opt" data-t="snow"><span class="sw"><i style="background:#FAFAF8"></i><i style="background:#18181b"></i><i style="background:#1d4ed8"></i></span>⬜️ 月白极简</button>
+        </div>
+      </>
+    )}
 
     <script>
-      const fab = document.getElementById('theme-fab')!;
-      const panel = document.getElementById('theme-panel')!;
-      const themeOpts = panel.querySelectorAll<HTMLButtonElement>('.theme-opt');
+      const fab = document.getElementById('theme-fab');
+      const panel = document.getElementById('theme-panel');
+      const themeOpts = panel?.querySelectorAll<HTMLButtonElement>('.theme-opt') || [];
       // 背景特效注入由页面自身的 #nebula-bg 脚本负责（BaseV2 只被 index/v2 使用，
       // 曾经的 #hud-field 通路会造成同一特效双份加载，已移除）
 
@@ -133,8 +138,8 @@ const {
         themeOpts.forEach((o) => o.classList.toggle('active', o.dataset.t === cur));
       }
       markActive();
-      fab.addEventListener('click', (e) => { e.stopPropagation(); panel.classList.toggle('open'); });
-      document.addEventListener('click', (e) => {
+      fab?.addEventListener('click', (e) => { e.stopPropagation(); panel?.classList.toggle('open'); });
+      if (panel) document.addEventListener('click', (e) => {
         if (!panel.contains(e.target as Node)) panel.classList.remove('open');
       });
       themeOpts.forEach((o) =>

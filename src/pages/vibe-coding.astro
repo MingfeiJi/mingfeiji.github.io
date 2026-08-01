@@ -1,0 +1,536 @@
+---
+import Base from '../layouts/BaseV2.astro';
+
+const loop = [
+  ['01', 'Intent', '把模糊愿望压成一句可验证的问题'],
+  ['02', 'Spec', '明确边界、状态、失败与验收方式'],
+  ['03', 'Prototype', '先交付一个可运行的判断对象'],
+  ['04', 'Agent', '把任务拆给适合的模型、Skill 与工具'],
+  ['05', 'Evaluate', '用截图、测试和 badcase 对抗自嗨'],
+  ['06', 'Ship', 'Preview 可审阅，Production 可回滚'],
+  ['07', 'Compound', '把本轮经验沉淀成下一轮的资产'],
+];
+---
+
+<Base
+  title="Vibe Coding Lab · 纪鸣飞的可运行构建现场"
+  description="三个可玩的生成式视觉实验，以及纪鸣飞从意图、规格、原型、Agent、评测到发布的 Vibe Coding 闭环。"
+  immersive={true}
+>
+  <div class="vibe-page" id="top">
+    <header class="vibe-hero">
+      <canvas id="intent-canvas" aria-label="由混沌粒子收敛成结构的意图星核"></canvas>
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="hero-copy">
+        <div class="eyebrow"><span></span> VIBE CODING / LIVE LAB 001</div>
+        <h1>把一句想法<br /><em>炼成可运行现场</em></h1>
+        <p>
+          我不把 Vibe Coding 理解成“让 AI 多写代码”，而是把意图、规格、原型、评测和发布压进同一个高速闭环。
+          下面不是效果图，是三件可以亲手改变的视觉仪器。
+        </p>
+        <div class="hero-actions">
+          <a class="vibe-btn primary" href="#experiments">开始交互</a>
+          <a class="vibe-btn" href="#operating-loop">查看构建闭环</a>
+        </div>
+      </div>
+      <div class="hero-console" aria-label="实验状态">
+        <div><span>MODE</span><b>BUILDING IN PUBLIC</b></div>
+        <div><span>INPUT</span><b>AMBIGUOUS INTENT</b></div>
+        <div><span>OUTPUT</span><b>RUNNABLE ARTIFACT</b></div>
+        <div class="live"><span>STATUS</span><b><i></i> SYSTEM ALIVE</b></div>
+      </div>
+      <div class="hero-orbit" aria-hidden="true"><span>INTENT</span><span>SPEC</span><span>SHIP</span></div>
+    </header>
+
+    <div class="vibe-main">
+      <section class="manifesto section-wrap reveal">
+        <div class="manifesto-index">00 / MANIFESTO</div>
+        <p>不要用文档描述一个未来产品。<strong>先让它在浏览器里呼吸一次。</strong></p>
+        <div class="manifesto-meta">Idea → Interface → Evidence</div>
+      </section>
+
+      <section class="experiments section-wrap" id="experiments">
+        <div class="section-head reveal">
+          <div>
+            <div class="section-kicker">INTERACTIVE ARTIFACTS / 03</div>
+            <h2>三个视觉仪器，三种构建隐喻</h2>
+          </div>
+          <p>鼠标、触控、键盘均可操作；减少动态模式下会自动降级为静态构图。</p>
+        </div>
+
+        <article class="instrument instrument-core reveal" data-lab="core">
+          <div class="instrument-copy">
+            <div class="instrument-no">EXPERIMENT 01 · THREE.JS</div>
+            <h3>意图星核<br /><em>Intent Matter</em></h3>
+            <p>模糊需求像高能粒子云。规格不是给它加更多文字，而是不断减少自由度，直到团队看见同一个结构。</p>
+            <div class="instrument-proof">
+              <span>输入：模糊愿望</span><span>控制：清晰度</span><span>产物：可验证结构</span>
+            </div>
+          </div>
+          <div class="lab-stage core-stage">
+            <div class="core-reticle" aria-hidden="true"></div>
+            <div class="core-readout" aria-live="polite">
+              <span>STRUCTURAL CLARITY</span>
+              <strong id="clarity-value">42%</strong>
+            </div>
+            <div class="lab-controls core-controls">
+              <label>
+                <span>混沌</span>
+                <input id="clarity" type="range" min="0" max="100" value="42" aria-label="意图清晰度" />
+                <span>收敛</span>
+              </label>
+              <button id="scatter-core" type="button">打散意图</button>
+              <button id="resolve-core" class="hot" type="button">锁定规格</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="instrument instrument-agents reveal" data-lab="agents">
+          <div class="instrument-copy">
+            <div class="instrument-no">EXPERIMENT 02 · CANVAS</div>
+            <h3>智能体星图<br /><em>Agent Constellation</em></h3>
+            <p>好的 Agent 系统不是一群同时说话的模型，而是一条有状态、有回退、有证据的信号路径。点击任一阶段，观察整条链路如何回应。</p>
+            <div class="phase-picker" aria-label="选择构建阶段">
+              {loop.map(([no, name]) => <button type="button" data-phase={Number(no) - 1}><span>{no}</span>{name}</button>)}
+            </div>
+          </div>
+          <div class="lab-stage agent-stage">
+            <canvas id="agent-canvas" tabindex="0" aria-label="七阶段 Agent 构建闭环星图"></canvas>
+            <div class="agent-status" aria-live="polite">
+              <span id="agent-step">READY / 点击运行整个闭环</span>
+              <button id="run-loop" class="hot" type="button">RUN LOOP</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="instrument instrument-signal reveal" data-lab="signal">
+          <div class="instrument-copy">
+            <div class="instrument-no">EXPERIMENT 03 · GENERATIVE FIELD</div>
+            <h3>信号花园<br /><em>Signal Garden</em></h3>
+            <p>Prompt 不是咒语，是对概率空间施加方向。移动指针改变场，调节信号强度，看看结构何时从噪声里长出来。</p>
+            <div class="instrument-proof">
+              <span>移动：施加意图</span><span>滑杆：信噪比</span><span>点击：重新播种</span>
+            </div>
+          </div>
+          <div class="lab-stage signal-stage">
+            <canvas id="signal-canvas" tabindex="0" aria-label="可用指针改变方向的生成式信号流场"></canvas>
+            <div class="signal-caption"><span>MOVE TO CULTIVATE</span><i></i><span>FIELD 03</span></div>
+            <div class="lab-controls signal-controls">
+              <label>
+                <span>NOISE</span>
+                <input id="coherence" type="range" min="0" max="100" value="68" aria-label="信号强度" />
+                <span>SIGNAL</span>
+              </label>
+              <button id="reseed" type="button">RESEED FIELD</button>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="operating-loop section-wrap" id="operating-loop">
+        <div class="section-head reveal">
+          <div>
+            <div class="section-kicker">OPERATING SYSTEM / 07 STEPS</div>
+            <h2>惊艳只是入口，闭环才是作品</h2>
+          </div>
+          <p>每一步都必须留下一个真实产物，让下一步不是凭感觉继续。</p>
+        </div>
+        <ol class="loop-grid">
+          {loop.map(([no, name, desc], index) => (
+            <li class="reveal" style={`--delay:${index * 55}ms`}>
+              <div class="loop-no">{no}</div>
+              <h3>{name}</h3>
+              <p>{desc}</p>
+              <div class="loop-artifact">{['BRIEF', 'PRD', 'PROTOTYPE', 'AGENT CONFIG', 'TEST', 'PREVIEW', 'SKILL'][index]}</div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section class="build-log section-wrap reveal">
+        <div class="build-log-copy">
+          <div class="section-kicker">BUILD LOG / CURRENT ITERATION</div>
+          <h2>这批作品本身，就是一条 Vibe Coding 证据链</h2>
+          <p>设计约束、交互实现、性能降级、移动端适配和构建验证会一起进入版本记录。不是“我会这些工具”，而是“这里就是正在运行的产物”。</p>
+        </div>
+        <div class="build-terminal" aria-label="构建记录">
+          <div><span>01</span><b>Intent Matter</b><em>Three.js / particle deformation</em><i>SHIPPED</i></div>
+          <div><span>02</span><b>Agent Constellation</b><em>Canvas / state choreography</em><i>SHIPPED</i></div>
+          <div><span>03</span><b>Signal Garden</b><em>Generative field / pointer input</em><i>SHIPPED</i></div>
+          <div><span>04</span><b>Next artifact</b><em>Case → commit → preview timeline</em><i class="next">BUILDING</i></div>
+        </div>
+      </section>
+
+      <section class="vibe-cta section-wrap reveal">
+        <div>
+          <span>THE NEXT BUILD STARTS WITH ONE SENTENCE.</span>
+          <h2>有一个复杂想法？<br />我们先把它做成能点开的东西。</h2>
+        </div>
+        <div class="hero-actions">
+          <a class="vibe-btn primary" href="mailto:1966315939@qq.com?subject=Vibe%20Coding%20共创">发起一次共创</a>
+          <a class="vibe-btn" href="/#works">查看其他作品</a>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    import * as THREE from 'three';
+
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const clampDpr = () => Math.min(devicePixelRatio || 1, 1.5);
+
+    // EXPERIMENT 01 — intent matter
+    const intentCanvas = document.querySelector<HTMLCanvasElement>('#intent-canvas');
+    const clarityInput = document.querySelector<HTMLInputElement>('#clarity');
+    const clarityValue = document.querySelector<HTMLElement>('#clarity-value');
+    if (intentCanvas && clarityInput && clarityValue) {
+      const renderer = new THREE.WebGLRenderer({ canvas: intentCanvas, alpha: true, antialias: true, powerPreference: 'high-performance' });
+      renderer.setPixelRatio(clampDpr());
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 30);
+      camera.position.z = 4.4;
+      const geometry = new THREE.IcosahedronGeometry(1.18, 4);
+      const base = new Float32Array(geometry.attributes.position.array as ArrayLike<number>);
+      const points = new THREE.Points(
+        geometry,
+        new THREE.PointsMaterial({ color: 0x78e8ff, size: 0.018, transparent: true, opacity: 0.92, blending: THREE.AdditiveBlending, depthWrite: false })
+      );
+      const wire = new THREE.Mesh(
+        new THREE.IcosahedronGeometry(1.17, 2),
+        new THREE.MeshBasicMaterial({ color: 0x8c6cff, wireframe: true, transparent: true, opacity: 0.11 })
+      );
+      scene.add(points, wire);
+      let clarity = Number(clarityInput.value) / 100;
+      let aimX = 0;
+      let aimY = 0;
+      let visible = true;
+      let intentDirty = true;
+      let last = 0;
+
+      const resizeIntent = () => {
+        const box = intentCanvas.getBoundingClientRect();
+        renderer.setSize(Math.max(1, box.width), Math.max(1, box.height), false);
+        camera.aspect = box.width / Math.max(1, box.height);
+        camera.updateProjectionMatrix();
+        intentDirty = true;
+      };
+      new ResizeObserver(resizeIntent).observe(intentCanvas);
+      resizeIntent();
+
+      const updateClarity = (value: number) => {
+        clarity = value / 100;
+        clarityInput.value = String(value);
+        clarityValue.textContent = `${Math.round(value)}%`;
+        intentDirty = true;
+      };
+      clarityInput.addEventListener('input', () => updateClarity(Number(clarityInput.value)));
+      document.querySelector('#scatter-core')?.addEventListener('click', () => updateClarity(12));
+      document.querySelector('#resolve-core')?.addEventListener('click', () => updateClarity(92));
+      intentCanvas.addEventListener('pointermove', (event) => {
+        const rect = intentCanvas.getBoundingClientRect();
+        aimX = (event.clientX - rect.left) / rect.width - 0.5;
+        aimY = (event.clientY - rect.top) / rect.height - 0.5;
+        intentDirty = true;
+      });
+      new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; intentDirty = true; }, { threshold: 0.02 }).observe(intentCanvas);
+
+      const renderIntent = (now: number) => {
+        requestAnimationFrame(renderIntent);
+        if (!visible || document.hidden || (reducedMotion && !intentDirty)) return;
+        const time = reducedMotion ? 0.6 : now * 0.00035;
+        if (!reducedMotion && now - last < 24) return;
+        last = now;
+        const positions = geometry.attributes.position.array as Float32Array;
+        const disorder = (1 - clarity) * 0.54;
+        for (let i = 0; i < positions.length; i += 3) {
+          const bx = base[i], by = base[i + 1], bz = base[i + 2];
+          const wave = Math.sin(bx * 5.2 + time * 3) * Math.cos(by * 4.3 - time * 2.1) * Math.sin(bz * 3.7 + time);
+          const radial = 1 + wave * disorder;
+          positions[i] = bx * radial + Math.sin(by * 8 + time * 4) * disorder * 0.12;
+          positions[i + 1] = by * radial + Math.cos(bz * 7 - time * 3) * disorder * 0.12;
+          positions[i + 2] = bz * radial;
+        }
+        geometry.attributes.position.needsUpdate = true;
+        points.rotation.y += reducedMotion ? 0 : 0.0018 + clarity * 0.0016;
+        points.rotation.x += (aimY * 0.38 - points.rotation.x) * 0.025;
+        points.rotation.z += (-aimX * 0.22 - points.rotation.z) * 0.025;
+        wire.rotation.copy(points.rotation);
+        const material = points.material as THREE.PointsMaterial;
+        material.color.setHSL(0.52 + clarity * 0.18, 0.88, 0.68);
+        wire.scale.setScalar(0.98 + clarity * 0.04);
+        renderer.render(scene, camera);
+        intentDirty = false;
+      };
+      requestAnimationFrame(renderIntent);
+    }
+
+    // EXPERIMENT 02 — agent constellation
+    const agentCanvas = document.querySelector<HTMLCanvasElement>('#agent-canvas');
+    const runLoop = document.querySelector<HTMLButtonElement>('#run-loop');
+    const agentStep = document.querySelector<HTMLElement>('#agent-step');
+    const phaseButtons = [...document.querySelectorAll<HTMLButtonElement>('[data-phase]')];
+    if (agentCanvas && runLoop && agentStep) {
+      const ctx = agentCanvas.getContext('2d');
+      const names = ['INTENT', 'SPEC', 'PROTOTYPE', 'AGENT', 'EVALUATE', 'SHIP', 'COMPOUND'];
+      let width = 1, height = 1, active = -1, pulseStart = performance.now(), running = false, loopStart = 0, hovered = -1;
+      let agentVisible = false, agentDirty = true;
+      let pointer = { x: -999, y: -999 };
+      const resizeAgent = () => {
+        const rect = agentCanvas.getBoundingClientRect();
+        width = rect.width; height = rect.height;
+        const dpr = clampDpr();
+        agentCanvas.width = Math.max(1, Math.round(width * dpr));
+        agentCanvas.height = Math.max(1, Math.round(height * dpr));
+        ctx?.setTransform(dpr, 0, 0, dpr, 0, 0);
+        agentDirty = true;
+      };
+      new ResizeObserver(resizeAgent).observe(agentCanvas);
+      resizeAgent();
+      const nodePositions = () => names.map((_, i) => {
+        const angle = -Math.PI / 2 + (i / names.length) * Math.PI * 2;
+        const radius = Math.min(width, height) * 0.33;
+        return { x: width / 2 + Math.cos(angle) * radius, y: height / 2 + Math.sin(angle) * radius };
+      });
+      const selectPhase = (index: number) => {
+        active = index;
+        pulseStart = performance.now();
+        agentDirty = true;
+        agentStep.textContent = `${String(index + 1).padStart(2, '0')} / ${names[index]} · SIGNAL ACCEPTED`;
+        phaseButtons.forEach((button, i) => button.classList.toggle('active', i === index));
+      };
+      phaseButtons.forEach((button) => button.addEventListener('click', () => selectPhase(Number(button.dataset.phase))));
+      runLoop.addEventListener('click', () => {
+        running = true; loopStart = performance.now(); selectPhase(0);
+        runLoop.textContent = 'RUNNING…';
+      });
+      agentCanvas.addEventListener('pointermove', (event) => {
+        const rect = agentCanvas.getBoundingClientRect();
+        pointer = { x: event.clientX - rect.left, y: event.clientY - rect.top };
+        agentDirty = true;
+      });
+      agentCanvas.addEventListener('pointerleave', () => { pointer = { x: -999, y: -999 }; hovered = -1; agentDirty = true; });
+      agentCanvas.addEventListener('click', () => { if (hovered >= 0) selectPhase(hovered); });
+      agentCanvas.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); runLoop.click(); }
+      });
+      new IntersectionObserver(([entry]) => { agentVisible = entry.isIntersecting; agentDirty = true; }, { threshold: 0.02 }).observe(agentCanvas);
+
+      const drawAgents = (now: number) => {
+        requestAnimationFrame(drawAgents);
+        if (!ctx || !agentVisible || document.hidden || (reducedMotion && !agentDirty && !running)) return;
+        if (running) {
+          const step = Math.min(6, Math.floor((now - loopStart) / 720));
+          if (step !== active) selectPhase(step);
+          if (now - loopStart > 7 * 720) {
+            running = false; runLoop.textContent = 'RUN AGAIN'; agentStep.textContent = 'LOOP COMPOUNDED · 7 ARTIFACTS SAVED';
+          }
+        }
+        ctx.clearRect(0, 0, width, height);
+        const nodes = nodePositions();
+        const bg = ctx.createRadialGradient(width / 2, height / 2, 20, width / 2, height / 2, Math.min(width, height) * 0.52);
+        bg.addColorStop(0, 'rgba(53, 220, 255, .08)'); bg.addColorStop(1, 'rgba(5, 8, 17, 0)');
+        ctx.fillStyle = bg; ctx.fillRect(0, 0, width, height);
+        hovered = -1;
+        ctx.lineWidth = 1;
+        nodes.forEach((node, i) => {
+          const next = nodes[(i + 1) % nodes.length];
+          const lit = active >= 0 && (i <= active || (active === 6 && i === 6));
+          const line = ctx.createLinearGradient(node.x, node.y, next.x, next.y);
+          line.addColorStop(0, lit ? 'rgba(82,229,255,.9)' : 'rgba(131,147,180,.18)');
+          line.addColorStop(1, lit ? 'rgba(158,112,255,.65)' : 'rgba(131,147,180,.08)');
+          ctx.strokeStyle = line; ctx.setLineDash([4, 8]); ctx.lineDashOffset = reducedMotion ? 0 : -now * 0.02;
+          ctx.beginPath(); ctx.moveTo(node.x, node.y); ctx.lineTo(next.x, next.y); ctx.stroke();
+          if (active === i) {
+            const p = reducedMotion ? 0.35 : ((now - pulseStart) % 1100) / 1100;
+            ctx.strokeStyle = `rgba(118, 235, 255, ${1 - p})`; ctx.setLineDash([]); ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.arc(node.x, node.y, 23 + p * 34, 0, Math.PI * 2); ctx.stroke();
+          }
+        });
+        ctx.setLineDash([]);
+        nodes.forEach((node, i) => {
+          const dist = Math.hypot(pointer.x - node.x, pointer.y - node.y);
+          if (dist < 34) hovered = i;
+          const on = i === active || i === hovered;
+          const radius = on ? 18 : 13;
+          const glow = ctx.createRadialGradient(node.x, node.y, 1, node.x, node.y, radius * 3.1);
+          glow.addColorStop(0, on ? 'rgba(110,237,255,.9)' : 'rgba(129,149,195,.42)');
+          glow.addColorStop(1, 'rgba(37,54,90,0)');
+          ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(node.x, node.y, radius * 3.1, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = on ? '#d7faff' : '#75839e'; ctx.beginPath(); ctx.arc(node.x, node.y, radius, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = '#070b14'; ctx.font = '700 9px JetBrains Mono, monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.fillText(String(i + 1).padStart(2, '0'), node.x, node.y + 0.5);
+          ctx.fillStyle = on ? '#d8f8ff' : '#7f8da8'; ctx.font = '10px JetBrains Mono, monospace';
+          ctx.fillText(names[i], node.x, node.y + 34);
+        });
+        ctx.fillStyle = '#d9f8ff'; ctx.font = '700 14px JetBrains Mono, monospace'; ctx.textAlign = 'center';
+        ctx.fillText(active >= 0 ? names[active] : 'AGENT LOOP', width / 2, height / 2 - 4);
+        ctx.fillStyle = '#64718c'; ctx.font = '10px JetBrains Mono, monospace';
+        ctx.fillText(active >= 0 ? 'ARTIFACT VERIFIED' : '7 NODES / 1 STATE', width / 2, height / 2 + 17);
+        agentDirty = false;
+      };
+      requestAnimationFrame(drawAgents);
+    }
+
+    // EXPERIMENT 03 — signal garden
+    const signalCanvas = document.querySelector<HTMLCanvasElement>('#signal-canvas');
+    const coherenceInput = document.querySelector<HTMLInputElement>('#coherence');
+    const reseed = document.querySelector<HTMLButtonElement>('#reseed');
+    if (signalCanvas && coherenceInput && reseed) {
+      const ctx = signalCanvas.getContext('2d');
+      let width = 1, height = 1, particles: Array<{x:number;y:number;px:number;py:number;life:number;hue:number}> = [];
+      let pointer = { x: 0, y: 0, active: false };
+      let hueShift = 0, signalVisible = false, signalDirty = true;
+      const particleCount = reducedMotion ? 70 : 230;
+      const seedParticles = () => {
+        particles = Array.from({ length: particleCount }, (_, i) => {
+          const x = Math.random() * width, y = Math.random() * height;
+          return { x, y, px: x, py: y, life: Math.random() * 180, hue: (i / particleCount) * 72 };
+        });
+      };
+      const resizeSignal = () => {
+        const rect = signalCanvas.getBoundingClientRect();
+        width = rect.width; height = rect.height;
+        const dpr = clampDpr();
+        signalCanvas.width = Math.max(1, Math.round(width * dpr)); signalCanvas.height = Math.max(1, Math.round(height * dpr));
+        ctx?.setTransform(dpr, 0, 0, dpr, 0, 0); seedParticles(); signalDirty = true;
+      };
+      new ResizeObserver(resizeSignal).observe(signalCanvas); resizeSignal();
+      const setPointer = (event: PointerEvent) => {
+        const rect = signalCanvas.getBoundingClientRect();
+        pointer = { x: event.clientX - rect.left, y: event.clientY - rect.top, active: true };
+        signalDirty = true;
+      };
+      signalCanvas.addEventListener('pointermove', setPointer);
+      signalCanvas.addEventListener('pointerdown', setPointer);
+      signalCanvas.addEventListener('pointerleave', () => { pointer.active = false; });
+      reseed.addEventListener('click', () => { hueShift = (hueShift + 47) % 180; seedParticles(); signalDirty = true; });
+      coherenceInput.addEventListener('input', () => { signalDirty = true; });
+      signalCanvas.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); reseed.click(); }
+      });
+      new IntersectionObserver(([entry]) => { signalVisible = entry.isIntersecting; signalDirty = true; }, { threshold: 0.02 }).observe(signalCanvas);
+      const drawSignal = () => {
+        requestAnimationFrame(drawSignal);
+        if (!ctx || !signalVisible || document.hidden || (reducedMotion && !signalDirty)) return;
+        const coherence = Number(coherenceInput.value) / 100;
+        ctx.fillStyle = reducedMotion ? 'rgba(5,8,17,1)' : 'rgba(5,8,17,.055)'; ctx.fillRect(0, 0, width, height);
+        ctx.lineWidth = 0.65 + coherence * 0.75;
+        particles.forEach((p) => {
+          p.px = p.x; p.py = p.y;
+          const nx = (p.x - width / 2) / Math.max(width, 1);
+          const ny = (p.y - height / 2) / Math.max(height, 1);
+          let angle = Math.sin(nx * 11 + ny * 3.2) * 1.8 + Math.cos(ny * 8 - nx * 2) * (1.1 - coherence);
+          if (pointer.active) {
+            const dx = p.x - pointer.x, dy = p.y - pointer.y;
+            const distance = Math.max(24, Math.hypot(dx, dy));
+            if (distance < 190) angle += Math.atan2(dy, dx) + (1 - distance / 190) * 1.9;
+          }
+          const speed = 0.45 + coherence * 1.25;
+          if (reducedMotion) {
+            p.x = p.px + Math.cos(angle) * 12;
+            p.y = p.py + Math.sin(angle) * 12;
+          } else {
+            p.x += Math.cos(angle) * speed; p.y += Math.sin(angle) * speed; p.life += 1;
+          }
+          if (p.x < -8 || p.x > width + 8 || p.y < -8 || p.y > height + 8 || p.life > 250) {
+            p.x = Math.random() * width; p.y = Math.random() * height; p.px = p.x; p.py = p.y; p.life = 0;
+          }
+          const alpha = Math.sin(Math.min(1, p.life / 30) * Math.PI / 2) * (0.16 + coherence * 0.38);
+          ctx.strokeStyle = `hsla(${184 + hueShift + p.hue}, 88%, 68%, ${alpha})`;
+          ctx.beginPath(); ctx.moveTo(p.px, p.py); ctx.lineTo(p.x, p.y); ctx.stroke();
+        });
+        signalDirty = false;
+      };
+      requestAnimationFrame(drawSignal);
+    }
+  </script>
+</Base>
+
+<style>
+  :global(body) { background: #050811; }
+  .vibe-page {
+    --v-bg: #050811;
+    --v-panel: rgba(11, 17, 31, .78);
+    --v-line: rgba(129, 216, 255, .16);
+    --v-cyan: #76e9ff;
+    --v-violet: #9b78ff;
+    --v-amber: #f7b95d;
+    --v-text: #edf9ff;
+    --v-muted: #8290aa;
+    position: relative;
+    color: var(--v-text);
+    background:
+      radial-gradient(circle at 18% 18%, rgba(34, 119, 175, .14), transparent 30%),
+      radial-gradient(circle at 84% 30%, rgba(112, 61, 185, .12), transparent 27%),
+      var(--v-bg);
+    overflow: hidden;
+  }
+  .vibe-page::before {
+    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 8; opacity: .22;
+    background-image: repeating-radial-gradient(circle at 17% 31%, rgba(255,255,255,.16) 0 .35px, transparent .5px 3px);
+    background-size: 9px 11px;
+    mix-blend-mode: soft-light;
+  }
+  .vibe-hero { min-height: 100svh; position: relative; display: grid; align-items: center; padding: 130px max(28px, 7vw) 80px; isolation: isolate; }
+  #intent-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -2; }
+  .hero-grid { position: absolute; inset: 0; z-index: -1; opacity: .24; background-image: linear-gradient(rgba(119, 221, 255, .11) 1px, transparent 1px), linear-gradient(90deg, rgba(119, 221, 255, .11) 1px, transparent 1px); background-size: 72px 72px; mask-image: linear-gradient(to bottom, transparent, black 20%, black 74%, transparent); }
+  .hero-copy { width: min(760px, 62vw); position: relative; z-index: 2; }
+  .eyebrow, .section-kicker, .instrument-no { font-family: var(--mono); color: var(--v-cyan); letter-spacing: .22em; font-size: 11px; font-weight: 700; }
+  .eyebrow { display: flex; align-items: center; gap: 12px; }
+  .eyebrow span { width: 36px; height: 1px; background: var(--v-cyan); box-shadow: 0 0 12px var(--v-cyan); }
+  .vibe-hero h1 { font-family: var(--serif); font-size: clamp(54px, 8.6vw, 128px); line-height: .94; letter-spacing: -.04em; margin: 28px 0; max-width: 900px; }
+  .vibe-hero h1 em, .instrument h3 em { display: inline-block; color: transparent; font-style: normal; -webkit-text-stroke: 1px rgba(182, 235, 255, .8); text-shadow: 0 0 40px rgba(82, 222, 255, .12); }
+  .vibe-hero p { max-width: 680px; font-size: clamp(15px, 1.55vw, 18px); color: #a6b3c9; line-height: 1.9; }
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 34px; }
+  .vibe-btn { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; padding: 0 24px; border: 1px solid rgba(123, 228, 255, .25); color: #d8f7ff; font-family: var(--mono); font-size: 12px; letter-spacing: .08em; background: rgba(10, 18, 31, .58); backdrop-filter: blur(14px); transition: .25s ease; }
+  .vibe-btn:hover { color: white; border-color: var(--v-cyan); transform: translateY(-2px); box-shadow: 0 12px 42px rgba(44, 211, 255, .12); }
+  .vibe-btn.primary { color: #031018; background: var(--v-cyan); border-color: var(--v-cyan); font-weight: 700; }
+  .hero-console { position: absolute; right: max(28px, 7vw); bottom: 10vh; width: min(330px, 30vw); border-top: 1px solid var(--v-line); font-family: var(--mono); font-size: 10px; }
+  .hero-console div { display: grid; grid-template-columns: 80px 1fr; gap: 18px; padding: 9px 0; border-bottom: 1px solid var(--v-line); }
+  .hero-console span { color: #53617a; }.hero-console b { color: #b7c5d8; font-weight: 400; }.hero-console .live b { color: #8bf1bd; }
+  .hero-console i { display: inline-block; width: 6px; height: 6px; margin-right: 7px; border-radius: 50%; background: #5af0a5; box-shadow: 0 0 12px #5af0a5; }
+  .hero-orbit { position: absolute; right: 17vw; top: 24vh; width: 210px; aspect-ratio: 1; border: 1px solid rgba(117, 230, 255, .13); border-radius: 50%; animation: vibe-orbit 28s linear infinite; }
+  .hero-orbit::before, .hero-orbit::after { content: ''; position: absolute; border: 1px solid rgba(146, 112, 255, .13); border-radius: 50%; inset: 18%; }.hero-orbit::after { inset: 39%; background: rgba(117,230,255,.1); box-shadow: 0 0 42px rgba(117,230,255,.22); }
+  .hero-orbit span { position: absolute; padding: 3px 6px; background: #07101b; color: #73839d; font: 9px var(--mono); }.hero-orbit span:nth-child(1){left:44%;top:-8px}.hero-orbit span:nth-child(2){right:-16px;top:52%}.hero-orbit span:nth-child(3){left:8%;bottom:8%}
+  @keyframes vibe-orbit { to { transform: rotate(360deg); } }
+  .section-wrap { width: min(1240px, calc(100% - 48px)); margin: 0 auto; }
+  .manifesto { min-height: 60vh; display: grid; grid-template-columns: 160px 1fr 180px; gap: 48px; align-items: center; border-top: 1px solid var(--v-line); border-bottom: 1px solid var(--v-line); }
+  .manifesto-index, .manifesto-meta { font: 10px var(--mono); letter-spacing: .15em; color: #58667e; }.manifesto-meta{text-align:right}
+  .manifesto p { font-family: var(--serif); font-size: clamp(32px, 5vw, 70px); line-height: 1.22; color: #7f8ba0; }.manifesto strong { color: var(--v-text); font-weight: 700; }
+  .experiments, .operating-loop { padding: 150px 0; }
+  .section-head { display: grid; grid-template-columns: 1fr minmax(240px, 380px); gap: 48px; align-items: end; margin-bottom: 72px; }
+  .section-head h2, .build-log h2, .vibe-cta h2 { font-family: var(--serif); font-size: clamp(34px, 5vw, 66px); line-height: 1.12; margin-top: 14px; letter-spacing: -.03em; }
+  .section-head > p, .build-log-copy > p { color: var(--v-muted); line-height: 1.8; font-size: 14px; }
+  .instrument { min-height: min(760px, 82svh); display: grid; grid-template-columns: minmax(280px, .72fr) 1.5fr; gap: 0; margin: 0 0 34px; border: 1px solid var(--v-line); background: rgba(7, 12, 23, .66); box-shadow: 0 38px 100px rgba(0, 0, 0, .24); overflow: hidden; }
+  .instrument-copy { padding: clamp(30px, 5vw, 72px); display: flex; flex-direction: column; justify-content: center; border-right: 1px solid var(--v-line); position: relative; }
+  .instrument-copy::after { content: ''; position: absolute; bottom: 26px; left: 26px; width: 8px; height: 8px; border-left: 1px solid var(--v-cyan); border-bottom: 1px solid var(--v-cyan); }
+  .instrument h3 { font-family: var(--serif); font-size: clamp(38px, 5.2vw, 70px); line-height: 1.02; margin: 24px 0 28px; }.instrument h3 em { font-size: .58em; margin-top: 12px; }
+  .instrument-copy > p { color: #8f9cb3; font-size: 15px; line-height: 1.9; max-width: 480px; }
+  .instrument-proof { display: flex; flex-direction: column; gap: 8px; margin-top: 38px; color: #6e7b92; font: 10px var(--mono); letter-spacing: .08em; }.instrument-proof span::before { content: '→'; color: var(--v-cyan); margin-right: 10px; }
+  .lab-stage { min-height: 560px; position: relative; overflow: hidden; background: radial-gradient(circle at 50% 50%, rgba(30, 114, 151, .09), transparent 48%), #050811; }
+  .core-reticle { position: absolute; width: min(48%, 390px); aspect-ratio: 1; left: 50%; top: 50%; transform: translate(-50%, -50%); border: 1px solid rgba(117,230,255,.12); border-radius: 50%; pointer-events:none; }
+  .core-reticle::before, .core-reticle::after { content:'';position:absolute;inset:13%;border:1px dashed rgba(155,120,255,.14);border-radius:50%}.core-reticle::after{inset:43%;border-style:solid;background:rgba(117,230,255,.05)}
+  .core-readout { position: absolute; top: 32px; right: 34px; display: flex; flex-direction: column; align-items: flex-end; font: 9px var(--mono); letter-spacing: .14em; color: #5f6c82; }.core-readout strong { font-size: 34px; letter-spacing: -.04em; color: var(--v-cyan); margin-top: 3px; }
+  .lab-controls { position: absolute; left: 28px; right: 28px; bottom: 28px; display: flex; align-items: center; gap: 10px; padding: 12px; background: rgba(8, 14, 26, .8); border: 1px solid var(--v-line); backdrop-filter: blur(12px); }
+  .lab-controls label { display: flex; align-items: center; gap: 12px; flex: 1; font: 9px var(--mono); color: #66758e; }.lab-controls input { accent-color: var(--v-cyan); width: 100%; }
+  .lab-controls button, .agent-status button { min-height: 38px; padding: 0 16px; border: 1px solid var(--v-line); background: rgba(15, 24, 41, .9); color: #a9b8cd; font: 9px var(--mono); letter-spacing: .08em; cursor: pointer; }.lab-controls button:hover, .agent-status button:hover { border-color: var(--v-cyan); color: white; }.lab-controls .hot, .agent-status .hot { background: var(--v-cyan); color: #061018; border-color: var(--v-cyan); font-weight: 700; }
+  .agent-stage canvas, .signal-stage canvas { width: 100%; height: 100%; display: block; }
+  .agent-status { position: absolute; inset: auto 26px 26px; display: flex; align-items: center; justify-content: space-between; gap: 18px; color: #66758e; font: 9px var(--mono); letter-spacing: .08em; }
+  .phase-picker { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-top: 34px; }.phase-picker button { border: 1px solid rgba(126,216,255,.1); background: rgba(13,21,36,.52); color: #748199; text-align:left; padding: 9px 10px; font: 9px var(--mono); cursor:pointer; }.phase-picker button span { color:#41506a;margin-right:8px}.phase-picker button:hover,.phase-picker button.active{border-color:rgba(118,233,255,.55);color:#d7f8ff;background:rgba(61,188,221,.09)}.phase-picker button.active span{color:var(--v-cyan)}
+  .signal-stage { min-height: 620px; }.signal-caption { position:absolute;top:26px;left:28px;right:28px;display:flex;align-items:center;gap:16px;color:#54617a;font:9px var(--mono);letter-spacing:.14em}.signal-caption i{height:1px;flex:1;background:linear-gradient(90deg,rgba(118,233,255,.3),transparent)}
+  .loop-grid { list-style: none; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--v-line); border-left: 1px solid var(--v-line); }
+  .loop-grid li { min-height: 250px; padding: 26px; border-right: 1px solid var(--v-line); border-bottom: 1px solid var(--v-line); position: relative; transition: background .25s, transform .25s; transition-delay: var(--delay); }.loop-grid li:hover { background: rgba(68, 194, 226, .06); transform: translateY(-4px); }
+  .loop-no { color: #4e5e77; font: 11px var(--mono); }.loop-grid h3 { font-family: var(--serif); font-size: 26px; margin: 26px 0 10px; }.loop-grid p { color: #7b899f; font-size: 13px; line-height: 1.7; }.loop-artifact { position: absolute; left: 26px; bottom: 22px; color: var(--v-cyan); font: 9px var(--mono); letter-spacing: .1em; }
+  .build-log { margin-top: 20px; margin-bottom: 150px; display: grid; grid-template-columns: .9fr 1.1fr; gap: 70px; align-items: center; padding: 72px; border: 1px solid var(--v-line); background: linear-gradient(135deg, rgba(16, 29, 48, .65), rgba(17, 12, 31, .65)); }
+  .build-log-copy > p { margin-top: 24px; }.build-terminal { border-top: 1px solid var(--v-line); }.build-terminal div { display: grid; grid-template-columns: 34px 1fr 1.35fr auto; gap: 14px; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--v-line); font: 9px var(--mono); }.build-terminal span{color:#48566e}.build-terminal b{font-size:11px;color:#c7d7e9}.build-terminal em{font-style:normal;color:#63718a}.build-terminal i{font-style:normal;color:#68e5a6}.build-terminal i.next{color:var(--v-amber)}
+  .vibe-cta { min-height: 72vh; display: flex; align-items: center; justify-content: space-between; gap: 48px; border-top: 1px solid var(--v-line); }.vibe-cta > div > span{color:var(--v-cyan);font:10px var(--mono);letter-spacing:.16em}.vibe-cta .hero-actions{flex-direction:column;min-width:220px}
+  @media (max-width: 900px) {
+    .hero-copy { width: 100%; }.hero-console { position: relative; right: auto; bottom: auto; width: 100%; margin-top: 56px; }.hero-orbit { right: -60px; top: 18vh; opacity: .6; }
+    .manifesto { grid-template-columns: 1fr; gap: 22px; padding: 90px 0; }.manifesto-meta{text-align:left}.section-head{grid-template-columns:1fr}.instrument{grid-template-columns:1fr}.instrument-copy{border-right:0;border-bottom:1px solid var(--v-line)}.loop-grid{grid-template-columns:repeat(2,1fr)}.build-log{grid-template-columns:1fr;padding:42px}.vibe-cta{align-items:flex-start;justify-content:center;flex-direction:column;padding:100px 0}
+  }
+  @media (max-width: 620px) {
+    .vibe-hero { padding: 120px 20px 64px; }.vibe-hero h1{font-size:clamp(50px,17vw,82px)}.section-wrap{width:min(100% - 28px,1240px)}.experiments,.operating-loop{padding:100px 0}.section-head{margin-bottom:46px}.instrument{min-height:0}.instrument-copy{padding:34px 24px}.lab-stage,.signal-stage{min-height:480px}.lab-controls{left:12px;right:12px;bottom:12px;flex-wrap:wrap}.lab-controls label{flex-basis:100%}.phase-picker{grid-template-columns:1fr 1fr}.agent-status{left:14px;right:14px;bottom:14px}.agent-status span{max-width:58%}.loop-grid{grid-template-columns:1fr 1fr}.loop-grid li{min-height:220px;padding:20px}.loop-artifact{left:20px}.build-log{padding:30px 22px;gap:38px}.build-terminal div{grid-template-columns:26px 1fr auto}.build-terminal em{display:none}.hero-orbit{display:none}
+  }
+  @media (prefers-reduced-motion: reduce) { .hero-orbit { animation: none; } }
+</style>
