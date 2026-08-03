@@ -1,5 +1,6 @@
 ---
 import '../styles/interview.css';
+import InterviewRipple from '../components/interview/InterviewRipple.astro';
 
 interface Props {
   title?: string;
@@ -29,6 +30,7 @@ const {
     <meta name="theme-color" content="#050505" />
   </head>
   <body>
+    <InterviewRipple />
     <a class="interview-skip" href="#interview-main">跳到主要内容</a>
     <div class="interview-progress" id="interview-progress" aria-hidden="true"></div>
     <header class="interview-nav-wrap">

@@ -7,7 +7,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "test:interview": "node --test tests/interview-page.test.mjs"
+    "test:interview": "node --test tests/interview-page.test.mjs tests/interview-ripple.test.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
