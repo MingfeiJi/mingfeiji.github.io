@@ -1,0 +1,27 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = '纪鸣飞 · AI 产品架构师 / FDE 面试作品集',
+  description = '用 3 分钟看懂纪鸣飞如何把复杂 AI 能力做成可运行、可衡量、可移交的业务系统。',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={new URL('/interview/', Astro.site)} />
+    <meta name="theme-color" content="#050505" />
+  </head>
+  <body>
+    <a href="#interview-main">跳到主要内容</a>
+    <slot />
+  </body>
+</html>
