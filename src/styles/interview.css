@@ -195,7 +195,7 @@
 
 .interview-nav-links a:hover { color: #fff; background: rgba(255, 255, 255, .06); }
 
-.interview-nav-contact {
+.interview-document .interview-nav-contact {
   flex: 0 0 auto;
   padding: 10px 17px;
   border-radius: 999px;
@@ -206,7 +206,7 @@
   transition: transform .25s ease, background .25s ease;
 }
 
-.interview-nav-contact:hover { background: #fff; transform: scale(1.035); }
+.interview-document .interview-nav-contact:hover { color: #050505; background: #fff; transform: scale(1.035); }
 .interview-mobile-menu { display: none; }
 
 .interview-hero {
