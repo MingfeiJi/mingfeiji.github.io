@@ -1,22 +1,283 @@
 ---
 import Interview from '../../layouts/Interview.astro';
+
+const realizedMetrics = [
+  { value: '¥百万级', label: '智能客服年化降本', note: '已落地 · 13 人成本' },
+  { value: '68% → 84%', label: '客户满意度', note: '智能客服“小 V”' },
+  { value: '65% → 87%', label: 'AIGC 生图采纳率', note: 'Lora 微调与评测闭环' },
+  { value: '+60%', label: '制造业核心流程效率', note: '50+ 流程重构' },
+];
+
+const judgmentCards = [
+  { no: '01', title: '产品判断', copy: '先识别值得做的问题，再选择 AI。曾主动毙掉“全 AI 一键出片”和“自动养号”两类伪需求。' },
+  { no: '02', title: '系统架构', copy: '把旅程、Agent、Skill、MCP、知识库、评测与可观测性组织成可演进的产品系统。' },
+  { no: '03', title: '业务落地', copy: '用业务结果和 AI 能力双轨衡量，不把 Demo、调用次数或模型参数当成最终价值。' },
+  { no: '04', title: '驻场交付', copy: '在业务现场完成诊断、共创、验证与移交，让项目组撤走后系统仍能持续迭代。' },
+];
+
+const artifactLinks = [
+  { label: '查看架构', href: '/prototypes/tripflow-arch.html', meta: '业务流程 × AI 五层架构' },
+  { label: '查看产品形态', href: '/prototypes/tripflow-product-form.html', meta: '旅程导航 × 任务中心 × 副驾' },
+  { label: '查看用户旅程', href: 'https://mingfeiji.github.io/tripflow-experience-map/', meta: '关键任务与体验断点' },
+];
+
+const supportingCases = [
+  {
+    tag: 'B 端 · 千人电商',
+    title: '智能客服“小 V”',
+    role: '产品 / 项目负责人',
+    problem: '大量重复咨询占用人工客服，满意度只有 68%，知识与业务变化又让纯规则机器人快速失效。',
+    decision: '采用“AI 优先、人工兜底”，设计 30 类意图、RAG + SFT 和 badcase 评测闭环，而不是追求表面上的全自动。',
+    result: '覆盖 80% 重复问题，节省 13 人成本，客户满意度从 68% 提升到 84%。',
+    href: '/prototypes/cs-agent-arch.html',
+  },
+  {
+    tag: '产业端 · 制造业',
+    title: 'ERP / 业财融合数字化转型',
+    role: 'PMO 主管 · 20+ 人团队',
+    problem: '组织、业务与财务链路割裂，50+ 核心流程存在重复操作、口径不一和责任边界模糊。',
+    decision: '先完成业务蓝图与责权利对齐，再推进系统重构；用流程效率与核算准确率共同衡量结果。',
+    result: '核心流程效率提升 60%，核算准确率提升 25%，项目获得集团级战略奖。',
+    href: '/prototypes/silicon-staff-arch.html',
+  },
+];
+
+const evidence = [
+  { no: '01', title: '用户研究', copy: '从业务一线、中层和一把手三层访谈，找到真实约束与责任人。', link: 'https://mingfeiji.github.io/tripflow-experience-map/', action: '查看研究与旅程' },
+  { no: '02', title: '信息架构', copy: '用旅程导航组织复杂任务，以任务中心承载输入、处理、输出和成本。', link: '/prototypes/tripflow-product-form.html', action: '查看 IA 与产品形态' },
+  { no: '03', title: '可运行原型', copy: '不用静态 PRD 等待对齐；业务能点、研发能抄、老板能据此做决策。', link: '/prototypes/tripflow-asset-library.html', action: '查看素材中台原型' },
+  { no: '04', title: '指标与评测', copy: '业务价值指标与 AI 能力指标并行，埋点、评测集和 badcase 形成闭环。', link: 'https://mingfeiji.github.io/tripflow-ops-playbook/', action: '查看运营与指标手册' },
+  { no: '05', title: '系统演进', copy: '允许产品从薄工具起步，但架构必须为知识、数据与反馈飞轮预留位置。', link: '/prototypes/tripflow-arch.html', action: '查看演进架构' },
+];
+
+const fdeLoop = [
+  { no: '01', title: '诊断', copy: '进入业务现场，辨别症状、根因、伪需求与组织约束。' },
+  { no: '02', title: '共创', copy: '与一线、负责人和工程团队共同确认旅程、蓝图和责任边界。' },
+  { no: '03', title: '交付', copy: '两周一个可运行版本，用原型和真实任务代替抽象讨论。' },
+  { no: '04', title: '验证', copy: '同时看业务结果、AI 效果、成本、合规和 badcase。' },
+  { no: '05', title: '移交', copy: '业务变化归运营、技术稳定归工程，让系统脱离项目组后仍能生长。' },
+];
+
+const career = [
+  { time: '2025 — 至今', title: '头部 OTA 大厂 · AI Lab', role: 'AI 产品经理（产品架构与转型主导）', copy: '0-1 主导出海内容增长 AI 中台，服务 70–80 人内容运营团队，推动项目升级为 BG 级 AI 化转型立项标杆。' },
+  { time: '2023 — 2025', title: '千人电商 · AI 转型', role: 'AI 产品 / 项目负责人', copy: '推进智能客服、AIGC 内容平台与 Lora 微调，形成从产品效果到组织采纳的完整闭环。' },
+  { time: '2022 — 2023', title: '制造业 · 数字化转型', role: 'PMO 主管', copy: '带领 20+ 人团队重构 ERP 与业财流程，在真实组织变革中建立蓝图、指标与移交方法。' },
+];
 ---
 
 <Interview>
   <div class="interview-page">
     <main id="interview-main">
       <section class="interview-hero" id="top">
-        <p>AI 产品架构师 / Forward Deployed Engineer</p>
-        <h1>把复杂 AI 能力，做成真正跑起来的业务系统。</h1>
-        <a href="#flagship">3 分钟看旗舰案例</a>
-        <a href="mailto:1966315939@qq.com">联系我 / 获取完整简历</a>
+        <div class="interview-shell interview-hero-grid">
+          <div class="interview-hero-copy">
+            <p class="interview-eyebrow">AI PRODUCT ARCHITECT · FORWARD DEPLOYED ENGINEER</p>
+            <h1>把复杂 AI 能力，<span>做成真正跑起来的业务系统。</span></h1>
+            <p class="interview-lede">我横跨产品判断、系统架构、业务落地与组织移交：不是把模型包装成 Demo，而是让 AI 进入生产线，形成可运行、可衡量、可持续迭代的闭环。</p>
+            <div class="interview-actions">
+              <a class="interview-button interview-button-primary" href="#flagship">3 分钟看旗舰案例</a>
+              <a class="interview-button" href="mailto:1966315939@qq.com?subject=AI%20产品架构师%20%2F%20FDE%20沟通">联系我 / 获取完整简历</a>
+            </div>
+            <p class="interview-readtime"><span></span> 30 秒认识我 · 3 分钟看案例 · 10 分钟验证证据</p>
+          </div>
+
+          <aside class="interview-profile" aria-label="岗位匹配摘要">
+            <div class="interview-profile-top">
+              <span>候选人</span>
+              <strong>纪鸣飞 / Mingfei Ji</strong>
+            </div>
+            <div class="interview-profile-role">AI 产品架构师<br />企业 AI 化转型专家</div>
+            <dl>
+              <div><dt>复杂度</dt><dd>业务 × 产品 × AI × 组织</dd></div>
+              <div><dt>工作方式</dt><dd>驻场共创 · 可运行交付</dd></div>
+              <div><dt>目标</dt><dd>价值落地 · 能力移交</dd></div>
+            </dl>
+          </aside>
+        </div>
       </section>
-      <section id="flagship" data-proof="realized"></section>
-      <section data-proof="target"></section>
-      <section id="cases"></section>
-      <section id="method"></section>
-      <section id="about"></section>
-      <a href="https://github.com/MingfeiJi">GitHub</a>
+
+      <section class="interview-section interview-proof" data-proof="realized" aria-labelledby="realized-title">
+        <div class="interview-shell">
+          <div class="interview-section-head interview-section-head-inline">
+            <div><p class="interview-kicker">PROOF, NOT PROMISES</p><h2 id="realized-title">已兑现结果</h2></div>
+            <p>先看已经发生的业务变化。每个数字都能回到下方项目，看到问题、决策与我的责任边界。</p>
+          </div>
+          <div class="interview-metrics">
+            {realizedMetrics.map((metric) => (
+              <article class="metric-card">
+                <strong>{metric.value}</strong>
+                <h3>{metric.label}</h3>
+                <p>{metric.note}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section class="interview-section interview-judgment" aria-labelledby="judgment-title">
+        <div class="interview-shell">
+          <div class="interview-section-head"><p class="interview-kicker">WHY FDE</p><h2 id="judgment-title">我不是单点型 AI PM。</h2><p>我的产品边界从“判断该做什么”，一直延伸到“系统上线后谁维护、如何继续增长”。</p></div>
+          <div class="interview-judgment-grid">
+            {judgmentCards.map((item) => (
+              <article class="interview-judgment-card">
+                <span>{item.no}</span><h3>{item.title}</h3><p>{item.copy}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section class="interview-section interview-flagship" id="flagship" aria-labelledby="flagship-title">
+        <div class="interview-shell">
+          <header class="interview-case-hero">
+            <div>
+              <p class="interview-kicker">FLAGSHIP CASE · 约 3 分钟</p>
+              <h2 id="flagship-title">出海内容增长 AI 中台</h2>
+              <p class="interview-case-sub">把 70–80 人内容团队的人工生产链路，重构为人机协同的增长系统。</p>
+            </div>
+            <div class="interview-case-role"><span>我的角色</span><strong>0-1 产品主导</strong><small>产品架构 · 用户研究 · 交付推进</small></div>
+          </header>
+
+          <div class="interview-case-facts">
+            <div><span>业务规模</span><strong>日产出海短视频 100+ 条</strong></div>
+            <div><span>原流程</span><strong>7 步中 6 步纯人工</strong></div>
+            <div><span>团队协作</span><strong>3 UI + 5+ 开发</strong></div>
+          </div>
+
+          <div class="interview-story">
+            <article class="interview-story-block interview-story-wide">
+              <div class="interview-story-no">01</div>
+              <div><p class="interview-story-label">背景与问题</p><h3>不是缺一个 AI 工具，而是整条内容旅程没有被产品化。</h3><p>选题、脚本、素材、剪辑、合规、发布、复盘分散在不同人和工具中。团队已有稳定产能，改造期间不能停产；海外平台又有严格合规红线，自动化出错会直接带来封号与业务损失。</p></div>
+            </article>
+
+            <article class="interview-story-block">
+              <div class="interview-story-no">02</div>
+              <div><p class="interview-story-label">研究与洞察</p><h3>真正的产品对象是“组织中的任务流”。</h3><p>驻场观察一线任务后，我把问题从“做一个 AI 中台”重述为“让每个任务知道输入、处理状态、输出、成本和下一位责任人”。同时毙掉“全 AI 一键出片”和“自动养号”两类伪需求。</p></div>
+            </article>
+
+            <article class="interview-story-block">
+              <div class="interview-story-no">03</div>
+              <div><p class="interview-story-label">信息架构与旅程</p><h3>旅程导航负责方向，任务中心负责确定性。</h3><p>用“灵感 → 资产 → 创作 → 审核 → 剪辑 → 发布 → 复盘”组织主旅程；任务中心呈现输入、AI 处理、人工判断、输出与 Token 成本；副驾 Dock 和上下文抽屉承载协助信息。</p></div>
+            </article>
+
+            <div class="interview-journey" aria-label="内容增长用户旅程">
+              {['灵感', '资产', '创作', '审核', '剪辑', '发布', '复盘'].map((item, index) => (
+                <div><span>{String(index + 1).padStart(2, '0')}</span><strong>{item}</strong></div>
+              ))}
+            </div>
+
+            <article class="interview-story-block">
+              <div class="interview-story-no">04</div>
+              <div><p class="interview-story-label">产品与系统方案</p><h3>在每个节点嵌入正确的 AI 原子能力，而不是再造一个孤立平台。</h3><p>基于 LobeHub 落地多 Agent + Skill + MCP + 知识库协同，用 Dify 处理数据侧批量 AI；结构化字段先筛选，再用 pgvector / RAG 召回；文本、图像和视频采用源头把控与终筛两层审核。</p></div>
+            </article>
+
+            <article class="interview-story-block">
+              <div class="interview-story-no">05</div>
+              <div><p class="interview-story-label">关键决策与取舍</p><h3>AI 做重活，人做判断；先复用，再演进。</h3><p>合规终审、创意定调保留人工；产品优先复用既有 LobeHub、Dify 和业务接口，避免为架构完整性拖慢价值验证。演进蓝图保留五层 Multi-Agent，但 MVP 只交付最短闭环。</p></div>
+            </article>
+          </div>
+
+          <section class="interview-result-panel" data-proof="realized" aria-labelledby="flagship-realized">
+            <div><p class="interview-story-label">MVP · 已兑现结果</p><h3 id="flagship-realized">一周内让系统进入真实生产。</h3></div>
+            <dl>
+              <div><dt>500</dt><dd>生成素材</dd></div>
+              <div><dt>990</dt><dd>团队发布视频</dd></div>
+              <div><dt>100 万+</dt><dd>总播放</dd></div>
+              <div><dt>BG 级</dt><dd>转型立项标杆</dd></div>
+            </dl>
+          </section>
+
+          <section class="interview-target-panel" data-proof="target" aria-labelledby="target-title">
+            <div><span>在途目标 · 非已兑现结果</span><h3 id="target-title">全年节省 ¥500 万 / 2.8 万工时，约 13 FTE</h3></div>
+            <p>目标值单独呈现，不与 MVP 实测结果混排。后续通过埋点 Schema、双轨指标和 badcase 评测持续验证。</p>
+          </section>
+
+          <div class="interview-ownership">
+            <div><p class="interview-story-label">我负责</p><h3>从问题定义到组织移交的完整产品闭环</h3></div>
+            <ul>
+              <li>多层级用户研究、需求优先级与产品路线图</li>
+              <li>用户旅程、信息架构、高保真原型与 Agent 产品形态</li>
+              <li>多 Agent / Skill / MCP / 知识库的产品架构</li>
+              <li>统筹 3 名 UI、5 名以上开发及跨部门业务团队</li>
+              <li>CIO 双周汇报、亚洲区总经理英文汇报与转型移交</li>
+            </ul>
+          </div>
+
+          <div class="interview-artifacts" aria-label="旗舰案例验证材料">
+            {artifactLinks.map((artifact) => (
+              <a href={artifact.href} target="_blank" rel="noopener">
+                <span>{artifact.meta}</span><strong>{artifact.label} ↗</strong>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section class="interview-section" id="cases" aria-labelledby="cases-title">
+        <div class="interview-shell">
+          <div class="interview-section-head"><p class="interview-kicker">SUPPORTING CASES</p><h2 id="cases-title">另外两次，问题不同，方法一致。</h2><p>从制造业数字化到千人电商 AI 转型：技术换代，但产品判断、指标与变革管理是同一套底层能力。</p></div>
+          <div class="interview-cases">
+            {supportingCases.map((item) => (
+              <article class="interview-case-card">
+                <header><div><p>{item.tag}</p><h3>{item.title}</h3></div><span>{item.role}</span></header>
+                <dl>
+                  <div><dt>问题</dt><dd>{item.problem}</dd></div>
+                  <div><dt>决策</dt><dd>{item.decision}</dd></div>
+                  <div><dt>结果</dt><dd>{item.result}</dd></div>
+                </dl>
+                <a href={item.href} target="_blank" rel="noopener">查看完整证据 ↗</a>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section class="interview-section interview-method" id="method" aria-labelledby="method-title">
+        <div class="interview-shell">
+          <div class="interview-section-head"><p class="interview-kicker">PRODUCT DESIGN EVIDENCE</p><h2 id="method-title">产品能力，不写在技能标签里。</h2><p>把用户研究、IA、旅程、原型、指标和评测都变成能点开的证据。</p></div>
+          <div class="interview-evidence-grid">
+            {evidence.map((item) => (
+              <a class="interview-evidence-card" href={item.link} target="_blank" rel="noopener">
+                <span>{item.no}</span><h3>{item.title}</h3><p>{item.copy}</p><strong>{item.action} ↗</strong>
+              </a>
+            ))}
+          </div>
+
+          <div class="interview-loop-head"><p class="interview-kicker">THE FDE LOOP</p><h2>交付会结束，飞轮不会。</h2></div>
+          <ol class="interview-loop">
+            {fdeLoop.map((item) => (
+              <li><span>{item.no}</span><div><h3>{item.title}</h3><p>{item.copy}</p></div></li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section class="interview-section interview-about" id="about" aria-labelledby="about-title">
+        <div class="interview-shell">
+          <div class="interview-section-head"><p class="interview-kicker">ABOUT</p><h2 id="about-title">三段递进式攻坚。</h2><p>每一段都比上一段更难：从流程数字化，到 AI 产品闭环，再到组织级 AI 转型。</p></div>
+          <div class="interview-career">
+            {career.map((item) => (
+              <article><time>{item.time}</time><div><h3>{item.title}</h3><strong>{item.role}</strong><p>{item.copy}</p></div></article>
+            ))}
+          </div>
+          <div class="interview-endorsements">
+            <span>集团级战略奖 ×2</span><span>年度优秀内训师 TOP 2/15</span><span>飞书开发者大会受邀嘉宾</span><span>「人人都是产品经理」专栏作者</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="interview-contact" aria-labelledby="contact-title">
+        <div class="interview-shell">
+          <p class="interview-kicker">LET'S BUILD THE REAL THING</p>
+          <h2 id="contact-title">如果你需要的不是一份 AI 方案，<span>而是一套真正跑起来的系统。</span></h2>
+          <p>我可以从一次业务现场诊断开始，和团队一起把问题、产品、系统与移交方式闭环。</p>
+          <div class="interview-actions">
+            <a class="interview-button interview-button-primary" href="mailto:1966315939@qq.com?subject=AI%20产品架构师%20%2F%20FDE%20沟通">联系我 / 获取完整简历</a>
+            <a class="interview-button" href="https://github.com/MingfeiJi" target="_blank" rel="noopener">GitHub ↗</a>
+          </div>
+          <small>上海 · 1966315939@qq.com · 可中英文工作</small>
+        </div>
+      </section>
     </main>
   </div>
 </Interview>
