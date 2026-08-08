@@ -5,6 +5,8 @@
 
 const ALLOW_ORIGINS = new Set([
   'https://mingfeiji.github.io',
+  'https://mingfeiji-vibe-site.vercel.app',
+  'https://mingfeiji-github-io-v849.vercel.app',
   'http://localhost:4321',
   'http://localhost:4329',
   'http://127.0.0.1:4321',

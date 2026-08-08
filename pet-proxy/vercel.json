@@ -1,4 +1,11 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "regions": ["hkg1"]
+  "regions": ["hkg1"],
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "https://mingfeiji-vibe-site.vercel.app",
+      "permanent": false
+    }
+  ]
 }
