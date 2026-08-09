@@ -1,0 +1,148 @@
+<canvas id="interview-ripple" aria-hidden="true"></canvas>
+
+<script>
+  import { computeRippleInput } from '../../lib/interview-ripple.js';
+
+  const canvas = document.querySelector<HTMLCanvasElement>('#interview-ripple');
+  const context = canvas?.getContext('2d');
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+
+  if (canvas && context && !reduceMotion.matches) {
+    type Ripple = {
+      x: number;
+      y: number;
+      born: number;
+      duration: number;
+      strength: number;
+      radius: number;
+      phase: number;
+    };
+
+    const ripples: Ripple[] = [];
+    let dpr = 1;
+    let frame = 0;
+    let lastPoint = { x: 0, y: 0, time: 0 };
+
+    const resize = () => {
+      dpr = Math.min(devicePixelRatio || 1, 1.5);
+      canvas.width = Math.round(innerWidth * dpr);
+      canvas.height = Math.round(innerHeight * dpr);
+      canvas.style.width = `${innerWidth}px`;
+      canvas.style.height = `${innerHeight}px`;
+      context.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+
+    const addRipple = (x: number, y: number, strength: number, radius: number, phase = 0) => {
+      ripples.push({
+        x,
+        y,
+        strength,
+        radius,
+        phase,
+        born: performance.now(),
+        duration: 850 + radius * 2.2,
+      });
+
+      if (ripples.length > 24) ripples.splice(0, ripples.length - 24);
+      if (!frame) frame = requestAnimationFrame(draw);
+    };
+
+    const draw = (now: number) => {
+      context.clearRect(0, 0, innerWidth, innerHeight);
+      context.globalCompositeOperation = 'screen';
+
+      for (let index = ripples.length - 1; index >= 0; index -= 1) {
+        const ripple = ripples[index];
+        const progress = (now - ripple.born) / ripple.duration;
+
+        if (progress >= 1) {
+          ripples.splice(index, 1);
+          continue;
+        }
+
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const fade = Math.pow(1 - progress, 1.55) * ripple.strength;
+        const radius = 9 + ripple.radius * eased;
+
+        const glow = context.createRadialGradient(
+          ripple.x,
+          ripple.y,
+          Math.max(0, radius - 24),
+          ripple.x,
+          ripple.y,
+          radius + 18,
+        );
+        glow.addColorStop(0, 'rgba(36, 118, 255, 0)');
+        glow.addColorStop(.58, `rgba(58, 137, 255, ${fade * .018})`);
+        glow.addColorStop(.76, `rgba(93, 167, 255, ${fade * .14})`);
+        glow.addColorStop(.86, `rgba(149, 205, 255, ${fade * .28})`);
+        glow.addColorStop(1, 'rgba(64, 130, 255, 0)');
+
+        context.fillStyle = glow;
+        context.beginPath();
+        context.arc(ripple.x, ripple.y, radius + 20, 0, Math.PI * 2);
+        context.fill();
+
+        for (let ring = 0; ring < 3; ring += 1) {
+          const ringRadius = Math.max(2, radius - ring * (12 + progress * 8) - ripple.phase);
+          context.strokeStyle = `rgba(${ring === 0 ? '166, 215, 255' : '66, 139, 255'}, ${fade * (.34 - ring * .075)})`;
+          context.lineWidth = Math.max(.45, (1.45 - ring * .28) * (1 - progress * .55));
+          context.beginPath();
+          context.ellipse(
+            ripple.x,
+            ripple.y,
+            ringRadius,
+            ringRadius * (.95 + ring * .012),
+            0,
+            0,
+            Math.PI * 2,
+          );
+          context.stroke();
+        }
+      }
+
+      context.globalCompositeOperation = 'source-over';
+      frame = ripples.length ? requestAnimationFrame(draw) : 0;
+    };
+
+    const onMove = (event: PointerEvent) => {
+      if (event.pointerType === 'touch') return;
+
+      const now = performance.now();
+      if (!lastPoint.time) {
+        lastPoint = { x: event.clientX, y: event.clientY, time: now };
+        return;
+      }
+
+      const distance = Math.hypot(event.clientX - lastPoint.x, event.clientY - lastPoint.y);
+      const elapsed = now - lastPoint.time;
+      const input = computeRippleInput({ distance, elapsed, kind: 'move' });
+
+      if (input.shouldSpawn) {
+        addRipple(event.clientX, event.clientY, input.strength, input.radius);
+        lastPoint = { x: event.clientX, y: event.clientY, time: now };
+      }
+    };
+
+    const onDown = (event: PointerEvent) => {
+      const input = computeRippleInput({ distance: 0, elapsed: 0, kind: 'down' });
+      addRipple(event.clientX, event.clientY, input.strength, input.radius);
+      window.setTimeout(() => addRipple(event.clientX, event.clientY, .72, 168, 14), 110);
+    };
+
+    const onVisibilityChange = () => {
+      if (document.hidden && frame) {
+        cancelAnimationFrame(frame);
+        frame = 0;
+      } else if (ripples.length && !frame) {
+        frame = requestAnimationFrame(draw);
+      }
+    };
+
+    resize();
+    addEventListener('resize', resize, { passive: true });
+    addEventListener('pointermove', onMove, { passive: true });
+    addEventListener('pointerdown', onDown, { passive: true });
+    document.addEventListener('visibilitychange', onVisibilityChange);
+  }
+</script>

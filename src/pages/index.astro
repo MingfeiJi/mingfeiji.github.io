@@ -647,6 +647,30 @@ const courses = [
     </div>
   </section>
 
+  <!-- ════════════ VIBE CODING · 可运行视觉实验 ════════════ -->
+  <section class="chapter vibe-preview" id="vibe-coding">
+    <div class="wrap">
+      <div class="chapter-head reveal">
+        <div class="ch-no"><em>LAB</em> VIBE CODING · INTERACTIVE ARTIFACTS</div>
+        <h2>不是会写 Prompt，是能把想法做成现场</h2>
+        <div class="ch-sub">三个可玩的生成式视觉作品：用粒子理解意图收敛，用星图观察 Agent 闭环，用流场体验 Prompt 如何改变概率方向。</div>
+      </div>
+      <a class="vibe-preview-stage reveal" href="/vibe-coding/" aria-label="进入 Vibe Coding 交互实验室">
+        <div class="vp-grid" aria-hidden="true"></div>
+        <div class="vp-orb" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="vp-copy">
+          <span>LIVE LAB / 3 INTERACTIVE WORKS</span>
+          <h3>意图星核 · Agent 星图 · 信号花园</h3>
+          <p>鼠标、触控、键盘都能改变作品。每个实验背后都有一条从 Intent 到 Ship 的真实构建链。</p>
+        </div>
+        <div class="vp-meta">
+          <span>THREE.JS</span><span>GENERATIVE CANVAS</span><span>REDUCED MOTION READY</span>
+        </div>
+        <div class="vp-enter">ENTER LAB <b>↗</b></div>
+      </a>
+    </div>
+  </section>
+
   <!-- ════════════ CH.05 · 产品 · Products ════════════ -->
   <section class="chapter" id="products">
     <div class="wrap">
@@ -1071,8 +1095,7 @@ const courses = [
       // 每个主题一套背景特效（独立特效文件，v2-scoped）
       var FX = {
         cosmos: '/cosmos-nebula.html',
-        klein: '/klein-fx.html', snow: '/snow-fx.html',
-        hud: '/ink-dynamic.html', cyber: '/cyber-field.html'
+        klein: '/klein-fx.html'
       };
       var curSrc = null;
       function sync() {
@@ -1094,12 +1117,12 @@ const courses = [
       }
       new MutationObserver(sync).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
       sync();
-      // 极客区粒子球按主题门禁: 仅深色科技主题(cosmos/cyber)加载, 浅色主题不白跑 Three.js
+      // 极客区粒子球只在星辰主题加载，其他主题不白跑 Three.js
       var gsf = document.getElementById('geek-sphere-frame');
       function syncGeek() {
         if (!gsf) return;
         var t = document.documentElement.getAttribute('data-theme');
-        var want = (t === 'cosmos' || t === 'cyber');
+        var want = t === 'cosmos';
         if (want && !gsf.getAttribute('src')) gsf.setAttribute('src', gsf.getAttribute('data-src'));
         else if (!want && gsf.getAttribute('src')) gsf.removeAttribute('src');
       }
@@ -1115,7 +1138,9 @@ const courses = [
       }
       addEventListener('pointermove', function (e) {
         var x = e.clientX / innerWidth - 0.5, y = e.clientY / innerHeight - 0.5;
-        if (depthOn) hero.style.transform = 'translate3d(' + (-x * 10).toFixed(2) + 'px,' + (-y * 8).toFixed(2) + 'px,0)';
+        var waterTheme = document.documentElement.getAttribute('data-theme') === 'hud';
+        if (depthOn && !waterTheme) hero.style.transform = 'translate3d(' + (-x * 10).toFixed(2) + 'px,' + (-y * 8).toFixed(2) + 'px,0)';
+        else if (hero) hero.style.transform = '';
         var f = host.querySelector('iframe');
         if (f && f.contentWindow) f.contentWindow.postMessage({ t: 'pointer', x: x, y: y }, '*');
       }, { passive: true });
@@ -1405,6 +1430,36 @@ const courses = [
 
 <style>
   /* —— v2 页面级 scoped 样式（不影响原首页 global.css）—— */
+  .vibe-preview-stage {
+    min-height: 440px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: clamp(30px, 5vw, 64px);
+    overflow: hidden;
+    color: var(--ink);
+    border: 1px solid color-mix(in srgb, var(--star) 24%, transparent);
+    background:
+      radial-gradient(circle at 76% 40%, color-mix(in srgb, var(--nebula) 22%, transparent), transparent 24%),
+      radial-gradient(circle at 72% 45%, color-mix(in srgb, var(--star) 15%, transparent), transparent 38%),
+      linear-gradient(135deg, rgba(4, 9, 20, .96), rgba(12, 13, 28, .9));
+    isolation: isolate;
+  }
+  .vibe-preview-stage:hover { color: var(--ink); border-color: color-mix(in srgb, var(--star) 58%, transparent); }
+  .vp-grid { position: absolute; inset: 0; z-index: -1; opacity: .22; background-image: linear-gradient(color-mix(in srgb, var(--star) 24%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--star) 24%, transparent) 1px, transparent 1px); background-size: 48px 48px; mask-image: linear-gradient(90deg, black, transparent 78%); }
+  .vp-copy { max-width: 650px; position: relative; z-index: 2; }
+  .vp-copy > span, .vp-meta { font: 10px var(--mono); letter-spacing: .14em; color: var(--star); }
+  .vp-copy h3 { font-family: var(--serif); font-size: clamp(34px, 5vw, 64px); line-height: 1.08; margin: 18px 0; color: var(--ink-strong); }
+  .vp-copy p { color: var(--ink2); max-width: 560px; font-size: 14px; }
+  .vp-meta { display: flex; flex-wrap: wrap; gap: 10px 26px; color: var(--ink3); position: relative; z-index: 2; }
+  .vp-enter { position: absolute; right: 42px; bottom: 36px; font: 11px var(--mono); letter-spacing: .12em; color: var(--star); z-index: 2; }.vp-enter b{font-size:22px;margin-left:7px;display:inline-block;transition:transform .25s}.vibe-preview-stage:hover .vp-enter b{transform:translate(5px,-5px)}
+  .vp-orb { position: absolute; width: min(34vw, 340px); aspect-ratio: 1; right: 8%; top: 50%; transform: translateY(-50%); border: 1px solid color-mix(in srgb, var(--star) 22%, transparent); border-radius: 50%; box-shadow: inset 0 0 70px color-mix(in srgb, var(--star) 8%, transparent), 0 0 80px color-mix(in srgb, var(--nebula) 8%, transparent); }
+  .vp-orb::before,.vp-orb::after{content:'';position:absolute;inset:16%;border:1px dashed color-mix(in srgb,var(--nebula) 35%,transparent);border-radius:50%;animation:vp-spin 20s linear infinite}.vp-orb::after{inset:38%;border-style:solid;background:color-mix(in srgb,var(--star) 14%,transparent);box-shadow:0 0 46px color-mix(in srgb,var(--star) 20%,transparent);animation-direction:reverse;animation-duration:12s}
+  .vp-orb i{position:absolute;width:6px;height:6px;border-radius:50%;background:var(--star);box-shadow:0 0 16px var(--star)}.vp-orb i:nth-child(1){left:8%;top:35%}.vp-orb i:nth-child(2){right:18%;top:12%;background:var(--nebula)}.vp-orb i:nth-child(3){right:5%;bottom:28%;background:var(--flare)}
+  @keyframes vp-spin { to { transform: rotate(360deg); } }
+  @media (max-width: 720px) { .vibe-preview-stage{min-height:520px}.vp-orb{width:240px;right:-85px;opacity:.55}.vp-enter{right:24px;bottom:22px}.vp-meta{max-width:70%;gap:7px 14px} }
+  @media (prefers-reduced-motion: reduce) { .vp-orb::before,.vp-orb::after{animation:none} }
   .hero-stats {
     display: flex; flex-wrap: wrap; gap: 10px 28px;
     margin: 26px 0 10px;
@@ -1694,14 +1749,12 @@ const courses = [
   /* 主题化：面板底/强调/我方气泡文字色由 --pet-* 驱动，随 data-theme 切换 */
   .pet { position: fixed; left: 22px; bottom: 22px; z-index: 60; font-family: var(--mono);
     --pet-surface: rgba(13,17,38,.93); --pet-surface2: rgba(9,13,32,.95); --pet-me-ink: #04060f; }
-  :global(html:is([data-theme='paper'], [data-theme='snow'])) .pet {
+  :global(html[data-theme='paper']) .pet {
     --pet-surface: rgba(255,255,255,.93); --pet-surface2: rgba(250,250,248,.96); --pet-me-ink: #fff; }
   :global(html[data-theme='klein']) .pet {
     --pet-surface: rgba(12,12,14,.92); --pet-surface2: rgba(5,5,7,.95); --pet-me-ink: #000; }
   :global(html[data-theme='hud']) .pet {
     --pet-surface: rgba(255,255,255,.94); --pet-surface2: rgba(247,245,239,.96); --pet-me-ink: #F7F5EF; }
-  :global(html[data-theme='cyber']) .pet {
-    --pet-surface: rgba(6,10,22,.94); --pet-surface2: rgba(4,7,16,.96); --pet-me-ink: #030509; }
   /* 地面投影：与浮动反相缩放，营造真实悬浮高度 */
   .pet::before { content: ''; position: absolute; left: 10px; bottom: -7px; width: 44px; height: 9px;
     border-radius: 50%; background: radial-gradient(50% 50% at 50% 50%, rgba(2,6,20,.55), transparent 72%);
@@ -1853,8 +1906,7 @@ const courses = [
   #nebula-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0;
     transition: opacity 1.4s ease; }
   #nebula-bg iframe { width: 100vw; height: 100vh; border: 0; display: block; }
-  /* 文字保护层：正文集中在左侧，用主题底色向右渐隐的柔幕压住背景亮斑（用户反馈：动效有时盖住文字）
-     --space-0 随主题自变：cosmos 深空/paper 米纸/klein 蓝/snow 白，一条规则五主题通用 */
+  /* 文字保护层：正文集中在左侧，用主题底色向右渐隐的柔幕压住背景亮斑 */
   #nebula-bg::after { content: ''; position: absolute; inset: 0;
     background: linear-gradient(100deg,
       color-mix(in srgb, var(--space-0) 62%, transparent) 0%,
@@ -1862,10 +1914,7 @@ const courses = [
       color-mix(in srgb, var(--space-0) 8%, transparent) 68%,
       transparent 82%); }
   html[data-theme="cosmos"] #nebula-bg,
-  html[data-theme="klein"] #nebula-bg,
-  html[data-theme="snow"] #nebula-bg,
-  html[data-theme="hud"] #nebula-bg,
-  html[data-theme="cyber"] #nebula-bg { opacity: 1; }
+  html[data-theme="klein"] #nebula-bg { opacity: 1; }
 
   /* ── 产品·Products 卡片 ── */
   .products-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
@@ -1874,7 +1923,7 @@ const courses = [
     padding: 24px 24px 20px; background: rgba(7,11,31,.6); position: relative; overflow: hidden;
     transition: transform .3s cubic-bezier(.2,.8,.2,1), border-color .3s, box-shadow .3s; }
   /* 产品卡按主题换底（对齐 global.css 对 .card 的主题覆盖模式） */
-  :global(html:is([data-theme='paper'], [data-theme='snow'])) .product-card { background: var(--space-3); }
+  :global(html[data-theme='paper']) .product-card { background: var(--space-3); }
   :global(html[data-theme='klein']) .product-card { background: rgba(255,255,255,.06); }
   :global(html[data-theme='hud']) .product-card { background: var(--space-3); }
   .product-card::before { content: ''; position: absolute; inset: 0; border-radius: 16px; pointer-events: none;
@@ -1908,7 +1957,7 @@ const courses = [
   .v2-scope { text-rendering: optimizeLegibility; }
   /* Hero 主标题：流动的星光渐变——只在 cosmos 主题生效。
      注意 Astro 作用域属性会抬高特异性,不加 :global(html[data-theme]) 门禁会压过
-     paper/snow/klein 的主题覆盖,导致浅色主题标题透明不可读(实测踩过) */
+     其他主题覆盖，导致浅色主题标题透明不可读 */
   .v2-scope .hero h1 { letter-spacing: .045em; }
   :global(html[data-theme='cosmos']) .v2-scope .hero h1 {
     background: linear-gradient(115deg, #fff 20%, #d6ecff 38%, #93c5fd 56%, #c4b5fd 76%, #f4f0ff 94%);
@@ -1943,11 +1992,11 @@ const courses = [
   }
 
   /* ── R13 浅色主题深底组件补丁（max审计: scoped 特异性压过主题覆盖导致深底深字不可读）── */
-  :global(html:is([data-theme='paper'], [data-theme='snow'], [data-theme='hud'])) .v2-scope :is(.geek-chapter .method-card, .cf-track span, .lab-portal) {
+  :global(html:is([data-theme='paper'], [data-theme='hud'])) .v2-scope :is(.geek-chapter .method-card, .cf-track span, .lab-portal) {
     background: var(--space-3);
   }
-  /* 粒子球容器只在 cosmos/cyber 显示（与 syncGeek 的注入门禁配对） */
-  :global(html:not([data-theme='cosmos'], [data-theme='cyber'])) .v2-scope .geek-particles { display: none; }
+  /* 粒子球容器只在 cosmos 显示（与 syncGeek 的注入门禁配对） */
+  :global(html:not([data-theme='cosmos'])) .v2-scope .geek-particles { display: none; }
 
   /* ── R8 章节节奏与卡片物理（v2-scoped）── */
   /* 知识区线稿图标 */
@@ -2047,7 +2096,7 @@ const courses = [
   :global(html[data-theme='klein']) .v2-scope .hero > h1 {
     animation: hero-rise 1s cubic-bezier(.16,1,.3,1) .1s backwards; }
 
-  /* ── R11 主题专项：克莱因金色点睛 / 月白动效收敛（v2-scoped）── */
+  /* ── R11 主题专项：曜黑玻璃点睛（v2-scoped）── */
   /* ② 克莱因蓝：金色 --flare(#ffe14d) 作为唯一强调色点睛 */
   :global(html[data-theme='klein']) .v2-scope :is(.card, .product-card, .proto-item):hover {
     border-color: color-mix(in srgb, var(--flare) 65%, transparent);
@@ -2059,28 +2108,11 @@ const courses = [
     background: linear-gradient(90deg, color-mix(in srgb, var(--flare) 80%, transparent), transparent); }
   :global(html[data-theme='klein']) .v2-scope .btn.primary:hover {
     box-shadow: 0 8px 28px color-mix(in srgb, var(--flare) 30%, transparent); }
-  /* ③ 月白极简：动效收敛——位移减半以下、时长收紧、hero 只淡入不位移、关闭视差 */
-  /* 注意必须 :not(.in) 限定初始态，否则高特异性会把 .in 终态也钉在位移上 */
-  :global(html[data-theme='snow']) .v2-scope :is(.reveal, .reveal-l) { transition-duration: .45s, .45s; }
-  :global(html[data-theme='snow']) .v2-scope .reveal:not(.in) { transform: translateY(12px); }
-  :global(html[data-theme='snow']) .v2-scope .reveal-l:not(.in) { transform: translateX(-14px); }
-  :global(html[data-theme='snow']) .v2-scope [data-stagger] > * { transition-duration: .4s, .4s; }
-  :global(html[data-theme='snow']) .v2-scope [data-stagger]:not(.in) > * { transform: translateY(10px); }
-  :global(html[data-theme='snow']) .v2-scope .hero > :is(.kicker, h1, .sub, .lede, .hero-stats, .hero-stats-note, .hero-cta) {
-    animation-name: hero-fade; animation-duration: .5s; }
-  :global(html[data-theme='snow']) .hero { transform: none !important; transition: none !important; }
-  @keyframes hero-fade { from { opacity: 0; } }
-
-  /* ── R15 水墨/雪 hero 排印门控（identity-skill 品味整改）──
-     R7 的 .v2-scope .hero h1/.sub 字距规则特异性压过全局主题覆盖，需页面级门控收回：
-     水墨=宽字距慢节奏（quiet cinematic），雪=grotesk 紧排（瑞士编辑） */
+  /* ── R15 水波墨境 hero 排印门控 ── */
   :global(html[data-theme='hud']) .v2-scope .hero h1 { letter-spacing: .14em; font-weight: 700; }
   :global(html[data-theme='hud']) .v2-scope .hero .sub { letter-spacing: .3em; }
-  :global(html[data-theme='snow']) .v2-scope .hero h1 { font-family: var(--grotesk); letter-spacing: -0.02em; }
-  :global(html[data-theme='snow']) .v2-scope .hero .sub { font-family: var(--grotesk); letter-spacing: .02em; }
 
-  /* ── R15b 大改层（用户要求 2/4/5 加大力度·一眼可见）──
-     水墨: 桌面端 hero 大标竖排书法构图；雪: 海报级 grotesk 字号 */
+  /* 水波墨境：桌面端 hero 大标竖排书法构图 */
   @media (min-width: 900px) {
     :global(html[data-theme='hud']) .v2-scope .hero h1 {
       writing-mode: vertical-rl; text-orientation: upright;
@@ -2089,7 +2121,6 @@ const courses = [
       width: max-content; /* 收缩到单列宽，否则 block 盒占满整行、竖列贴右缘 */
     }
   }
-  :global(html[data-theme='snow']) .v2-scope .hero h1 { font-size: clamp(56px, 11vw, 128px); font-weight: 900; }
 
   /* ── R9 作品区节奏（v2-scoped）── */
   /* works 卡：元信息升级为"可验证"状态条——绿色呼吸点 + 顶部虚线分隔 */

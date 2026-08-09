@@ -1,0 +1,78 @@
+---
+import '../styles/interview.css';
+import InterviewRipple from '../components/interview/InterviewRipple.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = '纪鸣飞 · AI 产品架构师 / FDE 面试作品集',
+  description = '用 3 分钟看懂纪鸣飞如何把复杂 AI 能力做成可运行、可衡量、可移交的业务系统。',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN" class="interview-document">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={new URL('/interview/', Astro.site)} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="profile" />
+    <meta property="og:url" content={new URL('/interview/', Astro.site)} />
+    <meta property="og:image" content={new URL('/og-cover.png', Astro.site)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#050505" />
+  </head>
+  <body>
+    <InterviewRipple />
+    <a class="interview-skip" href="#interview-main">跳到主要内容</a>
+    <div class="interview-progress" id="interview-progress" aria-hidden="true"></div>
+    <header class="interview-nav-wrap">
+      <nav class="interview-nav" aria-label="面试作品集导航">
+        <a class="interview-brand" href="/interview/#top" aria-label="纪鸣飞面试作品集首页">纪鸣飞 <span>✦</span></a>
+        <div class="interview-nav-links">
+          <a href="/interview/#flagship">旗舰案例</a>
+          <a href="/interview/#cases">项目案例</a>
+          <a href="/interview/#method">方法与原型</a>
+          <a href="/interview/#about">关于我</a>
+        </div>
+        <a class="interview-nav-contact" href="mailto:1966315939@qq.com?subject=AI%20产品架构师%20%2F%20FDE%20沟通">联系我</a>
+        <details class="interview-mobile-menu">
+          <summary aria-label="打开导航菜单">菜单</summary>
+          <div>
+            <a href="/interview/#flagship">旗舰案例</a>
+            <a href="/interview/#cases">项目案例</a>
+            <a href="/interview/#method">方法与原型</a>
+            <a href="/interview/#about">关于我</a>
+            <a href="mailto:1966315939@qq.com?subject=AI%20产品架构师%20%2F%20FDE%20沟通">联系我</a>
+          </div>
+        </details>
+      </nav>
+    </header>
+    <slot />
+    <footer class="interview-footer">
+      <div><strong>纪鸣飞 / Mingfei Ji</strong><span>AI Product Architect · Forward Deployed Engineer</span></div>
+      <div><span>上海 · 2026</span><a href="/">返回完整个站 ↗</a></div>
+    </footer>
+    <script>
+      const progress = document.getElementById('interview-progress');
+      const updateProgress = () => {
+        const max = document.documentElement.scrollHeight - innerHeight;
+        if (progress) progress.style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`;
+      };
+      addEventListener('scroll', updateProgress, { passive: true });
+      addEventListener('resize', updateProgress, { passive: true });
+      updateProgress();
+
+      document.querySelectorAll<HTMLAnchorElement>('.interview-mobile-menu a').forEach((link) => {
+        link.addEventListener('click', () => link.closest('details')?.removeAttribute('open'));
+      });
+    </script>
+  </body>
+</html>
