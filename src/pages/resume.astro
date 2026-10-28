@@ -28,7 +28,7 @@ const title = '纪鸣飞 · 高级 AI 产品经理 | 职业概览';
       <header class="intro">
         <p class="eyebrow">MINGFEI JI / AI PRODUCT MANAGEMENT</p>
         <div class="intro-grid">
-          <div><p class="role">{profile.title}</p><h1>让 AI 进入业务生产线，<br /><span>让结果可度量。</span></h1><p class="summary">{profile.summary}</p><div class="actions"><a class="button" href="#projects">看代表项目 <span>↓</span></a><a href="/">探索完整作品站 ↗</a></div></div>
+          <div><p class="role">{profile.title}</p><h1>让 AI 进入业务生产线，<br /><span>让结果可度量。</span></h1><p class="summary">{profile.summary}</p><div class="actions"><a class="button" href="#projects">看代表项目 <span>↓</span></a><a href="/studio/">探索数字作品室 ↗</a></div></div>
           <aside class="identity"><span class="identity-star" aria-hidden="true">✦</span><h2>纪鸣飞</h2><p>{profile.experience}</p><ul><li>出海内容增长</li><li>B 端 AI 产品架构</li><li>业务 Agent 与评测闭环</li></ul><a href="mailto:1966315939@qq.com">1966315939@qq.com ↗</a><p class="education">浙江农林大学 · 本科<br />信息管理与信息系统 · 2021 年毕业<br />PMP · 英文工作语言</p></aside>
         </div>
         <div class="metrics">{metrics.map(m => <div><strong>{m.value}</strong><span>{m.label}</span><small>{m.scope}</small></div>)}</div>
@@ -41,7 +41,7 @@ const title = '纪鸣飞 · 高级 AI 产品经理 | 职业概览';
       <section id="experience"><div class="section-heading"><div><p class="eyebrow">EXPERIENCE</p><h2>从企业数字化，到业务 AI 化。</h2></div><p>携程 · 更好玩 · vidaXL 中国</p></div><div class="timeline">{experiences.map(e => <article><div class="when">{e.period}<span>{e.legalName}</span></div><div><h3>{e.company}</h3><p class="job">{e.role}</p><p>{e.intro}</p><ul>{e.points.map(p => <li>{p}</li>)}</ul><div class="tags">{e.tags.map(t => <span>{t}</span>)}</div></article>)}</div></section>
 
       <section class="capabilities"><div><p class="eyebrow">CAPABILITIES</p><h2>能判断，也能亲手交付。</h2></div><dl><div><dt>产品与组织</dt><dd>需求共创 / 业务流程 / 产品形态 / 用户旅程 / 跨部门项目管理</dd></div><div><dt>Agent 系统</dt><dd>Agentic Harness / ReAct / MCP / Skill / Multi-Agent / RAG 与记忆</dd></div><div><dt>工程与评测</dt><dd>Claude Code / Codex / Dify / 评测集 / BadCase 归因 / 同集回归</dd></div><div><dt>出海与增长</dt><dd>多平台内容策略 / 本地化 / 账号矩阵 / T+7 新客归因 / AARRR</dd></div></dl></section>
-      <footer><p class="eyebrow">LET’S BUILD SOMETHING THAT WORKS</p><h2>聊聊你的业务，<br />以及 AI 能创造的价值。</h2><a class="button" href="mailto:1966315939@qq.com">邮件联系 <span>↗</span></a><div class="footer-links"><a href="/">完整作品站</a><a href="/prototypes/">可交互原型</a><a href="https://github.com/MingfeiJi" target="_blank" rel="noopener">GitHub ↗</a><span>纪鸣飞 · 2026</span></div></footer>
+      <footer><p class="eyebrow">LET’S BUILD SOMETHING THAT WORKS</p><h2>聊聊你的业务，<br />以及 AI 能创造的价值。</h2><a class="button" href="mailto:1966315939@qq.com">邮件联系 <span>↗</span></a><div class="footer-links"><a href="/">完整作品站</a><a href="/studio/">数字作品室</a><a href="/prototypes/">可交互原型</a><a href="https://github.com/MingfeiJi" target="_blank" rel="noopener">GitHub ↗</a><span>纪鸣飞 · 2026</span></div></footer>
     </main>
   </body>
 </html>

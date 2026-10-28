@@ -1,0 +1,12 @@
+---
+import Bloom from './Bloom.astro';
+---
+<section class="studio-feature" id="digital-studio" aria-labelledby="studio-feature-title">
+  <div class="feature-copy"><p class="label">PERSONAL WORKS / 数字作品室</p><h2 id="studio-feature-title">让想法，<br />有可以触碰的形状。</h2><p class="description">从三维花朵、世界地图，到 AI 旅行规划。<br />我的另一组产品与交互实践，正在这里生长。</p><a class="studio-link" href="/studio/">探索数字作品室 <span>↗</span></a><div class="index"><span>01 Bloom</span><span>02 World Atlas</span><span>03 沿途</span></div></div>
+  <div class="feature-art"><Bloom compact /></div>
+</section>
+<style>
+  .studio-feature{position:relative;z-index:1;scroll-margin-top:90px;max-width:1120px;margin:0 auto 85px;display:grid;grid-template-columns:1fr 1.15fr;background:#11241b;color:#e9e5d7;border:1px solid #53634b70;overflow:hidden;border-radius:3px;text-align:left}.feature-copy{padding:40px 0 35px 40px;align-self:center}.label{font:10px/1.8 'JetBrains Mono',monospace;letter-spacing:.08em;color:#bfae82;margin:0 0 20px}.feature-copy h2{font-family:'Noto Serif SC',serif;font-size:32px;font-weight:700;line-height:1.8;letter-spacing:0;margin:0;background:none;color:#e9e5d7;-webkit-text-fill-color:initial}.description{font:13px/2 'PingFang SC',system-ui,sans-serif;color:#aebba4;margin:20px 0 27px}.studio-link{display:inline-flex;gap:35px;font:12px/1.8 system-ui;color:#e9dfbf;border-bottom:1px solid #899472;padding-bottom:7px;text-decoration:none}.index{display:flex;gap:18px;font:9px/1.8 'JetBrains Mono',monospace;color:#a4b095;margin-top:34px}.feature-art{min-width:0}
+  @media(max-width:1160px){.studio-feature{margin-left:28px;margin-right:28px}}
+  @media(max-width:760px){.studio-feature{grid-template-columns:1fr;margin:0 22px 55px}.feature-copy{padding:28px 25px 0}.feature-copy h2{font-size:27px;line-height:1.65}.label{font-size:8px;margin-bottom:14px}.description{font-size:12px;margin:18px 0 22px}.index{margin-top:22px;font-size:8px}.studio-link{font-size:11px}}
+</style>
