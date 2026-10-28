@@ -13,8 +13,8 @@ interface Props {
   description?: string;
 }
 const {
-  title = '纪鸣飞 · 星辰大海 — 高级 AI 产品经理 / 出海内容增长 · Agentic Harness',
-  description = '高级 AI 产品经理，出海内容增长 · B端 AI 产品架构 · 业务 Agent · Agentic Harness。携程 TripFlow 0→1 产品负责人，AI 贯穿内容生产 7/7 环节，剪辑耗时降 60-70%、每日自动发布 1000+ 条、审核漏杀 0%、单周百万级播放。用能跑的产物代替纯 PRD，让 AI 成为在组织内自主进化的智能系统。',
+  title = '纪鸣飞 · 高级 AI 产品经理 · 出海内容增长与业务 Agent',
+  description = '5 年产品经验，3 年聚焦 AI 产品落地。TripFlow 内容增长中台、TripYoyo Agent／Skill 平台、Maige AI 社交与 vidaXL 企业数字化。用可运行产物与评测闭环推动业务价值。',
 } = Astro.props;
 ---
 
@@ -32,14 +32,14 @@ const {
     <meta property="og:url" content={new URL(Astro.url.pathname, Astro.site)} />
     <meta property="og:site_name" content="纪鸣飞 · Mingfei Ji" />
     <meta property="og:locale" content="zh_CN" />
-    <meta property="og:image" content={new URL('/og-cover.png', Astro.site)} />
+    <meta property="og:image" content={new URL('/og-career-20261028.jpg', Astro.site)} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="纪鸣飞 · AI 产品架构师 / FDE" />
+    <meta property="og:image:alt" content="纪鸣飞 · 高级 AI 产品经理" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={new URL('/og-cover.png', Astro.site)} />
+    <meta name="twitter:image" content={new URL('/og-career-20261028.jpg', Astro.site)} />
     <meta name="theme-color" content="#030412" />
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>" />
     <script is:inline>
@@ -59,6 +59,7 @@ const {
       <div class="nav-inner">
         <a href="#top" class="nav-logo">纪鸣飞<span> ✦</span></a>
         <div class="nav-links">
+          <a href="/resume/">职业概览</a>
           <a href="/#voyage">航程</a>
           <a href="/#flagship">旗舰</a>
           <a href="/#works">星图集</a>

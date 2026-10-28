@@ -3,6 +3,7 @@ import Base from '../layouts/BaseV2.astro';
 import KnowledgeGraph from '../components/KnowledgeGraph.astro';
 import { getCollection } from 'astro:content';
 import graphData from '../data/graph.json';
+import { profile, metrics, experiences, projects } from '../data/career';
 
 const graphNodeCount = (graphData.nodes as any[]).length;
 const graphLinkCount = (graphData.links as any[]).length;
@@ -52,10 +53,10 @@ const works = [
   },
   {
     tag: 'RESUME',
-    title: '完整简历 / 三段攻坚全档案',
-    desc: '制造业 ERP 转型 → 千人电商硅基员工 → 大厂出海 AI 中台，4 年+ AI 产品、5 年产品全周期的完整履历。',
-    meta: 'github.com/MingfeiJi',
-    url: 'https://github.com/MingfeiJi',
+    title: '职业概览 / 经历与代表项目',
+    desc: '5 年产品经验、3 年聚焦 AI 落地。三段工作经历、六个代表项目，以及每个结果的统计范围。',
+    meta: 'CAREER / 2026.10',
+    url: '/resume/',
   },
 ];
 
@@ -131,7 +132,7 @@ const cognitionPoints = [
     tag: '商业基本式',
     title: '需求决定收入，差异化决定利润',
     desc: '判断 C 端 AI 产品能否自我造血，不先问模型多强，而是问需求是否足够持续、差异化来自效果/获客/场景/生态中的哪一项，长期壁垒是否还能继续产生长期利润。',
-    chips: ['16 路意图', '三路 RAG', '防提示词注入', '付费转化 +30%'],
+    chips: ['16 路意图', '三路 RAG', '防提示词注入', 'MVP 与付费验证'],
     caseLabel: '拟人化闲聊 Agent',
     caseUrl: '/prototypes/chat-agent-arch.html',
   },
@@ -139,7 +140,7 @@ const cognitionPoints = [
     tag: '模型竞合',
     title: '纯工具层会越来越薄',
     desc: '每一次工具调用都在为模型积累可内化的训练样本。Skills、harness、context、MCP 都可能被模型公司吸收，产品公司要往内容生态、创作者网络、新媒介形态和用户侧生成关系里找新的着力点。',
-    chips: ['毙「全 AI 一键出片」', '毙「自动养号」', '灵感→资产→创作→审核→剪辑→复盘', '单周播放 100 万+'],
+    chips: ['毙「全 AI 一键出片」', '毙「自动养号」', '灵感→资产→创作→审核→剪辑→复盘', '相关内容单周千万级播放'],
     caseLabel: '出海内容增长 AI 中台',
     caseUrl: '/prototypes/tripflow-arch.html',
   },
@@ -147,7 +148,7 @@ const cognitionPoints = [
     tag: 'AI 原生组织',
     title: '链式协作会被球形协作替代',
     desc: '传统链路是产品、设计、前端、后端、测试逐段交付；AI-native 团队更像球形协作：每个人直接往项目里提交可运行产物，中间层靠清晰文档衔接，日级版本迭代成为默认节奏。',
-    chips: ['20+ 高保真原型', '整站 Agent 构建', 'Vibe Coding 课', 'Skill Workshop'],
+    chips: ['40+ 可交互原型', '整站 Agent 构建', 'Vibe Coding 课', 'Skill Workshop'],
     caseLabel: '原型工坊',
     caseUrl: '/prototypes/',
   },
@@ -184,7 +185,7 @@ const skills = [
   },
   {
     cat: 'LOOP / 评测',
-    items: ['评测集', 'BadCase 归因', '同集回归', 'Trace / Run / Issue 分层', '漏杀 / 误杀', 'AI Coding', '原型'],
+    items: ['Claude Code', 'Codex', '评测集', 'BadCase 归因', '同集回归', 'Trace / Run / Issue 分层', '漏杀 / 误杀', 'AI Coding', '原型'],
   },
   {
     cat: '增长 / 出海',
@@ -221,7 +222,7 @@ const geekGear = [
   { name: '无人值守自动化', status: 'DAILY DRIVER', desc: 'launchd / cron 定时矩阵：每日内容生产、晨晚双轨备份、IMAP 录音附件拉取——睡觉时系统在干活。' },
   { name: '语音 & 数字人', status: 'SHIPPED', desc: 'Whisper 转写 1402 条录音入库 + TTS 配音 + 数字人口播，录音直达多平台成稿。' },
   { name: '信息采集流水线', status: 'DAILY DRIVER', desc: 'BuilderPulse 中英热点池 git 自动拉取 + 邮件附件抓取 + 社媒内容采集归档，输入端全自动。' },
-  { name: 'Vibe Coding 原型术', status: 'DAILY DRIVER', desc: '单文件 HTML 高保真：20+ 可交互原型 + 看板 + 蓝图，"业务看得见、研发抄得走、老板拍得了板"。' },
+  { name: 'Vibe Coding 原型术', status: 'DAILY DRIVER', desc: '单文件 HTML 高保真：40+ 可交互原型 + 看板 + 蓝图，"业务看得见、研发抄得走、老板拍得了板"。' },
 ];
 
 const courses = [
@@ -236,7 +237,7 @@ const courses = [
 
 <Base
   title="纪鸣飞 · 高级 AI 产品经理 — 出海内容增长 · Agentic Harness"
-  description="高级 AI 产品经理，出海内容增长 · B端 AI 产品架构 · 业务 Agent · Agentic Harness。携程 TripFlow 0→1 产品负责人，AI 贯穿内容生产 7/7 环节：剪辑耗时降 60-70%、每日自动发布 1000+ 条、审核漏杀 0%、单周百万级播放。TripYoyo 机票走查准确率 7%→95%。"
+  description="5 年产品经验，3 年聚焦 AI 产品落地。携程 TripFlow 与 TripYoyo 0→1，出海内容增长、B 端 AI 产品架构与业务 Agent。每日自动发布 8000+ 条，剪辑 1.5h→约20min，机票走查准确率 7%→95%。"
 >
   <a href="#top" class="skip-link">跳到主要内容</a>
   <div id="nebula-bg" aria-hidden="true"></div>
@@ -290,23 +291,18 @@ const courses = [
 
   <!-- ════════════ HERO · 启航 ════════════ -->
   <header class="hero wrap" id="top">
-    <div class="kicker">Senior AI Product Manager · Global Content Growth · Enterprise AI · Agentic Harness</div>
+    <div class="kicker">Senior AI Product Manager · Enterprise AI</div>
     <h1>纪鸣飞</h1>
-    <div class="sub">高级 AI 产品经理 · 出海内容增长 · B端 AI 产品架构 · 业务 Agent</div>
-    <p class="lede">
-      把 Agent 做成会自我评估迭代的自动化 Loop，24 小时创造收益，<strong>用能跑的产物代替纯 PRD</strong>——让 AI 成为在组织内自主进化、演化的智能系统。
-      完整走过<strong>携程 TripFlow 0→1 → Maige AI 社交 → vidaXL 数字化转型</strong>三段攻坚，每段都留下可量化的结果和可复用的方法论。
+    <div class="sub">{profile.title}</div>
+    <p class="career-focus">{profile.focus}<span>{profile.experience}</span></p>
+    <p class="lede">把业务经验变成<strong>可运行、可评测、可持续迭代的 AI 系统</strong>。
+      从 vidaXL 企业数字化、Maige 出海 AI 社交，到携程 <strong>TripFlow 内容增长中台与 TripYoyo Agent／Skill 平台</strong>，把需求、架构、交付与业务反馈连成闭环。
     </p>
-    <div class="hero-stats">
-      <span><b>60-70%</b>剪辑耗时下降</span>
-      <span><b>1000+</b>每日自动发布</span>
-      <span><b>0%</b>审核漏杀率</span>
-      <span><b>7%→95%</b>价格走查准确率</span>
-    </div>
-    <div class="hero-stats-note">以上为<strong>携程 TripFlow 已兑现</strong>结果 · 单周百万级播放 · AI 贯穿内容生产 7/7 环节</div>
+    <div class="hero-stats">{metrics.map(m => <span title={m.scope}><b>{m.value}</b>{m.label}</span>)}</div>
+    <div class="hero-stats-note">审核数据对应 5000+ 条评测集 · 走查结果为 616 / 649 项正确 · 各项目分别统计</div>
     <div class="hero-cta">
-      <a class="btn primary" href="#flagship">旗舰项目 · 内容增长 AI 中台</a>
-      <a class="btn" href="#cognition">商业与 AI 认知</a>
+      <a class="btn primary" href="/resume/">职业概览 · 3 分钟了解我 ↗</a>
+      <a class="btn" href="#flagship">TripFlow · 代表项目</a>
       <a class="btn" href="#works">作品 · 可点开验证</a>
     </div>
     <!-- 曜黑玻璃专属：邮箱捕获 CTA（其他主题 display:none）——按用户提供的 dark hero 规格实现 -->
@@ -321,7 +317,7 @@ const courses = [
           </button>
         </form>
       </div>
-      <a class="kc-demo" href="#products">Play Video Demo · 看可玩的 AI 产品</a>
+      <a class="kc-demo" href="/resume/">职业概览 · 经历与代表项目 ↗</a>
     </div>
     <div class="hero-scroll">SCROLL<br />▼</div>
   </header>
@@ -332,54 +328,20 @@ const courses = [
       <div class="chapter-head reveal">
         <div class="ch-no"><em>01</em> KEY OUTCOMES</div>
         <h2>关键成果</h2>
-        <div class="ch-sub">三段递进式攻坚里<strong style="color:var(--ink)">已兑现</strong>的硬成果——每一项都能在下方对应项目里验证来源（目标值已标注）。</div>
+        <div class="ch-sub">从业务交付到平台复用，按项目展示结果。<a href="/resume/#projects" style="color:var(--star)">查看项目做法与指标口径 ↗</a></div>
       </div>
 
       <div class="dashboard reveal">
-        <div class="dial"><div class="num"><span data-count="20">0</span><span>+</span></div><div class="lab">AI+内容项目交付</div></div>
-        <div class="dial"><div class="num"><span data-count="7">0</span><span>/7</span></div><div class="lab">AI 贯穿内容环节</div></div>
-        <div class="dial"><div class="num"><span data-count="40">0</span><span>+</span></div><div class="lab">可交互原型</div></div>
-        <div class="dial"><div class="num"><span data-count="95">0</span><span>%</span></div><div class="lab">机票走查准确率</div></div>
-        <div class="dial"><div class="num"><span data-count="100">0</span><span>万+</span></div><div class="lab">单周播放量</div></div>
+        <div class="dial"><div class="num">5<span>年</span></div><div class="lab">产品经验 · 3 年聚焦 AI</div></div>
+        <div class="dial"><div class="num">20<span>+</span></div><div class="lab">一年交付 AI＋内容项目</div></div>
+        <div class="dial"><div class="num">7<span>/7</span></div><div class="lab">AI 贯穿内容生产环节</div></div>
+        <div class="dial"><div class="num">40<span>+</span></div><div class="lab">可交互原型</div></div>
+        <div class="dial"><div class="num">千万<span>级</span></div><div class="lab">相关内容单周播放</div></div>
       </div>
-
       <div class="km-matrix reveal">
-        <div class="km-row">
-          <div class="km-cat">TripFlow 产能<small>已落地</small></div>
-          <div class="km-stats">
-            <span><b>60-70%</b>剪辑单条耗时下降</span>
-            <span><b>1000+ 条</b>每日自动发布</span>
-            <span><b>0%</b>审核漏杀率 · 100+ 规则覆盖 10+ 渠道</span>
-            <span><b>7/7</b>AI 贯穿内容生产环节</span>
-          </div>
-        </div>
-        <div class="km-row">
-          <div class="km-cat">AI 效果提升<small>可量化</small></div>
-          <div class="km-stats">
-            <span><b>7% → 95%</b>机票价格走查准确率</span>
-            <span><b>68% → 84%</b>客户满意度（智能客服）</span>
-            <span><b>65% → 87%</b>生图采纳率（Lora 微调）</span>
-            <span><b>300-500%</b>AIGC 内容生产效率提升（Maige）</span>
-          </div>
-        </div>
-        <div class="km-row">
-          <div class="km-cat">规模与产出<small>跑起来了</small></div>
-          <div class="km-stats">
-            <span><b>100 万+</b>TripFlow 单周播放</span>
-            <span><b>20+</b>AI+内容项目一年交付</span>
-            <span><b>40+</b>可交互原型（Claude Code 亲手搭）</span>
-            <span><b>649 项</b>机票走查评测集</span>
-          </div>
-        </div>
-        <div class="km-row">
-          <div class="km-cat">vidaXL 降本<small>已兑现</small></div>
-          <div class="km-stats">
-            <span><b>降本 13 人</b>客服自动化 80% 重复问题 · 年省百万</span>
-            <span><b>+30%</b>核心品类生产效率</span>
-            <span><b>+40%</b>标注效率（图文标注 Agent）</span>
-            <span><b>专栏作者 · 大会嘉宾</b>「人人都是产品经理」· 飞书开发者大会</span>
-          </div>
-        </div>
+        <div class="km-row"><div class="km-cat">TripFlow<small>内容增长</small></div><div class="km-stats"><span><b>8000+ 条 / 日</b>自动发布 · 产量 ×10</span><span><b>1.5h → 约20min</b>单条剪辑耗时</span><span><b>约 80% 可用</b>灵感每日推送</span><span><b>T+7 新客支付</b>脚本策略归因闭环</span></div></div>
+        <div class="km-row"><div class="km-cat">TripYoyo<small>跨业务复用</small></div><div class="km-stats"><span><b>100 项任务</b>离线评测</span><span><b>7,091 次 Run</b>6 个完整日线上日清</span><span><b>7% → 95%</b>机票走查 · 616 / 649 项正确</span></div></div>
+        <div class="km-row"><div class="km-cat">Maige / vidaXL<small>产品与转型</small></div><div class="km-stats"><span><b>+300%–500%</b>Maige 内容生产效率</span><span><b>80%</b>小 V 自动处理重复问题</span><span><b>68% → 84%</b>客服满意度</span><span><b>65% → 87%</b>电商生图采纳率</span></div></div>
       </div>
 
       <div class="galaxies" style="margin-top:56px" data-stagger>
@@ -396,9 +358,9 @@ const courses = [
               <circle cx="42.6" cy="20.5" r="1.8" fill="#fbbf24"/>
             </svg>
           </div>
-          <div class="g-era">2025 — 至今 · 第一阶段</div>
+          <div class="g-era">2025 — 至今 · 携程</div>
           <h3>携程 TripFlow 出海 AI 中台</h3>
-          <p>国际公域出海内容增长 AI 中台 0→1 产品负责人，AI 贯穿 7/7 环节；剪辑耗时降 60-70%、每日自动发布 1000+ 条、审核漏杀 0%、单周百万级播放。TripYoyo 机票走查准确率 7%→95%。</p>
+          <p>国际公域出海内容增长 AI 中台 0→1 产品负责人，AI 贯穿 7/7 环节；剪辑 1.5h→约20min、每日自动发布 8000+ 条、相关内容单周千万级播放；TripYoyo 将业务能力沉淀为可复用的 Agent 与 Skill。</p>
           <a href="/prototypes/tripflow-arch.html" target="_blank" rel="noopener" style="font-family:var(--mono);font-size:12px;color:var(--star)">看项目档案 ↗</a>
         </div>
         <div class="card galaxy">
@@ -413,7 +375,7 @@ const courses = [
               <path d="M39 7l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z" fill="#a78bfa" opacity=".9"/>
             </svg>
           </div>
-          <div class="g-era">2025 · 第二阶段</div>
+          <div class="g-era">2025 · 更好玩</div>
           <h3>Maige AI 恋爱助手</h3>
           <p>C 端出海 AI 社交 0→1：原子 Agent 矩阵 + 16 路意图多轮对话 Agent + 防注入；AIGC 内容生产效率提升 300%-500%，完成 MVP 与初步验证。</p>
           <a href="/prototypes/chat-agent-arch.html" target="_blank" rel="noopener" style="font-family:var(--mono);font-size:12px;color:var(--star)">看项目档案 ↗</a>
@@ -430,7 +392,7 @@ const courses = [
               <circle cx="24" cy="24" r="1.5" fill="url(#gi1)"/>
             </svg>
           </div>
-          <div class="g-era">2021 — 2025 · 第三阶段</div>
+          <div class="g-era">2021 — 2025 · vidaXL 中国</div>
           <h3>vidaXL 数字化转型</h3>
           <p>千人级跨境电商：智能客服「小 V」降本 13 人、满意度 68%→84%；AIGC 生图采纳率 65%→87%；ERP 业财融合，年化降本百万级。</p>
           <a href="/prototypes/cs-agent-arch.html" target="_blank" rel="noopener" style="font-family:var(--mono);font-size:12px;color:var(--star)">看项目档案 ↗</a>
@@ -443,9 +405,9 @@ const courses = [
   <section class="chapter">
     <div class="wrap reveal">
       <p class="epigraph">
-        别人讲 AI 转型从 ChatGPT 讲起，<br />
-        我的版本从 2022 年的制造业车间讲起。<br />
-        技术在换代，但"让组织真正把工具用起来"的方法论是同一套。
+        从业务蓝图、上线验收，到 Agent 的评测与回归。<br />
+        工具在变化，始终要回答同一个问题：<br />
+        它能否进入真实流程，持续创造业务价值？
       </p>
       <div class="epigraph-src">—— 找到一把手 · 设计责权利 · 蓝图签字确认 · 双轨指标防作弊 ——</div>
     </div>
@@ -456,55 +418,21 @@ const courses = [
     <div class="wrap">
       <div class="chapter-head reveal">
         <div class="ch-no"><em>02</em> FLAGSHIP</div>
-        <h2>旗舰 · 出海内容增长 AI 中台</h2>
-        <div class="ch-sub">头部 OTA 核心业务线 · 0-1 主导 · 从单团队提效项目，升级为推动 BG 级 AI 化转型立项的标杆案例</div>
+        <h2>旗舰 · TripFlow × TripYoyo</h2>
+        <div class="ch-sub">携程火车票 AI Lab · 内容增长全流程 × 跨业务 Agent／Skill 平台</div>
       </div>
 
       <blockquote class="flagship-quote reveal">
-        携程火车票 AI Lab 出海内容增长 AI 中台，AI 贯穿「选题 → 脚本 → 素材 → 剪辑 → 审核 → 发布 → 数据复盘」7/7 环节，
-        一年主导和交付 20+ 个 AI+内容项目，成为内部 AI 转型示范。
-        <footer><span style="color:var(--star)">已兑现</span>：剪辑耗时降 60-70% · 每日自动发布 1000+ 条 · 审核漏杀 0% · 单周百万级播放</footer>
+        TripFlow 将「选题 → 脚本 → 素材 → 剪辑 → 审核 → 发布 → 数据复盘」连成内容增长流程；
+        TripYoyo 把其中的能力沉淀为 Harness、领域 MCP 与业务 Skill，支持跨业务复用。
+        <footer>一年主导和交付 20+ 个 AI＋内容项目 · 推动事业群级 AI 化转型立项<br />年度规划目标：节省约 2.8 万工时 ≈ 13 FTE／¥500 万，单独列示，不计入已实现收益。</footer>
       </blockquote>
-
-      <div class="dashboard reveal">
-        <div class="dial"><div class="num"><span data-count="60">0</span><span>-70%</span></div><div class="lab">剪辑耗时下降</div></div>
-        <div class="dial"><div class="num"><span data-count="1000">0</span><span>+</span></div><div class="lab">每日自动发布</div></div>
-        <div class="dial"><div class="num"><span data-count="0">0</span><span>%</span></div><div class="lab">审核漏杀率</div></div>
-        <div class="dial"><div class="num"><span data-count="100">0</span><span>万+</span></div><div class="lab">单周总播放</div></div>
-        <div class="dial"><div class="num"><span data-count="95">0</span><span>%</span></div><div class="lab">机票走查准确率</div></div>
-      </div>
-
       <div class="grid-3" style="margin-top:36px" data-stagger>
-        <div class="card">
-          <h3>业务流程 × AI 原子能力</h3>
-          <p>把内容生产全流程（灵感→资产库→创作→审核→剪辑）组织起来，在每个节点嵌入对的 AI 能力。基于 <strong>LobeHub 落地多 Agent + Skill + MCP + 知识库打通</strong>并产生业务效用；Dify 承数据侧批量 AI。完整五层 Multi-Agent 为演进蓝图。</p>
-          <div class="t-chips"><span class="chip">LobeHub 零迁移</span><span class="chip">Dify 产品自闭环</span><span class="chip">MCP 薄包装</span></div>
-        </div>
-        <div class="card">
-          <h3>混合检索知识库工程</h3>
-          <p>"结构化字段先筛掉 90% + pgvector 语义召回"，MySQL → PostgreSQL 平滑演进；V2 规划 Karpathy 风格 raw/→wiki/ 编译管线，BM25 优先 + 向量辅助。</p>
-          <div class="t-chips"><span class="chip violet">pgvector</span><span class="chip violet">RAG</span><span class="chip violet">BM25</span></div>
-        </div>
-        <div class="card">
-          <h3>多模态合规审核体系</h3>
-          <p>基于 Gemini 2.5 Flash/Pro 设计"源头把控 + 终筛"的文本/图像/视频审核体系，建设 5000+ 条评测集，显著降低海外平台违规封号风险。</p>
-          <div class="t-chips"><span class="chip gold">Gemini 2.5</span><span class="chip gold">评测集 5000+</span><span class="chip gold">Seedance</span></div>
-        </div>
-        <div class="card">
-          <h3>组织 AI 化转型设计</h3>
-          <p>诊断"被当产品做、实则是组织转型"的定位错位 → 四层转型组织 + 业务蓝图签字机制 + "业务变化归运营、技术稳定归工程"飞轮分工。</p>
-          <div class="t-chips"><span class="chip green">变革管理</span><span class="chip green">蓝图签字</span></div>
-        </div>
-        <div class="card">
-          <h3>产品形态收敛</h3>
-          <p>「旅程导航 + 任务中心（输入-处理-输出全程可视 + Token 成本）+ 副驾 Dock + 上下文抽屉」交互范式——回答"AI 中台产品到底长什么样"。</p>
-          <div class="t-chips"><span class="chip">38 意图</span><span class="chip">47 旅程</span><span class="chip">三原则</span></div>
-        </div>
-        <div class="card">
-          <h3>AI-native 团队带教</h3>
-          <p>统筹 3 名 UI + 5 名以上开发，带教 3 实习生 + 1 正岗产品。"人人用 Agent / 人人 Vibe Coding"，产出持续超出人力配置。</p>
-          <div class="t-chips"><span class="chip violet">日站会</span><span class="chip violet">反馈分诊</span></div>
-        </div>
+        {projects.map(p => <a class="card career-project" href={`/resume/#${p.id}`}>
+          <div class="m-num">{p.group} · {p.status}</div><h3>{p.name}</h3>
+          <p class="project-result">{p.result}<small>{p.unit}</small></p>
+          <p>{p.approach}</p><span class="project-more">查看项目与指标口径 ↗</span>
+        </a>)}
       </div>
 
       <div class="cs-grid reveal">
@@ -587,52 +515,17 @@ const courses = [
         <div class="ch-no"><em>04</em> CASE FILES</div>
         <h2>代表作 · 项目档案</h2>
         <div class="ch-sub">
-          每个项目都点得开完整架构图——<strong style="color:var(--ink)">复杂度、业务/商业价值、我的管理角色</strong>都摆在台面上。这是我在面试里直接对着讲完整经历的可视化底稿。
+          从当前成果概览进入，再按需查看<strong style="color:var(--ink)">产品形态、架构与可交互原型</strong>。
         </div>
       </div>
 
       <div class="case-grid" data-stagger>
-        <div class="case-card flagship">
-          <div class="cc-top"><span class="cc-tag">旗舰 · 头部 OTA</span><span class="cc-arrow dim">两个深挖视角 ↓</span></div>
-          <h3>出海内容增长 AI 中台</h3>
-          <div class="cc-role">0-1 主导 · AI 产品经理｜组织内容生产全流程，逐节点嵌入 AI 原子能力（基于 LobeHub 落地多 Agent + Skill + MCP + 知识库打通）</div>
-          <div class="cc-metrics"><span>灵感 / 资产库 / 创作 / 审核 / 剪辑 全链路 × AI 节点</span><span>单周素材 500 / 发布 990 / 播放 100 万+ · 目标年省 ¥500 万</span><span class="hl">升级为 BG 级转型立项标杆</span></div>
-          <div class="cc-mgmt">强项：AI 需求调研 → 落地方案 → 推动｜统筹 3 UI + 5+ 开发 · CIO 双周/英文汇报</div>
-          <div class="cc-cognition">对应认知 · 工具层会变薄，所以往内容生态 / 资产库 / 反馈飞轮里做厚</div>
-          <div class="cc-facets">
-            <a href="/prototypes/tripflow-arch.html" target="_blank" rel="noopener">业务流程 × AI 架构 ↗</a>
-            <a href="/prototypes/tripflow-product-form.html" target="_blank" rel="noopener">产品形态 × OOUX ↗</a>
-            <a href="/prototypes/tripflow-asset-library.html" target="_blank" rel="noopener">资产库 × 素材中台 ↗</a>
-          </div>
-        </div>
-
-        <a class="case-card" href="/prototypes/chat-agent-arch.html" target="_blank" rel="noopener">
-          <div class="cc-top"><span class="cc-tag">C 端 · 出海社交</span><span class="cc-arrow">看完整架构 ↗</span></div>
-          <h3>拟人化闲聊 Agent</h3>
-          <div class="cc-role">0-1 · 全项目工程复杂度最高的多轮对话 Agent</div>
-          <div class="cc-metrics"><span>158 节点 / 184 连线 · 16 路意图 · 三路 RAG · 防注入</span><span class="hl">关键环节付费转化 +30%</span></div>
-          <div class="cc-mgmt">含交互追踪：点消息看它如何"思考"</div>
-          <div class="cc-cognition">对应认知 · 需求决定收入、差异化决定利润——价值不在会聊天，在场景/记忆/人设/付费节点</div>
-        </a>
-
-        <a class="case-card" href="/prototypes/cs-agent-arch.html" target="_blank" rel="noopener">
-          <div class="cc-top"><span class="cc-tag">B 端 · 千人电商</span><span class="cc-arrow">看完整架构 ↗</span></div>
-          <h3>智能客服「小 V」</h3>
-          <div class="cc-role">产品 / 项目负责人 · RAG + SFT · AI 优先人工兜底</div>
-          <div class="cc-metrics"><span>自动化 80% 重复问题 · 30 类意图</span><span class="hl">优化 13 人 / 年省超百万 · 满意度 68%→84%</span></div>
-          <div class="cc-mgmt">管理：横向带跨部门团队 · 集团 CIO 双周汇报</div>
-          <div class="cc-cognition">对应认知 · 企业 AI 系统必须可评测、可兜底、可交付 ROI</div>
-        </a>
-
-        <a class="case-card" href="/prototypes/silicon-staff-arch.html" target="_blank" rel="noopener">
-          <div class="cc-top"><span class="cc-tag">B 端 · 战略项目集</span><span class="cc-arrow">看完整架构 ↗</span></div>
-          <h3>「硅基员工」AIGC + 数字化转型</h3>
-          <div class="cc-role">AI 产品专家 / PMO 主管 · ComfyUI + Lora 微调（10 万+ 数据）· ERP 业财融合</div>
-          <div class="cc-metrics"><span>生图采纳率 65%→87% · 效率 +30%</span><span class="hl">ERP 整体效率 +60% · 核算准确率 +25% / 流程拉通 +40% · 两次集团战略奖</span></div>
-          <div class="cc-mgmt">管理：带 20+ 人跨职能团队 · 公司年度优秀内训师（TOP 2/15）</div>
-          <div class="cc-cognition">对应认知 · AI 改造必须 owner 闭环，组织机制比工具本身更重要</div>
-        </a>
+        <div class="case-card flagship"><div class="cc-top"><span class="cc-tag">携程 · 内容增长与平台化</span></div><h3>TripFlow × TripYoyo</h3><div class="cc-role">0→1 规划、产品架构、原型开发、评测回归与组织协作</div><div class="cc-metrics"><span>6 大业务域 · 38 类意图 · 47 条用户旅程</span><span>8000+ 条 / 日自动发布 · 相关内容单周千万级播放</span><span class="hl">AI 贯穿 7/7 环节 · 业务能力沉淀为 Skill</span></div><div class="cc-facets"><a href="/resume/#projects">最新项目概览 ↗</a><a href="/prototypes/tripflow-arch.html" target="_blank" rel="noopener">历史架构原型 ↗</a><a href="/prototypes/tripflow-product-form.html" target="_blank" rel="noopener">产品形态原型 ↗</a></div></div>
+        <a class="case-card" href="/prototypes/chat-agent-arch.html" target="_blank" rel="noopener"><div class="cc-top"><span class="cc-tag">Maige · C 端出海社交</span><span class="cc-arrow">看架构原型 ↗</span></div><h3>多轮对话与记忆锚点</h3><div class="cc-role">16 路意图路由 · RAG 人设与用户记忆 · 输入侧防注入</div><div class="cc-metrics"><span class="hl">完成 MVP 与初步商业验证，跑通付费转化</span></div><div class="cc-mgmt">配套 AIGC 平台：冷启动内容生产效率 +300%–500%</div></a>
+        <a class="case-card" href="/prototypes/cs-agent-arch.html" target="_blank" rel="noopener"><div class="cc-top"><span class="cc-tag">vidaXL · 智能客服</span><span class="cc-arrow">看架构原型 ↗</span></div><h3>智能客服「小 V」</h3><div class="cc-role">AI 优先、人工兜底 · RAG＋Agent</div><div class="cc-metrics"><span>自动处理 80% 重复问题 · 客服编制优化 13 人</span><span class="hl">满意度 68%→84% · 团队整体效率 +30%</span></div><div class="cc-mgmt">700+ 通话样本、30 类核心意图、500+ FAQ</div></a>
+        <a class="case-card" href="/prototypes/silicon-staff-arch.html" target="_blank" rel="noopener"><div class="cc-top"><span class="cc-tag">vidaXL · 电商与数字化</span><span class="cc-arrow">看项目原型 ↗</span></div><h3>AIGC 平台与企业数字化</h3><div class="cc-role">Dify＋ComfyUI · 标注与 Lora 优化 · ERP 业财融合</div><div class="cc-metrics"><span class="hl">生图采纳率 65%→87% · 核心品类效率 +30%</span><span>图文标注效率 +40% · 沉淀 10 万+ 训练数据</span></div><div class="cc-mgmt">跨 16 个部门协作，完成蓝图到上线的完整交付</div></a>
       </div>
+      <p class="career-archive-note">历史原型展示设计过程；最新经历与成果口径以职业概览为准。</p>
 
       <div class="lab-line reveal">▸ 首页直接体验 · 看 Agent 如何"思考"一条消息</div>
       <div class="spotlight-frame reveal">
@@ -718,59 +611,14 @@ const courses = [
     <div class="wrap">
       <div class="chapter-head reveal">
         <div class="ch-no"><em>07</em> EXPERIENCE</div>
-        <h2>履历 · 三段递进式攻坚</h2>
-        <div class="ch-sub">每一段都比上一段更难。技术在换代，方法论一以贯之。</div>
+        <h2>履历 · 三段产品实践</h2>
+        <div class="ch-sub">从企业数字化、C 端 AI 社交，到内容增长中台与业务 Agent 平台。</div>
       </div>
 
       <div class="timeline">
-        <div class="t-item reveal-l">
-          <div class="t-date">2025 — 至今 ✦ 现在位置</div>
-          <h3>携程 · TripFlow 出海内容增长 AI 中台</h3>
-          <div class="t-role">火车票 AI Lab · AI 产品经理（0→1 产品负责人）</div>
-          <p class="t-desc">TripFlow 国际公域出海内容增长 AI 中台 0→1 产品负责人，AI 贯穿选题、脚本、素材、剪辑、审核、发布、数据复盘 7/7 环节，一年主导和交付 20+ 个 AI+内容项目，相关内容单周百万级播放。</p>
-          <ul>
-            <li><strong>产能提升：</strong>剪辑单条耗时降 <strong>60-70%</strong>、每日自动发布 <strong>1000+ 条</strong>、审核漏杀 <strong>0%</strong>；100+ 规则覆盖 10+ 渠道</li>
-            <li><strong>产品方案：</strong>从访谈与共创会出发，完成产品形态、用户旅程、Agent 方案（Agentic Harness + 领域 MCP/Skill）与 MVP 验证；用 Claude Code/Codex 亲手搭 40+ 可交互原型</li>
-            <li><strong>TripYoyo Agentic/Skill 平台：</strong>承载数据与剪辑能力并跨业务赋能，机票价格走查 Agent 准确率 <strong>7%→95%</strong>（649 评测项 616 正确）</li>
-            <li><strong>Loop 工程：</strong>评测集→BadCase 归因→改规则→同集回归，产物直接交研发与运营使用；独立闭环交付可运行项目</li>
-          </ul>
-          <div class="t-chips">
-            <span class="chip">Agentic Harness</span><span class="chip">MCP/Skill</span><span class="chip">评测驱动</span><span class="chip">Loop 工程</span><span class="chip">Claude Code</span>
-          </div>
-        </div>
-
-        <div class="t-item reveal-l">
-          <div class="t-date">2025</div>
-          <h3>北京更好玩 · Maige 恋爱助手</h3>
-          <div class="t-role">AI 产品经理 · C 端出海 AI 社交 0→1</div>
-          <p class="t-desc">从 0 到 1 完成 AI 情感陪伴与社交破冰产品的顶层设计、原子 Agent 矩阵与多轮对话 Agent；搭建 AIGC 内容生产平台，完成 MVP 与初步验证。</p>
-          <ul>
-            <li><strong>原子 Agent 矩阵：</strong>基于 AARRR 设计"串门信息提取 + 匹配推荐 + 小剧场破冰 + 闲聊促转化 + 记忆锚点"原子 Agent 矩阵</li>
-            <li><strong>多轮对话 Agent：</strong>16 路意图识别与路由 + 会话变量与动态提示词 + RAG 召回人设故事与用户记忆；输入侧<strong>防提示词注入</strong>设计，避免人设被绕过</li>
-            <li><strong>AIGC 内容生产：</strong>Dify 工作流批量生产人物画像设定，ComfyUI 文生图批量生成配图，冷启动内容生产效率<strong>提升 300%-500%</strong></li>
-            <li><strong>模型与评测：</strong>按场景选型 GPT-4o/4.1/4.1-mini/Grok，建立 LTV/留存、AARRR、AI 能力、性能四维指标</li>
-          </ul>
-          <div class="t-chips">
-            <span class="chip violet">16 路意图</span><span class="chip violet">防注入</span><span class="chip violet">Dify</span><span class="chip violet">ComfyUI</span><span class="chip violet">模型选型</span>
-          </div>
-        </div>
-
-        <div class="t-item reveal-l">
-          <div class="t-date">2021 — 2025</div>
-          <h3>宁波荷贝信息服务 · vidaXL 中国</h3>
-          <div class="t-role">数字化项目主管 · 千人级跨境电商</div>
-          <p class="t-desc">企业级 AI 降本增效与数字化转型项目，百万级年度降本。</p>
-          <ul>
-            <li><strong>智能客服「小 V」：</strong>RAG + Agent 自动处理 <strong>80%</strong> 重复问题 → 编制优化 <strong>13 人</strong>、年化节省超百万，<strong>满意度 68%→84%</strong>；700+ 通话样本归纳 30 类意图；与集团 CIO 双周汇报、向亚洲区总经理英文汇报</li>
-            <li><strong>AIGC 平台 + Lora 优化：</strong><strong>生图采纳率 65%→87%</strong>，核心品类生产效率 +30%；图文标注 Agent 工作流标注效率 +40%</li>
-            <li><strong>ERP 二次上线与业财融合：</strong>走完业务蓝图→PMO 审核→UAT→培训与 SOP→上线全阶段；推动成立数据管理部，沉淀企业级数据标准</li>
-            <li><strong>公司级信息安全：</strong>组织 16 个部门完成业务功能量化分析、数据清洗与合规文档体系，成果获管理层审批发布</li>
-          </ul>
-          <div class="t-chips">
-            <span class="chip gold">RAG+Agent</span><span class="chip gold">Lora 微调</span><span class="chip gold">ERP</span><span class="chip gold">PMP</span><span class="chip gold">英文汇报</span>
-          </div>
-        </div>
+        {experiences.map(e => <div class="t-item reveal-l"><div class="t-date">{e.period}</div><h3>{e.company}</h3><div class="t-role">{e.role}</div><p class="t-desc">{e.intro}</p><ul>{e.points.map(p => <li>{p}</li>)}</ul><div class="t-chips">{e.tags.map(t => <span class="chip">{t}</span>)}</div></div>)}
       </div>
+      <p class="career-archive-note">浙江农林大学 · 信息管理与信息系统 · 本科 · 2021 年毕业 · PMP 认证</p>
     </div>
   </section>
 
@@ -807,11 +655,11 @@ const courses = [
       </div>
 
       <div class="dashboard reveal">
-        <div class="dial"><div class="num"><span data-count="38">0</span><span>GB</span></div><div class="lab">知识库总体量</div></div>
-        <div class="dial"><div class="num"><span data-count="7600">0</span><span>+</span></div><div class="lab">Markdown 文档</div></div>
-        <div class="dial"><div class="num"><span data-count="1402">0</span><span>个</span></div><div class="lab">Plaud 录音转写</div></div>
-        <div class="dial"><div class="num"><span data-count="280">0</span><span>篇</span></div><div class="lab">抖音口播稿（20 周纪录）</div></div>
-        <div class="dial"><div class="num"><span data-count="964">0</span><span>篇</span></div><div class="lab">三平台累计成稿</div></div>
+        <div class="dial"><div class="num"><span data-count="38">38</span><span>GB</span></div><div class="lab">知识库总体量</div></div>
+        <div class="dial"><div class="num"><span data-count="7600">7600</span><span>+</span></div><div class="lab">Markdown 文档</div></div>
+        <div class="dial"><div class="num"><span data-count="1402">1402</span><span>个</span></div><div class="lab">Plaud 录音转写</div></div>
+        <div class="dial"><div class="num"><span data-count="280">280</span><span>篇</span></div><div class="lab">抖音口播稿（20 周纪录）</div></div>
+        <div class="dial"><div class="num"><span data-count="964">964</span><span>篇</span></div><div class="lab">三平台累计成稿</div></div>
       </div>
 
       <div class="grid-3" style="margin-top:34px" data-stagger>
@@ -882,7 +730,7 @@ const courses = [
       <div class="chapter-head reveal">
         <div class="ch-no"><em>✦</em> TECH STACK</div>
         <h2>技术栈</h2>
-        <div class="ch-sub">Claude Code / Cursor 是日常生产工具，不是谈资。</div>
+        <div class="ch-sub">Claude Code / Codex：从产品原型到业务 Skill，再到评测回归。</div>
       </div>
       <div class="reveal">
         {skills.map((s) => (
@@ -1245,11 +1093,11 @@ const courses = [
         var t = q.toLowerCase();
         var has = function () { for (var i = 0; i < arguments.length; i++) if (q.indexOf(arguments[i]) >= 0 || t.indexOf(arguments[i]) >= 0) return true; return false; };
         if (has('tripflow', '旗舰', '中台'))
-          return ['TripFlow 是我的旗舰。', '核心一句话：把组织的业务流程梳清楚，再在关键节点嵌入 AI 原子能力。', '多 Agent 是基于 LobeHub 落地的——打通了 Skill、MCP、知识库，有真实业务效用；但主线叙事是业务流程编排，不是炫多智能体。'];
+          return ['TripFlow 是内容增长 AI 中台，TripYoyo 是 Agent／Skill 平台。', '从选题到数据复盘覆盖 7/7 环节，把业务能力沉淀为 MCP 与 Skill。', '最新经历、项目结果与统计范围可以看顶部的「职业概览」。'];
         if (has('项目', 'ai 项目', '做过', '案例', '经历', '做了什么'))
-          return ['我的主线是三段：制造业数字化 → 千人规模电商的 AI 化转型 → 大厂出海业务的内容增长 AI 中台。', '风格是 FDE 式全栈，用「能跑的产物」推动落地，不是只写 PRD。', '想细看哪一段？或者直接看「项目档案」那一节～'];
+          return ['我的经历包括 vidaXL 企业数字化、Maige 出海 AI 社交，以及携程 TripFlow 与 TripYoyo。', '从需求共创、架构和原型到评测回归，亲手交付可运行的产物。', '想细看可以打开「职业概览」，或看下方项目档案。'];
         if (has('能力', '技能', '擅长', '强项'))
-          return ['三件事：AI 产品架构、企业 AI 化转型、FDE 式全栈交付。', '简单说——既能想清楚业务和产品形态，也能自己把可运行的东西做出来。'];
+          return ['我的方向是出海内容增长、B 端 AI 产品架构、业务 Agent 与评测闭环。', '既能梳理业务和产品形态，也能用 Claude Code／Codex 做出可运行的交付物。'];
         if (has('知识', 'obsidian', '学习', '体系'))
           return ['我维护着一套约 38GB 的 Obsidian 知识库，7600+ 篇 markdown。', '页面上「知识体系」那节有可视化图谱，可以点点看。'];
         if (has('联系', '邮箱', '加微', '怎么找', 'contact', '合作'))
@@ -1404,6 +1252,30 @@ const courses = [
 </Base>
 
 <style>
+  .career-focus { font-size:15px;line-height:1.8;color:var(--star);margin-top:12px; }
+  .career-focus span { display:block;color:var(--ink2);font-size:13px;margin-top:6px; }
+  .career-project { display:block;color:inherit; }
+  .career-project .m-num { font-family:var(--mono);font-size:11px;color:var(--star);margin-bottom:14px; }
+  .career-project .project-result { color:var(--star);font-family:var(--mono);font-size:25px;margin:18px 0; }
+  .career-project .project-result small { display:block;color:var(--ink2);font-family:var(--sans);font-size:12px;margin-top:4px; }
+  .project-more { display:block;font-size:12px;color:var(--star);margin-top:20px; }
+  .career-archive-note { font-size:12px;color:var(--ink2);margin-top:20px; }
+  .pet-panel[hidden] { display:none !important; }
+  .v2-scope .hero { padding:110px 28px 85px; }
+  .v2-scope .hero .lede { margin-top:22px; }
+  .v2-scope .hero-stats-note { margin-bottom:0; }
+  .v2-scope .hero-cta { margin-top:24px; }
+  @media(max-width:640px) {
+    .v2-scope .hero{padding:105px 22px 75px}
+    .career-focus{font-size:12px}.career-focus span{font-size:12px}
+    .v2-scope .hero .lede{font-size:15px;line-height:1.9}
+    .v2-scope .hero-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px !important}
+    .v2-scope .hero-stats>span{display:flex;flex-direction:column;gap:3px;font-size:11px}
+    .v2-scope .hero-stats>span b{font-size:16px;white-space:nowrap}
+    .v2-scope .hero-stats-note{font-size:10px}
+    .hero .sub{letter-spacing:.04em !important}
+  }
+
   /* —— v2 页面级 scoped 样式（不影响原首页 global.css）—— */
   .hero-stats {
     display: flex; flex-wrap: wrap; gap: 10px 28px;

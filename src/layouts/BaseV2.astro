@@ -13,8 +13,8 @@ interface Props {
   description?: string;
 }
 const {
-  title = '纪鸣飞 · AI 产品架构师 / 企业 AI 化转型专家 · FDE',
-  description = '5 年产品与数字化、4 年专注 AI 落地。制造业数字化 → 千人电商 AI 转型 → 大厂出海内容增长 AI 中台，用可运行的产物推动落地。',
+  title = '纪鸣飞 · 高级 AI 产品经理 · 出海内容增长与业务 Agent',
+  description = '5 年产品经验，3 年聚焦 AI 产品落地。TripFlow 内容增长中台、TripYoyo Agent／Skill 平台、Maige AI 社交与 vidaXL 企业数字化。用可运行产物与评测闭环推动业务价值。',
 } = Astro.props;
 ---
 
@@ -32,14 +32,14 @@ const {
     <meta property="og:url" content={new URL(Astro.url.pathname, Astro.site)} />
     <meta property="og:site_name" content="纪鸣飞 · Mingfei Ji" />
     <meta property="og:locale" content="zh_CN" />
-    <meta property="og:image" content={new URL('/og-cover.png', Astro.site)} />
+    <meta property="og:image" content={new URL('/og-career-20261028.jpg', Astro.site)} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="纪鸣飞 · AI 产品架构师 / FDE" />
+    <meta property="og:image:alt" content="纪鸣飞 · 高级 AI 产品经理" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={new URL('/og-cover.png', Astro.site)} />
+    <meta name="twitter:image" content={new URL('/og-career-20261028.jpg', Astro.site)} />
     <meta name="theme-color" content="#030412" />
     <script type="application/ld+json" set:html={JSON.stringify({
       '@context': 'https://schema.org',
@@ -47,8 +47,8 @@ const {
       name: '纪鸣飞',
       alternateName: 'Mingfei Ji',
       url: 'https://mingfeiji.github.io/',
-      jobTitle: 'AI Product Architect / Forward Deployed Engineer',
-      description: 'AI 产品架构师 · 企业 AI 化转型专家，4 年+ AI 产品落地经验',
+      jobTitle: 'Senior AI Product Manager',
+      description: '高级 AI 产品经理，5 年产品经验、3 年聚焦 AI 产品落地',
       sameAs: ['https://github.com/MingfeiJi'],
     })} />
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>" />
@@ -68,6 +68,7 @@ const {
       <div class="nav-inner">
         <a href="#top" class="nav-logo">纪鸣飞<span> ✦</span></a>
         <div class="nav-links">
+          <a href="/resume/">职业概览</a>
           <a href="#voyage">关键成果</a>
           <a href="#flagship">旗舰</a>
           <a href="#cognition">认知</a>
@@ -94,7 +95,7 @@ const {
         <div>
           <div class="f-name">纪鸣飞 <span style="color:var(--star)">/</span> Mingfei Ji</div>
           <div class="f-meta">
-            AI PRODUCT ARCHITECT · FORWARD DEPLOYED ENGINEER<br />
+            SENIOR AI PRODUCT MANAGER · ENTERPRISE AI · AGENTIC HARNESS<br />
             上海 · <a href="mailto:1966315939@qq.com" style="color:var(--star)">1966315939@qq.com</a> · github.com/MingfeiJi
           </div>
         </div>
@@ -105,7 +106,7 @@ const {
         </div>
         <div class="f-meta" style="text-align:right">
           「人人都是产品经理」专栏作者<br />
-          飞书开发者大会受邀嘉宾<br />
+          火山引擎 FORCE 大会受邀嘉宾<br />
           Building in public · 2026 ✦
         </div>
       </div>
