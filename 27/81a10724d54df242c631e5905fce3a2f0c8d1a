@@ -1,0 +1,25 @@
+src/components/StudioFeature.astro
+  s_7ad26e4465340d::t_299c135269328a 1-8,10-12
+src/pages/studio.astro
+  s_7ad26e4465340d::t_299c135269328a 1-46
+src/components/Bloom.astro
+  s_7ad26e4465340d::t_8ec0273a685a8d 1-110,113-123
+docs/releases/2026-10-28-studio-assets.md
+  s_7ad26e4465340d::t_0c55dc34362b7c 1-30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.51-trip",
+  "base_commit_sha": "2781a10724d54df242c631e5905fce3a2f0c8d1a",
+  "prompts": {},
+  "sessions": {
+    "s_7ad26e4465340d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1820d-c910-75a3-a3e2-4f04cad4ebb7",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "MingfeiJi <67701820+MingfeiJi@users.noreply.github.com>"
+    }
+  }
+}
