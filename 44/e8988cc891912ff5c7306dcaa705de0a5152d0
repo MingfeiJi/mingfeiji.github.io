@@ -1,0 +1,24 @@
+src/pages/index.astro
+  s_7ad26e4465340d::t_2a8cce77cbe3c9 6,56-59,135,143,151,188,225,240,294,296-299,301-302,304-305,320,331,335-339,342-344,361,363,378,395,408-410,421-422,426-428,431-435,518,523-526,528,614-615,619,621,658-662,733,1096,1098,1100,1255-1278
+src/pages/resume.astro
+  s_7ad26e4465340d::t_2ee900599ab90e 1-55
+src/data/career.ts
+  s_7ad26e4465340d::t_823c4e76c7e7e7 61,89
+  s_7ad26e4465340d::t_3dd80f33dd99d3 1-60,62-88,90-98
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.51-trip",
+  "base_commit_sha": "44e8988cc891912ff5c7306dcaa705de0a5152d0",
+  "prompts": {},
+  "sessions": {
+    "s_7ad26e4465340d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1820d-c910-75a3-a3e2-4f04cad4ebb7",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "temptrip <temptrip@lpt035104.cn1.global.ctrip.com>"
+    }
+  }
+}
