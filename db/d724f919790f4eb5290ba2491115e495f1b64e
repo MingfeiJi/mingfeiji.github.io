@@ -1,0 +1,21 @@
+docs/releases/2026-10-28-resume-refresh.md
+  s_7ad26e4465340d::t_8698dd18bfbfa9 3,65
+docs/releases/2026-10-28-studio-assets.md
+  s_7ad26e4465340d::t_8698dd18bfbfa9 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.51-trip",
+  "base_commit_sha": "dbd724f919790f4eb5290ba2491115e495f1b64e",
+  "prompts": {},
+  "sessions": {
+    "s_7ad26e4465340d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1820d-c910-75a3-a3e2-4f04cad4ebb7",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "MingfeiJi <67701820+MingfeiJi@users.noreply.github.com>"
+    }
+  }
+}
