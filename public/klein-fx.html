@@ -3,50 +3,38 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>obsidian glass video</title>
+<title>曜黑玻璃背景</title>
+<link rel="preload" as="image" href="/media/obsidian-poster.jpg" />
 <style>
-  /* 「曜黑玻璃」主题背景层：全屏静音循环视频（Mux HLS），黑底兜底。
-     调参: VIDEO_SRC 换流地址 / video 的 opacity 控制明暗 */
-  html,body{margin:0;height:100%;background:#000;overflow:hidden}
-  video{width:100vw;height:100vh;object-fit:cover;display:block;opacity:1}
-  /* 流挂掉/加载中兜底: 极淡的白色雾光,保证不是死黑 */
-  #fallback{position:fixed;inset:0;pointer-events:none;
-    background:
-      radial-gradient(60% 50% at 70% 20%, rgba(255,255,255,.07), transparent 70%),
-      radial-gradient(40% 40% at 20% 85%, rgba(255,255,255,.04), transparent 70%);}
+  html,body{margin:0;height:100%;overflow:hidden;background:#000}
+  body{background:#000 url('/media/obsidian-poster.jpg') center/cover no-repeat}
+  video{width:100vw;height:100vh;object-fit:cover;display:block}
+  body::after{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(180deg,#0005,#0006 50%,#0009)}
 </style>
 </head>
 <body>
-<div id="fallback"></div>
-<video id="v" autoplay muted loop playsinline></video>
-<script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js"></script>
+<video id="v" muted loop playsinline preload="none" poster="/media/obsidian-poster.jpg" aria-hidden="true"></video>
 <script>
 (function () {
-  var VIDEO_SRC = 'https://stream.mux.com/kimF2ha9zLrX64H00UgLGPflCzNtl1T0215MlAmeOztv8.m3u8';
-  var video = document.getElementById('v');
-  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  function hideFallback(){ document.getElementById('fallback').style.display = 'none'; }
-
-  if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    // Safari 原生 HLS
-    video.src = VIDEO_SRC;
-    video.addEventListener('loadeddata', hideFallback);
-  } else if (window.Hls && Hls.isSupported()) {
-    var hls = new Hls();
-    hls.loadSource(VIDEO_SRC);
-    hls.attachMedia(video);
-    hls.on(Hls.Events.FRAG_LOADED, hideFallback);
-    hls.on(Hls.Events.ERROR, function (_, data) {
-      if (data.fatal) { hls.destroy(); video.style.display = 'none'; }  // 流挂了→雾光兜底
-    });
-  } else {
-    video.style.display = 'none';
+  var video=document.getElementById('v');
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)');
+  var inView=true;
+  var saveData=Boolean(navigator.connection && navigator.connection.saveData);
+  function sync(){
+    if(reduce.matches || saveData || document.hidden || !inView){video.pause();return;}
+    if(!video.getAttribute('src'))video.src='/media/obsidian-loop.mp4';
+    video.play().catch(function(){});
   }
-
-  video.addEventListener('error', function(){ video.style.display = 'none'; });
-  // 降低运动偏好: 视频定格第一帧
-  if (reduce) video.addEventListener('loadeddata', function(){ video.pause(); });
+  video.addEventListener('error',function(){video.style.visibility='hidden';});
+  addEventListener('message',function(event){
+    if(event.origin!==location.origin || event.source!==parent || !event.data || event.data.t!=='fx-visibility')return;
+    inView=Boolean(event.data.visible);sync();
+  });
+  document.addEventListener('visibilitychange',sync);
+  reduce.addEventListener('change',sync);
+  addEventListener('pagehide',function(){video.pause();});
+  addEventListener('pageshow',sync);
+  sync();
 })();
 </script>
 </body>

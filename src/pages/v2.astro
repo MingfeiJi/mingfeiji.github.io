@@ -1071,10 +1071,14 @@ const courses = [
       // 每个主题一套背景特效（独立特效文件，v2-scoped）
       var FX = {
         cosmos: '/cosmos-nebula.html',
-        klein: '/klein-fx.html', snow: '/snow-fx.html',
-        hud: '/ink-dynamic.html', cyber: '/cyber-field.html'
+        klein: '/klein-fx.html'
       };
       var curSrc = null;
+      var heroInView = true;
+      function syncBackgroundVisibility() {
+        var frame = host.querySelector('iframe');
+        if (frame && frame.contentWindow) frame.contentWindow.postMessage({t: 'fx-visibility', visible: heroInView}, location.origin);
+      }
       function sync() {
         // 屏蔽 BaseV2 自带的 #hud-field（它 opacity 卡 0 + 会和本层重复），统一由本层接管
         var legacy = document.getElementById('hud-field');
@@ -1086,6 +1090,8 @@ const courses = [
         if (src) {
           var f = document.createElement('iframe');
           f.src = src; f.setAttribute('tabindex', '-1');
+          f.title = '主题装饰背景';
+          f.addEventListener('load', syncBackgroundVisibility);
           f.setAttribute('scrolling', 'no'); f.setAttribute('aria-hidden', 'true');
           // 内联尺寸（动态 iframe 拿不到 Astro scoped 样式，必须内联，否则停在 300×150）
           f.style.cssText = 'width:100vw;height:100vh;border:0;display:block;';
@@ -1099,7 +1105,7 @@ const courses = [
       function syncGeek() {
         if (!gsf) return;
         var t = document.documentElement.getAttribute('data-theme');
-        var want = (t === 'cosmos' || t === 'cyber');
+        var want = t === 'cosmos';
         if (want && !gsf.getAttribute('src')) gsf.setAttribute('src', gsf.getAttribute('data-src'));
         else if (!want && gsf.getAttribute('src')) gsf.removeAttribute('src');
       }
@@ -1108,6 +1114,7 @@ const courses = [
       // hero 深度视差：内容与星空反向微移，形成前/后景层次（仅精确指针 + 允许动效时）
       // 平滑交给 CSS transition，事件里直接写目标值，无常驻 rAF
       var hero = document.querySelector('.hero');
+      if (hero) new IntersectionObserver(function(entries) { heroInView = entries[0].isIntersecting; syncBackgroundVisibility(); }).observe(hero);
       var depthOn = hero && matchMedia('(pointer:fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (depthOn) {
         hero.style.transition = 'transform 1.1s cubic-bezier(.16,.6,.3,1)';
@@ -1851,7 +1858,7 @@ const courses = [
 
   /* ── 升级版星空背景（cosmos 主题下叠加，v2-scoped）── */
   #nebula-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0;
-    transition: opacity 1.4s ease; }
+    transition: opacity .25s ease; }
   #nebula-bg iframe { width: 100vw; height: 100vh; border: 0; display: block; }
   /* 文字保护层：正文集中在左侧，用主题底色向右渐隐的柔幕压住背景亮斑（用户反馈：动效有时盖住文字）
      --space-0 随主题自变：cosmos 深空/paper 米纸/klein 蓝/snow 白，一条规则五主题通用 */
@@ -1861,11 +1868,8 @@ const courses = [
       color-mix(in srgb, var(--space-0) 34%, transparent) 44%,
       color-mix(in srgb, var(--space-0) 8%, transparent) 68%,
       transparent 82%); }
-  html[data-theme="cosmos"] #nebula-bg,
-  html[data-theme="klein"] #nebula-bg,
-  html[data-theme="snow"] #nebula-bg,
-  html[data-theme="hud"] #nebula-bg,
-  html[data-theme="cyber"] #nebula-bg { opacity: 1; }
+  :global(html[data-theme="cosmos"]) #nebula-bg,
+  :global(html[data-theme="klein"]) #nebula-bg { opacity: 1; }
 
   /* ── 产品·Products 卡片 ── */
   .products-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
@@ -2039,7 +2043,7 @@ const courses = [
   :global(html[data-theme='klein']) .v2-scope .hero .sub { justify-content: center; letter-spacing: .08em; }
   :global(html[data-theme='klein']) .v2-scope .hero .sub::after { display: none; }
   :global(html[data-theme='klein']) .v2-scope .hero .lede {
-    max-width: 640px; font-size: 15px; line-height: 1.9; color: rgba(255,255,255,.55); }
+    max-width: 640px; font-size: 15px; line-height: 1.9; color: rgba(255,255,255,.76); }
   :global(html[data-theme='klein']) .v2-scope .hero .lede strong { color: rgba(255,255,255,.85); font-weight: 500; }
   /* 规格 hero 极简: 战绩条与三按钮组收进下方章节, 首屏只留核心叙事+捕获CTA */
   :global(html[data-theme='klein']) .v2-scope :is(.hero-stats, .hero-stats-note, .hero-cta) { display: none; }

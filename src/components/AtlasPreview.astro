@@ -1,0 +1,143 @@
+<div class="atlas-preview" data-atlas aria-label="World Atlas 三维地图预览">
+  <div class="atlas-toolbar" role="group" aria-label="选择地图场景">
+    <button data-scene="earth" aria-pressed="false">地球</button>
+    <button data-scene="paris" aria-pressed="false">巴黎</button>
+    <button data-scene="tokyo" aria-pressed="true">东京</button>
+    <span class="live">LIVE 3D</span>
+  </div>
+  <div class="atlas-canvas" role="img" aria-label="可旋转的东京三维建筑地图"></div>
+  <div class="atlas-loading" role="status">正在展开东京的建筑…</div>
+  <div class="atlas-place"><span class="place-name">TOKYO / 东京塔街区</span><span class="place-coordinate">35.6586° N · 139.7456° E</span></div>
+  <div class="atlas-bottom">
+    <div class="atlas-controls"><p>拖动旋转 · 双指缩放</p><button class="wireframe" aria-pressed="false" disabled>查看线框</button><button class="reset" aria-label="复位地图视角" disabled>↺</button></div>
+    <p class="attribution"><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a> · 城市局部艺术建模</p>
+  </div>
+  <noscript><a href="https://mingteck.com/atlas"><img src="/projects/atlas.jpg" alt="World Atlas 三维地图，点击进入完整作品" /></a></noscript>
+</div>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-atlas]').forEach(root => {
+    const observer = new IntersectionObserver(entries => {
+      if (entries.some(entry => entry.isIntersecting && entry.intersectionRatio >= .05)) { observer.disconnect(); initAtlas(root); }
+    }, { rootMargin: '0px', threshold: .05 });
+    observer.observe(root);
+  });
+  async function initAtlas(root: HTMLElement) {
+    const host = root.querySelector<HTMLElement>('.atlas-canvas')!;
+    const status = root.querySelector<HTMLElement>('.atlas-loading')!;
+    const scenes = {
+      earth: { name: 'EARTH / 世界', coordinate: '从全球视角，走近城市', target: [0,0,0], span: 1 },
+      paris: { name: 'PARIS / 埃菲尔铁塔街区', coordinate: '48.8583° N · 2.2945° E', target: [0,95,0], span: 760 },
+      tokyo: { name: 'TOKYO / 东京塔街区', coordinate: '35.6586° N · 139.7456° E', target: [0,70,0], span: 1757.49 }
+    };
+    type SceneId = keyof typeof scenes;
+    let release = () => {};
+    try {
+      const [T, { GLTFLoader }, { OrbitControls }] = await Promise.all([
+        import('three'), import('three/addons/loaders/GLTFLoader.js'), import('three/addons/controls/OrbitControls.js')
+      ]);
+      const renderer = new T.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'low-power' });
+      renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+      renderer.localClippingEnabled = true;
+      renderer.toneMapping = T.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.15;
+      host.appendChild(renderer.domElement);
+      const scene = new T.Scene();
+      scene.add(new T.HemisphereLight('#d4e8f4','#273943',2));
+      const sun = new T.DirectionalLight('#fff0d3',3.4); sun.position.set(-6,9,7);scene.add(sun);
+      const fill = new T.DirectionalLight('#97cdda',1.1); fill.position.set(6,3,-5);scene.add(fill);
+      const camera = new T.PerspectiveCamera(38,1,.05,200);
+      const controls = new OrbitControls(camera,renderer.domElement);
+      controls.enableDamping=false;controls.enablePan=false;
+      controls.minDistance=3;controls.maxDistance=18;
+      const loader = new GLTFLoader();
+      const cache = new Map<SceneId,Promise<any>>();
+      let current: any, active: SceneId='tokyo', ticket=0, visible=true, wire=false, disposed=false;
+      const wireButton=root.querySelector<HTMLButtonElement>('.wireframe')!;
+      const render=()=>{if(!disposed&&visible&&!document.hidden)renderer.render(scene,camera);};
+      const frame=()=>{
+        const mobile=camera.aspect<1.1;
+        if(active==='earth') {
+          camera.position.set(6.2,3.4,-7.9).setLength(mobile?11.8:10.4);
+          controls.target.set(0,0,0);controls.maxPolarAngle=Math.PI-.15;controls.minPolarAngle=.15;
+        } else {
+          controls.target.set(0,0,0);
+          camera.position.set(.66,.72,.95).normalize().multiplyScalar(mobile?10:8);
+          controls.maxPolarAngle=Math.PI*.47;controls.minPolarAngle=.2;
+        }
+        controls.update();render();
+      };
+      const applyWire=()=>{
+        current?.traverse((o:any)=>{if(o.isMesh)(Array.isArray(o.material)?o.material:[o.material]).forEach((m:any)=>{m.wireframe=wire;});});
+        wireButton.setAttribute('aria-pressed',String(wire));wireButton.textContent=wire?'返回材质':'查看线框';render();
+      };
+      async function show(id:SceneId) {
+        const request=++ticket;
+        status.hidden=false;status.textContent=`正在展开${id==='earth'?'三维地球':id==='paris'?'巴黎的建筑':'东京的建筑'}…`;
+        root.setAttribute('aria-busy','true');
+        try {
+          if(!cache.has(id)) {
+            const promise=loader.loadAsync(`/models/atlas/${id}.glb`).then(gltf=>{
+              const model=gltf.scene;
+              if(disposed){disposeModel(model);return null;}
+              if(id==='earth') model.scale.setScalar(2.65);
+              else {
+                const scale=5.5/scenes[id].span;
+                model.scale.setScalar(scale);
+                model.position.set(...scenes[id].target.map(v=>-v*scale) as [number,number,number]);
+                // Frame one authored district; distant landmark islands belong in the full atlas.
+                const planes=[new T.Plane(new T.Vector3(1,0,0),2.4),new T.Plane(new T.Vector3(-1,0,0),2.4),new T.Plane(new T.Vector3(0,0,1),2.4),new T.Plane(new T.Vector3(0,0,-1),2.4)];
+                model.traverse((o:any)=>{if(o.isMesh)(Array.isArray(o.material)?o.material:[o.material]).forEach((m:any)=>{m.clippingPlanes=planes;});});
+              }
+              return model;
+            }).catch(error=>{cache.delete(id);throw error;});
+            cache.set(id,promise);
+          }
+          const model=await cache.get(id);
+          if(disposed||request!==ticket||!model)return;
+          if(current)scene.remove(current);
+          current=model;scene.add(current);active=id;wire=false;
+          root.querySelectorAll<HTMLButtonElement>('[data-scene]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.scene===id)));
+          root.querySelector('.place-name')!.textContent=scenes[id].name;
+          root.querySelector('.place-coordinate')!.textContent=scenes[id].coordinate;
+          host.setAttribute('aria-label',`可旋转的${id==='earth'?'三维地球':id==='paris'?'巴黎三维建筑地图':'东京三维建筑地图'}`);
+          root.querySelector<HTMLElement>('.attribution')!.style.visibility=id==='earth'?'hidden':'visible';
+          root.querySelectorAll<HTMLButtonElement>('.atlas-controls button').forEach(b=>b.disabled=false);
+          status.hidden=true;root.setAttribute('aria-busy','false');root.dataset.ready='true';root.dataset.scene=id;
+          frame();applyWire();
+        } catch(error) {
+          if(disposed||request!==ticket)return;
+          status.textContent='模型暂未加载，点击场景可重试，或进入完整地图。';root.setAttribute('aria-busy','false');
+          console.warn('Atlas model unavailable',error);
+        }
+      }
+      function disposeModel(model:any) {
+        const geometries=new Set<any>(),materials=new Set<any>(),textures=new Set<any>();
+        model.traverse((o:any)=>{if(!o.isMesh)return;geometries.add(o.geometry);(Array.isArray(o.material)?o.material:[o.material]).forEach((m:any)=>{materials.add(m);Object.values(m).forEach((v:any)=>{if(v?.isTexture)textures.add(v);});});});
+        geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());
+      }
+      root.querySelectorAll<HTMLButtonElement>('[data-scene]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.scene as SceneId)));
+      wireButton.addEventListener('click',()=>{wire=!wire;applyWire();});
+      root.querySelector('.reset')!.addEventListener('click',frame);
+      controls.addEventListener('change',render);
+      const resize=new ResizeObserver(()=>{
+        const w=host.clientWidth,h=host.clientHeight;if(!w||!h)return;
+        renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();frame();
+      });resize.observe(host);
+      const visibility=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;render();});visibility.observe(root);
+      const onVisibility=()=>render();document.addEventListener('visibilitychange',onVisibility);
+      renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();status.hidden=false;status.textContent='三维画面已暂停，请刷新页面或进入完整地图。';});
+      renderer.domElement.addEventListener('webglcontextrestored',()=>{status.hidden=true;render();});
+      release=()=>{if(disposed)return;disposed=true;resize.disconnect();visibility.disconnect();controls.dispose();document.removeEventListener('visibilitychange',onVisibility);cache.forEach(p=>p.then(m=>{if(m)disposeModel(m);}).catch(()=>{}));renderer.dispose();};
+      window.addEventListener('pagehide',e=>{if(!e.persisted)release();});
+      window.addEventListener('pageshow',render);
+      await show('tokyo');
+    } catch(error) {
+      release();host.replaceChildren();status.textContent='当前设备未能打开三维画面，可进入完整地图查看。';
+      const fallback=document.createElement('img');fallback.src='/projects/atlas.jpg';fallback.alt='World Atlas 原作地图截图';host.appendChild(fallback);
+      console.warn('Atlas preview unavailable',error);
+    }
+  }
+</script>
+<style>
+  .atlas-preview{height:510px;position:relative;min-width:0;isolation:isolate;color:#dce8ed;background:radial-gradient(ellipse at 52% 50%,#35505a88,transparent 70%)}.atlas-toolbar{position:absolute;z-index:2;top:22px;left:25px;right:25px;display:flex;align-items:center;gap:5px}.atlas-toolbar button{font-size:11px;padding:8px 15px;border:1px solid #72909f4a;border-radius:4px;background:#122633bd;color:#a5bdca}.atlas-toolbar button[aria-pressed=true]{border-color:#b4d2da;color:#102430;background:#bbd5d9}.live{margin-left:auto;font:8px 'JetBrains Mono',monospace;letter-spacing:.1em;color:#b0cbd3}.live:before{content:'';display:inline-block;width:5px;height:5px;background:#89c3be;border-radius:50%;margin-right:6px}.atlas-canvas{position:absolute;inset:60px 0 88px}.atlas-canvas :global(canvas){display:block;touch-action:none}.atlas-canvas :global(img){width:100%;height:100%;object-fit:cover;opacity:.45}.atlas-loading{position:absolute;inset:75px 15px 125px;display:flex;align-items:center;justify-content:center;font:11px/1.8 system-ui;color:#dae5e8;pointer-events:none;text-align:center;background:#10212b66}.atlas-loading[hidden]{display:none}.atlas-place{position:absolute;bottom:108px;left:26px;display:flex;flex-direction:column;gap:6px;pointer-events:none;text-shadow:0 1px 7px #09151d}.place-name{font:10px/1.6 'JetBrains Mono','PingFang SC',monospace;letter-spacing:.04em}.place-coordinate{font:8px/1.8 'JetBrains Mono',monospace;color:#91b0bd}.atlas-bottom{position:absolute;bottom:17px;left:25px;right:25px}.atlas-controls{display:flex;align-items:center;gap:13px;border-top:1px solid #7597a44a;padding-top:12px}.atlas-controls p{margin:0 auto 0 0;font:10px/1.8 system-ui;color:#9ab7c6}.atlas-controls button{font:10px/1.7 system-ui;color:#c5d5dd;border:1px solid #7895a45c;padding:5px 10px;border-radius:3px}.atlas-controls button[aria-pressed=true]{color:#f0d7a5;border-color:#bba571}.atlas-controls .reset{font-size:20px;line-height:1.3;padding:1px 9px}.attribution{font:8px/1.7 system-ui;color:#7e9aa8;margin:10px 0 0}.attribution a{color:inherit;text-decoration:none}.attribution a:hover{text-decoration:underline}button{font-family:inherit;cursor:pointer;background:none}button:disabled{cursor:wait;opacity:.4}button:focus-visible,a:focus-visible{outline:2px solid #a4dbe4;outline-offset:4px}noscript img{width:100%}
+  @media(max-width:760px){.atlas-preview{height:430px}.atlas-toolbar{top:17px;left:23px;right:23px}.atlas-toolbar button{font-size:10px;padding:7px 13px}.atlas-canvas{inset:52px 0 90px}.atlas-place{left:23px;bottom:107px}.atlas-bottom{left:23px;right:23px;bottom:15px}.atlas-controls{gap:10px}.atlas-controls p{font-size:9px}.attribution{font-size:7px}.place-name{font-size:9px}.live{font-size:7px}}
+</style>

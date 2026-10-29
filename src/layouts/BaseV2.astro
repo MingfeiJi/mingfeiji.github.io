@@ -6,7 +6,7 @@ import '@fontsource/noto-serif-sc/900.css';
 import '@fontsource/instrument-serif/400.css';
 import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/700.css';
-import Cosmos from '../components/Cosmos.astro';
+import WaterRipple from '../components/WaterRipple.astro';
 
 interface Props {
   title?: string;
@@ -19,7 +19,7 @@ const {
 ---
 
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="klein">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -40,7 +40,7 @@ const {
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={new URL('/og-career-20261028.jpg', Astro.site)} />
-    <meta name="theme-color" content="#030412" />
+    <meta name="theme-color" content="#000000" />
     <script type="application/ld+json" set:html={JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'Person',
@@ -54,15 +54,16 @@ const {
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>" />
     <script is:inline>
       (function () {
-        var t = localStorage.getItem('mfj-theme') || 'cosmos';
-        if (t === 'paper') { t = 'hud'; localStorage.setItem('mfj-theme', t); }  // 宣纸已下架→迁移到水墨
+        var t = 'klein';
+        try { t = localStorage.getItem('mfj-theme-v3') || 'klein'; } catch (_) {}
+        if (!['klein', 'cosmos', 'hud'].includes(t)) t = 'klein';
         document.documentElement.setAttribute('data-theme', t);
       })();
     </script>
   </head>
   <body>
     <div id="voyage-progress"></div>
-    <Cosmos />
+    <WaterRipple />
 
     <nav class="nav">
       <div class="nav-inner">
@@ -114,12 +115,10 @@ const {
 
     <button class="theme-fab" id="theme-fab" title="切换主题" aria-label="切换主题">🎨</button>
     <div class="theme-panel" id="theme-panel">
-      <div class="tp-title">THEME · 选一种你喜欢的</div>
-      <button class="theme-opt" data-t="cosmos"><span class="sw"><i style="background:#030412"></i><i style="background:#7dd3fc"></i><i style="background:#a78bfa"></i></span>🌌 星辰大海</button>
-      <button class="theme-opt" data-t="hud"><span class="sw"><i style="background:#F7F5EF"></i><i style="background:#1a1a1a"></i><i style="background:#9E2B25"></i></span>🖌 动态水墨</button>
+      <div class="tp-title">THEME · 三种视觉语言</div>
       <button class="theme-opt" data-t="klein"><span class="sw"><i style="background:#000"></i><i style="background:#fff"></i><i style="background:#8a8a8a"></i></span>⚫️ 曜黑玻璃</button>
-      <button class="theme-opt" data-t="cyber"><span class="sw"><i style="background:#030509"></i><i style="background:#00f0ff"></i><i style="background:#c026ff"></i></span>🛰 赛博全息</button>
-      <button class="theme-opt" data-t="snow"><span class="sw"><i style="background:#FAFAF8"></i><i style="background:#18181b"></i><i style="background:#1d4ed8"></i></span>⬜️ 月白极简</button>
+      <button class="theme-opt" data-t="cosmos"><span class="sw"><i style="background:#030412"></i><i style="background:#7dd3fc"></i><i style="background:#a78bfa"></i></span>🌌 星辰大海</button>
+      <button class="theme-opt" data-t="hud"><span class="sw"><i style="background:#F4F7F4"></i><i style="background:#1f3539"></i><i style="background:#9E2B25"></i></span>〰 水波墨境</button>
     </div>
 
     <script>
@@ -130,7 +129,7 @@ const {
       // 曾经的 #hud-field 通路会造成同一特效双份加载，已移除）
 
       function markActive() {
-        const cur = document.documentElement.getAttribute('data-theme') || 'cosmos';
+        const cur = document.documentElement.getAttribute('data-theme') || 'klein';
         themeOpts.forEach((o) => o.classList.toggle('active', o.dataset.t === cur));
       }
       markActive();
@@ -142,7 +141,7 @@ const {
         o.addEventListener('click', () => {
           const t = o.dataset.t!;
           document.documentElement.setAttribute('data-theme', t);
-          localStorage.setItem('mfj-theme', t);
+          try { localStorage.setItem('mfj-theme-v3', t); localStorage.setItem('mfj-theme', t); } catch (_) {}
           markActive();
         })
       );
