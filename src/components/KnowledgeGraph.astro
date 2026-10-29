@@ -1,8 +1,9 @@
 ---
 interface Props {
   height?: string;
+  label?: string;
 }
-const { height = '72vh' } = Astro.props;
+const { height = '72vh', label = 'KNOWLEDGE GRAPH · LIVE' } = Astro.props;
 ---
 
 <div class="kg-shell" style={`height:${height}`}>
@@ -13,7 +14,7 @@ const { height = '72vh' } = Astro.props;
     <span class="kg-corner c-bl"></span>
     <span class="kg-corner c-br"></span>
     <span class="kg-scan"></span>
-    <span class="kg-coord">KNOWLEDGE GRAPH · LIVE</span>
+    <span class="kg-coord">{label}</span>
   </div>
   <div class="kg-legend">
     <span><i style="background:#fbbf24"></i>投资概念</span>
