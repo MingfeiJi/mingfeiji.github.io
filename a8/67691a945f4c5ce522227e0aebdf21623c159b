@@ -1,0 +1,24 @@
+src/styles/global.css
+  s_7ad26e4465340d::t_ff90dabe0289f8 180,182-184
+docs/releases/2026-10-29-atlas-home.md
+  s_7ad26e4465340d::t_41f9c3e70f5974 1-45
+src/components/AtlasPreview.astro
+  s_7ad26e4465340d::t_2a9fa60fdf5ae6 1-19,22-143
+  s_7ad26e4465340d::t_41f9c3e70f5974 20-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.51-trip",
+  "base_commit_sha": "a867691a945f4c5ce522227e0aebdf21623c159b",
+  "prompts": {},
+  "sessions": {
+    "s_7ad26e4465340d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1820d-c910-75a3-a3e2-4f04cad4ebb7",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "MingfeiJi <67701820+MingfeiJi@users.noreply.github.com>"
+    }
+  }
+}
