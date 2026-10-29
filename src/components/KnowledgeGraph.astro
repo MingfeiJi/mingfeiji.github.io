@@ -68,7 +68,12 @@ const { height = '72vh', label = 'KNOWLEDGE GRAPH · LIVE' } = Astro.props;
     .force('center', forceCenter(0, 0))
     .force('collide', forceCollide().radius((d: any) => r(d) + 4))
     .force('x', forceX(0).strength(0.045))
-    .force('y', forceY(0).strength(0.06));
+    .force('y', forceY(0).strength(0.06)).stop();
+  // The article graph is far below the fold; don't simulate or load its fonts at startup.
+  let graphVisible=false;
+  const syncGraph=()=>{if(graphVisible&&!document.hidden&&sim.alpha()>.001)sim.restart();else sim.stop();};
+  new IntersectionObserver(entries=>{graphVisible=entries[0].isIntersecting;syncGraph();if(graphVisible)draw();}).observe(shell);
+  document.addEventListener('visibilitychange',syncGraph);
 
   function r(d: N) { return 3.5 + Math.min(d.deg, 8) * 1.1; }
 
@@ -110,7 +115,7 @@ const { height = '72vh', label = 'KNOWLEDGE GRAPH · LIVE' } = Astro.props;
       ctx.shadowBlur = 0;
       // 高度数节点常显标签
       if ((n.deg >= 5 && scale > 0.7) || n === hovered || scale > 1.6) {
-        ctx.font = `${Math.max(10, 11 * Math.min(scale, 1.3))}px "LXGW WenKai", sans-serif`;
+        ctx.font = `${Math.max(10, 11 * Math.min(scale, 1.3))}px system-ui, sans-serif`;
         ctx.fillStyle = dim ? 'rgba(154,166,207,.3)' : 'rgba(232,236,255,.92)';
         ctx.textAlign = 'center';
         ctx.fillText(n.title.slice(0, 12), x, y + rad + 13);

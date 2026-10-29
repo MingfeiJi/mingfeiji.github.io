@@ -7,6 +7,7 @@ import '@fontsource/instrument-serif/400.css';
 import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/700.css';
 import WaterRipple from '../components/WaterRipple.astro';
+import ObsidianBackground from '../components/ObsidianBackground.astro';
 
 interface Props {
   title?: string;
@@ -23,6 +24,7 @@ const {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preload" as="image" href="/media/obsidian-poster.jpg" fetchpriority="high" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
@@ -61,14 +63,17 @@ const {
       })();
     </script>
   </head>
-  <body>
+  <body class="mobile-portfolio">
     <div id="voyage-progress"></div>
     <WaterRipple />
+    <ObsidianBackground />
 
     <nav class="nav">
       <div class="nav-inner">
         <a href="#top" class="nav-logo">纪鸣飞<span> ✦</span></a>
-        <div class="nav-links">
+        <a class="mobile-work-link" href="/#digital-studio">3D 作品 ↗</a>
+        <button class="mobile-menu-toggle" aria-expanded="false" aria-controls="site-navigation">目录 <span>＋</span></button>
+        <div class="nav-links" id="site-navigation">
           <a href="/resume/">职业概览</a>
           <a href="#voyage">关键成果</a>
           <a href="#flagship">旗舰</a>
@@ -119,10 +124,19 @@ const {
       <button class="theme-opt" data-t="klein"><span class="sw"><i style="background:#000"></i><i style="background:#fff"></i><i style="background:#8a8a8a"></i></span>⚫️ 曜黑玻璃</button>
       <button class="theme-opt" data-t="cosmos"><span class="sw"><i style="background:#030412"></i><i style="background:#7dd3fc"></i><i style="background:#a78bfa"></i></span>🌌 星辰大海</button>
       <button class="theme-opt" data-t="hud"><span class="sw"><i style="background:#F4F7F4"></i><i style="background:#1f3539"></i><i style="background:#9E2B25"></i></span>〰 水波墨境</button>
+      <button class="motion-opt" id="background-motion" aria-pressed="false">背景动效：静态</button>
     </div>
 
     <script>
       const fab = document.getElementById('theme-fab')!;
+      const menuToggle=document.querySelector<HTMLButtonElement>('.mobile-menu-toggle')!;
+      const nav=document.querySelector<HTMLElement>('.nav')!;
+      const closeMenu=()=>{nav.classList.remove('menu-open');menuToggle.setAttribute('aria-expanded','false');menuToggle.innerHTML='目录 <span>＋</span>';};
+      menuToggle.addEventListener('click',()=>{const open=nav.classList.toggle('menu-open');menuToggle.setAttribute('aria-expanded',String(open));menuToggle.innerHTML=open?'收起 <span>−</span>':'目录 <span>＋</span>';});
+      nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeMenu));
+      document.addEventListener('keydown',e=>{if(e.key==='Escape'&&nav.classList.contains('menu-open')){closeMenu();menuToggle.focus();}});
+      document.addEventListener('click',e=>{if(!nav.contains(e.target as Node))closeMenu();});
+      matchMedia('(max-width:760px)').addEventListener('change',closeMenu);
       const panel = document.getElementById('theme-panel')!;
       const themeOpts = panel.querySelectorAll<HTMLButtonElement>('.theme-opt');
       // 背景特效注入由页面自身的 #nebula-bg 脚本负责（BaseV2 只被 index/v2 使用，
