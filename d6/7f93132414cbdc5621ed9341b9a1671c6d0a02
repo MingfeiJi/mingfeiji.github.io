@@ -1,0 +1,25 @@
+src/components/KnowledgeSystem.astro
+  s_7ad26e4465340d::t_b85cbd2e02b135 18,29,94
+  s_7ad26e4465340d::t_93fb0bcfd13d46 1-17,19-28,30-68,70-85,93,95-96
+  s_7ad26e4465340d::t_329d69fbacf498 69
+src/data/knowledge.ts
+  s_7ad26e4465340d::t_93fb0bcfd13d46 1-34
+src/components/KnowledgeGraph.astro
+  s_7ad26e4465340d::t_329d69fbacf498 4,6,17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.51-trip",
+  "base_commit_sha": "d67f93132414cbdc5621ed9341b9a1671c6d0a02",
+  "prompts": {},
+  "sessions": {
+    "s_7ad26e4465340d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1820d-c910-75a3-a3e2-4f04cad4ebb7",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "MingfeiJi <67701820+MingfeiJi@users.noreply.github.com>"
+    }
+  }
+}
