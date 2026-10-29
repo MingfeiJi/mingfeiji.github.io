@@ -183,6 +183,9 @@ a:hover { color: var(--flare); }
 .nav-links::-webkit-scrollbar { display: none; }
 .nav-links a { font-size: 13.5px; font-weight: 500; color: var(--ink2); white-space: nowrap; flex-shrink: 0; }
 .nav-links a:hover { color: var(--star); text-shadow: 0 0 14px color-mix(in srgb, var(--star) 55%, transparent); }
+.mobile-menu-toggle,.mobile-work-link{display:none}
+.motion-opt{font:13px var(--sans);color:var(--ink);background:var(--space-2);border:1px solid var(--line);border-radius:8px;min-height:44px;width:100%;margin-top:12px;padding:8px 12px;cursor:pointer}
+.motion-opt[hidden]{display:none}.motion-opt:disabled{opacity:.5;cursor:default}
 @media (max-width: 760px) {
   .nav-inner { gap: 12px; padding: 14px 16px; }
   .nav-logo { white-space: nowrap; flex: 0 0 auto; }
@@ -792,3 +795,39 @@ html[data-theme="hud"] .chip { color: var(--ink2); border-color: var(--line2); b
 
 /* klein marker 线收缩到文字宽度 */
 html[data-theme="klein"] .hero .sub { width: fit-content; }
+
+/* Mobile portfolio: native typography, reachable navigation, deliberate interaction. */
+@media(max-width:760px){
+  .mobile-portfolio{--sans:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;--body-font:var(--sans);--serif:'Songti SC','STSong',Georgia,serif;--mono:ui-monospace,'SF Mono',Menlo,monospace}
+  .mobile-portfolio :is(h1,h2,h3,h4,.nav-logo,.epigraph){font-family:var(--serif)!important}
+  .mobile-portfolio .nav{padding:8px 12px 0!important;border:0;background:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+  .mobile-portfolio .nav-inner{position:relative;padding:6px 12px!important;min-height:56px;gap:8px;border-radius:28px!important;background:color-mix(in srgb,var(--space-0) 91%,transparent)!important;border:1px solid var(--line2);backdrop-filter:blur(8px)!important;-webkit-backdrop-filter:blur(8px)!important}
+  .mobile-portfolio .nav-logo{font-size:19px;min-height:44px;display:flex;align-items:center;gap:4px}
+  .mobile-portfolio .mobile-work-link{display:flex;align-items:center;min-height:44px;margin-left:auto;padding:0 10px;font-size:12px;color:var(--ink)}
+  .mobile-portfolio .mobile-menu-toggle{display:flex;align-items:center;justify-content:center;gap:8px;min-width:64px;min-height:44px;padding:0 8px;color:var(--ink);background:none;border:0;font:13px var(--sans);cursor:pointer}
+  .mobile-menu-toggle span{font-size:20px}
+  .mobile-portfolio .nav-links{display:none;margin:0}
+  .mobile-portfolio .menu-open .nav-links{display:grid;grid-template-columns:1fr 1fr;position:absolute;left:0;right:0;top:calc(100% + 8px);max-height:calc(100svh - 100px);overflow-y:auto;gap:0;padding:12px;border:1px solid var(--line2);border-radius:20px;background:var(--space-1);box-shadow:0 16px 40px #0006}
+  .mobile-portfolio .nav-links a{display:flex;align-items:center;min-height:48px;padding:8px 12px;font-size:14px;color:var(--ink2);border-bottom:1px solid var(--line)}
+  .mobile-portfolio .nav-links a:focus-visible,.mobile-menu-toggle:focus-visible{outline:2px solid var(--star);outline-offset:-2px}
+  .mobile-portfolio .hero{min-height:0!important;padding-top:136px!important;padding-bottom:58px!important;text-align:left!important}
+  .mobile-portfolio .hero h1{font-size:56px!important;line-height:1.15!important;text-align:left!important;margin-left:0!important}
+  .mobile-portfolio .hero .kicker{font-size:9px!important;letter-spacing:.12em!important;line-height:1.9;max-width:270px;margin-left:0!important}
+  .mobile-portfolio .hero .sub{margin-left:0!important;font-size:21px!important}
+  .mobile-portfolio .hero .career-focus{font-size:13px!important;line-height:1.8!important}
+  .mobile-portfolio .hero .lede{font-size:14px!important;line-height:1.85!important;margin-top:22px!important;text-align:left!important}
+  .mobile-portfolio .hero .hero-scroll,.mobile-portfolio .klein-capture{display:none!important}
+  .mobile-portfolio .hero .hero-cta{display:grid!important;grid-template-columns:1fr;gap:10px!important;margin-top:26px!important;justify-content:stretch!important}
+  .mobile-portfolio .hero-cta .btn{min-height:48px;display:flex;justify-content:center;align-items:center;font-size:13px;padding:10px 12px}
+  .mobile-portfolio .hero-cta .btn:nth-child(2){display:none}
+  .mobile-portfolio :is(.card,.product-card,.dial,.ontology-panel,.loop-panel,.kg-shell,.method-card){backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+  html[data-theme=klein] .mobile-portfolio :is(.card,.product-card,.dial,.ontology-panel,.loop-panel,.kg-shell,.method-card){background-color:#111018d9!important}
+  .mobile-portfolio .theme-fab{width:44px;height:44px;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));font-size:20px}
+  .mobile-portfolio .theme-panel{right:14px;bottom:calc(68px + env(safe-area-inset-bottom));max-width:calc(100vw - 28px)}
+  .mobile-portfolio .theme-opt{min-height:48px}
+  .mobile-portfolio .pet{left:14px!important;bottom:calc(14px + env(safe-area-inset-bottom))!important}
+  .mobile-portfolio .pet-fab{width:44px!important;height:44px!important;animation:none!important}
+  .mobile-portfolio .pet-fab img{width:38px!important;height:38px!important;margin:3px!important}
+  .mobile-portfolio .pet-hi{display:none!important}
+  .mobile-portfolio .pet-panel{width:min(360px,calc(100vw - 28px))!important;max-height:calc(100svh - 145px)}
+}

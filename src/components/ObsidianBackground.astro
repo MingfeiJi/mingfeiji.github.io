@@ -1,0 +1,48 @@
+<div class="obsidian-background" aria-hidden="true">
+  <img class="obsidian-poster" src="/media/obsidian-poster.jpg" width="1280" height="720" fetchpriority="high" alt="" />
+  <video class="obsidian-motion" muted loop playsinline preload="none" poster="/media/obsidian-poster.jpg"></video>
+</div>
+<script>
+  const video=document.querySelector<HTMLVideoElement>('.obsidian-motion');
+  const toggle=document.querySelector<HTMLButtonElement>('#background-motion');
+  if(video&&toggle){
+    const compact=matchMedia('(max-width: 760px), (pointer: coarse)');
+    const reduce=matchMedia('(prefers-reduced-motion: reduce)');
+    const connection=(navigator as Navigator & {connection?:{saveData?:boolean;effectiveType?:string;addEventListener?:(type:string,fn:()=>void)=>void}}).connection;
+    let inHero=true, choice:boolean|undefined;
+    let idleReady=false;
+    const allowed=()=>!reduce.matches&&!connection?.saveData&&!/(^|-)2g$/.test(connection?.effectiveType||'');
+    const sync=()=>{
+      const isGlass=document.documentElement.dataset.theme==='klein';
+      const motion=allowed()&&(choice??!compact.matches);
+      toggle.hidden=!isGlass;
+      toggle.setAttribute('aria-pressed',String(motion));
+      toggle.textContent=motion?'背景动效：开':'背景动效：静态';
+      toggle.disabled=!allowed();
+      if(!isGlass||!motion||!inHero||document.hidden||!idleReady){video.pause();return;}
+      if(!video.getAttribute('src'))video.src='/media/obsidian-loop.mp4';
+      video.play().catch(()=>{video.classList.remove('playing');});
+    };
+    toggle.addEventListener('click',()=>{choice=!(choice??!compact.matches);idleReady=true;sync();});
+    video.addEventListener('playing',()=>video.classList.add('playing'));
+    video.addEventListener('error',()=>video.classList.remove('playing'));
+    document.addEventListener('visibilitychange',sync);
+    new MutationObserver(sync).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+    const hero=document.querySelector('.hero');
+    if(hero)new IntersectionObserver(entries=>{inHero=entries[0].isIntersecting;sync();}).observe(hero);
+    compact.addEventListener('change',sync);reduce.addEventListener('change',sync);connection?.addEventListener?.('change',sync);
+    addEventListener('pagehide',()=>video.pause());addEventListener('pageshow',sync);
+    const ready=()=>{idleReady=true;sync();};
+    // Content and the poster take priority. Mobile never auto-downloads the loop.
+    const defer=()=>{'requestIdleCallback' in window?window.requestIdleCallback(ready,{timeout:1500}):setTimeout(ready,300);};
+    if(document.readyState==='complete')defer();else addEventListener('load',defer,{once:true});
+    sync();
+  }
+</script>
+<style>
+  .obsidian-background{position:fixed;inset:0;z-index:0;pointer-events:none;background:#000;display:none;contain:strict}
+  :global(html[data-theme=klein]) .obsidian-background{display:block}
+  .obsidian-poster,.obsidian-motion{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .obsidian-motion{opacity:0}.obsidian-motion.playing{opacity:1}
+  .obsidian-background:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#0005,#0006 50%,#0009),linear-gradient(100deg,#0007,transparent 85%)}
+</style>
