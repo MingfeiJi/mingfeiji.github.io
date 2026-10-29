@@ -1,0 +1,123 @@
+---
+interface Props { compact?: boolean }
+const { compact = false } = Astro.props;
+---
+<div class:list={['bloom', { compact }]} data-bloom>
+  <div class="bloom-canvas" aria-label="可旋转的三维芍药模型" role="img"></div>
+  <div class="bloom-loading" role="status">正在展开一朵花<span></span></div>
+  <noscript><img src="/projects/bloom.jpg" alt="Bloom 三维芍药作品原站截图" /><p>开启 JavaScript 可体验三维模型，或<a href="https://mingteck.com/flower">前往原作</a>。</p></noscript>
+  <div class="specimen" aria-hidden="true"><span>PAEONIA / 001</span><span>103 PETALS<br />ONE QUIET MOMENT</span></div>
+  <div class="bloom-bottom">
+    <p class="bloom-hint">拖动环绕 · 滚动靠近</p>
+    <div class="bloom-controls" aria-label="花朵交互控制">
+      <button class="bloom-play" type="button" aria-label="播放绽放" aria-pressed="false" disabled>▷</button>
+      <label class="bloom-slider">绽放 <output>86%</output><input type="range" min="0" max="1" step="0.01" value="0.86" aria-label="调整花朵绽放程度" disabled /></label>
+      <div class="bloom-materials" role="group" aria-label="花朵材质">
+        <button data-material="natural" aria-pressed="true" disabled>自然</button>
+        <button data-material="glass" aria-pressed="false" disabled>玻璃</button>
+        <button data-material="paper" aria-pressed="false" disabled>宣纸</button>
+      </div>
+      <button class="bloom-reset" type="button" aria-label="复位花朵视角" disabled>↺</button>
+    </div>
+  </div>
+</div>
+<script>
+  const roots = document.querySelectorAll<HTMLElement>('[data-bloom]');
+  roots.forEach(root => {
+    let started = false;
+    const enter = new IntersectionObserver(entries => {
+      if (!started && entries.some(e => e.isIntersecting)) { started = true; enter.disconnect(); start(root); }
+    }, { rootMargin: '100px' });
+    enter.observe(root);
+  });
+  async function start(root: HTMLElement) {
+    const host = root.querySelector<HTMLElement>('.bloom-canvas')!;
+    const loading = root.querySelector<HTMLElement>('.bloom-loading')!;
+    let dispose: (() => void) | undefined;
+    try {
+      const [T, { GLTFLoader }, { OrbitControls }] = await Promise.all([
+        import('three'), import('three/addons/loaders/GLTFLoader.js'), import('three/addons/controls/OrbitControls.js')
+      ]);
+      const renderer = new T.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'low-power' });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+      renderer.toneMapping = T.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.05;
+      host.appendChild(renderer.domElement);
+      const scene = new T.Scene();
+      const camera = new T.PerspectiveCamera(35, 1, .1, 100);
+      camera.position.set(5.2, 6, 8);
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.target.set(0, 1.25, 0);
+      controls.enablePan = false; controls.enableDamping = false;
+      controls.minDistance = 6; controls.maxDistance = 17;
+      controls.minPolarAngle = .35; controls.maxPolarAngle = Math.PI * .75;
+      controls.update(); controls.saveState();
+      scene.add(new T.AmbientLight('#d7dfd3', .65), new T.HemisphereLight('#f2e7da', '#253c30', 1.4));
+      [[3,7,5,3.1,'#fff0e1'],[-5,2,-3,2.5,'#e7cdc3'],[0,-2,3,.45,'#9ab5a2']].forEach(([x,y,z,i,c]) => {
+        const light = new T.DirectionalLight(c as string, i as number); light.position.set(x as number,y as number,z as number); scene.add(light);
+      });
+      const gltf = await new GLTFLoader().loadAsync('/models/peony.glb');
+      const flower = gltf.scene;
+      const box = new T.Box3().setFromObject(flower), size = box.getSize(new T.Vector3());
+      const scale = 7.4 / Math.max(size.x, size.y, size.z);
+      flower.scale.setScalar(scale); flower.position.copy(box.getCenter(new T.Vector3()).multiplyScalar(-scale));
+      const petals: any[] = [], styles: any[] = [];
+      flower.traverse((obj: any) => {
+        if (!obj.isMesh) return;
+        if (obj.morphTargetInfluences) petals.push(obj);
+        if (/stem|leaf|sepal|stamen|pistil/i.test(obj.name)) return;
+        const natural = obj.material;
+        const convert = (material: any, glass: boolean) => new T.MeshPhysicalMaterial({ color: material.color, side: material.side, roughness: glass ? .14 : .94, transmission: glass ? .72 : 0, thickness: .45, ior: 1.35 });
+        const adapt = (glass: boolean) => Array.isArray(natural) ? natural.map(m => convert(m,glass)) : convert(natural,glass);
+        styles.push({mesh: obj, natural, glass: adapt(true), paper: adapt(false)});
+      });
+      scene.add(flower);
+      const input = root.querySelector<HTMLInputElement>('input')!;
+      const output = root.querySelector('output')!;
+      const play = root.querySelector<HTMLButtonElement>('.bloom-play')!;
+      let playing = false, frame = 0, startedAt = 0, visible = true;
+      const render = () => { if (visible && !document.hidden) renderer.render(scene,camera); };
+      const setBloom = (value: number) => {
+        petals.forEach(p => p.morphTargetInfluences[p.morphTargetDictionary?.Bloom ?? 0] = value);
+        input.value = value.toFixed(2); output.value = `${Math.round(value*100)}%`; render();
+      };
+      const stop = () => { playing = false; cancelAnimationFrame(frame); play.textContent = '▷'; play.setAttribute('aria-pressed','false'); play.setAttribute('aria-label','播放绽放'); };
+      const animate = (now: number) => {
+        if (!playing) return;
+        const progress = Math.min((now-startedAt)/4200,1);
+        setBloom(progress*progress*(3-2*progress));
+        if (progress < 1) frame = requestAnimationFrame(animate); else stop();
+      };
+      input.addEventListener('input',()=>{stop(); setBloom(Number(input.value));});
+      play.addEventListener('click',()=>{
+        if (playing) return stop();
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) { setBloom(Number(input.value) > .5 ? 0 : 1); return; }
+        playing = true; play.textContent = 'Ⅱ'; play.setAttribute('aria-label','暂停绽放'); play.setAttribute('aria-pressed','true'); startedAt = performance.now(); frame = requestAnimationFrame(animate);
+      });
+      root.querySelectorAll<HTMLButtonElement>('[data-material]').forEach(button => button.addEventListener('click',()=>{
+        styles.forEach(s=>s.mesh.material=s[button.dataset.material!]);
+        root.querySelectorAll('[data-material]').forEach(b=>b.setAttribute('aria-pressed', String(b===button))); render();
+      }));
+      root.querySelector('.bloom-reset')!.addEventListener('click',()=>{stop();controls.reset();setBloom(.86);});
+      controls.addEventListener('change', render);
+      const resize = new ResizeObserver(()=>{const w=host.clientWidth,h=host.clientHeight; if(!w||!h)return;renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();render();}); resize.observe(host);
+      const visibility = new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;if(!visible)stop();else render();});visibility.observe(root);
+      const onVisibility=()=>{if(document.hidden)stop();else render();};document.addEventListener('visibilitychange',onVisibility);
+      renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();stop();loading.hidden=false;loading.textContent='三维画面暂时中断，请刷新页面或查看原作。';});
+      setBloom(.86); loading.hidden=true;
+      root.querySelectorAll<HTMLButtonElement|HTMLInputElement>('button,input').forEach(b=>b.disabled=false);
+      root.dataset.ready='true';
+      dispose=()=>{stop();resize.disconnect();visibility.disconnect();document.removeEventListener('visibilitychange',onVisibility);controls.dispose();flower.traverse((o:any)=>{if(o.isMesh){o.geometry.dispose();(Array.isArray(o.material)?o.material:[o.material]).forEach((m:any)=>m.dispose());}});styles.forEach(s=>['natural','glass','paper'].forEach(k=>(Array.isArray(s[k])?s[k]:[s[k]]).forEach((m:any)=>m.dispose())));renderer.dispose();};
+      window.addEventListener('pagehide',e=>{stop();if(!e.persisted)dispose?.();});
+      window.addEventListener('pageshow',()=>render());
+    } catch (error) {
+      dispose?.(); host.replaceChildren(); loading.textContent='三维模型暂未加载，仍可查看原作。';
+      const image = document.createElement('img'); image.src='/projects/bloom.jpg';image.alt='Bloom 原站三维芍药作品截图';image.className='bloom-fallback';host.appendChild(image);
+      console.warn('Bloom preview unavailable', error);
+    }
+  }
+</script>
+<style>
+  .bloom{position:relative;min-width:0;height:610px;background:radial-gradient(ellipse at 50% 45%,#243d31 0,transparent 65%);color:#ebe6d6;isolation:isolate}.bloom-canvas{position:absolute;inset:0 0 55px;touch-action:pan-y}.bloom-canvas :global(canvas){display:block;width:100%;height:100%;touch-action:none}.bloom-canvas :global(.bloom-fallback){width:100%;height:100%;object-fit:cover;opacity:.65}.bloom-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;font-size:12px;color:#c8c9b8;pointer-events:none}.bloom-loading[hidden]{display:none}.bloom-loading span{width:40px;height:1px;background:#bdaa7d;margin-top:14px}.specimen{position:absolute;inset:20px 30px auto;display:flex;justify-content:space-between;font:9px/1.7 'JetBrains Mono',monospace;letter-spacing:.1em;color:#a9b5a5;pointer-events:none}.specimen span:last-child{text-align:right}.bloom-bottom{position:absolute;bottom:10px;left:24px;right:24px}.bloom-hint{font-size:10px;letter-spacing:.1em;color:#b0b8a8;margin:0 0 13px;text-align:center}.bloom-controls{display:flex;align-items:center;gap:17px;padding:14px 17px;border:1px solid #4c5d4c70;border-radius:6px;background:#14271fbb;backdrop-filter:blur(12px)}button{font:inherit;cursor:pointer;color:inherit;background:none;border:0}button:disabled{opacity:.4;cursor:wait}button:focus-visible,input:focus-visible{outline:2px solid #d6c48e;outline-offset:5px}.bloom-play{width:32px;height:32px;border:1px solid #536350;border-radius:50%;font-size:19px;flex:none}.bloom-slider{flex:1;display:grid;grid-template-columns:1fr 1fr;min-width:65px;font-size:10px;gap:5px;color:#bbc5b6}.bloom-slider output{text-align:right;font-family:monospace}input{grid-column:1/-1;width:100%;margin:0;accent-color:#cfbd8d;cursor:pointer}.bloom-materials{display:flex;border-left:1px solid #53635055;padding-left:12px;gap:4px}.bloom-materials button{font-size:10px;padding:6px 7px;white-space:nowrap;border-radius:3px}.bloom-materials button[aria-pressed=true]{background:#cfbd8d24;color:#ede5cd}.bloom-reset{font-size:23px;padding:0}noscript img{width:100%}.compact{height:470px}.compact .specimen{inset:20px}.compact .bloom-bottom{left:16px;right:16px}
+  @media(max-width:640px){.bloom{height:480px}.bloom-bottom{left:12px;right:12px}.bloom-controls{gap:12px;padding:13px 12px}.bloom-materials{padding-left:8px}.bloom-materials button{padding:5px}.specimen{inset:15px}.compact{height:425px}}
+</style>

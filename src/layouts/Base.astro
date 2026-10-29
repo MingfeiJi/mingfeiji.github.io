@@ -7,19 +7,20 @@ import '@fontsource/instrument-serif/400.css';
 import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/700.css';
 import Cosmos from '../components/Cosmos.astro';
+import WaterRipple from '../components/WaterRipple.astro';
 
 interface Props {
   title?: string;
   description?: string;
 }
 const {
-  title = '纪鸣飞 · 星辰大海 — AI 产品架构师 / 企业 AI 化转型专家',
-  description = '4 年+ AI 产品经验，AI Native 产品架构师。从制造业数字化转型到千人电商硅基员工计划，再到大厂出海内容增长 AI 中台——FDE 式全栈交付，用可运行的产物代替纯 PRD 推动落地。',
+  title = '纪鸣飞 · 高级 AI 产品经理 · 出海内容增长与业务 Agent',
+  description = '5 年产品经验，3 年聚焦 AI 产品落地。TripFlow 内容增长中台、TripYoyo Agent／Skill 平台、Maige AI 社交与 vidaXL 企业数字化。用可运行产物与评测闭环推动业务价值。',
 } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="klein">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -32,21 +33,22 @@ const {
     <meta property="og:url" content={new URL(Astro.url.pathname, Astro.site)} />
     <meta property="og:site_name" content="纪鸣飞 · Mingfei Ji" />
     <meta property="og:locale" content="zh_CN" />
-    <meta property="og:image" content={new URL('/og-cover.png', Astro.site)} />
+    <meta property="og:image" content={new URL('/og-career-20261028.jpg', Astro.site)} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="纪鸣飞 · AI 产品架构师 / FDE" />
+    <meta property="og:image:alt" content="纪鸣飞 · 高级 AI 产品经理" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={new URL('/og-cover.png', Astro.site)} />
-    <meta name="theme-color" content="#030412" />
+    <meta name="twitter:image" content={new URL('/og-career-20261028.jpg', Astro.site)} />
+    <meta name="theme-color" content="#000000" />
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>" />
     <script is:inline>
       // 防闪烁：渲染前应用已保存主题
       (function () {
-        var t = localStorage.getItem('mfj-theme') || 'cosmos';
-        if (t === 'paper') { t = 'hud'; localStorage.setItem('mfj-theme', t); }  // 宣纸已下架→迁移到水墨
+        var t = 'klein';
+        try { t = localStorage.getItem('mfj-theme-v3') || 'klein'; } catch (_) {}
+        if (!['klein', 'cosmos', 'hud'].includes(t)) t = 'klein';
         document.documentElement.setAttribute('data-theme', t);
       })();
     </script>
@@ -54,11 +56,13 @@ const {
   <body>
     <div id="voyage-progress"></div>
     <Cosmos />
+    <WaterRipple />
 
     <nav class="nav">
       <div class="nav-inner">
         <a href="#top" class="nav-logo">纪鸣飞<span> ✦</span></a>
         <div class="nav-links">
+          <a href="/resume/">职业概览</a>
           <a href="/#voyage">航程</a>
           <a href="/#flagship">旗舰</a>
           <a href="/#works">星图集</a>
@@ -84,7 +88,7 @@ const {
         <div>
           <div class="f-name">纪鸣飞 <span style="color:var(--star)">/</span> Mingfei Ji</div>
           <div class="f-meta">
-            AI PRODUCT ARCHITECT · FORWARD DEPLOYED ENGINEER<br />
+            SENIOR AI PRODUCT MANAGER · GLOBAL CONTENT GROWTH · AGENTIC HARNESS<br />
             上海 · github.com/MingfeiJi
           </div>
         </div>
@@ -103,12 +107,10 @@ const {
 
     <button class="theme-fab" id="theme-fab" title="切换主题" aria-label="切换主题">🎨</button>
     <div class="theme-panel" id="theme-panel">
-      <div class="tp-title">THEME · 选一种你喜欢的</div>
-      <button class="theme-opt" data-t="cosmos"><span class="sw"><i style="background:#030412"></i><i style="background:#7dd3fc"></i><i style="background:#a78bfa"></i></span>🌌 星辰大海</button>
-      <button class="theme-opt" data-t="hud"><span class="sw"><i style="background:#F7F5EF"></i><i style="background:#1a1a1a"></i><i style="background:#9E2B25"></i></span>🖌 动态水墨</button>
+      <div class="tp-title">THEME · 三种视觉语言</div>
       <button class="theme-opt" data-t="klein"><span class="sw"><i style="background:#000"></i><i style="background:#fff"></i><i style="background:#8a8a8a"></i></span>⚫️ 曜黑玻璃</button>
-      <button class="theme-opt" data-t="cyber"><span class="sw"><i style="background:#030509"></i><i style="background:#00f0ff"></i><i style="background:#c026ff"></i></span>🛰 赛博全息</button>
-      <button class="theme-opt" data-t="snow"><span class="sw"><i style="background:#FAFAF8"></i><i style="background:#18181b"></i><i style="background:#1d4ed8"></i></span>⬜️ 月白极简</button>
+      <button class="theme-opt" data-t="cosmos"><span class="sw"><i style="background:#030412"></i><i style="background:#7dd3fc"></i><i style="background:#a78bfa"></i></span>🌌 星辰大海</button>
+      <button class="theme-opt" data-t="hud"><span class="sw"><i style="background:#F4F7F4"></i><i style="background:#1f3539"></i><i style="background:#9E2B25"></i></span>〰 水波墨境</button>
     </div>
 
     <script>
@@ -117,7 +119,7 @@ const {
       const panel = document.getElementById('theme-panel')!;
       const themeOpts = panel.querySelectorAll<HTMLButtonElement>('.theme-opt');
       function markActive() {
-        const cur = document.documentElement.getAttribute('data-theme') || 'cosmos';
+        const cur = document.documentElement.getAttribute('data-theme') || 'klein';
         themeOpts.forEach((o) => o.classList.toggle('active', o.dataset.t === cur));
       }
       markActive();
@@ -129,7 +131,7 @@ const {
         o.addEventListener('click', () => {
           const t = o.dataset.t!;
           document.documentElement.setAttribute('data-theme', t);
-          localStorage.setItem('mfj-theme', t);
+          try { localStorage.setItem('mfj-theme-v3', t); localStorage.setItem('mfj-theme', t); } catch (_) {}
           markActive();
         })
       );

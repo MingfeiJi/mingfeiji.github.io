@@ -1,7 +1,16 @@
 <canvas id="cosmos"></canvas>
 
 <script>
-  import * as THREE from 'three';
+  let initialized = false;
+  function maybeStart() {
+    if (initialized || document.documentElement.dataset.theme !== 'cosmos') return;
+    initialized = true;
+    start().catch(error => console.warn('Star background unavailable', error));
+  }
+  new MutationObserver(maybeStart).observe(document.documentElement, {attributes:true,attributeFilter:['data-theme']});
+  maybeStart();
+  async function start() {
+  const THREE = await import('three');
 
   const canvas = document.getElementById('cosmos') as HTMLCanvasElement;
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -78,7 +87,7 @@
     ctx.fillRect(0, 0, 256, 256);
     return new THREE.CanvasTexture(cv);
   }
-  const nebulas: THREE.Sprite[] = [];
+  const nebulas: any[] = [];
   const nebulaSpecs: Array<[string, number, number, number, number]> = [
     ['rgba(124,58,237,0.16)', -260, 130, -420, 900],
     ['rgba(37,99,235,0.15)', 320, -90, -520, 1000],
@@ -96,7 +105,7 @@
   }
 
   /* ---------- 流星 ---------- */
-  const meteors: Array<{ line: THREE.Line; vel: THREE.Vector3; life: number }> = [];
+  const meteors: Array<{ line: any; vel: any; life: number }> = [];
   function spawnMeteor() {
     const start = new THREE.Vector3(
       (Math.random() - 0.5) * 1400,
@@ -130,7 +139,9 @@
   const clock = new THREE.Clock();
   let meteorTimer = 0;
 
+  let frame = 0;
   function tick() {
+    if (document.hidden || document.documentElement.dataset.theme !== 'cosmos') {frame=0;return;}
     const dt = Math.min(clock.getDelta(), 0.05);
     const t = clock.elapsedTime;
 
@@ -162,22 +173,26 @@
       const m = meteors[i];
       m.life -= dt * 0.55;
       m.line.position.addScaledVector(m.vel, dt * 60 * 0.16);
-      (m.line.material as THREE.LineBasicMaterial).opacity = Math.max(m.life, 0) * 0.9;
+      (m.line.material as any).opacity = Math.max(m.life, 0) * 0.9;
       if (m.life <= 0) {
         scene.remove(m.line);
         m.line.geometry.dispose();
-        (m.line.material as THREE.Material).dispose();
+        (m.line.material as any).dispose();
         meteors.splice(i, 1);
       }
     }
 
     renderer.render(scene, camera);
-    requestAnimationFrame(tick);
+    frame = requestAnimationFrame(tick);
   }
 
-  if (prefersReduced) {
-    renderer.render(scene, camera);
-  } else {
-    tick();
+  function sync() {
+    if (document.hidden || document.documentElement.dataset.theme !== 'cosmos') {cancelAnimationFrame(frame);frame=0;return;}
+    if (prefersReduced) renderer.render(scene,camera);
+    else if (!frame) frame=requestAnimationFrame(tick);
+  }
+  new MutationObserver(sync).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+  document.addEventListener('visibilitychange',sync);
+  sync();
   }
 </script>
