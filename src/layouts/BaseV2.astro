@@ -11,15 +11,17 @@ import WaterRipple from '../components/WaterRipple.astro';
 interface Props {
   title?: string;
   description?: string;
+  defaultTheme?: string;
 }
 const {
+  defaultTheme = 'klein',
   title = '纪鸣飞 · 高级 AI 产品经理 · 出海内容增长与业务 Agent',
   description = '5 年产品经验，3 年聚焦 AI 产品落地。TripFlow 内容增长中台、TripYoyo Agent／Skill 平台、Maige AI 社交与 vidaXL 企业数字化。用可运行产物与评测闭环推动业务价值。',
 } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="zh-CN" data-theme="klein">
+<html lang="zh-CN" data-theme={defaultTheme} data-default-theme={defaultTheme}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -54,9 +56,11 @@ const {
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>" />
     <script is:inline>
       (function () {
-        var t = 'klein';
-        try { t = localStorage.getItem('mfj-theme-v3') || 'klein'; } catch (_) {}
-        if (!['klein', 'cosmos', 'hud'].includes(t)) t = 'klein';
+        var initial = document.documentElement.getAttribute('data-default-theme') || 'klein';
+        var key = initial === 'constellation' ? 'mfj-theme-v4' : 'mfj-theme-v3';
+        var t = initial;
+        try { t = localStorage.getItem(key) || initial; } catch (_) {}
+        if (!['constellation', 'klein', 'cosmos', 'hud'].includes(t)) t = initial;
         document.documentElement.setAttribute('data-theme', t);
       })();
     </script>
@@ -75,6 +79,7 @@ const {
           <a href="#cognition">认知</a>
           <a href="#cases">项目档案</a>
           <a href="/studio/">数字作品室</a>
+          <a href="/owner-os/">一号位看板</a>
           <a href="#logbook">履历</a>
           <a href="#method">方法论</a>
           <a href="#knowledge">知识体系</a>
@@ -115,7 +120,8 @@ const {
 
     <button class="theme-fab" id="theme-fab" title="切换主题" aria-label="切换主题">🎨</button>
     <div class="theme-panel" id="theme-panel">
-      <div class="tp-title">THEME · 三种视觉语言</div>
+      <div class="tp-title">THEME · 视觉语言</div>
+      <button class="theme-opt" data-t="constellation"><span class="sw"><i style="background:#090912"></i><i style="background:#d6b77b"></i><i style="background:#b6a2e0"></i></span>✦ 星核 · 暖金</button>
       <button class="theme-opt" data-t="klein"><span class="sw"><i style="background:#000"></i><i style="background:#fff"></i><i style="background:#8a8a8a"></i></span>⚫️ 曜黑玻璃</button>
       <button class="theme-opt" data-t="cosmos"><span class="sw"><i style="background:#030412"></i><i style="background:#7dd3fc"></i><i style="background:#a78bfa"></i></span>🌌 星辰大海</button>
       <button class="theme-opt" data-t="hud"><span class="sw"><i style="background:#F4F7F4"></i><i style="background:#1f3539"></i><i style="background:#9E2B25"></i></span>〰 水波墨境</button>
@@ -141,7 +147,7 @@ const {
         o.addEventListener('click', () => {
           const t = o.dataset.t!;
           document.documentElement.setAttribute('data-theme', t);
-          try { localStorage.setItem('mfj-theme-v3', t); localStorage.setItem('mfj-theme', t); } catch (_) {}
+          try { localStorage.setItem('mfj-theme-v4', t); localStorage.setItem('mfj-theme-v3', t); localStorage.setItem('mfj-theme', t); } catch (_) {}
           markActive();
         })
       );
@@ -196,4 +202,5 @@ const {
 
 <style is:global>
   @import '../styles/global.css';
+  @import '../styles/constellation.css';
 </style>

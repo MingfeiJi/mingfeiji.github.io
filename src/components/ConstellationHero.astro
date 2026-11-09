@@ -1,0 +1,39 @@
+<div class="constellation-scene" data-home-constellation>
+  <canvas data-star-core aria-hidden="true"></canvas>
+  <svg class="constellation-orbits" viewBox="0 0 760 620" aria-hidden="true"><ellipse cx="381" cy="308" rx="250" ry="160" transform="rotate(-22 381 308)"/><ellipse cx="381" cy="308" rx="300" ry="215" transform="rotate(-22 381 308)"/><path d="M157 212 211 165 267 190 302 145 M548 170 590 143 635 180 M512 458 567 425 613 447"/><g><circle cx="157" cy="212" r="2"/><circle cx="211" cy="165" r="3"/><circle cx="267" cy="190" r="2"/><circle cx="302" cy="145" r="2"/><circle cx="548" cy="170" r="2"/><circle cx="590" cy="143" r="3"/><circle cx="635" cy="180" r="2"/><circle cx="512" cy="458" r="2"/><circle cx="567" cy="425" r="3"/><circle cx="613" cy="447" r="2"/></g></svg>
+  <div class="star-caption"><span>PERSONAL CONSTELLATION</span><p>经验、判断与创造，在这里相连。</p></div>
+  <a class="constellation-entry entry-product" href="#flagship"><span class="entry-dot"></span><span>业务与产品<small>PRODUCT / SYSTEM</small></span><i>↗</i></a>
+  <a class="constellation-entry entry-knowledge" href="#knowledge"><span class="entry-dot"></span><span>知识与判断<small>KNOWLEDGE / REASON</small></span><i>↗</i></a>
+  <a class="constellation-entry entry-studio" href="/studio/"><span class="entry-dot"></span><span>数字作品<small>DESIGN / BUILD</small></span><i>↗</i></a>
+  <div class="star-tools"><button type="button" data-star-motion aria-pressed="false">星核静态</button><span data-star-status aria-live="polite"></span></div>
+</div>
+<script is:inline defer src="/owner-os/assets/star-core-f1b7fe2dcaf936c5.js"></script>
+<script is:inline defer src="/owner-os/assets/cosmos-ea8441a55b78832f.js"></script>
+<script is:inline>
+(function(){
+  function setup(){
+    var host=document.querySelector('[data-home-constellation]');if(!host)return;
+    var button=host.querySelector('[data-star-motion]'),status=host.querySelector('[data-star-status]');
+    var reduced=matchMedia('(prefers-reduced-motion: reduce)'),motion=!reduced.matches,cleanup=null;
+    function label(){button.textContent=motion&&!reduced.matches?'星核运行中':'星核静态';button.setAttribute('aria-pressed',String(motion&&!reduced.matches));status.textContent=reduced.matches?'遵循系统减少动态设置':'';}
+    function sync(){if(cleanup){cleanup();cleanup=null;}if(document.documentElement.dataset.theme==='constellation'&&window.OwnerCosmos)cleanup=window.OwnerCosmos.mount(host,{motion:motion&&!reduced.matches});label();}
+    button.addEventListener('click',function(){motion=reduced.matches?false:!motion;window.OwnerCosmos&&window.OwnerCosmos.setMotion(motion);label();});
+    reduced.addEventListener('change',function(){if(reduced.matches)motion=false;window.OwnerCosmos&&window.OwnerCosmos.setMotion(motion);label();});
+    new MutationObserver(sync).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+    window.addEventListener('pagehide',function(){cleanup&&cleanup();});sync();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup,{once:true});else setup();
+})();
+</script>
+<style>
+.constellation-scene{display:none;position:absolute;right:-85px;top:102px;width:760px;height:620px;z-index:2;isolation:isolate;pointer-events:none}
+:global(html[data-theme='constellation']) .constellation-scene{display:block}
+.constellation-scene canvas{width:100%;height:100%;display:block;opacity:.82;pointer-events:none;mask-image:linear-gradient(90deg,transparent 0%,#000 26%,#000 100%)}
+.constellation-orbits{position:absolute;inset:0;width:100%;height:100%;fill:none;stroke:#a58bb63b;stroke-width:.7;pointer-events:none}.constellation-orbits path{stroke:#c9b6d688}.constellation-orbits circle{fill:#dfd1e8;stroke:none}
+.star-caption{position:absolute;left:44%;top:66%;text-align:center;transform:translateX(-50%);white-space:nowrap;color:#eee7f0;text-shadow:0 2px 14px #090912;pointer-events:none}.star-caption>span{font:7px 'JetBrains Mono',monospace;letter-spacing:2.3px;color:#a99bb4}.star-caption p{font:13px/1.8 'Noto Serif SC','Songti SC',serif;margin-top:9px}
+.constellation-entry{position:absolute;display:flex;align-items:center;gap:10px;padding:11px 13px;border:1px solid #7b638a44;border-radius:6px;background:#13111ebd;backdrop-filter:blur(8px);color:#eee7f0;text-decoration:none;font:13px/1.6 'Noto Serif SC','Songti SC',serif;pointer-events:auto;transition:border-color .2s,transform .2s}.constellation-entry small{display:block;font:6.5px/1.7 'JetBrains Mono',monospace;letter-spacing:.7px;color:#a99bb4;margin-top:4px}.constellation-entry i{font:12px system-ui;color:#d6b77b;font-style:normal;margin-left:12px}.constellation-entry:hover{border-color:#d6b77b88;color:#eee7f0;transform:translateY(-3px)}.constellation-entry:focus-visible{outline:2px solid #d6b77b;outline-offset:5px}.entry-dot{width:6px;height:6px;flex:none;border-radius:50%;background:var(--entry-color);box-shadow:0 0 13px var(--entry-color)}.entry-product{--entry-color:#85b5df;right:19%;top:18%}.entry-knowledge{--entry-color:#b6a2e0;right:17%;top:42%}.entry-studio{--entry-color:#8cc6b3;right:21%;bottom:12%}
+.star-tools{position:absolute;right:18%;bottom:1%;display:flex;align-items:center;gap:10px;color:#8e7e9b;pointer-events:auto}.star-tools button{border:1px solid #65517166;border-radius:20px;padding:5px 10px;background:#0d0b16a8;font:8px/1.8 system-ui;color:#bfa7cf;cursor:pointer}.star-tools button:focus-visible{outline:2px solid #d6b77b;outline-offset:4px}.star-tools span{font:7px/1.8 system-ui;max-width:110px}
+@media(max-width:1180px) and (min-width:761px){.constellation-scene{right:-140px;top:110px;width:680px;height:600px}.entry-product{right:28%}.entry-knowledge{right:27%}.entry-studio{right:29%}.star-tools{right:27%}.star-caption{left:47%}}
+@media(max-width:760px){.constellation-scene{position:relative;inset:auto;width:calc(100% + 44px);height:355px;flex:none;order:9;margin:12px -22px -28px}.constellation-scene canvas{opacity:.78;mask-image:linear-gradient(0deg,transparent,#000 12%,#000 86%,transparent)}.constellation-orbits{opacity:.55}.star-caption{top:57%;left:49%;font-size:10px}.star-caption>span{font-size:6px;letter-spacing:1.2px}.star-caption p{font-size:11px}.constellation-entry{font-size:10px;padding:8px 9px;gap:7px}.constellation-entry small{font-size:5.5px;letter-spacing:.2px}.constellation-entry i{margin-left:3px;font-size:10px}.entry-dot{width:4px;height:4px}.entry-product{right:8%;top:7%}.entry-knowledge{right:auto;left:8%;top:31%}.entry-studio{right:7%;bottom:14%}.star-tools{right:7%;bottom:1%;gap:7px}.star-tools button{font-size:7px;padding:3px 8px}.star-tools span{font-size:6px}}
+@media(prefers-reduced-motion:reduce){.constellation-entry{transition:none}.constellation-entry:hover{transform:none}}
+</style>

@@ -1,0 +1,45 @@
+/* Owner OS 0.5 visual family. Independent palette and layout; no Obsidian theme source. */
+html[data-theme="constellation"]{
+ --space-0:#090912;--space-1:#0e0c17;--space-2:#13111e;--space-3:#1b1627;
+ --ink:#eee7f0;--ink2:#b6a8c1;--ink3:#8e7e9d;--ink-strong:#f5edf4;
+ --star:#d6b77b;--nebula:#b6a2e0;--flare:#e6c995;--aurora:#8cc6b3;--rose:#c58da8;
+ --line:#7b638a38;--line2:#a087b53d;--glow-star:0 0 24px #d6b77b20;--glow-nebula:0 0 32px #b6a2e01a;
+ --sans:-apple-system,"PingFang SC","Noto Sans SC","Microsoft YaHei",sans-serif;--body-font:var(--sans);
+ --maxw:1200px;background:#090912;color:var(--ink);color-scheme:dark;
+}
+html[data-theme="constellation"] body{background:radial-gradient(ellipse at 85% 0,#3b254022,transparent 21%),#090912;font-family:var(--sans)}
+html[data-theme="constellation"] ::selection{background:#d6b77b3d;color:#fff8eb}
+html[data-theme="constellation"] a:focus-visible,html[data-theme="constellation"] button:focus-visible{outline:2px solid #d6b77b;outline-offset:5px}
+html[data-theme="constellation"] .nav{background:#0d0a16de;border-color:#70597c33;box-shadow:none}
+html[data-theme="constellation"] .nav-inner{padding-top:19px;padding-bottom:19px}
+html[data-theme="constellation"] .nav-logo{color:#eee7f0;letter-spacing:.08em;font-weight:700}
+html[data-theme="constellation"] .nav-logo span{color:#d6b77b;text-shadow:none}
+html[data-theme="constellation"] .nav-links{gap:23px}
+html[data-theme="constellation"] .nav-links a{font-size:11px;letter-spacing:.03em;color:#b6a8c1}
+html[data-theme="constellation"] .nav-links a:hover{color:#e6c995;text-shadow:none}
+html[data-theme="constellation"] #voyage-progress{background:linear-gradient(90deg,#8e73aa,#d6b77b);box-shadow:none;height:1px}
+html[data-theme="constellation"] .chapter{padding:100px 0}
+html[data-theme="constellation"] .chapter-head .ch-no{color:#bda378;font-size:10px;letter-spacing:.2em}
+html[data-theme="constellation"] .chapter-head .ch-no::before{background:#d6b77b55;width:28px}
+html[data-theme="constellation"] .chapter-head h2{background:none;color:#eee7f0;-webkit-text-fill-color:initial;font-weight:700;font-size:clamp(29px,4vw,41px)}
+html[data-theme="constellation"] .chapter-head .ch-sub{font-size:14px;line-height:1.9;color:#b6a8c1}
+html[data-theme="constellation"] .card{border-color:#7b638a42;background:linear-gradient(150deg,#22192b66,#120e1b99);border-radius:9px;box-shadow:none;backdrop-filter:none}
+html[data-theme="constellation"] .card:hover{border-color:#d6b77b66;box-shadow:0 15px 35px #0002}
+html[data-theme="constellation"] .card::before{background:radial-gradient(500px 180px at var(--mx,50%) var(--my,0%),#b6a2e007,transparent)}
+html[data-theme="constellation"] .btn{font-family:var(--sans);font-size:12px;font-weight:400;border-color:#8f734655;background:#d6b77b04;border-radius:5px;padding:12px 20px;backdrop-filter:none;color:#d6bd8d;box-shadow:none}
+html[data-theme="constellation"] .btn.primary{color:#18111e;background:#d6b77b;border-color:#d6b77b;box-shadow:none}
+html[data-theme="constellation"] .btn:hover{color:#f6e8c8;border-color:#d6b77b99;background:#d6b77b10;box-shadow:none}
+html[data-theme="constellation"] .btn.primary:hover{color:#18111e;background:#e6c995;box-shadow:none}
+html[data-theme="constellation"] .chip{border-radius:4px;font-size:9px;padding:4px 10px;border-color:#8f73464d;color:#d6bd8d;background:#d6b77b07}
+html[data-theme="constellation"] .chip.violet{color:#c8b7df;border-color:#937ba650;background:#b6a2e008}
+html[data-theme="constellation"] .chip.green{color:#a1c7b9;border-color:#79aa9940;background:#8cc6b307}
+html[data-theme="constellation"] .footer{background:#0c0a14;border-color:#7b638a38}
+html[data-theme="constellation"] .f-name{font-weight:700;letter-spacing:.07em}
+html[data-theme="constellation"] .f-meta{font-family:var(--sans);color:#9d8dab;line-height:2}
+html[data-theme="constellation"] .f-links a{color:#c7b4d2;border-color:#755b8555}
+html[data-theme="constellation"] .theme-fab{background:#17111f;border-color:#7b638a55;box-shadow:0 6px 24px #0004}
+html[data-theme="constellation"] .theme-panel{background:#17111ff5;border-color:#7b638a66;box-shadow:0 20px 70px #0006}
+html[data-theme="constellation"] .theme-opt{color:#cab9d5}
+html[data-theme="constellation"] .theme-opt.active{border-color:#d6b77b66;background:#d6b77b0d;color:#e3cb9d}
+@media(max-width:760px){html[data-theme="constellation"] .nav-inner{padding:14px 18px;gap:17px}html[data-theme="constellation"] .nav-logo{font-size:15px}html[data-theme="constellation"] .nav-links{gap:18px}html[data-theme="constellation"] .nav-links a{font-size:10px}html[data-theme="constellation"] .chapter{padding:67px 0}html[data-theme="constellation"] .btn{padding:11px 14px;font-size:11px}html[data-theme="constellation"] .chapter-head{margin-bottom:30px}html[data-theme="constellation"] .chapter-head .ch-sub{font-size:12px}}
+@media(prefers-reduced-motion:reduce){html[data-theme="constellation"]{scroll-behavior:auto}html[data-theme="constellation"] :is(.card,.btn){transition:none}}

@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/BaseV2.astro';
+import ConstellationHero from '../components/ConstellationHero.astro';
 import KnowledgeSystem from '../components/KnowledgeSystem.astro';
 import StudioFeature from '../components/StudioFeature.astro';
 import { getCollection } from 'astro:content';
@@ -216,6 +217,7 @@ const courses = [
 ---
 
 <Base
+  defaultTheme="constellation"
   title="纪鸣飞 · 高级 AI 产品经理 — 出海内容增长 · Agentic Harness"
   description="5 年产品经验，3 年聚焦 AI 产品落地。携程 TripFlow 与 TripYoyo 0→1，出海内容增长、B 端 AI 产品架构与业务 Agent。每日自动发布 8000+ 条，剪辑 1.5h→约20min，机票走查准确率 7%→95%。"
 >
@@ -271,6 +273,7 @@ const courses = [
 
   <!-- ════════════ HERO · 启航 ════════════ -->
   <header class="hero wrap" id="top">
+    <ConstellationHero />
     <div class="kicker">Senior AI Product Manager · Enterprise AI</div>
     <h1>纪鸣飞</h1>
     <div class="sub">{profile.title}</div>
@@ -284,6 +287,7 @@ const courses = [
       <a class="btn primary" href="/resume/">职业概览 · 3 分钟了解我 ↗</a>
       <a class="btn" href="#flagship">TripFlow · 代表项目</a>
       <a class="btn" href="/studio/">数字作品室 · 3D 与产品 ↗</a>
+      <a class="btn constellation-owner-link" href="/owner-os/">一号位看板 · 设计演示 ↗</a>
     </div>
     <!-- 曜黑玻璃专属：邮箱捕获 CTA（其他主题 display:none）——按用户提供的 dark hero 规格实现 -->
     <div class="klein-capture" id="klein-capture">
@@ -1899,4 +1903,42 @@ const courses = [
   .v2-scope .pet-x { min-width: 30px; min-height: 30px; }
   .v2-scope .pet-hide { min-height: 30px; }
   .v2-scope .pet-sugs button { min-height: 30px; }
+</style>
+
+<style>
+/* One visual signature for the new theme; legacy theme rules remain gated. */
+:global(html[data-theme='constellation']) .v2-scope .hero{padding:142px 32px 78px;min-height:810px;justify-content:flex-start;text-align:left;isolation:isolate;overflow:hidden;transform:none!important;transition:none!important}
+:global(html[data-theme='constellation']) .v2-scope .hero > :not(:global(.constellation-scene)){position:relative;z-index:1;max-width:590px}
+:global(html[data-theme='constellation']) .v2-scope .hero .kicker{font:9px/1.8 var(--mono);letter-spacing:.25em;color:#c5a876;text-shadow:none;margin:0 0 29px}
+:global(html[data-theme='constellation']) .v2-scope .hero h1{font-family:var(--serif);font-weight:700;font-size:104px;line-height:1.3;letter-spacing:.09em;color:#eee7f0;background:none;-webkit-text-fill-color:initial;margin:0}
+:global(html[data-theme='constellation']) .v2-scope .hero .sub{font:17px/1.8 var(--serif);letter-spacing:.1em;color:#dfc699;margin-top:18px;justify-content:flex-start}
+:global(html[data-theme='constellation']) .v2-scope .hero .sub::after{display:none}
+:global(html[data-theme='constellation']) .v2-scope .hero .career-focus{font:11px/1.9 var(--sans);color:#ab98b9;margin-top:12px}
+:global(html[data-theme='constellation']) .v2-scope .hero .career-focus span{color:#9b88a8}
+:global(html[data-theme='constellation']) .v2-scope .hero .lede{font:13px/2.05 var(--sans);max-width:560px;letter-spacing:.02em;color:#b8a7c3;margin-top:25px;text-wrap:pretty}
+:global(html[data-theme='constellation']) .v2-scope .hero .lede strong{font-weight:500;color:#e0d0e8}
+:global(html[data-theme='constellation']) .v2-scope .hero-stats{display:flex;flex-wrap:wrap;gap:16px 27px!important;max-width:550px;margin-top:28px;color:#a992b7}
+:global(html[data-theme='constellation']) .v2-scope .hero-stats span{font:9px/1.8 var(--sans);display:flex;flex-direction:column;gap:4px}
+:global(html[data-theme='constellation']) .v2-scope .hero-stats span b{font:17px/1.4 var(--mono);color:#e6c995;letter-spacing:0}
+:global(html[data-theme='constellation']) .v2-scope .hero-stats span::after{display:none}
+:global(html[data-theme='constellation']) .v2-scope .hero-stats-note{display:block;font:8px/1.8 var(--sans);color:#93809f;margin-top:12px}
+:global(html[data-theme='constellation']) .v2-scope .hero-cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px;max-width:590px}
+:global(html[data-theme='constellation']) .v2-scope .hero-cta .btn{font-size:10px;padding:10px 13px}
+.constellation-owner-link{display:none}
+:global(html[data-theme='constellation']) .constellation-owner-link{display:inline-flex}
+:global(html[data-theme='constellation']) .v2-scope .hero-scroll{display:none}
+:global(html[data-theme='constellation']) .v2-scope .rail{color:#8c789d}
+:global(html[data-theme='constellation']) .v2-scope .rail-item.active{color:#d6b77b}
+:global(html[data-theme='constellation']) .v2-scope :is(.km-matrix,.dashboard,.work-card,.flagship,.case-card,.knowledge-card,.method-card,.tech-card,.article-card,.signal-card,.service-card){background:linear-gradient(145deg,#21182b55,#100d1899);border-color:#755a8344;box-shadow:none}
+:global(html[data-theme='constellation']) .v2-scope .dial .num{color:#e2c38c;background:none;-webkit-text-fill-color:initial;text-shadow:none;font-weight:700}
+:global(html[data-theme='constellation']) .v2-scope .dial .lab{color:#b6a3c2;font-family:var(--sans);font-size:11px}
+:global(html[data-theme='constellation']) .v2-scope .km-cat{color:#dfc796}
+:global(html[data-theme='constellation']) .v2-scope .km-stats span b{color:#e4d2ed}
+:global(html[data-theme='constellation']) .v2-scope .km-stats span{color:#a994b6}
+:global(html[data-theme='constellation']) .v2-scope .work-card .w-meta::before{background:#b6a2e0;box-shadow:none}
+:global(html[data-theme='constellation']) .v2-scope .epigraph{font-weight:700;color:#d6bd8d;background:none;-webkit-text-fill-color:initial}
+:global(html[data-theme='constellation']) .v2-scope .pet-fab{background:#22192c;border-color:#90724b55;box-shadow:0 8px 30px #0004}
+:global(html[data-theme='constellation']) .v2-scope .pet-panel{background:#17111ff5;border-color:#755a8366}
+@media(max-width:1180px) and (min-width:761px){:global(html[data-theme='constellation']) .v2-scope .hero{padding-top:132px;min-height:820px}:global(html[data-theme='constellation']) .v2-scope .hero > :not(:global(.constellation-scene)){max-width:530px}:global(html[data-theme='constellation']) .v2-scope .hero h1{font-size:90px}:global(html[data-theme='constellation']) .v2-scope .hero .lede{max-width:500px}}
+@media(max-width:760px){:global(html[data-theme='constellation']) .v2-scope .hero{display:flex;padding:112px 22px 42px;min-height:0;overflow:hidden}:global(html[data-theme='constellation']) .v2-scope .hero > :not(:global(.constellation-scene)){max-width:100%}:global(html[data-theme='constellation']) .v2-scope .hero .kicker{font-size:7px;letter-spacing:.15em;margin-bottom:18px}:global(html[data-theme='constellation']) .v2-scope .hero h1{font-size:64px;line-height:1.25;letter-spacing:.08em}:global(html[data-theme='constellation']) .v2-scope .hero .sub{font-size:14px;margin-top:18px;letter-spacing:.05em!important}:global(html[data-theme='constellation']) .v2-scope .hero .career-focus{font-size:10px;margin-top:10px}:global(html[data-theme='constellation']) .v2-scope .hero .lede{font-size:12px;line-height:2;max-width:100%;margin-top:20px}:global(html[data-theme='constellation']) .v2-scope .hero-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px 18px!important;margin-top:23px;width:100%}:global(html[data-theme='constellation']) .v2-scope .hero-stats span b{font-size:16px}:global(html[data-theme='constellation']) .v2-scope .hero-stats-note{font-size:7px;margin-top:13px}:global(html[data-theme='constellation']) .v2-scope .hero-cta{gap:8px;margin-top:21px}:global(html[data-theme='constellation']) .v2-scope .hero-cta .btn{font-size:9px;padding:9px 11px}}
 </style>

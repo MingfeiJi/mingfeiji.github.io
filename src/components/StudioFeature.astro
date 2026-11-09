@@ -18,3 +18,28 @@ import AtlasPreview from './AtlasPreview.astro';
   @media(max-width:760px){.studio-feature{grid-template-columns:1fr;margin:0 18px 55px}.feature-copy{padding:27px 24px 16px}.feature-copy h2{font-size:28px;line-height:1.65}.feature-copy h2 br{display:none}.label{font-size:9px;margin-bottom:14px}.description{font-size:12px;margin:15px 0 12px}.description br{display:none}.tech{font-size:9px}.atlas-link{margin-top:20px;font-size:11px}.studio-link{display:inline-flex;margin:0 0 0 17px;font-size:9px;gap:5px}}
   @media(max-width:380px){.studio-link{display:flex;margin:15px 0 0}}
 </style>
+
+<style>
+:global(html[data-theme='constellation']) .studio-feature{background:linear-gradient(135deg,#1b1426,#100d18);border-color:#755a8355;color:#eee7f0;border-radius:9px;box-shadow:0 20px 60px #0002}
+:global(html[data-theme='constellation']) .feature-copy h2{color:#eee7f0;font-size:36px;font-weight:700}
+:global(html[data-theme='constellation']) .label{color:#c5a876;font-size:8px;letter-spacing:.14em}
+:global(html[data-theme='constellation']) .description{color:#b6a3c2}
+:global(html[data-theme='constellation']) .tech{color:#aa95b9}
+:global(html[data-theme='constellation']) .tech i{color:#806b90}
+:global(html[data-theme='constellation']) .atlas-link{color:#d6bd8d;border-color:#92754c66}
+:global(html[data-theme='constellation']) .studio-link{color:#aa95b9}
+:global(html[data-theme='constellation']) .studio-link:hover{color:#e6c995}
+:global(html[data-theme='constellation']) .studio-feature :global(.atlas-preview){color:#e3d7ec;background:radial-gradient(ellipse at 52% 50%,#44314d66,transparent 70%)}
+:global(html[data-theme='constellation']) .studio-feature :global(.atlas-toolbar button){background:#191221bd;border-color:#84609155;color:#b9a4c8}
+:global(html[data-theme='constellation']) .studio-feature :global(.atlas-toolbar button[aria-pressed='true']){background:#d6b77b;border-color:#d6b77b;color:#18111e}
+:global(html[data-theme='constellation']) .studio-feature :global(.live){color:#b5a0c3}
+:global(html[data-theme='constellation']) .studio-feature :global(.live::before){background:#8cc6b3}
+:global(html[data-theme='constellation']) .studio-feature :global(.atlas-loading){background:#18102266;color:#d5c1e0}
+:global(html[data-theme='constellation']) .studio-feature :global(.atlas-controls){border-color:#84609144}
+:global(html[data-theme='constellation']) .studio-feature :global(.atlas-controls p){color:#ac96ba}
+:global(html[data-theme='constellation']) .studio-feature :global(.atlas-controls button){color:#d5c1e0;border-color:#84609155}
+:global(html[data-theme='constellation']) .studio-feature :global(.atlas-controls button[aria-pressed='true']){color:#e6c995;border-color:#b99b6b}
+:global(html[data-theme='constellation']) .studio-feature :global(.place-coordinate){color:#a68bb7}
+:global(html[data-theme='constellation']) .studio-feature :global(.attribution){color:#8d779d}
+@media(max-width:760px){:global(html[data-theme='constellation']) .feature-copy h2{font-size:27px}}
+</style>
